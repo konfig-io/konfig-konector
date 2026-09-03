@@ -1,123 +1,771 @@
 /* ── Sidebar Data ────────────────────────────────────────────────────────────── */
 const SIDEBAR_DATA = [
   {
-    id: 'iam',
-    label: 'IAM',
-    href: '/docs/iam.html',
+    id: "acm",
+    label: "ACM",
+    href: "/docs/acm.html",
     items: [
-      { label: 'IAMRole', anchor: 'iamrole' },
-      { label: 'IAMPolicy', anchor: 'iampolicy' },
-      { label: 'IAMPolicyAttachment', anchor: 'iampolicyattachment' },
-      { label: 'IAMRolePolicy', anchor: 'iamrolepolicy' },
-      { label: 'PodIdentityAssociation', anchor: 'podidentityassociation' },
-      { label: 'IAMUser', anchor: 'iamuser' },
-      { label: 'IAMGroup', anchor: 'iamgroup' },
-      { label: 'IAMGroupPolicyAttachment', anchor: 'iamgrouppolicyattachment' },
-      { label: 'IAMGroupMembership', anchor: 'iamgroupmembership' },
-      { label: 'IAMSAMLProvider', anchor: 'iamsamlprovider' },
-      { label: 'IAMOIDCProvider', anchor: 'iamoidcprovider' },
+      { label: "Certificate", anchor: "certificate" },
+      { label: "CertificateValidation", anchor: "certificatevalidation" }
     ]
   },
   {
-    id: 'networking',
-    label: 'Networking',
-    href: '/docs/networking.html',
+    id: "acmpca",
+    label: "ACM PCA",
+    href: "/docs/acmpca.html",
     items: [
-      { label: 'VPC', anchor: 'vpc' },
-      { label: 'Subnet', anchor: 'subnet' },
-      { label: 'InternetGateway', anchor: 'internetgateway' },
-      { label: 'RouteTable', anchor: 'routetable' },
-      { label: 'NatGateway', anchor: 'natgateway' },
-      { label: 'SecurityGroup', anchor: 'securitygroup' },
-      { label: 'VPCEndpoint', anchor: 'vpcendpoint' },
+      { label: "PrivateCA", anchor: "privateca" }
     ]
   },
   {
-    id: 'compute',
-    label: 'Compute',
-    href: '/docs/compute.html',
+    id: "mq",
+    label: "Amazon MQ",
+    href: "/docs/mq.html",
     items: [
-      { label: 'KeyPair', anchor: 'keypair' },
-      { label: 'LaunchTemplate', anchor: 'launchtemplate' },
-      { label: 'AutoScalingGroup', anchor: 'autoscalinggroup' },
-      { label: 'EC2Instance', anchor: 'ec2instance' },
+      { label: "MQBroker", anchor: "mqbroker" },
+      { label: "MQConfiguration", anchor: "mqconfiguration" }
     ]
   },
   {
-    id: 'rds',
-    label: 'Database',
-    href: '/docs/rds.html',
+    id: "apigateway",
+    label: "API Gateway",
+    href: "/docs/apigateway.html",
     items: [
-      { label: 'DBSubnetGroup', anchor: 'dbsubnetgroup' },
-      { label: 'DBParameterGroup', anchor: 'dbparametergroup' },
-      { label: 'DBClusterParameterGroup', anchor: 'dbclusterparametergroup' },
-      { label: 'DBInstance', anchor: 'dbinstance' },
-      { label: 'DBCluster', anchor: 'dbcluster' },
+      { label: "RestAPI", anchor: "restapi" },
+      { label: "RestAPIDeployment", anchor: "restapideployment" },
+      { label: "RestAPIStage", anchor: "restapistage" }
     ]
   },
   {
-    id: 'storage',
-    label: 'Storage',
-    href: '/docs/storage.html',
+    id: "apigatewayv2",
+    label: "API Gateway v2",
+    href: "/docs/apigatewayv2.html",
     items: [
-      { label: 'S3Bucket', anchor: 's3bucket' },
-      { label: 'S3BucketPolicy', anchor: 's3bucketpolicy' },
+      { label: "APIGatewayV2API", anchor: "apigatewayv2api" },
+      { label: "APIGatewayV2ApiMapping", anchor: "apigatewayv2apimapping" },
+      { label: "APIGatewayV2Authorizer", anchor: "apigatewayv2authorizer" },
+      { label: "APIGatewayV2DomainName", anchor: "apigatewayv2domainname" },
+      { label: "APIGatewayV2Integration", anchor: "apigatewayv2integration" },
+      { label: "APIGatewayV2Route", anchor: "apigatewayv2route" },
+      { label: "APIGatewayV2Stage", anchor: "apigatewayv2stage" },
+      { label: "APIGatewayV2VpcLink", anchor: "apigatewayv2vpclink" }
     ]
   },
   {
-    id: 'messaging',
-    label: 'Messaging',
-    href: '/docs/messaging.html',
+    id: "apprunner",
+    label: "App Runner",
+    href: "/docs/apprunner.html",
     items: [
-      { label: 'SQSQueue', anchor: 'sqsqueue' },
-      { label: 'SNSTopic', anchor: 'snstopic' },
-      { label: 'SNSSubscription', anchor: 'snssubscription' },
+      { label: "AppRunnerAutoScaling", anchor: "apprunnerautoscaling" },
+      { label: "AppRunnerService", anchor: "apprunnerservice" }
     ]
   },
   {
-    id: 'elasticache',
-    label: 'ElastiCache',
-    href: '/docs/elasticache.html',
+    id: "applicationautoscaling",
+    label: "Application Auto Scaling",
+    href: "/docs/applicationautoscaling.html",
     items: [
-      { label: 'ElastiCacheSubnetGroup', anchor: 'elasticachesubnetgroup' },
-      { label: 'ElastiCacheReplicationGroup', anchor: 'elasticachereplicationgroup' },
+      { label: "AppScalingPolicy", anchor: "appscalingpolicy" },
+      { label: "ScalableTarget", anchor: "scalabletarget" }
     ]
   },
   {
-    id: 'route53',
-    label: 'Route53 / DNS',
-    href: '/docs/route53.html',
+    id: "athena",
+    label: "Athena",
+    href: "/docs/athena.html",
     items: [
-      { label: 'HostedZone', anchor: 'hostedzone' },
-      { label: 'RecordSet', anchor: 'recordset' },
-      { label: 'HealthCheck', anchor: 'healthcheck' },
+      { label: "AthenaDataCatalog", anchor: "athenadatacatalog" },
+      { label: "AthenaNamedQuery", anchor: "athenanamedquery" },
+      { label: "AthenaWorkGroup", anchor: "athenaworkgroup" }
     ]
   },
   {
-    id: 'eks',
-    label: 'EKS',
-    href: '/docs/eks.html',
+    id: "autoscaling",
+    label: "Auto Scaling",
+    href: "/docs/autoscaling.html",
     items: [
-      { label: 'EKSCluster', anchor: 'ekscluster' },
-      { label: 'EKSNodeGroup', anchor: 'eksnodegroup' },
-      { label: 'EKSAddon', anchor: 'eksaddon' },
-      { label: 'EKSFargateProfile', anchor: 'eksfargateprofile' },
-      { label: 'EKSAccessEntry', anchor: 'eksaccessentry' },
+      { label: "AutoScalingGroup", anchor: "autoscalinggroup" },
+      { label: "ScalingPolicy", anchor: "scalingpolicy" }
     ]
   },
   {
-    id: 'lambda-ecs',
-    label: 'Lambda & ECS',
-    href: '/docs/lambda-ecs.html',
+    id: "configservice",
+    label: "AWS Config",
+    href: "/docs/configservice.html",
     items: [
-      { label: 'LambdaFunction', anchor: 'lambdafunction' },
-      { label: 'LambdaEventSourceMapping', anchor: 'lambdaeventsourcemapping' },
-      { label: 'LambdaPermission', anchor: 'lambdapermission' },
-      { label: 'ECSCluster', anchor: 'ecscluster' },
-      { label: 'ECSTaskDefinition', anchor: 'ecstaskdefinition' },
-      { label: 'ECSService', anchor: 'ecsservice' },
+      { label: "ConfigDeliveryChannel", anchor: "configdeliverychannel" },
+      { label: "ConfigRecorder", anchor: "configrecorder" },
+      { label: "ConfigRule", anchor: "configrule" }
     ]
   },
+  {
+    id: "backup",
+    label: "Backup",
+    href: "/docs/backup.html",
+    items: [
+      { label: "BackupPlan", anchor: "backupplan" },
+      { label: "BackupSelection", anchor: "backupselection" },
+      { label: "BackupVault", anchor: "backupvault" }
+    ]
+  },
+  {
+    id: "batch",
+    label: "Batch",
+    href: "/docs/batch.html",
+    items: [
+      { label: "BatchComputeEnvironment", anchor: "batchcomputeenvironment" },
+      { label: "BatchJobDefinition", anchor: "batchjobdefinition" },
+      { label: "BatchJobQueue", anchor: "batchjobqueue" }
+    ]
+  },
+  {
+    id: "budgets",
+    label: "Budgets",
+    href: "/docs/budgets.html",
+    items: [
+      { label: "Budget", anchor: "budget" }
+    ]
+  },
+  {
+    id: "servicediscovery",
+    label: "Cloud Map",
+    href: "/docs/servicediscovery.html",
+    items: [
+      { label: "CloudMapNamespace", anchor: "cloudmapnamespace" },
+      { label: "CloudMapService", anchor: "cloudmapservice" }
+    ]
+  },
+  {
+    id: "cloudformation",
+    label: "CloudFormation",
+    href: "/docs/cloudformation.html",
+    items: [
+      { label: "CloudFormationStack", anchor: "cloudformationstack" },
+      { label: "CloudFormationStackSet", anchor: "cloudformationstackset" }
+    ]
+  },
+  {
+    id: "cloudfront",
+    label: "CloudFront",
+    href: "/docs/cloudfront.html",
+    items: [
+      { label: "CloudFrontCachePolicy", anchor: "cloudfrontcachepolicy" },
+      { label: "CloudFrontDistribution", anchor: "cloudfrontdistribution" },
+      { label: "CloudFrontFunction", anchor: "cloudfrontfunction" },
+      { label: "CloudFrontOriginAccessControl", anchor: "cloudfrontoriginaccesscontrol" }
+    ]
+  },
+  {
+    id: "cloudtrail",
+    label: "CloudTrail",
+    href: "/docs/cloudtrail.html",
+    items: [
+      { label: "Trail", anchor: "trail" }
+    ]
+  },
+  {
+    id: "cloudwatch",
+    label: "CloudWatch",
+    href: "/docs/cloudwatch.html",
+    items: [
+      { label: "CloudWatchAlarm", anchor: "cloudwatchalarm" },
+      { label: "CloudWatchDashboard", anchor: "cloudwatchdashboard" },
+      { label: "CompositeAlarm", anchor: "compositealarm" }
+    ]
+  },
+  {
+    id: "cloudwatchlogs",
+    label: "CloudWatch Logs",
+    href: "/docs/cloudwatchlogs.html",
+    items: [
+      { label: "LogGroup", anchor: "loggroup" },
+      { label: "MetricFilter", anchor: "metricfilter" },
+      { label: "SubscriptionFilter", anchor: "subscriptionfilter" }
+    ]
+  },
+  {
+    id: "codeartifact",
+    label: "CodeArtifact",
+    href: "/docs/codeartifact.html",
+    items: [
+      { label: "CodeArtifactDomain", anchor: "codeartifactdomain" },
+      { label: "CodeArtifactRepository", anchor: "codeartifactrepository" }
+    ]
+  },
+  {
+    id: "codebuild",
+    label: "CodeBuild",
+    href: "/docs/codebuild.html",
+    items: [
+      { label: "CodeBuildProject", anchor: "codebuildproject" }
+    ]
+  },
+  {
+    id: "codecommit",
+    label: "CodeCommit",
+    href: "/docs/codecommit.html",
+    items: [
+      { label: "CodeCommitRepository", anchor: "codecommitrepository" }
+    ]
+  },
+  {
+    id: "codedeploy",
+    label: "CodeDeploy",
+    href: "/docs/codedeploy.html",
+    items: [
+      { label: "CodeDeployApplication", anchor: "codedeployapplication" },
+      { label: "CodeDeployDeploymentGroup", anchor: "codedeploydeploymentgroup" }
+    ]
+  },
+  {
+    id: "codepipeline",
+    label: "CodePipeline",
+    href: "/docs/codepipeline.html",
+    items: [
+      { label: "CodePipeline", anchor: "codepipeline" }
+    ]
+  },
+  {
+    id: "cognito",
+    label: "Cognito",
+    href: "/docs/cognito.html",
+    items: [
+      { label: "IdentityProvider", anchor: "identityprovider" },
+      { label: "UserPool", anchor: "userpool" },
+      { label: "UserPoolClient", anchor: "userpoolclient" }
+    ]
+  },
+  {
+    id: "controltower",
+    label: "Control Tower",
+    href: "/docs/controltower.html",
+    items: [
+      { label: "CTEnabledControl", anchor: "ctenabledcontrol" }
+    ]
+  },
+  {
+    id: "costexplorer",
+    label: "Cost Explorer",
+    href: "/docs/costexplorer.html",
+    items: [
+      { label: "CostAnomalyMonitor", anchor: "costanomalymonitor" },
+      { label: "CostAnomalySubscription", anchor: "costanomalysubscription" }
+    ]
+  },
+  {
+    id: "firehose",
+    label: "Data Firehose",
+    href: "/docs/firehose.html",
+    items: [
+      { label: "FirehoseDeliveryStream", anchor: "firehosedeliverystream" }
+    ]
+  },
+  {
+    id: "dax",
+    label: "DAX",
+    href: "/docs/dax.html",
+    items: [
+      { label: "DAXCluster", anchor: "daxcluster" }
+    ]
+  },
+  {
+    id: "dynamodb",
+    label: "DynamoDB",
+    href: "/docs/dynamodb.html",
+    items: [
+      { label: "DynamoDBBackup", anchor: "dynamodbbackup" },
+      { label: "DynamoDBGlobalTable", anchor: "dynamodbglobaltable" },
+      { label: "DynamoDBTable", anchor: "dynamodbtable" },
+      { label: "DynamoDBTablePolicy", anchor: "dynamodbtablepolicy" }
+    ]
+  },
+  {
+    id: "ec2",
+    label: "EC2 & VPC",
+    href: "/docs/ec2.html",
+    items: [
+      { label: "AMI", anchor: "ami" },
+      { label: "CapacityReservation", anchor: "capacityreservation" },
+      { label: "CustomerGateway", anchor: "customergateway" },
+      { label: "EBSVolume", anchor: "ebsvolume" },
+      { label: "EC2Instance", anchor: "ec2instance" },
+      { label: "EIPAssociation", anchor: "eipassociation" },
+      { label: "EgressOnlyIGW", anchor: "egressonlyigw" },
+      { label: "ElasticIP", anchor: "elasticip" },
+      { label: "FlowLog", anchor: "flowlog" },
+      { label: "InternetGateway", anchor: "internetgateway" },
+      { label: "KeyPair", anchor: "keypair" },
+      { label: "LaunchTemplate", anchor: "launchtemplate" },
+      { label: "ManagedPrefixList", anchor: "managedprefixlist" },
+      { label: "NatGateway", anchor: "natgateway" },
+      { label: "NetworkACL", anchor: "networkacl" },
+      { label: "PlacementGroup", anchor: "placementgroup" },
+      { label: "RouteTable", anchor: "routetable" },
+      { label: "SecurityGroup", anchor: "securitygroup" },
+      { label: "SpotFleet", anchor: "spotfleet" },
+      { label: "Subnet", anchor: "subnet" },
+      { label: "TransitGateway", anchor: "transitgateway" },
+      { label: "TransitGatewayVpcAttachment", anchor: "transitgatewayvpcattachment" },
+      { label: "VPC", anchor: "vpc" },
+      { label: "VPCEndpoint", anchor: "vpcendpoint" },
+      { label: "VPCPeeringConnection", anchor: "vpcpeeringconnection" },
+      { label: "VPNConnection", anchor: "vpnconnection" },
+      { label: "VPNConnectionRoute", anchor: "vpnconnectionroute" },
+      { label: "VPNGateway", anchor: "vpngateway" }
+    ]
+  },
+  {
+    id: "ecr",
+    label: "ECR",
+    href: "/docs/ecr.html",
+    items: [
+      { label: "ECRLifecyclePolicy", anchor: "ecrlifecyclepolicy" },
+      { label: "ECRRepository", anchor: "ecrrepository" },
+      { label: "ECRRepositoryPolicy", anchor: "ecrrepositorypolicy" }
+    ]
+  },
+  {
+    id: "ecs",
+    label: "ECS",
+    href: "/docs/ecs.html",
+    items: [
+      { label: "ECSCapacityProvider", anchor: "ecscapacityprovider" },
+      { label: "ECSCluster", anchor: "ecscluster" },
+      { label: "ECSService", anchor: "ecsservice" },
+      { label: "ECSTaskDefinition", anchor: "ecstaskdefinition" }
+    ]
+  },
+  {
+    id: "efs",
+    label: "EFS",
+    href: "/docs/efs.html",
+    items: [
+      { label: "EFSAccessPoint", anchor: "efsaccesspoint" },
+      { label: "EFSFileSystem", anchor: "efsfilesystem" },
+      { label: "EFSMountTarget", anchor: "efsmounttarget" }
+    ]
+  },
+  {
+    id: "eks",
+    label: "EKS",
+    href: "/docs/eks.html",
+    items: [
+      { label: "EKSAccessEntry", anchor: "eksaccessentry" },
+      { label: "EKSAddon", anchor: "eksaddon" },
+      { label: "EKSCluster", anchor: "ekscluster" },
+      { label: "EKSFargateProfile", anchor: "eksfargateprofile" },
+      { label: "EKSIdentityProviderConfig", anchor: "eksidentityproviderconfig" },
+      { label: "EKSNodeGroup", anchor: "eksnodegroup" },
+      { label: "PodIdentityAssociation", anchor: "podidentityassociation" }
+    ]
+  },
+  {
+    id: "elasticache",
+    label: "ElastiCache",
+    href: "/docs/elasticache.html",
+    items: [
+      { label: "ElastiCacheParameterGroup", anchor: "elasticacheparametergroup" },
+      { label: "ElastiCacheReplicationGroup", anchor: "elasticachereplicationgroup" },
+      { label: "ElastiCacheServerlessCache", anchor: "elasticacheserverlesscache" },
+      { label: "ElastiCacheSubnetGroup", anchor: "elasticachesubnetgroup" }
+    ]
+  },
+  {
+    id: "eventbridge",
+    label: "EventBridge",
+    href: "/docs/eventbridge.html",
+    items: [
+      { label: "ECSScheduledTask", anchor: "ecsscheduledtask" },
+      { label: "EventBus", anchor: "eventbus" },
+      { label: "EventRule", anchor: "eventrule" },
+      { label: "EventTarget", anchor: "eventtarget" }
+    ]
+  },
+  {
+    id: "pipes",
+    label: "EventBridge Pipes",
+    href: "/docs/pipes.html",
+    items: [
+      { label: "EventBridgePipe", anchor: "eventbridgepipe" }
+    ]
+  },
+  {
+    id: "scheduler",
+    label: "EventBridge Scheduler",
+    href: "/docs/scheduler.html",
+    items: [
+      { label: "Schedule", anchor: "schedule" },
+      { label: "ScheduleGroup", anchor: "schedulegroup" }
+    ]
+  },
+  {
+    id: "glue",
+    label: "Glue",
+    href: "/docs/glue.html",
+    items: [
+      { label: "GlueConnection", anchor: "glueconnection" },
+      { label: "GlueCrawler", anchor: "gluecrawler" },
+      { label: "GlueDatabase", anchor: "gluedatabase" },
+      { label: "GlueJob", anchor: "gluejob" },
+      { label: "GlueTrigger", anchor: "gluetrigger" }
+    ]
+  },
+  {
+    id: "guardduty",
+    label: "GuardDuty",
+    href: "/docs/guardduty.html",
+    items: [
+      { label: "GuardDutyDetector", anchor: "guarddutydetector" }
+    ]
+  },
+  {
+    id: "iam",
+    label: "IAM",
+    href: "/docs/iam.html",
+    items: [
+      { label: "IAMGroup", anchor: "iamgroup" },
+      { label: "IAMGroupMembership", anchor: "iamgroupmembership" },
+      { label: "IAMGroupPolicyAttachment", anchor: "iamgrouppolicyattachment" },
+      { label: "IAMInstanceProfile", anchor: "iaminstanceprofile" },
+      { label: "IAMOIDCProvider", anchor: "iamoidcprovider" },
+      { label: "IAMPolicy", anchor: "iampolicy" },
+      { label: "IAMPolicyAttachment", anchor: "iampolicyattachment" },
+      { label: "IAMRole", anchor: "iamrole" },
+      { label: "IAMRolePolicy", anchor: "iamrolepolicy" },
+      { label: "IAMSAMLProvider", anchor: "iamsamlprovider" },
+      { label: "IAMUser", anchor: "iamuser" }
+    ]
+  },
+  {
+    id: "ssoadmin",
+    label: "IAM Identity Center",
+    href: "/docs/ssoadmin.html",
+    items: [
+      { label: "PermissionSet", anchor: "permissionset" },
+      { label: "SSOAssignment", anchor: "ssoassignment" }
+    ]
+  },
+  {
+    id: "inspector2",
+    label: "Inspector",
+    href: "/docs/inspector2.html",
+    items: [
+      { label: "InspectorEnabler", anchor: "inspectorenabler" }
+    ]
+  },
+  {
+    id: "kinesis",
+    label: "Kinesis",
+    href: "/docs/kinesis.html",
+    items: [
+      { label: "KinesisStream", anchor: "kinesisstream" },
+      { label: "KinesisStreamConsumer", anchor: "kinesisstreamconsumer" }
+    ]
+  },
+  {
+    id: "kms",
+    label: "KMS",
+    href: "/docs/kms.html",
+    items: [
+      { label: "KMSAlias", anchor: "kmsalias" },
+      { label: "KMSGrant", anchor: "kmsgrant" },
+      { label: "KMSKey", anchor: "kmskey" },
+      { label: "KMSKeyPolicy", anchor: "kmskeypolicy" }
+    ]
+  },
+  {
+    id: "lambda",
+    label: "Lambda",
+    href: "/docs/lambda.html",
+    items: [
+      { label: "LambdaAlias", anchor: "lambdaalias" },
+      { label: "LambdaCodeSigningConfig", anchor: "lambdacodesigningconfig" },
+      { label: "LambdaEventInvokeConfig", anchor: "lambdaeventinvokeconfig" },
+      { label: "LambdaEventSourceMapping", anchor: "lambdaeventsourcemapping" },
+      { label: "LambdaFunction", anchor: "lambdafunction" },
+      { label: "LambdaFunctionURL", anchor: "lambdafunctionurl" },
+      { label: "LambdaLayerVersion", anchor: "lambdalayerversion" },
+      { label: "LambdaPermission", anchor: "lambdapermission" },
+      { label: "LambdaProvisionedConcurrency", anchor: "lambdaprovisionedconcurrency" }
+    ]
+  },
+  {
+    id: "elbv2",
+    label: "Load Balancing",
+    href: "/docs/elbv2.html",
+    items: [
+      { label: "Listener", anchor: "listener" },
+      { label: "ListenerRule", anchor: "listenerrule" },
+      { label: "LoadBalancer", anchor: "loadbalancer" },
+      { label: "TargetGroup", anchor: "targetgroup" }
+    ]
+  },
+  {
+    id: "grafana",
+    label: "Managed Grafana",
+    href: "/docs/grafana.html",
+    items: [
+      { label: "GrafanaWorkspace", anchor: "grafanaworkspace" }
+    ]
+  },
+  {
+    id: "amp",
+    label: "Managed Prometheus",
+    href: "/docs/amp.html",
+    items: [
+      { label: "PrometheusAlertManagerDefinition", anchor: "prometheusalertmanagerdefinition" },
+      { label: "PrometheusRuleGroupsNamespace", anchor: "prometheusrulegroupsnamespace" },
+      { label: "PrometheusWorkspace", anchor: "prometheusworkspace" }
+    ]
+  },
+  {
+    id: "memorydb",
+    label: "MemoryDB",
+    href: "/docs/memorydb.html",
+    items: [
+      { label: "MemoryDBCluster", anchor: "memorydbcluster" }
+    ]
+  },
+  {
+    id: "kafka",
+    label: "MSK",
+    href: "/docs/kafka.html",
+    items: [
+      { label: "MSKCluster", anchor: "mskcluster" },
+      { label: "MSKConfiguration", anchor: "mskconfiguration" },
+      { label: "MSKServerlessCluster", anchor: "mskserverlesscluster" }
+    ]
+  },
+  {
+    id: "networkfirewall",
+    label: "Network Firewall",
+    href: "/docs/networkfirewall.html",
+    items: [
+      { label: "Firewall", anchor: "firewall" },
+      { label: "FirewallPolicy", anchor: "firewallpolicy" },
+      { label: "FirewallRuleGroup", anchor: "firewallrulegroup" }
+    ]
+  },
+  {
+    id: "opensearch",
+    label: "OpenSearch",
+    href: "/docs/opensearch.html",
+    items: [
+      { label: "OpenSearchDomain", anchor: "opensearchdomain" }
+    ]
+  },
+  {
+    id: "opensearchserverless",
+    label: "OpenSearch Serverless",
+    href: "/docs/opensearchserverless.html",
+    items: [
+      { label: "OpenSearchAccessPolicy", anchor: "opensearchaccesspolicy" },
+      { label: "OpenSearchServerlessCollection", anchor: "opensearchserverlesscollection" }
+    ]
+  },
+  {
+    id: "organizations",
+    label: "Organizations",
+    href: "/docs/organizations.html",
+    items: [
+      { label: "OrganizationsAccount", anchor: "organizationsaccount" },
+      { label: "OrganizationsOU", anchor: "organizationsou" },
+      { label: "OrganizationsPolicy", anchor: "organizationspolicy" },
+      { label: "OrganizationsPolicyAttachment", anchor: "organizationspolicyattachment" }
+    ]
+  },
+  {
+    id: "ram",
+    label: "RAM",
+    href: "/docs/ram.html",
+    items: [
+      { label: "ResourceShare", anchor: "resourceshare" }
+    ]
+  },
+  {
+    id: "rds",
+    label: "RDS & Aurora",
+    href: "/docs/rds.html",
+    items: [
+      { label: "DBCluster", anchor: "dbcluster" },
+      { label: "DBClusterParameterGroup", anchor: "dbclusterparametergroup" },
+      { label: "DBInstance", anchor: "dbinstance" },
+      { label: "DBOptionGroup", anchor: "dboptiongroup" },
+      { label: "DBParameterGroup", anchor: "dbparametergroup" },
+      { label: "DBProxy", anchor: "dbproxy" },
+      { label: "DBSnapshot", anchor: "dbsnapshot" },
+      { label: "DBSubnetGroup", anchor: "dbsubnetgroup" },
+      { label: "RDSEventSubscription", anchor: "rdseventsubscription" },
+      { label: "RDSGlobalCluster", anchor: "rdsglobalcluster" }
+    ]
+  },
+  {
+    id: "redshift",
+    label: "Redshift",
+    href: "/docs/redshift.html",
+    items: [
+      { label: "RedshiftCluster", anchor: "redshiftcluster" },
+      { label: "RedshiftParameterGroup", anchor: "redshiftparametergroup" },
+      { label: "RedshiftSubnetGroup", anchor: "redshiftsubnetgroup" }
+    ]
+  },
+  {
+    id: "route53",
+    label: "Route 53",
+    href: "/docs/route53.html",
+    items: [
+      { label: "DelegationSignerRecord", anchor: "delegationsignerrecord" },
+      { label: "HealthCheck", anchor: "healthcheck" },
+      { label: "HostedZone", anchor: "hostedzone" },
+      { label: "RecordSet", anchor: "recordset" }
+    ]
+  },
+  {
+    id: "route53resolver",
+    label: "Route 53 Resolver",
+    href: "/docs/route53resolver.html",
+    items: [
+      { label: "ResolverEndpoint", anchor: "resolverendpoint" },
+      { label: "ResolverRule", anchor: "resolverrule" }
+    ]
+  },
+  {
+    id: "s3",
+    label: "S3",
+    href: "/docs/s3.html",
+    items: [
+      { label: "S3Bucket", anchor: "s3bucket" },
+      { label: "S3BucketCORS", anchor: "s3bucketcors" },
+      { label: "S3BucketLifecycle", anchor: "s3bucketlifecycle" },
+      { label: "S3BucketNotification", anchor: "s3bucketnotification" },
+      { label: "S3BucketPolicy", anchor: "s3bucketpolicy" },
+      { label: "S3BucketReplication", anchor: "s3bucketreplication" }
+    ]
+  },
+  {
+    id: "s3control",
+    label: "S3 Control",
+    href: "/docs/s3control.html",
+    items: [
+      { label: "S3AccessPoint", anchor: "s3accesspoint" }
+    ]
+  },
+  {
+    id: "secretsmanager",
+    label: "Secrets Manager",
+    href: "/docs/secretsmanager.html",
+    items: [
+      { label: "Secret", anchor: "secret" },
+      { label: "SecretRotation", anchor: "secretrotation" }
+    ]
+  },
+  {
+    id: "securityhub",
+    label: "Security Hub",
+    href: "/docs/securityhub.html",
+    items: [
+      { label: "SecurityHubAccount", anchor: "securityhubaccount" },
+      { label: "SecurityHubStandard", anchor: "securityhubstandard" }
+    ]
+  },
+  {
+    id: "servicecatalog",
+    label: "Service Catalog",
+    href: "/docs/servicecatalog.html",
+    items: [
+      { label: "SCPortfolio", anchor: "scportfolio" },
+      { label: "SCPortfolioProductAssociation", anchor: "scportfolioproductassociation" },
+      { label: "SCProduct", anchor: "scproduct" }
+    ]
+  },
+  {
+    id: "sesv2",
+    label: "SES",
+    href: "/docs/sesv2.html",
+    items: [
+      { label: "SESConfigurationSet", anchor: "sesconfigurationset" },
+      { label: "SESEmailIdentity", anchor: "sesemailidentity" }
+    ]
+  },
+  {
+    id: "shield",
+    label: "Shield",
+    href: "/docs/shield.html",
+    items: [
+      { label: "ShieldProtection", anchor: "shieldprotection" }
+    ]
+  },
+  {
+    id: "sns",
+    label: "SNS",
+    href: "/docs/sns.html",
+    items: [
+      { label: "SNSSubscription", anchor: "snssubscription" },
+      { label: "SNSTopic", anchor: "snstopic" }
+    ]
+  },
+  {
+    id: "sqs",
+    label: "SQS",
+    href: "/docs/sqs.html",
+    items: [
+      { label: "SQSQueue", anchor: "sqsqueue" }
+    ]
+  },
+  {
+    id: "ssm",
+    label: "SSM",
+    href: "/docs/ssm.html",
+    items: [
+      { label: "SSMAssociation", anchor: "ssmassociation" },
+      { label: "SSMDocument", anchor: "ssmdocument" },
+      { label: "SSMMaintenanceWindow", anchor: "ssmmaintenancewindow" },
+      { label: "SSMParameter", anchor: "ssmparameter" },
+      { label: "SSMPatchBaseline", anchor: "ssmpatchbaseline" }
+    ]
+  },
+  {
+    id: "sfn",
+    label: "Step Functions",
+    href: "/docs/sfn.html",
+    items: [
+      { label: "Activity", anchor: "activity" },
+      { label: "StateMachine", anchor: "statemachine" }
+    ]
+  },
+  {
+    id: "vpclattice",
+    label: "VPC Lattice",
+    href: "/docs/vpclattice.html",
+    items: [
+      { label: "LatticeListener", anchor: "latticelistener" },
+      { label: "LatticeService", anchor: "latticeservice" },
+      { label: "LatticeServiceNetwork", anchor: "latticeservicenetwork" },
+      { label: "LatticeServiceNetworkServiceAssociation", anchor: "latticeservicenetworkserviceassociation" },
+      { label: "LatticeServiceNetworkVpcAssociation", anchor: "latticeservicenetworkvpcassociation" },
+      { label: "LatticeTargetGroup", anchor: "latticetargetgroup" }
+    ]
+  },
+  {
+    id: "wafv2",
+    label: "WAFv2",
+    href: "/docs/wafv2.html",
+    items: [
+      { label: "IPSet", anchor: "ipset" },
+      { label: "WAFRegexPatternSet", anchor: "wafregexpatternset" },
+      { label: "WAFRuleGroup", anchor: "wafrulegroup" },
+      { label: "WebACL", anchor: "webacl" }
+    ]
+  },
+  {
+    id: "xray",
+    label: "X-Ray",
+    href: "/docs/xray.html",
+    items: [
+      { label: "XRayGroup", anchor: "xraygroup" },
+      { label: "XRaySamplingRule", anchor: "xraysamplingrule" }
+    ]
+  }
 ];
 
 /* ── Determine current page ──────────────────────────────────────────────────── */

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup — konfig-konector Docs</title>
+  <meta name="description" content="API reference for BackupPlan, BackupSelection, BackupVault." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5L12 2.5z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">backup</span>
+    </div>
+
+    <h1 class="docs-page-title">Backup</h1>
+    <p class="docs-page-subtitle">3 resource kinds. Generated from the operator's CRD schemas.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <section id="backupplan" class="resource-section">
+      <h2>BackupPlan <a href="#backupplan" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">BackupPlan is the Schema for managing AWS Backup plans.</p>
+      <p class="resource-desc"><code>kubectl get backupplans</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/backup/backupplan.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BackupPlan — Backup
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/backup.html#backupplan
+apiVersion: aws.konfig.io/v1alpha1
+kind: BackupPlan
+metadata:
+  name: example-backupplan
+  namespace: default
+spec:
+  planName: example-backupplan
+  rules:
+  - completionWindowMinutes: 1
+    lifecycle:
+      deleteAfterDays: 7
+      moveToColdStorageAfterDays: 7
+    ruleName: example-backupplan
+    scheduleExpression: example
+    startWindowMinutes: 1
+    targetBackupVaultName: example-backupplan
+    targetBackupVaultRef: example
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>planName</code></td><td>string</td><td><span class="req">yes</span></td><td>PlanName is the display name of the backup plan.</td></tr>
+<tr><td><code>rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Rules are the scheduled backup tasks in this plan.</td></tr>
+<tr><td><code>rules[].completionWindowMinutes</code></td><td>integer</td><td>—</td><td>CompletionWindowMinutes is the window after a backup job starts before it must complete or be canceled.</td></tr>
+<tr><td><code>rules[].lifecycle</code></td><td>object</td><td>—</td><td>Lifecycle defines cold storage transition and expiry for recovery points.</td></tr>
+<tr><td><code>rules[].lifecycle.deleteAfterDays</code></td><td>integer</td><td>—</td><td>DeleteAfterDays is the number of days after creation that a recovery point is deleted.</td></tr>
+<tr><td><code>rules[].lifecycle.moveToColdStorageAfterDays</code></td><td>integer</td><td>—</td><td>MoveToColdStorageAfterDays is the number of days after creation that a recovery point is moved to cold storage.</td></tr>
+<tr><td><code>rules[].ruleName</code></td><td>string</td><td><span class="req">yes</span></td><td>RuleName is a display name for the rule.</td></tr>
+<tr><td><code>rules[].scheduleExpression</code></td><td>string</td><td>—</td><td>ScheduleExpression is a CRON expression in UTC specifying when Backup initiates a backup job.</td></tr>
+<tr><td><code>rules[].startWindowMinutes</code></td><td>integer</td><td>—</td><td>StartWindowMinutes is the window after a backup is scheduled before a job is canceled if it doesn't start.</td></tr>
+<tr><td><code>rules[].targetBackupVaultName</code></td><td>string</td><td>—</td><td>TargetBackupVaultName is the AWS name of the vault where backups are stored.</td></tr>
+<tr><td><code>rules[].targetBackupVaultRef</code></td><td>string</td><td>—</td><td>TargetBackupVaultRef references a BackupVault CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply to the plan.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>planArn</code></td><td>string</td><td>—</td><td>PlanARN is the ARN of the backup plan.</td></tr>
+<tr><td><code>planId</code></td><td>string</td><td>—</td><td>PlanID uniquely identifies the backup plan.</td></tr>
+<tr><td><code>versionId</code></td><td>string</td><td>—</td><td>VersionID is the current version of the backup plan.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="backupselection" class="resource-section">
+      <h2>BackupSelection <a href="#backupselection" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">BackupSelection is the Schema for managing AWS Backup selections.</p>
+      <p class="resource-desc"><code>kubectl get backupselections</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/backup/backupselection.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BackupSelection — Backup
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/backup.html#backupselection
+apiVersion: aws.konfig.io/v1alpha1
+kind: BackupSelection
+metadata:
+  name: example-backupselection
+  namespace: default
+spec:
+  iamRoleArn: arn:aws:iam::123456789012:role/example-role
+  iamRoleRef:
+    name: example-iamrole
+  listOfTags:
+  - key: example
+    value: example
+  planRef: example
+  resources:
+  - example
+  selectionName: example-backupselection
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>iamRoleArn</code></td><td>string</td><td>—</td><td>IAMRoleARN is the IAM role ARN Backup uses to authenticate when backing up resources.</td></tr>
+<tr><td><code>iamRoleRef</code></td><td>object</td><td>—</td><td>IAMRoleRef references an IAMRole CR whose ARN to use.</td></tr>
+<tr><td><code>iamRoleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>iamRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>iamRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>listOfTags</code></td><td>array&lt;object&gt;</td><td>—</td><td>ListOfTags assigns resources matching any of these StringEquals tag conditions (OR logic).</td></tr>
+<tr><td><code>listOfTags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td>Key is the tag key.</td></tr>
+<tr><td><code>listOfTags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td>Value is the tag value.</td></tr>
+<tr><td><code>planRef</code></td><td>string</td><td><span class="req">yes</span></td><td>PlanRef is the name of a BackupPlan CR in the same namespace.</td></tr>
+<tr><td><code>resources</code></td><td>array&lt;string&gt;</td><td>—</td><td>Resources are ARNs of resources to assign to the backup plan.</td></tr>
+<tr><td><code>selectionName</code></td><td>string</td><td><span class="req">yes</span></td><td>SelectionName is the display name of the resource selection.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>planId</code></td><td>string</td><td>—</td><td>PlanID is the backup plan the selection is attached to.</td></tr>
+<tr><td><code>selectionId</code></td><td>string</td><td>—</td><td>SelectionID uniquely identifies the backup selection.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="backupvault" class="resource-section">
+      <h2>BackupVault <a href="#backupvault" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">BackupVault is the Schema for managing AWS Backup vaults.</p>
+      <p class="resource-desc"><code>kubectl get backupvaults</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/backup/backupvault.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BackupVault — Backup
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/backup.html#backupvault
+apiVersion: aws.konfig.io/v1alpha1
+kind: BackupVault
+metadata:
+  name: example-backupvault
+  namespace: default
+spec:
+  kmsKeyArn: arn:aws:iam::123456789012:role/example-role
+  tags:
+    environment: dev
+    team: platform
+  vaultName: example-backupvault
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>kmsKeyArn</code></td><td>string</td><td>—</td><td>KMSKeyARN is the server-side encryption key used to protect backups.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply to the vault.</td></tr>
+<tr><td><code>vaultName</code></td><td>string</td><td><span class="req">yes</span></td><td>VaultName is the name of the backup vault.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>vaultArn</code></td><td>string</td><td>—</td><td>VaultARN is the ARN of the backup vault.</td></tr>
+</tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

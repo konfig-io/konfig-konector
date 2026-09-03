@@ -23,8 +23,10 @@ Think of it as [Google Config Connector](https://cloud.google.com/config-connect
 The operator ships **241 resource kinds across ~74 AWS services** — IAM, EC2/VPC,
 RDS/Aurora, S3, DynamoDB, Lambda, ECS, EKS, ElastiCache, SQS/SNS/EventBridge,
 Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
-List every kind with `konfig-export --list`, or browse the per-service guides in
-[`docs/reference/`](docs/reference/). A few highlights:
+List every kind with `konfig-export --list`, browse the generated API reference
+at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
+full-options examples in [`examples/`](examples/) — one per kind, generated from
+the CRD schemas (`make gen-reference`). A few highlights:
 
 | Kind | AWS Service | Notes |
 |---|---|---|

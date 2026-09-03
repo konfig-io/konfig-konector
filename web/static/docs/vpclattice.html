@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VPC Lattice — konfig-konector Docs</title>
+  <meta name="description" content="API reference for LatticeListener, LatticeService, LatticeServiceNetwork, LatticeServiceNetworkServiceAssociation, LatticeServiceNetworkVpcAssociation, LatticeTargetGroup." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5L12 2.5z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">vpclattice</span>
+    </div>
+
+    <h1 class="docs-page-title">VPC Lattice</h1>
+    <p class="docs-page-subtitle">6 resource kinds. Generated from the operator's CRD schemas.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <section id="latticelistener" class="resource-section">
+      <h2>LatticeListener <a href="#latticelistener" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeListener is the Schema for managing VPC Lattice listeners.</p>
+      <p class="resource-desc"><code>kubectl get latticelisteners</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticelistener.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeListener — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticelistener
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeListener
+metadata:
+  name: example-latticelistener
+  namespace: default
+spec:
+  defaultAction:
+    fixedResponse:
+      statusCode: 100
+    forward:
+    - targetGroupRef:
+        name: example-targetgroup
+      weight: 1
+  name: example-latticelistener
+  port: 1
+  protocol: HTTP
+  serviceRef:
+    name: example-service
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>defaultAction</code></td><td>object</td><td><span class="req">yes</span></td><td>DefaultAction taken when no listener rule matches.</td></tr>
+<tr><td><code>defaultAction.fixedResponse</code></td><td>object</td><td>—</td><td>FixedResponse returns a fixed HTTP status code.</td></tr>
+<tr><td><code>defaultAction.fixedResponse.statusCode</code></td><td>integer</td><td><span class="req">yes</span></td><td>StatusCode is the HTTP response code to return.</td></tr>
+<tr><td><code>defaultAction.forward</code></td><td>array&lt;object&gt;</td><td>—</td><td>Forward routes requests to one or more target groups.</td></tr>
+<tr><td><code>defaultAction.forward[].targetGroupRef</code></td><td>object</td><td><span class="req">yes</span></td><td>TargetGroupRef references the target group to forward to.</td></tr>
+<tr><td><code>defaultAction.forward[].targetGroupRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS target group ID or ARN.</td></tr>
+<tr><td><code>defaultAction.forward[].targetGroupRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeTargetGroup CR in the same namespace.</td></tr>
+<tr><td><code>defaultAction.forward[].weight</code></td><td>integer</td><td>—</td><td>Weight determines how requests are distributed among target groups.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the listener.</td></tr>
+<tr><td><code>port</code></td><td>integer</td><td>—</td><td>Port on which the listener accepts traffic.</td></tr>
+<tr><td><code>protocol</code></td><td>enum</td><td><span class="req">yes</span></td><td>Protocol of the listener. Allowed: <code>HTTP, HTTPS</code></td></tr>
+<tr><td><code>serviceRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceRef references the service the listener belongs to.</td></tr>
+<tr><td><code>serviceRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service ID or ARN.</td></tr>
+<tr><td><code>serviceRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeService CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the listener.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the listener.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>serviceId</code></td><td>string</td><td>—</td><td>ServiceID is the identifier of the owning service (needed for delete).</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="latticeservice" class="resource-section">
+      <h2>LatticeService <a href="#latticeservice" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeService is the Schema for managing VPC Lattice services.</p>
+      <p class="resource-desc"><code>kubectl get latticeservices</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticeservice.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeService — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticeservice
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeService
+metadata:
+  name: example-latticeservice
+  namespace: default
+spec:
+  authType: NONE
+  certificateArn: arn:aws:iam::123456789012:role/example-role
+  customDomainName: example-latticeservice
+  name: example-latticeservice
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>authType</code></td><td>enum</td><td>—</td><td>AuthType determines how clients are authenticated. Allowed: <code>NONE, AWS_IAM</code></td></tr>
+<tr><td><code>certificateArn</code></td><td>string</td><td>—</td><td>CertificateARN is the ARN of the ACM certificate for the custom domain.</td></tr>
+<tr><td><code>customDomainName</code></td><td>string</td><td>—</td><td>CustomDomainName is the custom domain name of the service.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the service.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the service.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>dnsName</code></td><td>string</td><td>—</td><td>DNSName is the DNS name that clients use to reach the service.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the service.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the lifecycle status reported by AWS.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="latticeservicenetwork" class="resource-section">
+      <h2>LatticeServiceNetwork <a href="#latticeservicenetwork" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeServiceNetwork is the Schema for managing VPC Lattice service networks.</p>
+      <p class="resource-desc"><code>kubectl get latticeservicenetworks</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticeservicenetwork.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeServiceNetwork — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticeservicenetwork
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeServiceNetwork
+metadata:
+  name: example-latticeservicenetwork
+  namespace: default
+spec:
+  authType: NONE
+  name: example-latticeservicenetwork
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>authType</code></td><td>enum</td><td>—</td><td>AuthType determines how clients are authenticated. Allowed: <code>NONE, AWS_IAM</code></td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the service network.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the service network.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the service network.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="latticeservicenetworkserviceassociation" class="resource-section">
+      <h2>LatticeServiceNetworkServiceAssociation <a href="#latticeservicenetworkserviceassociation" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeServiceNetworkServiceAssociation is the Schema for managing VPC Lattice service network to service associations.</p>
+      <p class="resource-desc"><code>kubectl get latticeservicenetworkserviceassociations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticeservicenetworkserviceassociation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeServiceNetworkServiceAssociation — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticeservicenetworkserviceassociation
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeServiceNetworkServiceAssociation
+metadata:
+  name: example-latticeservicenetworkserviceassociation
+  namespace: default
+spec:
+  serviceNetworkRef:
+    name: example-servicenetwork
+  serviceRef:
+    name: example-service
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>serviceNetworkRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceNetworkRef references the service network to associate.</td></tr>
+<tr><td><code>serviceNetworkRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service network ID or ARN.</td></tr>
+<tr><td><code>serviceNetworkRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeServiceNetwork CR in the same namespace.</td></tr>
+<tr><td><code>serviceRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceRef references the service to associate.</td></tr>
+<tr><td><code>serviceRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service ID or ARN.</td></tr>
+<tr><td><code>serviceRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeService CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the association.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the association.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the lifecycle status reported by AWS.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="latticeservicenetworkvpcassociation" class="resource-section">
+      <h2>LatticeServiceNetworkVpcAssociation <a href="#latticeservicenetworkvpcassociation" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeServiceNetworkVpcAssociation is the Schema for managing VPC Lattice service network to VPC associations.</p>
+      <p class="resource-desc"><code>kubectl get latticeservicenetworkvpcassociations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticeservicenetworkvpcassociation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeServiceNetworkVpcAssociation — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticeservicenetworkvpcassociation
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeServiceNetworkVpcAssociation
+metadata:
+  name: example-latticeservicenetworkvpcassociation
+  namespace: default
+spec:
+  securityGroupRefs:
+  - name: example-securitygrouprefs
+  serviceNetworkRef:
+    name: example-servicenetwork
+  tags:
+    environment: dev
+    team: platform
+  vpcRef:
+    name: example-vpc
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>securityGroupRefs</code></td><td>array&lt;object&gt;</td><td>—</td><td>SecurityGroupRefs are security groups to apply to the association.</td></tr>
+<tr><td><code>securityGroupRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Security Group ID (e.g.</td></tr>
+<tr><td><code>securityGroupRefs[].name</code></td><td>string</td><td>—</td><td>Name of a SecurityGroup CR in the same namespace.</td></tr>
+<tr><td><code>serviceNetworkRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceNetworkRef references the service network to associate.</td></tr>
+<tr><td><code>serviceNetworkRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service network ID or ARN.</td></tr>
+<tr><td><code>serviceNetworkRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeServiceNetwork CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+<tr><td><code>vpcRef</code></td><td>object</td><td><span class="req">yes</span></td><td>VPCRef references the VPC to associate.</td></tr>
+<tr><td><code>vpcRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS VPC ID (e.g.</td></tr>
+<tr><td><code>vpcRef.name</code></td><td>string</td><td>—</td><td>Name of a VPC CR in the same namespace.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the association.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the association.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the lifecycle status reported by AWS.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="latticetargetgroup" class="resource-section">
+      <h2>LatticeTargetGroup <a href="#latticetargetgroup" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">LatticeTargetGroup is the Schema for managing VPC Lattice target groups.</p>
+      <p class="resource-desc"><code>kubectl get latticetargetgroups</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/latticetargetgroup.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LatticeTargetGroup — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#latticetargetgroup
+apiVersion: aws.konfig.io/v1alpha1
+kind: LatticeTargetGroup
+metadata:
+  name: example-latticetargetgroup
+  namespace: default
+spec:
+  config:
+    healthCheck:
+      path: example
+      protocol: HTTP
+    port: 1
+    protocol: HTTP
+    vpcRef:
+      name: example-vpc
+  name: example-latticetargetgroup
+  tags:
+    environment: dev
+    team: platform
+  type: INSTANCE
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>config</code></td><td>object</td><td>—</td><td>Config holds the protocol/port/VPC configuration.</td></tr>
+<tr><td><code>config.healthCheck</code></td><td>object</td><td>—</td><td>HealthCheck configures target health checks.</td></tr>
+<tr><td><code>config.healthCheck.path</code></td><td>string</td><td>—</td><td>Path is the destination for health checks on the targets.</td></tr>
+<tr><td><code>config.healthCheck.protocol</code></td><td>enum</td><td>—</td><td>Protocol used for health checks (HTTP or HTTPS). Allowed: <code>HTTP, HTTPS</code></td></tr>
+<tr><td><code>config.port</code></td><td>integer</td><td>—</td><td>Port on which the targets listen.</td></tr>
+<tr><td><code>config.protocol</code></td><td>enum</td><td>—</td><td>Protocol to use for routing traffic to the targets. Allowed: <code>HTTP, HTTPS, TCP</code></td></tr>
+<tr><td><code>config.vpcRef</code></td><td>object</td><td>—</td><td>VPCRef references the VPC of the targets.</td></tr>
+<tr><td><code>config.vpcRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS VPC ID (e.g.</td></tr>
+<tr><td><code>config.vpcRef.name</code></td><td>string</td><td>—</td><td>Name of a VPC CR in the same namespace.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the target group.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type of target group. Allowed: <code>INSTANCE, IP, LAMBDA, ALB</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the target group.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID is the unique identifier of the target group.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the lifecycle status reported by AWS.</td></tr>
+</tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

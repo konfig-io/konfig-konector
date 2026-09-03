@@ -205,3 +205,8 @@ GOBIN=$(LOCALBIN) go install $${package} ;\
 mv "$$(echo "$(1)" | sed "s/-$(3)$$//")" $(1) ;\
 }
 endef
+
+.PHONY: gen-reference
+gen-reference: ## Regenerate examples/ and the website API reference from CRD schemas.
+	python3 hack/gen-reference.py
+	NODE_PATH=$${KONCIERGE_NODE_MODULES:-$$HOME/projects/konfig-koncierge/node_modules} node hack/validate-examples.mjs --fix

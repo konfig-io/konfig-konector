@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto Scaling — konfig-konector Docs</title>
+  <meta name="description" content="API reference for AutoScalingGroup, ScalingPolicy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5L12 2.5z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">autoscaling</span>
+    </div>
+
+    <h1 class="docs-page-title">Auto Scaling</h1>
+    <p class="docs-page-subtitle">2 resource kinds. Generated from the operator's CRD schemas.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <section id="autoscalinggroup" class="resource-section">
+      <h2>AutoScalingGroup <a href="#autoscalinggroup" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">AutoScalingGroup is the Schema for managing EC2 Auto Scaling Groups.</p>
+      <p class="resource-desc"><code>kubectl get autoscalinggroups</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/autoscaling/autoscalinggroup.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># AutoScalingGroup — Auto Scaling
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/autoscaling.html#autoscalinggroup
+apiVersion: aws.konfig.io/v1alpha1
+kind: AutoScalingGroup
+metadata:
+  name: example-autoscalinggroup
+  namespace: default
+spec:
+  autoScalingGroupName: example-autoscalinggroup
+  desiredCapacity: 2
+  launchTemplateRef:
+    name: example-autoscalinggroup
+    version: &#x27;1.0&#x27;
+  maxSize: 1
+  minSize: 1
+  tags:
+    environment: dev
+    team: platform
+  targetGroupArns:
+  - example
+  vpcZoneIdentifier:
+  - name: example-vpczoneidentifier
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>autoScalingGroupName</code></td><td>string</td><td><span class="req">yes</span></td><td>AutoScalingGroupName is the name of the Auto Scaling group.</td></tr>
+<tr><td><code>desiredCapacity</code></td><td>integer</td><td>—</td><td>DesiredCapacity is the desired number of instances.</td></tr>
+<tr><td><code>launchTemplateRef</code></td><td>object</td><td><span class="req">yes</span></td><td>LaunchTemplateRef references the launch template to use.</td></tr>
+<tr><td><code>launchTemplateRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Launch Template ID.</td></tr>
+<tr><td><code>launchTemplateRef.name</code></td><td>string</td><td>—</td><td>Name is the name of a LaunchTemplate CR in the same namespace.</td></tr>
+<tr><td><code>launchTemplateRef.version</code></td><td>string</td><td>—</td><td>Version is the launch template version (e.g.</td></tr>
+<tr><td><code>maxSize</code></td><td>integer</td><td><span class="req">yes</span></td><td>MaxSize is the maximum number of instances.</td></tr>
+<tr><td><code>minSize</code></td><td>integer</td><td><span class="req">yes</span></td><td>MinSize is the minimum number of instances.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply (also propagated to instances).</td></tr>
+<tr><td><code>targetGroupArns</code></td><td>array&lt;string&gt;</td><td>—</td><td>TargetGroupARNs is the list of ALB/NLB target group ARNs to attach.</td></tr>
+<tr><td><code>vpcZoneIdentifier</code></td><td>array&lt;object&gt;</td><td>—</td><td>VPCZoneIdentifier is the list of subnet references for the ASG.</td></tr>
+<tr><td><code>vpcZoneIdentifier[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Subnet ID (e.g.</td></tr>
+<tr><td><code>vpcZoneIdentifier[].name</code></td><td>string</td><td>—</td><td>Name of a Subnet CR in the same namespace.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="scalingpolicy" class="resource-section">
+      <h2>ScalingPolicy <a href="#scalingpolicy" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">ScalingPolicy is the Schema for managing AutoScaling Scaling Policies.</p>
+      <p class="resource-desc"><code>kubectl get scalingpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/autoscaling/scalingpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ScalingPolicy — Auto Scaling
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/autoscaling.html#scalingpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: ScalingPolicy
+metadata:
+  name: example-scalingpolicy
+  namespace: default
+spec:
+  adjustmentType: ChangeInCapacity
+  autoScalingGroupRef:
+    name: example-autoscalinggroup
+  cooldown: 1
+  policyName: example-scalingpolicy
+  policyType: SimpleScaling
+  scalingAdjustment: 1
+  stepAdjustments:
+  - metricIntervalLowerBound: 1
+    metricIntervalUpperBound: 1
+    scalingAdjustment: 1
+  targetTrackingConfiguration:
+    disableScaleIn: false
+    predefinedMetricType: example
+    targetValue: 1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>adjustmentType</code></td><td>enum</td><td>—</td><td>AdjustmentType is the adjustment type (for SimpleScaling/StepScaling). Allowed: <code>ChangeInCapacity, ExactCapacity, PercentChangeInCapacity</code></td></tr>
+<tr><td><code>autoScalingGroupRef</code></td><td>object</td><td><span class="req">yes</span></td><td>AutoScalingGroupRef references the AutoScalingGroup CR.</td></tr>
+<tr><td><code>autoScalingGroupRef.name</code></td><td>string</td><td>—</td><td>Name of the resource in the same namespace.</td></tr>
+<tr><td><code>autoScalingGroupRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the resource.</td></tr>
+<tr><td><code>cooldown</code></td><td>integer</td><td>—</td><td>Cooldown is the cooldown period in seconds (for SimpleScaling).</td></tr>
+<tr><td><code>policyName</code></td><td>string</td><td><span class="req">yes</span></td><td>PolicyName is the name of the scaling policy.</td></tr>
+<tr><td><code>policyType</code></td><td>enum</td><td><span class="req">yes</span></td><td>PolicyType is the policy type. Allowed: <code>SimpleScaling, StepScaling, TargetTrackingScaling</code></td></tr>
+<tr><td><code>scalingAdjustment</code></td><td>integer</td><td>—</td><td>ScalingAdjustment is the adjustment value (for SimpleScaling).</td></tr>
+<tr><td><code>stepAdjustments</code></td><td>array&lt;object&gt;</td><td>—</td><td>StepAdjustments are the step adjustments (for StepScaling).</td></tr>
+<tr><td><code>stepAdjustments[].metricIntervalLowerBound</code></td><td>number</td><td>—</td><td>MetricIntervalLowerBound is the lower bound for the metric interval.</td></tr>
+<tr><td><code>stepAdjustments[].metricIntervalUpperBound</code></td><td>number</td><td>—</td><td>MetricIntervalUpperBound is the upper bound for the metric interval.</td></tr>
+<tr><td><code>stepAdjustments[].scalingAdjustment</code></td><td>integer</td><td><span class="req">yes</span></td><td>ScalingAdjustment is the amount by which to scale.</td></tr>
+<tr><td><code>targetTrackingConfiguration</code></td><td>object</td><td>—</td><td>TargetTrackingConfiguration defines target tracking (for TargetTrackingScaling).</td></tr>
+<tr><td><code>targetTrackingConfiguration.disableScaleIn</code></td><td>boolean</td><td>—</td><td>DisableScaleIn prevents scale-in when true.</td></tr>
+<tr><td><code>targetTrackingConfiguration.predefinedMetricType</code></td><td>string</td><td>—</td><td>PredefinedMetricType is a predefined metric (e.g.</td></tr>
+<tr><td><code>targetTrackingConfiguration.targetValue</code></td><td>number</td><td><span class="req">yes</span></td><td>TargetValue is the target value for the metric.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>policyArn</code></td><td>string</td><td>—</td><td>PolicyARN is the ARN of the scaling policy.</td></tr>
+</tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

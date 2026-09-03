@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EKS — konfig-konector Docs</title>
-  <meta name="description" content="API reference for EKSCluster, EKSNodeGroup, EKSAddon, EKSFargateProfile, EKSAccessEntry." />
+  <meta name="description" content="API reference for EKSAccessEntry, EKSAddon, EKSCluster, EKSFargateProfile, EKSIdentityProviderConfig, EKSNodeGroup, PodIdentityAssociation." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/docs.css" />
@@ -16,7 +16,7 @@
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="/">
-      <div class="nav-logo-icon">⚙</div>
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5L12 2.5z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
       konfig-konector
     </a>
     <ul class="nav-links">
@@ -24,7 +24,7 @@
       <li><a href="/#resources">Resources</a></li>
       <li><a href="/#quickstart">Quick Start</a></li>
       <li><a href="/docs/">Docs</a></li>
-      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub</a></li>
     </ul>
   </div>
 </nav>
@@ -41,544 +41,595 @@
     </div>
 
     <h1 class="docs-page-title">EKS</h1>
-    <p class="docs-page-subtitle">EKS clusters, managed node groups, addons, Fargate profiles, and access entries.</p>
+    <p class="docs-page-subtitle">7 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
       <code>aws.konfig.io/v1alpha1</code>
     </div>
 
-    <!-- EKSCluster -->
-    <section id="ekscluster" class="resource-section">
-      <h2>EKSCluster <a href="#ekscluster" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
-      <p class="resource-desc">Creates and manages an EKS control plane. Supports full VPC configuration, control plane logging, envelope encryption, access configuration, Kubernetes network config, and upgrade policy.</p>
-      <div class="resource-alert">⏱ Async — EKS cluster creation takes 10–15 minutes. Controller polls every 30 seconds until the cluster reaches the <code>ACTIVE</code> state.</div>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterName</td><td>string</td><td><span class="req">✅</span></td><td>Unique name for the EKS cluster. Immutable after creation.</td></tr>
-            <tr><td>version</td><td>string</td><td></td><td>Kubernetes version (e.g. <code>1.30</code>). Upgrades trigger an async update.</td></tr>
-            <tr><td>roleArn</td><td>string</td><td></td><td>IAM role ARN for the cluster control plane. Exactly one of <code>roleArn</code> or <code>roleRef.name</code> required.</td></tr>
-            <tr><td>roleRef.name</td><td>string</td><td></td><td>Name of the <code>IAMRole</code> CR to use as the cluster role.</td></tr>
-            <tr><td>resourcesVpcConfig.subnetRefs</td><td>[]SubnetRef</td><td><span class="req">✅</span></td><td>Subnet CR names or IDs. At least two subnets in different AZs required.</td></tr>
-            <tr><td>resourcesVpcConfig.securityGroupRefs</td><td>[]string</td><td></td><td>Additional security group CR names for the cluster ENIs.</td></tr>
-            <tr><td>resourcesVpcConfig.endpointPublicAccess</td><td>bool</td><td></td><td>Allow public access to the Kubernetes API server. Default: true.</td></tr>
-            <tr><td>resourcesVpcConfig.endpointPrivateAccess</td><td>bool</td><td></td><td>Allow private (VPC-internal) access to the Kubernetes API server. Default: false.</td></tr>
-            <tr><td>resourcesVpcConfig.publicAccessCidrs</td><td>[]string</td><td></td><td>CIDRs allowed to access the public API endpoint. Default: <code>["0.0.0.0/0"]</code>.</td></tr>
-            <tr><td>logging.enabledTypes</td><td>[]string</td><td></td><td>Control plane log types to send to CloudWatch: <code>api</code>, <code>audit</code>, <code>authenticator</code>, <code>controllerManager</code>, <code>scheduler</code>.</td></tr>
-            <tr><td>encryptionConfig.providerKeyArn</td><td>string</td><td></td><td>KMS key ARN for envelope encryption of Kubernetes secrets. Immutable.</td></tr>
-            <tr><td>encryptionConfig.resources</td><td>[]string</td><td></td><td>Resources to encrypt (typically <code>["secrets"]</code>). Immutable.</td></tr>
-            <tr><td>accessConfig.authenticationMode</td><td>string</td><td></td><td><code>API</code>, <code>API_AND_CONFIG_MAP</code>, or <code>CONFIG_MAP</code>. Required for <code>EKSAccessEntry</code>.</td></tr>
-            <tr><td>accessConfig.bootstrapClusterCreatorAdminPermissions</td><td>bool</td><td></td><td>Grant the cluster creator cluster-admin permissions via an access entry. Default: true.</td></tr>
-            <tr><td>kubernetesNetworkConfig.serviceIpv4Cidr</td><td>string</td><td></td><td>CIDR for Kubernetes service IPs (e.g. <code>172.20.0.0/16</code>). Immutable.</td></tr>
-            <tr><td>kubernetesNetworkConfig.ipFamily</td><td>string</td><td></td><td><code>ipv4</code> or <code>ipv6</code>. Immutable after creation.</td></tr>
-            <tr><td>upgradePolicy.supportType</td><td>string</td><td></td><td><code>STANDARD</code> or <code>EXTENDED</code> support. Extended support provides longer patch windows. Mutable.</td></tr>
-            <tr><td>bootstrapSelfManagedAddons</td><td>bool</td><td></td><td>Bootstrap self-managed addons (kube-proxy, CoreDNS, vpc-cni). Default: true. Immutable.</td></tr>
-            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the cluster.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterArn</td><td>The ARN of the EKS cluster.</td></tr>
-            <tr><td>endpoint</td><td>The Kubernetes API server endpoint URL.</td></tr>
-            <tr><td>version</td><td>The current Kubernetes version.</td></tr>
-            <tr><td>status</td><td>Cluster status: <code>CREATING</code>, <code>ACTIVE</code>, <code>DELETING</code>, <code>FAILED</code>, <code>UPDATING</code>.</td></tr>
-            <tr><td>certificateAuthority</td><td>Base64-encoded certificate authority data for kubeconfig.</td></tr>
-            <tr><td>oidcIssuer</td><td>The OIDC issuer URL for the cluster (use with <code>IAMOIDCProvider</code> for IRSA).</td></tr>
-            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
-            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
-            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Example — Basic Cluster</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSCluster
-metadata:
-  name: prod-cluster
-  namespace: platform
-spec:
-  clusterName: prod-cluster
-  version: "1.30"
-  roleArn: arn:aws:iam::123456789012:role/eks-cluster-role
-  resourcesVpcConfig:
-    subnetRefs:
-      - prod-private-subnet-1a
-      - prod-private-subnet-1b
-      - prod-private-subnet-1c
-    endpointPublicAccess: true
-    endpointPrivateAccess: true
-    publicAccessCidrs:
-      - 203.0.113.0/24
-  accessConfig:
-    authenticationMode: API_AND_CONFIG_MAP
-  tags:
-    env: prod</code></pre>
-      </div>
-
-      <h3>Example — Full-Featured Cluster</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSCluster
-metadata:
-  name: prod-cluster
-  namespace: platform
-spec:
-  clusterName: prod-cluster
-  version: "1.30"
-  roleArn: arn:aws:iam::123456789012:role/eks-cluster-role
-  resourcesVpcConfig:
-    subnetRefs:
-      - prod-private-subnet-1a
-      - prod-private-subnet-1b
-    endpointPublicAccess: false
-    endpointPrivateAccess: true
-  logging:
-    enabledTypes:
-      - api
-      - audit
-      - authenticator
-  encryptionConfig:
-    providerKeyArn: arn:aws:kms:us-east-1:123456789012:key/mrk-abc123
-    resources:
-      - secrets
-  accessConfig:
-    authenticationMode: API
-    bootstrapClusterCreatorAdminPermissions: true
-  kubernetesNetworkConfig:
-    serviceIpv4Cidr: 172.20.0.0/16
-    ipFamily: ipv4
-  upgradePolicy:
-    supportType: EXTENDED
-  tags:
-    env: prod
-    criticality: high</code></pre>
-      </div>
-
-      <h3>Notes</h3>
-      <ul class="notes-list">
-        <li>Either <code>roleArn</code> or <code>roleRef.name</code> is required. The role must have the <code>AmazonEKSClusterPolicy</code> managed policy attached.</li>
-        <li><code>kubernetesNetworkConfig.ipFamily</code> and <code>kubernetesNetworkConfig.serviceIpv4Cidr</code> are immutable after creation.</li>
-        <li><code>upgradePolicy.supportType</code> is mutable and can be changed without recreating the cluster.</li>
-        <li>The <code>oidcIssuer</code> in status is used to create an <code>IAMOIDCProvider</code> CR for IRSA (IAM Roles for Service Accounts).</li>
-      </ul>
-
-      <h3>Deletion</h3>
-      <div class="deletion-note"><strong>Prerequisite deletions required.</strong> Delete all EKSNodeGroup, EKSFargateProfile, and EKSAddon CRs before deleting the cluster. Cluster deletion takes 10–15 minutes.</div>
-    </section>
-
-    <!-- EKSNodeGroup -->
-    <section id="eksnodegroup" class="resource-section">
-      <h2>EKSNodeGroup <a href="#eksnodegroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
-      <p class="resource-desc">Creates and manages an EKS managed node group. Supports scaling configuration, instance types, AMI type, capacity type, taints, labels, launch templates, and node repair.</p>
-      <div class="resource-alert">⏱ Async — node group creation and scaling takes 3–5 minutes. Controller polls every 20 seconds until the node group reaches the <code>ACTIVE</code> state.</div>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterName</td><td>string</td><td><span class="req">✅</span></td><td>EKS cluster name. Mutually exclusive with <code>clusterRef.name</code>.</td></tr>
-            <tr><td>clusterRef.name</td><td>string</td><td></td><td>Name of the <code>EKSCluster</code> CR (alternative to <code>clusterName</code>).</td></tr>
-            <tr><td>nodegroupName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the node group. Immutable after creation.</td></tr>
-            <tr><td>nodeRoleArn</td><td>string</td><td></td><td>IAM role ARN for EC2 instances. One of <code>nodeRoleArn</code> or <code>nodeRoleRef.name</code> required.</td></tr>
-            <tr><td>nodeRoleRef.name</td><td>string</td><td></td><td>Name of the <code>IAMRole</code> CR.</td></tr>
-            <tr><td>subnetRefs</td><td>[]SubnetRef</td><td><span class="req">✅</span></td><td>Subnet CR names or IDs. Place in private subnets for production.</td></tr>
-            <tr><td>scalingConfig.minSize</td><td>int32</td><td><span class="req">✅</span></td><td>Minimum number of nodes.</td></tr>
-            <tr><td>scalingConfig.maxSize</td><td>int32</td><td><span class="req">✅</span></td><td>Maximum number of nodes.</td></tr>
-            <tr><td>scalingConfig.desiredSize</td><td>int32</td><td><span class="req">✅</span></td><td>Desired number of nodes. Managed by cluster autoscaler in autoscaled setups.</td></tr>
-            <tr><td>instanceTypes</td><td>[]string</td><td></td><td>EC2 instance types (e.g. <code>["m5.xlarge", "m5a.xlarge"]</code>). Immutable.</td></tr>
-            <tr><td>amiType</td><td>string</td><td></td><td>AMI type: <code>AL2_x86_64</code>, <code>AL2_x86_64_GPU</code>, <code>AL2_ARM_64</code>, <code>AL2023_x86_64_STANDARD</code>, etc. Immutable.</td></tr>
-            <tr><td>capacityType</td><td>string</td><td></td><td><code>ON_DEMAND</code> or <code>SPOT</code>. Immutable. Default: <code>ON_DEMAND</code>.</td></tr>
-            <tr><td>diskSize</td><td>int32</td><td></td><td>Root EBS disk size in GiB. Immutable when using a launch template.</td></tr>
-            <tr><td>labels</td><td>map[string]string</td><td></td><td>Kubernetes labels to apply to nodes.</td></tr>
-            <tr><td>taints</td><td>[]Taint</td><td></td><td>Kubernetes taints to apply to nodes.</td></tr>
-            <tr><td>taints[].key</td><td>string</td><td></td><td>Taint key.</td></tr>
-            <tr><td>taints[].value</td><td>string</td><td></td><td>Taint value.</td></tr>
-            <tr><td>taints[].effect</td><td>string</td><td></td><td><code>NO_SCHEDULE</code>, <code>NO_EXECUTE</code>, or <code>PREFER_NO_SCHEDULE</code>.</td></tr>
-            <tr><td>updateConfig.maxUnavailable</td><td>int32</td><td></td><td>Maximum number of unavailable nodes during updates.</td></tr>
-            <tr><td>updateConfig.maxUnavailablePercentage</td><td>int32</td><td></td><td>Maximum percentage of unavailable nodes during updates.</td></tr>
-            <tr><td>launchTemplate.name</td><td>string</td><td></td><td>Launch template name.</td></tr>
-            <tr><td>launchTemplate.id</td><td>string</td><td></td><td>Launch template ID (alternative to name).</td></tr>
-            <tr><td>launchTemplate.version</td><td>string</td><td></td><td>Launch template version.</td></tr>
-            <tr><td>releaseVersion</td><td>string</td><td></td><td>AMI release version (e.g. <code>1.30.0-20240514</code>).</td></tr>
-            <tr><td>version</td><td>string</td><td></td><td>Kubernetes version for the node group. Defaults to cluster version.</td></tr>
-            <tr><td>remoteAccess.ec2SshKey</td><td>string</td><td></td><td>EC2 key pair name for SSH access.</td></tr>
-            <tr><td>remoteAccess.sourceSecurityGroupRefs</td><td>[]string</td><td></td><td>Security groups allowed SSH access to nodes.</td></tr>
-            <tr><td>nodeRepairConfig.enabled</td><td>bool</td><td></td><td>Enable automatic node repair. Unhealthy nodes are automatically replaced.</td></tr>
-            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the node group and EC2 instances.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>nodegroupArn</td><td>The ARN of the node group.</td></tr>
-            <tr><td>status</td><td>Current status: <code>CREATING</code>, <code>ACTIVE</code>, <code>UPDATING</code>, <code>DELETING</code>, <code>DEGRADED</code>.</td></tr>
-            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
-            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
-            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Example — Basic Worker Nodes</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSNodeGroup
-metadata:
-  name: prod-workers
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  nodegroupName: prod-workers
-  nodeRoleArn: arn:aws:iam::123456789012:role/eks-node-role
-  subnetRefs:
-    - prod-private-subnet-1a
-    - prod-private-subnet-1b
-  scalingConfig:
-    minSize: 2
-    maxSize: 10
-    desiredSize: 3
-  instanceTypes:
-    - m5.xlarge
-  amiType: AL2023_x86_64_STANDARD
-  capacityType: ON_DEMAND
-  diskSize: 50
-  tags:
-    env: prod</code></pre>
-      </div>
-
-      <h3>Example — Full-Featured with Taints and Node Repair</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSNodeGroup
-metadata:
-  name: prod-gpu-workers
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  nodegroupName: prod-gpu-workers
-  nodeRoleArn: arn:aws:iam::123456789012:role/eks-node-role
-  subnetRefs:
-    - prod-private-subnet-1a
-  scalingConfig:
-    minSize: 0
-    maxSize: 5
-    desiredSize: 1
-  instanceTypes:
-    - g4dn.xlarge
-    - g4dn.2xlarge
-  amiType: AL2_x86_64_GPU
-  capacityType: ON_DEMAND
-  labels:
-    workload-type: gpu
-    env: prod
-  taints:
-    - key: nvidia.com/gpu
-      value: present
-      effect: NO_SCHEDULE
-  updateConfig:
-    maxUnavailable: 1
-  nodeRepairConfig:
-    enabled: true
-  tags:
-    env: prod
-    workload: gpu</code></pre>
-      </div>
-
-      <h3>Deletion</h3>
-      <div class="deletion-note"><strong>Async (3–5 minutes).</strong> EKS drains pods from nodes (respecting PodDisruptionBudgets), terminates the EC2 instances, and deletes the node group. The CR remains until AWS confirms full deletion.</div>
-    </section>
-
-    <!-- EKSAddon -->
-    <section id="eksaddon" class="resource-section">
-      <h2>EKSAddon <a href="#eksaddon" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
-      <p class="resource-desc">Creates and manages an EKS cluster addon (e.g. vpc-cni, kube-proxy, coredns, ebs-csi-driver, eks-pod-identity-agent). Can adopt pre-existing addons.</p>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterName</td><td>string</td><td></td><td>EKS cluster name. Mutually exclusive with <code>clusterRef.name</code>.</td></tr>
-            <tr><td>clusterRef.name</td><td>string</td><td></td><td>Name of the <code>EKSCluster</code> CR. One of these is required.</td></tr>
-            <tr><td>addonName</td><td>string</td><td><span class="req">✅</span></td><td>Addon name (e.g. <code>vpc-cni</code>, <code>coredns</code>, <code>kube-proxy</code>, <code>aws-ebs-csi-driver</code>, <code>eks-pod-identity-agent</code>).</td></tr>
-            <tr><td>addonVersion</td><td>string</td><td></td><td>Addon version. If omitted, defaults to the latest recommended version.</td></tr>
-            <tr><td>serviceAccountRoleArn</td><td>string</td><td></td><td>IAM role ARN for the addon's service account (IRSA). Mutually exclusive with <code>serviceAccountRoleRef.name</code>.</td></tr>
-            <tr><td>serviceAccountRoleRef.name</td><td>string</td><td></td><td>Name of the <code>IAMRole</code> CR for the addon's service account.</td></tr>
-            <tr><td>resolveConflicts</td><td>string</td><td></td><td>Conflict resolution on install: <code>OVERWRITE</code>, <code>NONE</code>, or <code>PRESERVE</code>. Default: <code>OVERWRITE</code>.</td></tr>
-            <tr><td>configurationValues</td><td>string</td><td></td><td>JSON configuration override for the addon (addon-specific settings).</td></tr>
-            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the addon.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>addonArn</td><td>The ARN of the addon.</td></tr>
-            <tr><td>addonVersion</td><td>The installed addon version.</td></tr>
-            <tr><td>status</td><td>Addon status: <code>CREATING</code>, <code>ACTIVE</code>, <code>DEGRADED</code>, <code>UPDATING</code>.</td></tr>
-            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
-            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
-            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Example — vpc-cni Addon</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSAddon
-metadata:
-  name: prod-vpc-cni
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  addonName: vpc-cni
-  resolveConflicts: OVERWRITE
-  tags:
-    env: prod</code></pre>
-      </div>
-
-      <h3>Example — ebs-csi-driver with IRSA</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSAddon
-metadata:
-  name: prod-ebs-csi-driver
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  addonName: aws-ebs-csi-driver
-  addonVersion: v1.26.0-eksbuild.1
-  serviceAccountRoleRef:
-    name: ebs-csi-controller-role
-  resolveConflicts: OVERWRITE
-  tags:
-    env: prod</code></pre>
-      </div>
-
-      <h3>Deletion</h3>
-      <div class="deletion-note"><strong>Immediate.</strong> The addon is removed from the cluster. The addon's Kubernetes resources (DaemonSets, Deployments) are deleted.</div>
-    </section>
-
-    <!-- EKSFargateProfile -->
-    <section id="eksfargateprofile" class="resource-section">
-      <h2>EKSFargateProfile <a href="#eksfargateprofile" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
-      <p class="resource-desc">Creates a Fargate profile defining which pods run on AWS Fargate rather than EC2 nodes. Pod selection is based on namespace and optional label selectors.</p>
-      <div class="resource-alert">⏱ Async — Fargate profile creation and deletion takes approximately 2 minutes. Controller polls every 15 seconds.</div>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterName</td><td>string</td><td></td><td>EKS cluster name. One of <code>clusterName</code> or <code>clusterRef.name</code> required.</td></tr>
-            <tr><td>clusterRef.name</td><td>string</td><td></td><td>Name of the <code>EKSCluster</code> CR.</td></tr>
-            <tr><td>fargateProfileName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the Fargate profile. Immutable after creation.</td></tr>
-            <tr><td>podExecutionRoleArn</td><td>string</td><td></td><td>IAM role ARN for Fargate pod execution. One of this or <code>podExecutionRoleRef.name</code> required.</td></tr>
-            <tr><td>podExecutionRoleRef.name</td><td>string</td><td></td><td>Name of the <code>IAMRole</code> CR for pod execution.</td></tr>
-            <tr><td>subnetRefs</td><td>[]SubnetRef</td><td></td><td>Private subnet CR names or IDs. Fargate pods require private subnets.</td></tr>
-            <tr><td>selectors</td><td>[]Selector</td><td><span class="req">✅</span></td><td>Pod selection criteria. At least one selector required.</td></tr>
-            <tr><td>selectors[].namespace</td><td>string</td><td><span class="req">✅</span></td><td>Kubernetes namespace to match.</td></tr>
-            <tr><td>selectors[].labels</td><td>map[string]string</td><td></td><td>Optional label selectors. All labels must match.</td></tr>
-            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the Fargate profile.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>fargateProfileArn</td><td>The ARN of the Fargate profile.</td></tr>
-            <tr><td>status</td><td>Current status: <code>CREATING</code>, <code>ACTIVE</code>, <code>DELETING</code>, <code>CREATE_FAILED</code>.</td></tr>
-            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
-            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
-            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <section id="eksaccessentry" class="resource-section">
+      <h2>EKSAccessEntry <a href="#eksaccessentry" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSAccessEntry is the Schema for managing EKS Access Entries.</p>
+      <p class="resource-desc"><code>kubectl get eksaccessentries</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/eksaccessentry.yaml">example on GitHub</a></p>
 
       <h3>Example</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSFargateProfile
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSAccessEntry — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#eksaccessentry
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSAccessEntry
 metadata:
-  name: prod-fargate-profile
-  namespace: platform
+  name: example-eksaccessentry
+  namespace: default
 spec:
+  accessPolicies:
+  - accessScope:
+      namespaces:
+      - example
+      type: cluster
+    policyArn: arn:aws:iam::123456789012:role/example-role
+  clusterName: example-eksaccessentry
   clusterRef:
-    name: prod-cluster
-  fargateProfileName: prod-serverless
-  podExecutionRoleArn: arn:aws:iam::123456789012:role/eks-fargate-pod-execution-role
-  subnetRefs:
-    - prod-private-subnet-1a
-    - prod-private-subnet-1b
-  selectors:
-    - namespace: serverless-workloads
-    - namespace: kube-system
-      labels:
-        k8s-app: kube-dns
+    clusterName: example-eksaccessentry
+    name: example-eksaccessentry
+  kubernetesGroups:
+  - example
+  principalArn: arn:aws:iam::123456789012:role/example-role
+  principalRef:
+    name: example-principal
   tags:
-    env: prod</code></pre>
-      </div>
-
-      <h3>Notes</h3>
-      <ul class="notes-list">
-        <li>Fargate pods must run in private subnets. Public subnet placement is not supported.</li>
-        <li>Selectors and subnets are mostly immutable after creation. To change them, delete and recreate the profile.</li>
-        <li>The pod execution role must have the <code>AmazonEKSFargatePodExecutionRolePolicy</code> managed policy attached.</li>
-      </ul>
-
-      <h3>Deletion</h3>
-      <div class="deletion-note"><strong>Async (~2 minutes).</strong> Running pods matched by this profile are terminated. The profile is fully deleted after AWS confirms deletion.</div>
-    </section>
-
-    <!-- EKSAccessEntry -->
-    <section id="eksaccessentry" class="resource-section">
-      <h2>EKSAccessEntry <a href="#eksaccessentry" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
-      <p class="resource-desc">Maps an IAM principal (role or user) to Kubernetes RBAC groups or EKS access policies. Requires the cluster to use <code>API</code> or <code>API_AND_CONFIG_MAP</code> authentication mode.</p>
+    environment: dev
+    team: platform
+  type: STANDARD
+  username: example-eksaccessentry
+</code></pre></div>
 
       <h3>Spec</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>clusterName</td><td>string</td><td></td><td>EKS cluster name. One of <code>clusterName</code> or <code>clusterRef.name</code> required.</td></tr>
-            <tr><td>clusterRef.name</td><td>string</td><td></td><td>Name of the <code>EKSCluster</code> CR.</td></tr>
-            <tr><td>principalArn</td><td>string</td><td></td><td>IAM principal ARN (role or user). One of <code>principalArn</code> or <code>principalRef.name</code> required.</td></tr>
-            <tr><td>principalRef.name</td><td>string</td><td></td><td>Name of the <code>IAMRole</code> CR.</td></tr>
-            <tr><td>type</td><td>string</td><td></td><td>Entry type: <code>STANDARD</code>, <code>FARGATE_LINUX</code>, <code>EC2_LINUX</code>, or <code>EC2_WINDOWS</code>. Default: <code>STANDARD</code>.</td></tr>
-            <tr><td>kubernetesGroups</td><td>[]string</td><td></td><td>Kubernetes RBAC groups to add the principal to (e.g. <code>["system:masters"]</code>).</td></tr>
-            <tr><td>username</td><td>string</td><td></td><td>Kubernetes username for the principal. Defaults to the IAM principal ARN.</td></tr>
-            <tr><td>accessPolicies</td><td>[]AccessPolicy</td><td></td><td>EKS access policies to associate with this entry.</td></tr>
-            <tr><td>accessPolicies[].policyArn</td><td>string</td><td></td><td>ARN of the EKS access policy.</td></tr>
-            <tr><td>accessPolicies[].accessScope.type</td><td>string</td><td></td><td><code>cluster</code> for cluster-wide access, <code>namespace</code> for namespace-scoped access.</td></tr>
-            <tr><td>accessPolicies[].accessScope.namespaces</td><td>[]string</td><td></td><td>Namespaces to scope access to (when type is <code>namespace</code>).</td></tr>
-            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the access entry.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Common Access Policy ARNs</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Policy</th><th>ARN</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>AmazonEKSClusterAdminPolicy</td><td><code>arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy</code></td><td>Full cluster-admin access.</td></tr>
-            <tr><td>AmazonEKSAdminPolicy</td><td><code>arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy</code></td><td>Admin access, cluster-scoped.</td></tr>
-            <tr><td>AmazonEKSEditPolicy</td><td><code>arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy</code></td><td>Edit access to workload resources.</td></tr>
-            <tr><td>AmazonEKSViewPolicy</td><td><code>arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy</code></td><td>Read-only view access.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessPolicies</code></td><td>array&lt;object&gt;</td><td>—</td><td>AccessPolicies are the EKS access policies to associate with this entry.</td></tr>
+<tr><td><code>accessPolicies[].accessScope</code></td><td>object</td><td><span class="req">yes</span></td><td>AccessScope defines the scope of the policy.</td></tr>
+<tr><td><code>accessPolicies[].accessScope.namespaces</code></td><td>array&lt;string&gt;</td><td>—</td><td>Namespaces is the list of Kubernetes namespaces the policy applies to.</td></tr>
+<tr><td><code>accessPolicies[].accessScope.type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type is the scope type: cluster or namespace. Allowed: <code>cluster, namespace</code></td></tr>
+<tr><td><code>accessPolicies[].policyArn</code></td><td>string</td><td><span class="req">yes</span></td><td>PolicyArn is the ARN of the EKS access policy.</td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td>—</td><td>ClusterName is the EKS cluster name.</td></tr>
+<tr><td><code>clusterRef</code></td><td>object</td><td>—</td><td>ClusterRef references an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>clusterRef.clusterName</code></td><td>string</td><td>—</td><td>ClusterName is a direct AWS EKS cluster name, bypassing CR lookup.</td></tr>
+<tr><td><code>clusterRef.name</code></td><td>string</td><td>—</td><td>Name of an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>kubernetesGroups</code></td><td>array&lt;string&gt;</td><td>—</td><td>KubernetesGroups are the Kubernetes RBAC groups to assign to this principal.</td></tr>
+<tr><td><code>principalArn</code></td><td>string</td><td>—</td><td>PrincipalArn is the IAM role or user ARN to grant cluster access.</td></tr>
+<tr><td><code>principalRef</code></td><td>object</td><td>—</td><td>PrincipalRef references an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>principalRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>principalRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>principalRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags.</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td>—</td><td>Type is the access entry type. Allowed: <code>STANDARD, FARGATE_LINUX, EC2_LINUX, EC2_WINDOWS</code></td></tr>
+<tr><td><code>username</code></td><td>string</td><td>—</td><td>Username is the Kubernetes username for this principal.</td></tr>
+</tbody></table></div>
 
       <h3>Status</h3>
-      <div class="docs-table-wrap">
-        <table class="docs-table">
-          <thead><tr><th>Field</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>accessEntryArn</td><td>The ARN of the access entry.</td></tr>
-            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
-            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
-            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Example — Cluster Admin Access</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSAccessEntry
-metadata:
-  name: platform-team-admin
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  principalArn: arn:aws:iam::123456789012:role/platform-team-role
-  type: STANDARD
-  accessPolicies:
-    - policyArn: arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy
-      accessScope:
-        type: cluster
-  tags:
-    team: platform</code></pre>
-      </div>
-
-      <h3>Example — Namespace-Scoped Edit for CI Role</h3>
-      <div class="code-wrap">
-        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
-        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
-kind: EKSAccessEntry
-metadata:
-  name: ci-deploy-access
-  namespace: platform
-spec:
-  clusterRef:
-    name: prod-cluster
-  principalArn: arn:aws:iam::123456789012:role/ci-deploy-role
-  type: STANDARD
-  accessPolicies:
-    - policyArn: arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy
-      accessScope:
-        type: namespace
-        namespaces:
-          - my-app
-          - my-app-staging
-  tags:
-    purpose: ci-cd</code></pre>
-      </div>
-
-      <h3>Notes</h3>
-      <ul class="notes-list">
-        <li>The EKS cluster must be configured with <code>accessConfig.authenticationMode: API</code> or <code>API_AND_CONFIG_MAP</code> for access entries to work.</li>
-        <li>Access entries replace the need to manually manage the <code>aws-auth</code> ConfigMap for IAM principals.</li>
-        <li>For EC2 node role principals, use <code>type: EC2_LINUX</code> or <code>EC2_WINDOWS</code> instead of <code>STANDARD</code>.</li>
-      </ul>
-
-      <h3>Deletion</h3>
-      <div class="deletion-note"><strong>Immediate.</strong> The access entry and associated policy associations are deleted. The IAM principal loses access to the cluster.</div>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessEntryArn</code></td><td>string</td><td>—</td><td>AccessEntryArn is the ARN of the access entry.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
     </section>
 
+    <section id="eksaddon" class="resource-section">
+      <h2>EKSAddon <a href="#eksaddon" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSAddon is the Schema for managing EKS Add-ons.</p>
+      <p class="resource-desc"><code>kubectl get eksaddons</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/eksaddon.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSAddon — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#eksaddon
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSAddon
+metadata:
+  name: example-eksaddon
+  namespace: default
+spec:
+  addonName: example-eksaddon
+  addonVersion: &#x27;1.0&#x27;
+  clusterName: example-eksaddon
+  clusterRef:
+    clusterName: example-eksaddon
+    name: example-eksaddon
+  configurationValues: example
+  resolveConflicts: OVERWRITE
+  serviceAccountRoleArn: arn:aws:iam::123456789012:role/example-role
+  serviceAccountRoleRef:
+    name: example-serviceaccountrole
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>addonName</code></td><td>string</td><td><span class="req">yes</span></td><td>AddonName is the name of the EKS add-on (e.g.</td></tr>
+<tr><td><code>addonVersion</code></td><td>string</td><td>—</td><td>AddonVersion is the version of the add-on.</td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td>—</td><td>ClusterName is the EKS cluster name.</td></tr>
+<tr><td><code>clusterRef</code></td><td>object</td><td>—</td><td>ClusterRef references an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>clusterRef.clusterName</code></td><td>string</td><td>—</td><td>ClusterName is a direct AWS EKS cluster name, bypassing CR lookup.</td></tr>
+<tr><td><code>clusterRef.name</code></td><td>string</td><td>—</td><td>Name of an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>configurationValues</code></td><td>string</td><td>—</td><td>ConfigurationValues is a JSON or YAML string of configuration values for the add-on.</td></tr>
+<tr><td><code>resolveConflicts</code></td><td>enum</td><td>—</td><td>ResolveConflicts controls how conflicts are resolved when updating the add-on. Allowed: <code>OVERWRITE, NONE, PRESERVE</code></td></tr>
+<tr><td><code>serviceAccountRoleArn</code></td><td>string</td><td>—</td><td>ServiceAccountRoleArn is an IAM role ARN for the add-on's service account (IRSA).</td></tr>
+<tr><td><code>serviceAccountRoleRef</code></td><td>object</td><td>—</td><td>ServiceAccountRoleRef references an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>serviceAccountRoleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>serviceAccountRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>serviceAccountRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>addonArn</code></td><td>string</td><td>—</td><td>AddonArn is the ARN of the EKS add-on.</td></tr>
+<tr><td><code>addonVersion</code></td><td>string</td><td>—</td><td>AddonVersion is the currently installed add-on version.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the add-on status: CREATING, ACTIVE, UPDATING, DEGRADED, DELETING.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ekscluster" class="resource-section">
+      <h2>EKSCluster <a href="#ekscluster" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSCluster is the Schema for managing EKS Clusters.</p>
+      <p class="resource-desc"><code>kubectl get eksclusters</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/ekscluster.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSCluster — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#ekscluster
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSCluster
+metadata:
+  name: example-ekscluster
+  namespace: default
+spec:
+  accessConfig:
+    authenticationMode: API
+    bootstrapClusterCreatorAdminPermissions: false
+  bootstrapSelfManagedAddons: false
+  clusterName: example-ekscluster
+  encryptionConfig:
+    providerKeyArn: arn:aws:iam::123456789012:role/example-role
+    resources:
+    - example
+  kubernetesNetworkConfig:
+    ipFamily: ipv4
+    serviceIpv4Cidr: 10.0.0.0/16
+  logging:
+    enabledTypes:
+    - example
+  resourcesVpcConfig:
+    endpointPrivateAccess: false
+    endpointPublicAccess: false
+    publicAccessCidrs:
+    - 10.0.0.0/16
+    securityGroupRefs:
+    - name: example-securitygrouprefs
+    subnetRefs:
+    - name: example-subnetrefs
+  roleArn: arn:aws:iam::123456789012:role/example-role
+  roleRef:
+    name: example-role
+  tags:
+    environment: dev
+    team: platform
+  upgradePolicy:
+    supportType: STANDARD
+  version: &#x27;1.0&#x27;
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessConfig</code></td><td>object</td><td>—</td><td>AccessConfig configures the cluster authentication mode.</td></tr>
+<tr><td><code>accessConfig.authenticationMode</code></td><td>enum</td><td>—</td><td>AuthenticationMode controls how IAM principals are granted cluster access. Allowed: <code>API, API_AND_CONFIG_MAP, CONFIG_MAP</code></td></tr>
+<tr><td><code>accessConfig.bootstrapClusterCreatorAdminPermissions</code></td><td>boolean</td><td>—</td><td>BootstrapClusterCreatorAdminPermissions grants the cluster creator admin access.</td></tr>
+<tr><td><code>bootstrapSelfManagedAddons</code></td><td>boolean</td><td>—</td><td>BootstrapSelfManagedAddons installs self-managed add-ons on cluster creation.</td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>ClusterName is the name of the EKS cluster.</td></tr>
+<tr><td><code>encryptionConfig</code></td><td>object</td><td>—</td><td>EncryptionConfig enables KMS encryption of Kubernetes secrets.</td></tr>
+<tr><td><code>encryptionConfig.providerKeyArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ProviderKeyArn is the KMS key ARN to use for encryption.</td></tr>
+<tr><td><code>encryptionConfig.resources</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>Resources is the list of Kubernetes resources to encrypt (e.g.</td></tr>
+<tr><td><code>kubernetesNetworkConfig</code></td><td>object</td><td>—</td><td>KubernetesNetworkConfig configures the Kubernetes network.</td></tr>
+<tr><td><code>kubernetesNetworkConfig.ipFamily</code></td><td>enum</td><td>—</td><td>IPFamily is the IP family for the cluster: ipv4 or ipv6. Allowed: <code>ipv4, ipv6</code></td></tr>
+<tr><td><code>kubernetesNetworkConfig.serviceIpv4Cidr</code></td><td>string</td><td>—</td><td>ServiceIPv4CIDR is the CIDR block for Kubernetes service IPs.</td></tr>
+<tr><td><code>logging</code></td><td>object</td><td>—</td><td>Logging configures control plane logging.</td></tr>
+<tr><td><code>logging.enabledTypes</code></td><td>array&lt;string&gt;</td><td>—</td><td>EnabledTypes is the list of log types to enable.</td></tr>
+<tr><td><code>resourcesVpcConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>ResourcesVpcConfig is the VPC configuration for the cluster control plane.</td></tr>
+<tr><td><code>resourcesVpcConfig.endpointPrivateAccess</code></td><td>boolean</td><td>—</td><td>EndpointPrivateAccess enables the private API server endpoint.</td></tr>
+<tr><td><code>resourcesVpcConfig.endpointPublicAccess</code></td><td>boolean</td><td>—</td><td>EndpointPublicAccess enables the public API server endpoint.</td></tr>
+<tr><td><code>resourcesVpcConfig.publicAccessCidrs</code></td><td>array&lt;string&gt;</td><td>—</td><td>PublicAccessCidrs restricts access to the public endpoint.</td></tr>
+<tr><td><code>resourcesVpcConfig.securityGroupRefs</code></td><td>array&lt;object&gt;</td><td>—</td><td>SecurityGroupRefs are additional security groups for the control plane ENIs.</td></tr>
+<tr><td><code>resourcesVpcConfig.securityGroupRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Security Group ID (e.g.</td></tr>
+<tr><td><code>resourcesVpcConfig.securityGroupRefs[].name</code></td><td>string</td><td>—</td><td>Name of a SecurityGroup CR in the same namespace.</td></tr>
+<tr><td><code>resourcesVpcConfig.subnetRefs</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>SubnetRefs are the subnets for the EKS control plane ENIs.</td></tr>
+<tr><td><code>resourcesVpcConfig.subnetRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Subnet ID (e.g.</td></tr>
+<tr><td><code>resourcesVpcConfig.subnetRefs[].name</code></td><td>string</td><td>—</td><td>Name of a Subnet CR in the same namespace.</td></tr>
+<tr><td><code>roleArn</code></td><td>string</td><td>—</td><td>RoleArn is the IAM role ARN for the EKS control plane.</td></tr>
+<tr><td><code>roleRef</code></td><td>object</td><td>—</td><td>RoleRef is a reference to an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>roleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>roleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>roleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+<tr><td><code>upgradePolicy</code></td><td>object</td><td>—</td><td>UpgradePolicy configures the cluster version support policy.</td></tr>
+<tr><td><code>upgradePolicy.supportType</code></td><td>enum</td><td><span class="req">yes</span></td><td>SupportType is STANDARD or EXTENDED. Allowed: <code>STANDARD, EXTENDED</code></td></tr>
+<tr><td><code>version</code></td><td>string</td><td>—</td><td>Version is the Kubernetes version for the cluster (e.g.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>certificateAuthority</code></td><td>string</td><td>—</td><td>CertificateAuthority is the base64-encoded certificate authority data.</td></tr>
+<tr><td><code>clusterArn</code></td><td>string</td><td>—</td><td>ClusterArn is the ARN of the EKS cluster.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>endpoint</code></td><td>string</td><td>—</td><td>Endpoint is the Kubernetes API server endpoint.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>oidcIssuer</code></td><td>string</td><td>—</td><td>OIDCIssuer is the OIDC issuer URL for the cluster (used for IRSA).</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the cluster status: CREATING, ACTIVE, DELETING, FAILED, UPDATING.</td></tr>
+<tr><td><code>version</code></td><td>string</td><td>—</td><td>Version is the current Kubernetes version of the cluster.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="eksfargateprofile" class="resource-section">
+      <h2>EKSFargateProfile <a href="#eksfargateprofile" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSFargateProfile is the Schema for managing EKS Fargate Profiles.</p>
+      <p class="resource-desc"><code>kubectl get eksfargateprofiles</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/eksfargateprofile.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSFargateProfile — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#eksfargateprofile
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSFargateProfile
+metadata:
+  name: example-eksfargateprofile
+  namespace: default
+spec:
+  clusterName: example-eksfargateprofile
+  clusterRef:
+    clusterName: example-eksfargateprofile
+    name: example-eksfargateprofile
+  fargateProfileName: example-eksfargateprofile
+  podExecutionRoleArn: arn:aws:iam::123456789012:role/example-role
+  podExecutionRoleRef:
+    name: example-podexecutionrole
+  selectors:
+  - labels:
+      key: value
+    namespace: example
+  subnetRefs:
+  - name: example-subnetrefs
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>clusterName</code></td><td>string</td><td>—</td><td>ClusterName is the EKS cluster name.</td></tr>
+<tr><td><code>clusterRef</code></td><td>object</td><td>—</td><td>ClusterRef references an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>clusterRef.clusterName</code></td><td>string</td><td>—</td><td>ClusterName is a direct AWS EKS cluster name, bypassing CR lookup.</td></tr>
+<tr><td><code>clusterRef.name</code></td><td>string</td><td>—</td><td>Name of an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>fargateProfileName</code></td><td>string</td><td><span class="req">yes</span></td><td>FargateProfileName is the name of the Fargate profile.</td></tr>
+<tr><td><code>podExecutionRoleArn</code></td><td>string</td><td>—</td><td>PodExecutionRoleArn is the IAM role ARN for Fargate pod execution.</td></tr>
+<tr><td><code>podExecutionRoleRef</code></td><td>object</td><td>—</td><td>PodExecutionRoleRef references an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>podExecutionRoleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>podExecutionRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>podExecutionRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>selectors</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Selectors define which pods are scheduled on Fargate.</td></tr>
+<tr><td><code>selectors[].labels</code></td><td>map&lt;string&gt;</td><td>—</td><td>Labels are the Kubernetes pod labels to match.</td></tr>
+<tr><td><code>selectors[].namespace</code></td><td>string</td><td><span class="req">yes</span></td><td>Namespace is the Kubernetes namespace to match.</td></tr>
+<tr><td><code>subnetRefs</code></td><td>array&lt;object&gt;</td><td>—</td><td>SubnetRefs are the private subnets to run Fargate pods in.</td></tr>
+<tr><td><code>subnetRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Subnet ID (e.g.</td></tr>
+<tr><td><code>subnetRefs[].name</code></td><td>string</td><td>—</td><td>Name of a Subnet CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>fargateProfileArn</code></td><td>string</td><td>—</td><td>FargateProfileArn is the ARN of the Fargate profile.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the profile status: CREATING, ACTIVE, DELETING, CREATE_FAILED, DELETE_FAILED.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="eksidentityproviderconfig" class="resource-section">
+      <h2>EKSIdentityProviderConfig <a href="#eksidentityproviderconfig" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSIdentityProviderConfig is the Schema for managing EKS OIDC identity provider configurations.</p>
+      <p class="resource-desc"><code>kubectl get eksidentityproviderconfigs</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/eksidentityproviderconfig.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSIdentityProviderConfig — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#eksidentityproviderconfig
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSIdentityProviderConfig
+metadata:
+  name: example-eksidentityproviderconfig
+  namespace: default
+spec:
+  clusterName: example-eksidentityproviderconfig
+  identityProviderConfigName: example-eksidentityproviderconfig
+  oidc:
+    clientId: example-id
+    groupsClaim: example
+    groupsPrefix: example
+    issuerUrl: example
+    requiredClaims:
+      key: value
+    usernameClaim: example
+    usernamePrefix: example
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>ClusterName is the name of the EKS cluster.</td></tr>
+<tr><td><code>identityProviderConfigName</code></td><td>string</td><td><span class="req">yes</span></td><td>IdentityProviderConfigName is the name of the identity provider configuration.</td></tr>
+<tr><td><code>oidc</code></td><td>object</td><td><span class="req">yes</span></td><td>OIDC is the OIDC identity provider configuration.</td></tr>
+<tr><td><code>oidc.clientId</code></td><td>string</td><td><span class="req">yes</span></td><td>ClientID is the OIDC client application ID.</td></tr>
+<tr><td><code>oidc.groupsClaim</code></td><td>string</td><td>—</td><td>GroupsClaim is the JWT claim to use for group membership.</td></tr>
+<tr><td><code>oidc.groupsPrefix</code></td><td>string</td><td>—</td><td>GroupsPrefix is a prefix to prepend to group names.</td></tr>
+<tr><td><code>oidc.issuerUrl</code></td><td>string</td><td><span class="req">yes</span></td><td>IssuerURL is the OIDC provider URL.</td></tr>
+<tr><td><code>oidc.requiredClaims</code></td><td>map&lt;string&gt;</td><td>—</td><td>RequiredClaims are key-value pairs that must be present in the token.</td></tr>
+<tr><td><code>oidc.usernameClaim</code></td><td>string</td><td>—</td><td>UsernameClaim is the JWT claim to use as the username.</td></tr>
+<tr><td><code>oidc.usernamePrefix</code></td><td>string</td><td>—</td><td>UsernamePrefix is a prefix to prepend to usernames.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the identity provider configuration.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the current state of the configuration.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="eksnodegroup" class="resource-section">
+      <h2>EKSNodeGroup <a href="#eksnodegroup" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">EKSNodeGroup is the Schema for managing EKS Managed Node Groups.</p>
+      <p class="resource-desc"><code>kubectl get eksnodegroups</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/eksnodegroup.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSNodeGroup — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#eksnodegroup
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSNodeGroup
+metadata:
+  name: example-eksnodegroup
+  namespace: default
+spec:
+  amiType: AL2_x86_64
+  capacityType: ON_DEMAND
+  clusterName: example-eksnodegroup
+  clusterRef:
+    clusterName: example-eksnodegroup
+    name: example-eksnodegroup
+  diskSize: 2
+  instanceTypes:
+  - example
+  labels:
+    key: value
+  launchTemplate:
+    name: example-eksnodegroup
+    version: &#x27;1.0&#x27;
+  nodeRepairConfig:
+    enabled: true
+  nodeRoleArn: arn:aws:iam::123456789012:role/example-role
+  nodeRoleRef:
+    name: example-noderole
+  nodegroupName: example-eksnodegroup
+  releaseVersion: &#x27;1.0&#x27;
+  remoteAccess:
+    ec2SshKey: example
+    sourceSecurityGroupRefs:
+    - name: example-sourcesecuritygrouprefs
+  scalingConfig:
+    desiredSize: 1
+    maxSize: 1
+    minSize: 1
+  subnetRefs:
+  - name: example-subnetrefs
+  tags:
+    environment: dev
+    team: platform
+  taints:
+  - effect: NO_SCHEDULE
+    key: example
+    value: example
+  updateConfig:
+    maxUnavailable: 1
+    maxUnavailablePercentage: 1
+  version: &#x27;1.0&#x27;
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>amiType</code></td><td>enum</td><td>—</td><td>AmiType is the AMI type for nodes. Allowed: <code>AL2_x86_64, AL2_x86_64_GPU, AL2_ARM_64, AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD, BOTTLEROCKET_x86_64, BOTTLEROCKET_ARM_64, CUSTOM</code></td></tr>
+<tr><td><code>capacityType</code></td><td>enum</td><td>—</td><td>CapacityType is the capacity type: ON_DEMAND or SPOT. Allowed: <code>ON_DEMAND, SPOT</code></td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td>—</td><td>ClusterName is the EKS cluster name.</td></tr>
+<tr><td><code>clusterRef</code></td><td>object</td><td>—</td><td>ClusterRef references an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>clusterRef.clusterName</code></td><td>string</td><td>—</td><td>ClusterName is a direct AWS EKS cluster name, bypassing CR lookup.</td></tr>
+<tr><td><code>clusterRef.name</code></td><td>string</td><td>—</td><td>Name of an EKSCluster CR in the same namespace.</td></tr>
+<tr><td><code>diskSize</code></td><td>integer</td><td>—</td><td>DiskSize is the root EBS volume size in GiB.</td></tr>
+<tr><td><code>instanceTypes</code></td><td>array&lt;string&gt;</td><td>—</td><td>InstanceTypes is the list of EC2 instance types.</td></tr>
+<tr><td><code>labels</code></td><td>map&lt;string&gt;</td><td>—</td><td>Labels are Kubernetes labels applied to nodes.</td></tr>
+<tr><td><code>launchTemplate</code></td><td>object</td><td>—</td><td>LaunchTemplate is an optional custom launch template.</td></tr>
+<tr><td><code>launchTemplate.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Launch Template ID.</td></tr>
+<tr><td><code>launchTemplate.name</code></td><td>string</td><td>—</td><td>Name is a LaunchTemplate CR name in the same namespace.</td></tr>
+<tr><td><code>launchTemplate.version</code></td><td>string</td><td>—</td><td>Version is the launch template version.</td></tr>
+<tr><td><code>nodeRepairConfig</code></td><td>object</td><td>—</td><td>NodeRepairConfig configures automatic node repair.</td></tr>
+<tr><td><code>nodeRepairConfig.enabled</code></td><td>boolean</td><td><span class="req">yes</span></td><td>Enabled enables automatic node repair.</td></tr>
+<tr><td><code>nodeRoleArn</code></td><td>string</td><td>—</td><td>NodeRoleArn is the IAM role ARN for the node instances.</td></tr>
+<tr><td><code>nodeRoleRef</code></td><td>object</td><td>—</td><td>NodeRoleRef references an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>nodeRoleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>nodeRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>nodeRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>nodegroupName</code></td><td>string</td><td><span class="req">yes</span></td><td>NodegroupName is the name of the node group.</td></tr>
+<tr><td><code>releaseVersion</code></td><td>string</td><td>—</td><td>ReleaseVersion is the AMI release version.</td></tr>
+<tr><td><code>remoteAccess</code></td><td>object</td><td>—</td><td>RemoteAccess configures SSH access to nodes.</td></tr>
+<tr><td><code>remoteAccess.ec2SshKey</code></td><td>string</td><td>—</td><td>EC2SshKey is the name of the EC2 key pair for SSH access.</td></tr>
+<tr><td><code>remoteAccess.sourceSecurityGroupRefs</code></td><td>array&lt;object&gt;</td><td>—</td><td>SourceSecurityGroupRefs restricts SSH access to these security groups.</td></tr>
+<tr><td><code>remoteAccess.sourceSecurityGroupRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Security Group ID (e.g.</td></tr>
+<tr><td><code>remoteAccess.sourceSecurityGroupRefs[].name</code></td><td>string</td><td>—</td><td>Name of a SecurityGroup CR in the same namespace.</td></tr>
+<tr><td><code>scalingConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>ScalingConfig defines the min/max/desired node counts.</td></tr>
+<tr><td><code>scalingConfig.desiredSize</code></td><td>integer</td><td><span class="req">yes</span></td><td>DesiredSize is the desired number of nodes.</td></tr>
+<tr><td><code>scalingConfig.maxSize</code></td><td>integer</td><td><span class="req">yes</span></td><td>MaxSize is the maximum number of nodes.</td></tr>
+<tr><td><code>scalingConfig.minSize</code></td><td>integer</td><td><span class="req">yes</span></td><td>MinSize is the minimum number of nodes.</td></tr>
+<tr><td><code>subnetRefs</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>SubnetRefs are the subnets to launch nodes in.</td></tr>
+<tr><td><code>subnetRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Subnet ID (e.g.</td></tr>
+<tr><td><code>subnetRefs[].name</code></td><td>string</td><td>—</td><td>Name of a Subnet CR in the same namespace.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags.</td></tr>
+<tr><td><code>taints</code></td><td>array&lt;object&gt;</td><td>—</td><td>Taints are Kubernetes taints applied to nodes.</td></tr>
+<tr><td><code>taints[].effect</code></td><td>enum</td><td><span class="req">yes</span></td><td>Effect specifies the taint effect. Allowed: <code>NO_SCHEDULE, NO_EXECUTE, PREFER_NO_SCHEDULE</code></td></tr>
+<tr><td><code>taints[].key</code></td><td>string</td><td><span class="req">yes</span></td><td>Key is the taint key.</td></tr>
+<tr><td><code>taints[].value</code></td><td>string</td><td>—</td><td>Value is the taint value.</td></tr>
+<tr><td><code>updateConfig</code></td><td>object</td><td>—</td><td>UpdateConfig defines rolling update behavior.</td></tr>
+<tr><td><code>updateConfig.maxUnavailable</code></td><td>integer</td><td>—</td><td>MaxUnavailable is the maximum number of nodes unavailable during an update.</td></tr>
+<tr><td><code>updateConfig.maxUnavailablePercentage</code></td><td>integer</td><td>—</td><td>MaxUnavailablePercentage is the maximum percentage of nodes unavailable during an update.</td></tr>
+<tr><td><code>version</code></td><td>string</td><td>—</td><td>Version is the Kubernetes version for the node group.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>nodegroupArn</code></td><td>string</td><td>—</td><td>NodegroupArn is the ARN of the node group.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the node group status: CREATING, ACTIVE, UPDATING, DELETING, DEGRADED.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="podidentityassociation" class="resource-section">
+      <h2>PodIdentityAssociation <a href="#podidentityassociation" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">PodIdentityAssociation links a Kubernetes ServiceAccount to an AWS IAM Role via EKS Pod Identity.</p>
+      <p class="resource-desc"><code>kubectl get podidentityassociations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/podidentityassociation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># PodIdentityAssociation — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#podidentityassociation
+apiVersion: aws.konfig.io/v1alpha1
+kind: PodIdentityAssociation
+metadata:
+  name: example-podidentityassociation
+  namespace: default
+spec:
+  annotateServiceAccount: false
+  clusterName: example-podidentityassociation
+  roleRef:
+    name: example-role
+  serviceAccountName: example-podidentityassociation
+  tags:
+    environment: dev
+    team: platform
+  targetNamespace: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>annotateServiceAccount</code></td><td>boolean</td><td>—</td><td>AnnotateServiceAccount controls whether the operator also writes the eks.amazonaws.com/role-arn annotation on the target ServiceAccount (for IRSA compatibility).</td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>ClusterName is the name of the EKS cluster.</td></tr>
+<tr><td><code>roleRef</code></td><td>object</td><td><span class="req">yes</span></td><td>RoleRef references the IAMRole CR or a direct ARN to bind to the ServiceAccount.</td></tr>
+<tr><td><code>roleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
+<tr><td><code>roleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
+<tr><td><code>roleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>serviceAccountName</code></td><td>string</td><td><span class="req">yes</span></td><td>ServiceAccountName is the name of the Kubernetes ServiceAccount to bind.</td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags applied to the association.</td></tr>
+<tr><td><code>targetNamespace</code></td><td>string</td><td><span class="req">yes</span></td><td>Namespace is the Kubernetes namespace of the target ServiceAccount.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>associationArn</code></td><td>string</td><td>—</td><td>AssociationARN is the ARN of the EKS Pod Identity association.</td></tr>
+<tr><td><code>associationId</code></td><td>string</td><td>—</td><td>AssociationID is the EKS Pod Identity association identifier.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>roleArn</code></td><td>string</td><td>—</td><td>RoleARN is the resolved IAM role ARN.</td></tr>
+</tbody></table></div>
+    </section>
   </main>
 </div>
 
 <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script>hljs.highlightAll();</script>
 <script src="/js/docs.js"></script>
 </body>
 </html>
