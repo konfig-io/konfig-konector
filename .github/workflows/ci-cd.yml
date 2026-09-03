@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+  id-token: write # OIDC federation for AWS ECR push
+
+env:
+  ENVTEST_K8S_VERSION: "1.29.5"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Install envtest binaries
+        run: |
+          mkdir -p bin/k8s/1.29.0-linux-amd64
+          curl -sL "https://github.com/kubernetes-sigs/controller-tools/releases/download/envtest-v${ENVTEST_K8S_VERSION}/envtest-v${ENVTEST_K8S_VERSION}-linux-amd64.tar.gz" \
+            | tar -xz -C bin/k8s/1.29.0-linux-amd64 --strip-components=2
+
+      - name: Install helm
+        uses: azure/setup-helm@v4
+
+      - name: Test
+        run: |
+          KUBEBUILDER_ASSETS="$PWD/bin/k8s/1.29.0-linux-amd64" \
+            go test $(go list ./... | grep -v /e2e) -count=1
+
+      - name: Verify manifests are up to date
+        run: |
+          make manifests generate
+          if ! git diff --quiet; then
+            echo "::error::config/ or zz_generated files are stale — run 'make manifests generate' and commit"
+            git diff --stat
+            exit 1
+          fi
+
+  # Builds and pushes the operator image to ECR. Configure these repository
+  # variables (Settings → Secrets and variables → Actions → Variables):
+  #   AWS_CI_ROLE_ARN — IAM role assumable via GitHub OIDC with ECR push rights
+  #   AWS_REGION      — e.g. us-east-1
+  #   ECR_REPOSITORY  — e.g. konfig-konector
+  # The job is skipped until AWS_CI_ROLE_ARN is set. Image tags: <git sha>,
+  # plus "latest" on main. Argo CD / GitOps tag bumps are intentionally left
+  # to the consuming environment's pipeline.
+  build_and_push:
+    needs: [test]
+    if: github.event_name == 'push' && vars.AWS_CI_ROLE_ARN != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CI_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+        run: |
+          IMAGE="$REGISTRY/$REPOSITORY"
+          docker build -t "$IMAGE:${{ github.sha }}" -f ./Dockerfile .
+          docker push "$IMAGE:${{ github.sha }}"
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            docker tag "$IMAGE:${{ github.sha }}" "$IMAGE:latest"
+            docker push "$IMAGE:latest"
+          fi

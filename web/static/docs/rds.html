@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Database (RDS) — konfig-konector Docs</title>
+  <meta name="description" content="API reference for DBSubnetGroup, DBParameterGroup, DBClusterParameterGroup, DBInstance, DBCluster." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">⚙</div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">rds</span>
+    </div>
+
+    <h1 class="docs-page-title">Database (RDS)</h1>
+    <p class="docs-page-subtitle">RDS subnet groups, parameter groups, DB instances (MySQL, PostgreSQL, etc.), and Aurora clusters.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <!-- DBSubnetGroup -->
+    <section id="dbsubnetgroup" class="resource-section">
+      <h2>DBSubnetGroup <a href="#dbsubnetgroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates an RDS DB subnet group. Requires at least two subnets in different Availability Zones. Used by DBInstance and DBCluster.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbSubnetGroupName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the DB subnet group. Immutable after creation.</td></tr>
+            <tr><td>description</td><td>string</td><td><span class="req">✅</span></td><td>Description of the subnet group.</td></tr>
+            <tr><td>subnetRefs</td><td>[]SubnetRef</td><td><span class="req">✅</span></td><td>List of subnet CR names or direct IDs. Must include at least 2 subnets in different AZs.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the subnet group.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the DB subnet group.</td></tr>
+            <tr><td>status</td><td>Current status (e.g. <code>Complete</code>).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBSubnetGroup
+metadata:
+  name: prod-db-subnet-group
+  namespace: database
+spec:
+  dbSubnetGroupName: prod-db-subnet-group
+  description: "Production database subnet group"
+  subnetRefs:
+    - prod-private-subnet-1a
+    - prod-private-subnet-1b
+    - prod-private-subnet-1c
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> Cannot be deleted while referenced by a DBInstance or DBCluster. Delete database resources first.</div>
+    </section>
+
+    <!-- DBParameterGroup -->
+    <section id="dbparametergroup" class="resource-section">
+      <h2>DBParameterGroup <a href="#dbparametergroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates an RDS parameter group for DB instances. Each parameter specifies an apply method: <code>immediate</code> or <code>pending-reboot</code>.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbParameterGroupName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the parameter group. Immutable after creation.</td></tr>
+            <tr><td>dbParameterGroupFamily</td><td>string</td><td><span class="req">✅</span></td><td>DB family (e.g. <code>mysql8.0</code>, <code>postgres15</code>). Must match the engine version. Immutable.</td></tr>
+            <tr><td>description</td><td>string</td><td><span class="req">✅</span></td><td>Description of the parameter group.</td></tr>
+            <tr><td>parameters</td><td>[]Parameter</td><td></td><td>List of parameter overrides.</td></tr>
+            <tr><td>parameters[].parameterName</td><td>string</td><td></td><td>The parameter name (e.g. <code>max_connections</code>).</td></tr>
+            <tr><td>parameters[].parameterValue</td><td>string</td><td></td><td>The parameter value as a string.</td></tr>
+            <tr><td>parameters[].applyMethod</td><td>string</td><td></td><td><code>immediate</code> or <code>pending-reboot</code>. Some parameters require reboot to take effect.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the parameter group.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the parameter group.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBParameterGroup
+metadata:
+  name: prod-postgres15-params
+  namespace: database
+spec:
+  dbParameterGroupName: prod-postgres15-params
+  dbParameterGroupFamily: postgres15
+  description: "Production PostgreSQL 15 parameter group"
+  parameters:
+    - parameterName: max_connections
+      parameterValue: "500"
+      applyMethod: pending-reboot
+    - parameterName: shared_preload_libraries
+      parameterValue: pg_stat_statements
+      applyMethod: pending-reboot
+    - parameterName: log_min_duration_statement
+      parameterValue: "1000"
+      applyMethod: immediate
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> Cannot be deleted while referenced by a DBInstance. Modify the instance to use the default parameter group first.</div>
+    </section>
+
+    <!-- DBClusterParameterGroup -->
+    <section id="dbclusterparametergroup" class="resource-section">
+      <h2>DBClusterParameterGroup <a href="#dbclusterparametergroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a cluster-level parameter group for Aurora clusters. Same structure as <code>DBParameterGroup</code> but applies at the Aurora cluster level rather than individual instances.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbClusterParameterGroupName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the cluster parameter group. Immutable after creation.</td></tr>
+            <tr><td>dbParameterGroupFamily</td><td>string</td><td><span class="req">✅</span></td><td>Aurora DB family (e.g. <code>aurora-mysql8.0</code>, <code>aurora-postgresql15</code>). Immutable.</td></tr>
+            <tr><td>description</td><td>string</td><td><span class="req">✅</span></td><td>Description of the parameter group.</td></tr>
+            <tr><td>parameters</td><td>[]Parameter</td><td></td><td>Same structure as <code>DBParameterGroup.parameters</code>.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the parameter group.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the cluster parameter group.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBClusterParameterGroup
+metadata:
+  name: prod-aurora-pg15-cluster-params
+  namespace: database
+spec:
+  dbClusterParameterGroupName: prod-aurora-pg15-cluster-params
+  dbParameterGroupFamily: aurora-postgresql15
+  description: "Aurora PostgreSQL 15 cluster parameter group"
+  parameters:
+    - parameterName: shared_preload_libraries
+      parameterValue: pg_stat_statements,auto_explain
+      applyMethod: pending-reboot
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> Cannot be deleted while referenced by a DBCluster.</div>
+    </section>
+
+    <!-- DBInstance -->
+    <section id="dbinstance" class="resource-section">
+      <h2>DBInstance <a href="#dbinstance" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
+      <p class="resource-desc">Creates and manages an RDS DB instance. Supports MySQL, PostgreSQL, MariaDB, Oracle, and SQL Server engines with full configuration including storage autoscaling, Performance Insights, Enhanced Monitoring, and CloudWatch log exports.</p>
+      <div class="resource-alert">⏱ Async — initial provisioning takes several minutes depending on instance class and storage size. The controller polls every 30 seconds until the instance reaches the <code>available</code> state.</div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbInstanceIdentifier</td><td>string</td><td><span class="req">✅</span></td><td>Unique identifier for the DB instance. Immutable.</td></tr>
+            <tr><td>dbInstanceClass</td><td>string</td><td><span class="req">✅</span></td><td>Instance class (e.g. <code>db.t3.micro</code>, <code>db.r6g.xlarge</code>).</td></tr>
+            <tr><td>engine</td><td>string</td><td><span class="req">✅</span></td><td>Database engine: <code>mysql</code>, <code>postgres</code>, <code>mariadb</code>, <code>oracle-ee</code>, <code>sqlserver-ee</code>, etc.</td></tr>
+            <tr><td>engineVersion</td><td>string</td><td><span class="req">✅</span></td><td>Engine version (e.g. <code>15.3</code>, <code>8.0.35</code>).</td></tr>
+            <tr><td>masterUsername</td><td>string</td><td><span class="req">✅</span></td><td>Master username. Immutable after creation.</td></tr>
+            <tr><td>masterUserPasswordRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the Kubernetes Secret containing the master password.</td></tr>
+            <tr><td>masterUserPasswordRef.key</td><td>string</td><td><span class="req">✅</span></td><td>Key within the Secret.</td></tr>
+            <tr><td>dbName</td><td>string</td><td></td><td>Name of the initial database to create.</td></tr>
+            <tr><td>allocatedStorage</td><td>int32</td><td><span class="req">✅</span></td><td>Allocated storage in GiB.</td></tr>
+            <tr><td>storageType</td><td>string</td><td></td><td><code>gp2</code>, <code>gp3</code>, <code>io1</code>, or <code>io2</code>. Default: <code>gp2</code>.</td></tr>
+            <tr><td>storageEncrypted</td><td>bool</td><td></td><td>Enable storage encryption at rest.</td></tr>
+            <tr><td>kmsKeyId</td><td>string</td><td></td><td>KMS key ARN or ID for storage encryption.</td></tr>
+            <tr><td>multiAZ</td><td>bool</td><td></td><td>Enable Multi-AZ deployment for high availability.</td></tr>
+            <tr><td>publiclyAccessible</td><td>bool</td><td></td><td>Make the DB instance accessible from the internet. Default: false.</td></tr>
+            <tr><td>dbSubnetGroupRef</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>DBSubnetGroup</code> CR or direct group name.</td></tr>
+            <tr><td>dbParameterGroupRef</td><td>string</td><td></td><td>Name of the <code>DBParameterGroup</code> CR.</td></tr>
+            <tr><td>vpcSecurityGroupRefs</td><td>[]string</td><td></td><td>Names of <code>SecurityGroup</code> CRs.</td></tr>
+            <tr><td>port</td><td>int32</td><td></td><td>Database port. Defaults vary by engine (MySQL: 3306, PostgreSQL: 5432).</td></tr>
+            <tr><td>backupRetentionPeriod</td><td>int32</td><td></td><td>Number of days to retain automated backups. Range: 0–35. 0 disables backups.</td></tr>
+            <tr><td>preferredBackupWindow</td><td>string</td><td></td><td>Daily time range for backups (e.g. <code>03:00-04:00</code> UTC).</td></tr>
+            <tr><td>preferredMaintenanceWindow</td><td>string</td><td></td><td>Weekly time range for maintenance (e.g. <code>sun:05:00-sun:06:00</code>).</td></tr>
+            <tr><td>iops</td><td>int32</td><td></td><td>Provisioned IOPS for <code>io1</code> or <code>io2</code> storage.</td></tr>
+            <tr><td>storageThroughput</td><td>int32</td><td></td><td>Throughput in MB/s for <code>gp3</code> storage.</td></tr>
+            <tr><td>maxAllocatedStorage</td><td>int32</td><td></td><td>Maximum storage limit in GiB for autoscaling. Set to enable storage autoscaling.</td></tr>
+            <tr><td>autoMinorVersionUpgrade</td><td>bool</td><td></td><td>Automatically apply minor engine upgrades during maintenance windows.</td></tr>
+            <tr><td>copyTagsToSnapshot</td><td>bool</td><td></td><td>Copy instance tags to automated snapshots.</td></tr>
+            <tr><td>enableIAMDatabaseAuthentication</td><td>bool</td><td></td><td>Enable IAM database authentication.</td></tr>
+            <tr><td>enablePerformanceInsights</td><td>bool</td><td></td><td>Enable Performance Insights for query-level monitoring.</td></tr>
+            <tr><td>performanceInsightsKmsKeyId</td><td>string</td><td></td><td>KMS key for Performance Insights data encryption.</td></tr>
+            <tr><td>performanceInsightsRetentionPeriod</td><td>int32</td><td></td><td>Retention period in days for Performance Insights data. Default: 7.</td></tr>
+            <tr><td>monitoringInterval</td><td>int32</td><td></td><td>Interval for Enhanced Monitoring metrics (seconds): 0, 1, 5, 10, 15, 30, or 60. 0 disables.</td></tr>
+            <tr><td>monitoringRoleArn</td><td>string</td><td></td><td>IAM role ARN for Enhanced Monitoring. Required when <code>monitoringInterval &gt; 0</code>.</td></tr>
+            <tr><td>enabledCloudwatchLogsExports</td><td>[]string</td><td></td><td>CloudWatch log types to export. MySQL: <code>error</code>, <code>slowquery</code>, <code>audit</code>. PostgreSQL: <code>postgresql</code>, <code>upgrade</code>.</td></tr>
+            <tr><td>deletionProtection</td><td>bool</td><td></td><td>Enable deletion protection to prevent accidental deletion.</td></tr>
+            <tr><td>skipFinalSnapshot</td><td>bool</td><td></td><td>Skip creating a final snapshot when the instance is deleted. Default: false (final snapshot is created).</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the instance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbInstanceArn</td><td>The ARN of the DB instance.</td></tr>
+            <tr><td>endpoint</td><td>The connection endpoint hostname.</td></tr>
+            <tr><td>port</td><td>The database port number.</td></tr>
+            <tr><td>dbInstanceStatus</td><td>Current status: <code>creating</code>, <code>available</code>, <code>modifying</code>, <code>deleting</code>, etc.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — MySQL Basic</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBInstance
+metadata:
+  name: prod-mysql
+  namespace: database
+spec:
+  dbInstanceIdentifier: prod-mysql
+  dbInstanceClass: db.t3.medium
+  engine: mysql
+  engineVersion: "8.0.35"
+  masterUsername: admin
+  masterUserPasswordRef:
+    name: prod-mysql-secret
+    key: password
+  dbName: appdb
+  allocatedStorage: 100
+  storageType: gp3
+  storageEncrypted: true
+  multiAZ: true
+  dbSubnetGroupRef: prod-db-subnet-group
+  vpcSecurityGroupRefs:
+    - db-sg
+  backupRetentionPeriod: 7
+  preferredBackupWindow: "03:00-04:00"
+  autoMinorVersionUpgrade: true
+  copyTagsToSnapshot: true
+  tags:
+    env: prod
+    engine: mysql</code></pre>
+      </div>
+
+      <h3>Example — Full-Featured PostgreSQL</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBInstance
+metadata:
+  name: prod-postgres
+  namespace: database
+spec:
+  dbInstanceIdentifier: prod-postgres
+  dbInstanceClass: db.r6g.xlarge
+  engine: postgres
+  engineVersion: "15.4"
+  masterUsername: postgres
+  masterUserPasswordRef:
+    name: prod-postgres-secret
+    key: password
+  dbName: appdb
+  allocatedStorage: 500
+  storageType: gp3
+  storageThroughput: 250
+  maxAllocatedStorage: 2000
+  storageEncrypted: true
+  kmsKeyId: arn:aws:kms:us-east-1:123456789012:key/mrk-abc123
+  multiAZ: true
+  publiclyAccessible: false
+  dbSubnetGroupRef: prod-db-subnet-group
+  dbParameterGroupRef: prod-postgres15-params
+  vpcSecurityGroupRefs:
+    - db-sg
+  port: 5432
+  backupRetentionPeriod: 14
+  preferredBackupWindow: "03:00-04:00"
+  preferredMaintenanceWindow: "sun:05:00-sun:06:00"
+  autoMinorVersionUpgrade: false
+  copyTagsToSnapshot: true
+  enableIAMDatabaseAuthentication: true
+  enablePerformanceInsights: true
+  performanceInsightsRetentionPeriod: 31
+  monitoringInterval: 60
+  monitoringRoleArn: arn:aws:iam::123456789012:role/rds-enhanced-monitoring
+  enabledCloudwatchLogsExports:
+    - postgresql
+    - upgrade
+  deletionProtection: true
+  skipFinalSnapshot: false
+  tags:
+    env: prod
+    engine: postgres
+    criticality: high</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>The master password is read from the referenced Kubernetes Secret at reconcile time. It is never written to status, events, or logs.</li>
+        <li>Updates to most spec fields are gated on <code>observedGeneration</code> to avoid costly describe + modify API calls on every reconcile.</li>
+        <li><code>skipFinalSnapshot: false</code> (the default) means a final snapshot named <code>&lt;identifier&gt;-final</code> will be created when the CR is deleted. Set to <code>true</code> to skip this for dev/test environments.</li>
+        <li>Storage autoscaling is enabled by setting <code>maxAllocatedStorage</code> to a value greater than <code>allocatedStorage</code>.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>May take several minutes.</strong> If <code>skipFinalSnapshot: false</code>, a final snapshot is created first which can take several minutes. If <code>deletionProtection: true</code>, the deletion will fail — disable protection first.</div>
+    </section>
+
+    <!-- DBCluster -->
+    <section id="dbcluster" class="resource-section">
+      <h2>DBCluster <a href="#dbcluster" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
+      <p class="resource-desc">Creates and manages an Aurora DB cluster. Manages the cluster-level resources only — you must create individual <code>DBInstance</code> CRs to add reader/writer instances to the cluster.</p>
+      <div class="resource-alert">⏱ Async — Aurora cluster provisioning takes several minutes. Controller polls every 30 seconds until the cluster is <code>available</code>.</div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbClusterIdentifier</td><td>string</td><td><span class="req">✅</span></td><td>Unique identifier for the DB cluster. Immutable.</td></tr>
+            <tr><td>engine</td><td>string</td><td><span class="req">✅</span></td><td><code>aurora-mysql</code> or <code>aurora-postgresql</code>.</td></tr>
+            <tr><td>engineVersion</td><td>string</td><td><span class="req">✅</span></td><td>Engine version (e.g. <code>8.0.mysql_aurora.3.04.0</code>, <code>15.4</code>).</td></tr>
+            <tr><td>masterUsername</td><td>string</td><td><span class="req">✅</span></td><td>Master username. Immutable after creation.</td></tr>
+            <tr><td>masterUserPasswordRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Kubernetes Secret name containing the master password.</td></tr>
+            <tr><td>masterUserPasswordRef.key</td><td>string</td><td><span class="req">✅</span></td><td>Key within the Secret.</td></tr>
+            <tr><td>dbSubnetGroupRef</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>DBSubnetGroup</code> CR.</td></tr>
+            <tr><td>dbClusterParameterGroupRef</td><td>string</td><td></td><td>Name of the <code>DBClusterParameterGroup</code> CR.</td></tr>
+            <tr><td>vpcSecurityGroupRefs</td><td>[]string</td><td></td><td>Names of <code>SecurityGroup</code> CRs.</td></tr>
+            <tr><td>backupRetentionPeriod</td><td>int32</td><td></td><td>Days to retain automated backups (1–35).</td></tr>
+            <tr><td>preferredBackupWindow</td><td>string</td><td></td><td>Daily backup window in UTC (e.g. <code>03:00-04:00</code>).</td></tr>
+            <tr><td>preferredMaintenanceWindow</td><td>string</td><td></td><td>Weekly maintenance window (e.g. <code>sun:05:00-sun:06:00</code>).</td></tr>
+            <tr><td>storageEncrypted</td><td>bool</td><td></td><td>Encrypt storage at rest. Immutable after creation.</td></tr>
+            <tr><td>kmsKeyId</td><td>string</td><td></td><td>KMS key ARN for storage encryption. Immutable.</td></tr>
+            <tr><td>storageType</td><td>string</td><td></td><td>Aurora storage type: <code>aurora</code> or <code>aurora-iopt1</code> (I/O-optimized).</td></tr>
+            <tr><td>allocatedStorage</td><td>int32</td><td></td><td>Storage in GiB (Aurora Serverless v2 and I/O-optimized only).</td></tr>
+            <tr><td>port</td><td>int32</td><td></td><td>Port for cluster connections. Defaults: MySQL 3306, PostgreSQL 5432.</td></tr>
+            <tr><td>engineMode</td><td>string</td><td></td><td><code>provisioned</code> or <code>serverless</code>. Immutable after creation.</td></tr>
+            <tr><td>serverlessV2ScalingConfig.minCapacity</td><td>float64</td><td></td><td>Minimum ACU capacity for Serverless v2 (e.g. 0.5).</td></tr>
+            <tr><td>serverlessV2ScalingConfig.maxCapacity</td><td>float64</td><td></td><td>Maximum ACU capacity for Serverless v2 (e.g. 16.0).</td></tr>
+            <tr><td>backtrackWindow</td><td>int64</td><td></td><td>Backtrack window in seconds (Aurora MySQL only, max 259200 = 72 hours).</td></tr>
+            <tr><td>networkType</td><td>string</td><td></td><td><code>IPV4</code> or <code>DUAL</code> for dual-stack IPv4+IPv6.</td></tr>
+            <tr><td>enableHttpEndpoint</td><td>bool</td><td></td><td>Enable the RDS Data API HTTP endpoint (Serverless v1 only).</td></tr>
+            <tr><td>enableIAMDatabaseAuthentication</td><td>bool</td><td></td><td>Enable IAM database authentication.</td></tr>
+            <tr><td>copyTagsToSnapshot</td><td>bool</td><td></td><td>Copy cluster tags to automated snapshots.</td></tr>
+            <tr><td>autoMinorVersionUpgrade</td><td>bool</td><td></td><td>Automatically apply minor version upgrades.</td></tr>
+            <tr><td>enabledCloudwatchLogsExports</td><td>[]string</td><td></td><td>Log types to export. Delta sync. Aurora MySQL: <code>audit</code>, <code>error</code>, <code>general</code>, <code>slowquery</code>. Aurora PostgreSQL: <code>postgresql</code>.</td></tr>
+            <tr><td>performanceInsightsEnabled</td><td>bool</td><td></td><td>Enable Performance Insights.</td></tr>
+            <tr><td>performanceInsightsKmsKeyId</td><td>string</td><td></td><td>KMS key for Performance Insights.</td></tr>
+            <tr><td>performanceInsightsRetentionPeriod</td><td>int32</td><td></td><td>Retention in days (default: 7).</td></tr>
+            <tr><td>deletionProtection</td><td>bool</td><td></td><td>Enable deletion protection.</td></tr>
+            <tr><td>skipFinalSnapshot</td><td>bool</td><td></td><td>Skip final snapshot on deletion. Default: false.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>dbClusterArn</td><td>The ARN of the Aurora cluster.</td></tr>
+            <tr><td>endpoint</td><td>Writer endpoint hostname for write connections.</td></tr>
+            <tr><td>readerEndpoint</td><td>Reader endpoint hostname for load-balanced read connections.</td></tr>
+            <tr><td>status</td><td>Current status: <code>creating</code>, <code>available</code>, <code>modifying</code>, etc.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — Aurora MySQL Provisioned</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBCluster
+metadata:
+  name: prod-aurora-mysql
+  namespace: database
+spec:
+  dbClusterIdentifier: prod-aurora-mysql
+  engine: aurora-mysql
+  engineVersion: 8.0.mysql_aurora.3.04.0
+  masterUsername: admin
+  masterUserPasswordRef:
+    name: prod-aurora-secret
+    key: password
+  dbSubnetGroupRef: prod-db-subnet-group
+  vpcSecurityGroupRefs:
+    - db-sg
+  storageEncrypted: true
+  backupRetentionPeriod: 7
+  preferredBackupWindow: "02:00-03:00"
+  enableIAMDatabaseAuthentication: true
+  deletionProtection: true
+  tags:
+    env: prod
+    engine: aurora-mysql</code></pre>
+      </div>
+
+      <h3>Example — Aurora Serverless v2 PostgreSQL</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: DBCluster
+metadata:
+  name: staging-serverless-pg
+  namespace: database
+spec:
+  dbClusterIdentifier: staging-serverless-pg
+  engine: aurora-postgresql
+  engineVersion: "15.4"
+  engineMode: provisioned   # Serverless v2 uses provisioned engineMode
+  masterUsername: postgres
+  masterUserPasswordRef:
+    name: staging-pg-secret
+    key: password
+  dbSubnetGroupRef: staging-db-subnet-group
+  vpcSecurityGroupRefs:
+    - db-sg
+  serverlessV2ScalingConfig:
+    minCapacity: 0.5
+    maxCapacity: 8.0
+  storageEncrypted: true
+  backupRetentionPeriod: 3
+  skipFinalSnapshot: true
+  tags:
+    env: staging
+    engine: aurora-postgresql</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>The <code>DBCluster</code> CR manages only the cluster-level resource. Create separate <code>DBInstance</code> CRs with the <code>dbClusterIdentifier</code> field pointing to this cluster to add writer and reader instances.</li>
+        <li>The <code>readerEndpoint</code> load-balances reads across all read replicas; use the <code>endpoint</code> (writer) for writes.</li>
+        <li><code>engineMode</code> is immutable after creation.</li>
+        <li>Aurora Serverless v2 uses <code>engineMode: provisioned</code> with <code>serverlessV2ScalingConfig</code> and requires at least one instance of type <code>db.serverless</code>.</li>
+        <li>CloudWatch log exports use delta sync — adding/removing entries in <code>enabledCloudwatchLogsExports</code> is applied incrementally.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if cluster has instances.</strong> Delete all DB instances in the cluster first. If <code>deletionProtection: true</code>, disable it before deletion. A final snapshot is created by default unless <code>skipFinalSnapshot: true</code>.</div>
+    </section>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

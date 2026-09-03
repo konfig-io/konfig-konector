@@ -1,0 +1,81 @@
+---
+# 1. Create an IAM role for a workload
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRole
+metadata:
+  name: my-app-role
+  namespace: default
+spec:
+  roleName: my-app-eks-role
+  description: "IAM role for my-app running in EKS"
+  maxSessionDuration: 3600
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "pods.eks.amazonaws.com"
+          },
+          "Action": ["sts:AssumeRole", "sts:TagSession"]
+        }
+      ]
+    }
+  tags:
+    app: my-app
+    env: production
+
+---
+# 2. Create an IAM policy for S3 access
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicy
+metadata:
+  name: my-app-s3-policy
+  namespace: default
+spec:
+  policyName: my-app-s3-access
+  description: "Allow my-app to read from its S3 bucket"
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": ["s3:GetObject", "s3:ListBucket"],
+          "Resource": [
+            "arn:aws:s3:::my-app-bucket",
+            "arn:aws:s3:::my-app-bucket/*"
+          ]
+        }
+      ]
+    }
+
+---
+# 3. Attach the policy to the role
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicyAttachment
+metadata:
+  name: my-app-s3-attachment
+  namespace: default
+spec:
+  roleRef:
+    name: my-app-role
+  policyRef:
+    name: my-app-s3-policy
+
+---
+# 4. Link the Kubernetes ServiceAccount to the IAM role via EKS Pod Identity
+apiVersion: aws.konfig.io/v1alpha1
+kind: PodIdentityAssociation
+metadata:
+  name: my-app-pod-identity
+  namespace: default
+spec:
+  clusterName: my-eks-cluster
+  targetNamespace: default
+  serviceAccountName: my-app
+  roleRef:
+    name: my-app-role
+  # Also write the annotation for IRSA compatibility
+  annotateServiceAccount: true

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Route53 / DNS — konfig-konector Docs</title>
+  <meta name="description" content="API reference for HostedZone, RecordSet, HealthCheck." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">⚙</div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">route53</span>
+    </div>
+
+    <h1 class="docs-page-title">Route53 / DNS</h1>
+    <p class="docs-page-subtitle">Hosted zones, DNS record sets with routing policies, and Route 53 health checks.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <!-- HostedZone -->
+    <section id="hostedzone" class="resource-section">
+      <h2>HostedZone <a href="#hostedzone" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a Route 53 hosted zone (public or private). For private zones, the zone is associated with the specified VPC. Name server records returned in status must be configured at your domain registrar for public zones.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>name</td><td>string</td><td><span class="req">✅</span></td><td>Domain name for the hosted zone. Must end with a trailing dot (e.g. <code>example.com.</code>).</td></tr>
+            <tr><td>comment</td><td>string</td><td></td><td>Optional comment for the hosted zone.</td></tr>
+            <tr><td>private</td><td>bool</td><td></td><td>Create a private hosted zone. Default: false (public zone).</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>VPC ID to associate with a private hosted zone. Required when <code>private: true</code>.</td></tr>
+            <tr><td>vpcRef.region</td><td>string</td><td></td><td>AWS region of the VPC. Required when <code>private: true</code>.</td></tr>
+            <tr><td>delegationSetId</td><td>string</td><td></td><td>Reusable delegation set ID for consistent name servers across zones.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the hosted zone.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>hostedZoneId</td><td>The Route 53 hosted zone ID (e.g. <code>Z1234ABCDEFGH</code>).</td></tr>
+            <tr><td>nameServers</td><td>List of authoritative name servers for the zone. These must be configured at your domain registrar for public zones.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — Public Zone</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: HostedZone
+metadata:
+  name: example-com-zone
+  namespace: dns
+spec:
+  name: example.com.
+  comment: "Production DNS zone for example.com"
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Example — Private Zone</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: HostedZone
+metadata:
+  name: internal-example-com-zone
+  namespace: dns
+spec:
+  name: internal.example.com.
+  comment: "Internal DNS zone"
+  private: true
+  vpcRef:
+    id: vpc-0abc123
+    region: us-east-1
+  tags:
+    env: prod
+    visibility: private</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>The controller uses the CR's UID as the <code>CallerReference</code> to ensure idempotency. Creating two CRs with the same zone name will create two separate hosted zones in Route 53.</li>
+        <li>For public zones, the name server addresses returned in <code>status.nameServers</code> must be added as NS records at your domain registrar or parent zone.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if zone has records.</strong> Route 53 refuses to delete a hosted zone that contains records other than the default NS and SOA records. Delete all <code>RecordSet</code> CRs (and any manually created records) first.</div>
+    </section>
+
+    <!-- RecordSet -->
+    <section id="recordset" class="resource-section">
+      <h2>RecordSet <a href="#recordset" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates and manages a DNS record set in a Route 53 hosted zone. Supports simple records, alias records (for ALB/CloudFront/S3), weighted routing, failover routing, and health check associations.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>hostedZoneRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>HostedZone</code> CR in the same namespace.</td></tr>
+            <tr><td>hostedZoneRef.id</td><td>string</td><td></td><td>Direct Route 53 hosted zone ID (alternative to <code>hostedZoneRef.name</code>).</td></tr>
+            <tr><td>name</td><td>string</td><td><span class="req">✅</span></td><td>Fully qualified domain name with trailing dot (e.g. <code>api.example.com.</code>).</td></tr>
+            <tr><td>type</td><td>string</td><td><span class="req">✅</span></td><td>Record type: <code>A</code>, <code>AAAA</code>, <code>CNAME</code>, <code>MX</code>, <code>TXT</code>, <code>NS</code>, <code>SRV</code>, <code>CAA</code>, <code>PTR</code>.</td></tr>
+            <tr><td>ttl</td><td>int64</td><td></td><td>TTL in seconds. Required for non-alias records.</td></tr>
+            <tr><td>records</td><td>[]string</td><td></td><td>Record values. Required for non-alias records.</td></tr>
+            <tr><td>alias.dnsName</td><td>string</td><td></td><td>DNS name of the alias target (e.g. ALB DNS name). Mutually exclusive with <code>records</code>.</td></tr>
+            <tr><td>alias.hostedZoneId</td><td>string</td><td></td><td>Hosted zone ID of the alias target (e.g. the ALB's hosted zone ID).</td></tr>
+            <tr><td>alias.evaluateTargetHealth</td><td>bool</td><td></td><td>Route 53 evaluates the health of the alias target. Default: false.</td></tr>
+            <tr><td>weight</td><td>int64</td><td></td><td>Weight for weighted routing policy (0–255). Set on multiple records with the same name/type.</td></tr>
+            <tr><td>setIdentifier</td><td>string</td><td></td><td>Unique identifier for weighted, failover, or geolocation routing records.</td></tr>
+            <tr><td>failover</td><td>string</td><td></td><td><code>PRIMARY</code> or <code>SECONDARY</code> for failover routing policy.</td></tr>
+            <tr><td>healthCheckRef.name</td><td>string</td><td></td><td>Name of a <code>HealthCheck</code> CR to associate with this record.</td></tr>
+            <tr><td>healthCheckRef.id</td><td>string</td><td></td><td>Direct Route 53 health check ID (alternative to <code>healthCheckRef.name</code>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>changeId</td><td>The Route 53 change ID for the last submitted change (e.g. <code>/change/C2345EXAMPLE</code>).</td></tr>
+            <tr><td>changeStatus</td><td><code>PENDING</code> or <code>INSYNC</code>. Route 53 propagation status.</td></tr>
+            <tr><td>hostedZoneId</td><td>The resolved hosted zone ID.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — Simple A Record</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-a-record
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: api.example.com.
+  type: A
+  ttl: 300
+  records:
+    - 203.0.113.10</code></pre>
+      </div>
+
+      <h3>Example — ALB Alias Record</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: www-alb-alias
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: www.example.com.
+  type: A
+  alias:
+    dnsName: prod-alb-1234567890.us-east-1.elb.amazonaws.com.
+    hostedZoneId: Z35SXDOTRQ7X7K
+    evaluateTargetHealth: true</code></pre>
+      </div>
+
+      <h3>Example — Weighted Routing Pair</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-blue
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: api.example.com.
+  type: CNAME
+  ttl: 60
+  records:
+    - blue.api.example.com.
+  weight: 80
+  setIdentifier: blue
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-green
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: api.example.com.
+  type: CNAME
+  ttl: 60
+  records:
+    - green.api.example.com.
+  weight: 20
+  setIdentifier: green</code></pre>
+      </div>
+
+      <h3>Example — TXT Record (Domain Verification)</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: acme-challenge
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: _acme-challenge.example.com.
+  type: TXT
+  ttl: 300
+  records:
+    - '"abc123verificationtoken"'</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>DNS changes propagate asynchronously. <code>status.changeStatus</code> moves from <code>PENDING</code> to <code>INSYNC</code> typically within 60 seconds, but can take longer.</li>
+        <li>Record names must be fully qualified (end with a trailing dot).</li>
+        <li>TXT record values must be enclosed in double quotes within the YAML string.</li>
+        <li>Route 53 throttles ChangeResourceRecordSets API calls. The controller handles throttling automatically with exponential backoff.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The record set is deleted from the hosted zone. DNS changes propagate asynchronously after deletion.</div>
+    </section>
+
+    <!-- HealthCheck -->
+    <section id="healthcheck" class="resource-section">
+      <h2>HealthCheck <a href="#healthcheck" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a Route 53 health check to monitor endpoint availability. Health checks can be associated with RecordSet CRs to enable failover routing.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>type</td><td>string</td><td><span class="req">✅</span></td><td>Health check type: <code>HTTP</code>, <code>HTTPS</code>, <code>HTTP_STR_MATCH</code>, <code>HTTPS_STR_MATCH</code>, <code>TCP</code>, or <code>CALCULATED</code>.</td></tr>
+            <tr><td>ipAddress</td><td>string</td><td></td><td>IP address to check. Either <code>ipAddress</code> or <code>fqdn</code> is required.</td></tr>
+            <tr><td>fqdn</td><td>string</td><td></td><td>Fully qualified domain name to check (sends Host header).</td></tr>
+            <tr><td>port</td><td>int32</td><td></td><td>Port to connect to. Defaults: HTTP=80, HTTPS=443, TCP=80.</td></tr>
+            <tr><td>resourcePath</td><td>string</td><td></td><td>Path to request for HTTP/HTTPS checks (e.g. <code>/health</code>).</td></tr>
+            <tr><td>searchString</td><td>string</td><td></td><td>String to match in the response body (for <code>_STR_MATCH</code> types).</td></tr>
+            <tr><td>requestInterval</td><td>int32</td><td></td><td>Seconds between health checks: <code>10</code> or <code>30</code>. Default: 30. Interval of 10 costs more.</td></tr>
+            <tr><td>failureThreshold</td><td>int32</td><td></td><td>Consecutive failures before marking unhealthy (1–10). Default: 3.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the health check.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>healthCheckId</td><td>The Route 53 health check ID. Use this in <code>RecordSet.spec.healthCheckRef.id</code>.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — HTTPS Health Check</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: HealthCheck
+metadata:
+  name: prod-api-health
+  namespace: dns
+spec:
+  type: HTTPS
+  fqdn: api.example.com
+  port: 443
+  resourcePath: /health
+  requestInterval: 30
+  failureThreshold: 3
+  tags:
+    env: prod
+    service: api</code></pre>
+      </div>
+
+      <h3>Example — Failover with Health Check</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: HealthCheck
+metadata:
+  name: primary-api-health
+  namespace: dns
+spec:
+  type: HTTPS
+  fqdn: primary.api.example.com
+  port: 443
+  resourcePath: /health
+  requestInterval: 10
+  failureThreshold: 2
+  tags:
+    env: prod
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-primary
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: api.example.com.
+  type: A
+  alias:
+    dnsName: primary.api.example.com.
+    hostedZoneId: Z35SXDOTRQ7X7K
+    evaluateTargetHealth: true
+  failover: PRIMARY
+  setIdentifier: primary
+  healthCheckRef:
+    name: primary-api-health
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-secondary
+  namespace: dns
+spec:
+  hostedZoneRef:
+    name: example-com-zone
+  name: api.example.com.
+  type: A
+  alias:
+    dnsName: secondary.api.example.com.
+    hostedZoneId: Z35SXDOTRQ7X7K
+    evaluateTargetHealth: true
+  failover: SECONDARY
+  setIdentifier: secondary</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Either <code>ipAddress</code> or <code>fqdn</code> is required. When both are provided, <code>fqdn</code> is used as the Host header while connecting to <code>ipAddress</code>.</li>
+        <li><code>requestInterval: 10</code> (fast health checks) costs more than the default 30-second interval.</li>
+        <li>The <code>healthCheckId</code> in status is used in <code>RecordSet.spec.healthCheckRef.id</code> for association.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The Route 53 health check is deleted. Associated record sets are not automatically updated — remove the <code>healthCheckRef</code> from any RecordSets before deleting.</div>
+    </section>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

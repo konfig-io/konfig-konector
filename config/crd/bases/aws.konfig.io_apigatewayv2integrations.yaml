@@ -1,0 +1,245 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: apigatewayv2integrations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: APIGatewayV2Integration
+    listKind: APIGatewayV2IntegrationList
+    plural: apigatewayv2integrations
+    singular: apigatewayv2integration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.integrationId
+      name: Integration-ID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIGatewayV2Integration is the Schema for managing API Gateway
+          v2 integrations.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: APIGatewayV2IntegrationSpec defines the desired state of
+              an API Gateway v2 integration.
+            properties:
+              apiRef:
+                description: APIRef references the APIGatewayV2API this integration
+                  belongs to.
+                properties:
+                  apiId:
+                    description: APIID is a direct AWS API Gateway API ID, bypassing
+                      CR lookup.
+                    type: string
+                  name:
+                    description: Name of the API CR in the same namespace.
+                    type: string
+                type: object
+              connectionId:
+                description: |-
+                  ConnectionID is a direct VPC link ID used when connectionType is
+                  VPC_LINK, bypassing CR lookup.
+                type: string
+              connectionType:
+                description: ConnectionType is INTERNET or VPC_LINK.
+                enum:
+                - INTERNET
+                - VPC_LINK
+                type: string
+              credentialsArn:
+                description: CredentialsARN is the credentials for the integration.
+                type: string
+              description:
+                description: Description of the integration.
+                type: string
+              functionRef:
+                description: |-
+                  FunctionRef references a LambdaFunction CR whose ARN becomes the
+                  integration URI.
+                properties:
+                  functionName:
+                    description: FunctionName is a direct AWS Lambda function name
+                      or ARN.
+                    type: string
+                  name:
+                    description: Name of a LambdaFunction CR in the same namespace.
+                    type: string
+                type: object
+              integrationMethod:
+                description: IntegrationMethod is the HTTP method for HTTP integrations
+                  (e.g. POST).
+                type: string
+              integrationType:
+                description: IntegrationType is the integration type.
+                enum:
+                - AWS
+                - AWS_PROXY
+                - HTTP
+                - HTTP_PROXY
+                - MOCK
+                type: string
+              integrationUri:
+                description: |-
+                  IntegrationURI is the raw integration URI (e.g. a Lambda function ARN
+                  for AWS_PROXY, or an HTTP endpoint URL for HTTP_PROXY). Prefer
+                  FunctionRef for Lambda targets; if both are set, IntegrationURI wins.
+                type: string
+              payloadFormatVersion:
+                description: PayloadFormatVersion is 1.0 or 2.0 (Lambda proxy integrations).
+                enum:
+                - "1.0"
+                - "2.0"
+                type: string
+              requestParameters:
+                additionalProperties:
+                  type: string
+                description: RequestParameters are parameter mappings.
+                type: object
+              timeoutInMillis:
+                description: TimeoutInMillis is the custom timeout (50-30000 ms for
+                  HTTP APIs).
+                format: int32
+                minimum: 50
+                type: integer
+              vpcLinkRef:
+                description: |-
+                  VPCLinkRef references the APIGatewayV2VpcLink used when connectionType
+                  is VPC_LINK. Resolved to the connection ID.
+                properties:
+                  name:
+                    description: Name of the resource in the same namespace.
+                    type: string
+                  namespace:
+                    description: Namespace of the resource. Defaults to the referring
+                      object's namespace.
+                    type: string
+                type: object
+            required:
+            - apiRef
+            - integrationType
+            type: object
+          status:
+            description: APIGatewayV2IntegrationStatus defines the observed state
+              of APIGatewayV2Integration.
+            properties:
+              apiId:
+                description: APIID is the resolved API identifier the integration
+                  was created in.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              integrationId:
+                description: IntegrationID is the integration identifier.
+                type: string
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

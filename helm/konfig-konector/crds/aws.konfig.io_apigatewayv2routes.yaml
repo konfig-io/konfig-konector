@@ -1,0 +1,221 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: apigatewayv2routes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: APIGatewayV2Route
+    listKind: APIGatewayV2RouteList
+    plural: apigatewayv2routes
+    singular: apigatewayv2route
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.routeId
+      name: Route-ID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIGatewayV2Route is the Schema for managing API Gateway v2 routes.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: APIGatewayV2RouteSpec defines the desired state of an API
+              Gateway v2 route.
+            properties:
+              apiKeyRequired:
+                description: APIKeyRequired specifies whether an API key is required
+                  (WebSocket only).
+                type: boolean
+              apiRef:
+                description: APIRef references the APIGatewayV2API this route belongs
+                  to.
+                properties:
+                  apiId:
+                    description: APIID is a direct AWS API Gateway API ID, bypassing
+                      CR lookup.
+                    type: string
+                  name:
+                    description: Name of the API CR in the same namespace.
+                    type: string
+                type: object
+              authorizationScopes:
+                description: AuthorizationScopes are the OAuth scopes for JWT authorization.
+                items:
+                  type: string
+                type: array
+              authorizationType:
+                description: AuthorizationType is the authorization type for the route.
+                enum:
+                - NONE
+                - AWS_IAM
+                - CUSTOM
+                - JWT
+                type: string
+              authorizerRef:
+                description: |-
+                  AuthorizerRef references the APIGatewayV2Authorizer for the route when
+                  authorizationType is CUSTOM or JWT.
+                properties:
+                  authorizerId:
+                    description: AuthorizerID is a direct AWS authorizer ID, bypassing
+                      CR lookup.
+                    type: string
+                  name:
+                    description: Name of an APIGatewayV2Authorizer CR in the same
+                      namespace.
+                    type: string
+                type: object
+              integrationRef:
+                description: |-
+                  IntegrationRef references the APIGatewayV2Integration this route targets.
+                  Resolved into a "integrations/<id>" target.
+                properties:
+                  integrationId:
+                    description: IntegrationID is a direct AWS integration ID, bypassing
+                      CR lookup.
+                    type: string
+                  name:
+                    description: Name of an APIGatewayV2Integration CR in the same
+                      namespace.
+                    type: string
+                type: object
+              operationName:
+                description: OperationName is the operation name for the route.
+                type: string
+              routeKey:
+                description: RouteKey is the route key (e.g. "GET /pets" or "$default").
+                minLength: 1
+                type: string
+              target:
+                description: |-
+                  Target is a raw route target (e.g. "integrations/abc123"). Prefer
+                  IntegrationRef; if both are set, Target wins.
+                type: string
+            required:
+            - apiRef
+            - routeKey
+            type: object
+          status:
+            description: APIGatewayV2RouteStatus defines the observed state of APIGatewayV2Route.
+            properties:
+              apiId:
+                description: APIID is the resolved API identifier the route was created
+                  in.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              routeId:
+                description: RouteID is the route identifier.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

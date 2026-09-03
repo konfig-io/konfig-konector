@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networking — konfig-konector Docs</title>
+  <meta name="description" content="API reference for VPC, Subnet, InternetGateway, RouteTable, NatGateway, SecurityGroup, VPCEndpoint." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">⚙</div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">networking</span>
+    </div>
+
+    <h1 class="docs-page-title">Networking</h1>
+    <p class="docs-page-subtitle">VPC, subnets, internet gateways, route tables, NAT gateways, security groups, and VPC endpoints.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <!-- VPC -->
+    <section id="vpc" class="resource-section">
+      <h2>VPC <a href="#vpc" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates and manages a VPC with DNS settings, instance tenancy, optional IPv6 CIDR block, and secondary IPv4 CIDRs. Secondary CIDRs are reconciled on every sync — missing ones are added, removed ones are disassociated.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>cidrBlock</td><td>string</td><td><span class="req">✅</span></td><td>The primary IPv4 CIDR block for the VPC (e.g. <code>10.0.0.0/16</code>). Immutable after creation.</td></tr>
+            <tr><td>enableDnsSupport</td><td>bool</td><td></td><td>Enable DNS resolution in the VPC. Default: true.</td></tr>
+            <tr><td>enableDnsHostnames</td><td>bool</td><td></td><td>Assign DNS hostnames to EC2 instances. Default: false.</td></tr>
+            <tr><td>instanceTenancy</td><td>string</td><td></td><td>Tenancy of instances launched into the VPC. <code>default</code> or <code>dedicated</code>. Immutable after creation. Default: <code>default</code>.</td></tr>
+            <tr><td>assignIpv6CidrBlock</td><td>bool</td><td></td><td>Request an Amazon-provided IPv6 /56 CIDR block for the VPC.</td></tr>
+            <tr><td>secondaryIPv4CIDRs</td><td>[]string</td><td></td><td>Additional IPv4 CIDR blocks to associate with the VPC. Delta sync — adds/removes as needed.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the VPC.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcId</td><td>The ID of the created VPC (e.g. <code>vpc-0abc123</code>).</td></tr>
+            <tr><td>state</td><td>Current VPC state: <code>pending</code> or <code>available</code>.</td></tr>
+            <tr><td>ipv6CidrBlock</td><td>The Amazon-provided IPv6 CIDR block, if requested.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: VPC
+metadata:
+  name: prod-vpc
+  namespace: networking
+spec:
+  cidrBlock: 10.0.0.0/16
+  enableDnsSupport: true
+  enableDnsHostnames: true
+  assignIpv6CidrBlock: true
+  secondaryIPv4CIDRs:
+    - 100.64.0.0/16
+  tags:
+    env: prod
+    team: platform</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>cidrBlock</code> is immutable after creation. To change it, delete and recreate the VPC (and all dependent resources).</li>
+        <li><code>instanceTenancy</code> is immutable after creation.</li>
+        <li><code>secondaryIPv4CIDRs</code> are reconciled on every sync — adding entries associates the CIDR, removing entries disassociates it from the VPC.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> AWS will refuse to delete a VPC that still has subnets, non-default security groups, route tables (other than the main table), or an attached internet gateway. Delete all dependent resources first.</div>
+    </section>
+
+    <!-- Subnet -->
+    <section id="subnet" class="resource-section">
+      <h2>Subnet <a href="#subnet" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a subnet within a VPC. The controller waits for the referenced VPC CR to be Ready before creating the subnet.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>VPC</code> CR in the same namespace.</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>Direct VPC ID (alternative to <code>vpcRef.name</code>).</td></tr>
+            <tr><td>cidrBlock</td><td>string</td><td><span class="req">✅</span></td><td>IPv4 CIDR block for the subnet. Must be a subset of the VPC CIDR. Immutable after creation.</td></tr>
+            <tr><td>availabilityZone</td><td>string</td><td><span class="req">✅</span></td><td>The Availability Zone for the subnet (e.g. <code>us-east-1a</code>).</td></tr>
+            <tr><td>mapPublicIpOnLaunch</td><td>bool</td><td></td><td>Automatically assign a public IPv4 address to instances launched in this subnet. Default: false.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the subnet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>subnetId</td><td>The ID of the created subnet.</td></tr>
+            <tr><td>availableIpAddressCount</td><td>The number of available IPv4 addresses in the subnet.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: Subnet
+metadata:
+  name: prod-public-subnet-1a
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  cidrBlock: 10.0.1.0/24
+  availabilityZone: us-east-1a
+  mapPublicIpOnLaunch: true
+  tags:
+    env: prod
+    type: public
+    kubernetes.io/role/elb: "1"</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>cidrBlock</code> is immutable after creation.</li>
+        <li>The controller waits for the <code>VPC</code> CR to be <code>Ready</code> before creating the subnet. If the VPC CR is not Ready, the subnet CR will have <code>reason: DependencyNotReady</code>.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> AWS will refuse to delete a subnet that has Elastic Network Interfaces (ENIs) attached — typically means EC2 instances, RDS instances, Lambda functions, or load balancers still using it.</div>
+    </section>
+
+    <!-- InternetGateway -->
+    <section id="internetgateway" class="resource-section">
+      <h2>InternetGateway <a href="#internetgateway" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates an Internet Gateway and attaches it to the referenced VPC. Only one IGW can be attached to a VPC at a time.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>VPC</code> CR to attach to.</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>Direct VPC ID (alternative to <code>vpcRef.name</code>).</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the internet gateway.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>internetGatewayId</td><td>The ID of the created internet gateway (e.g. <code>igw-0abc123</code>).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: InternetGateway
+metadata:
+  name: prod-igw
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Maximum one internet gateway per VPC. Creating a second one while the first is attached will result in an error.</li>
+        <li>The controller handles both creation and attachment in the same reconcile loop.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The controller detaches the IGW from the VPC first, then deletes it.</div>
+    </section>
+
+    <!-- RouteTable -->
+    <section id="routetable" class="resource-section">
+      <h2>RouteTable <a href="#routetable" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Route table with individual route management and subnet associations. Routes and subnet associations are diffed on every reconcile. The local route is never removed.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>VPC</code> CR.</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>Direct VPC ID (alternative to <code>vpcRef.name</code>).</td></tr>
+            <tr><td>routes</td><td>[]Route</td><td></td><td>List of routes. Each route has <code>destinationCidr</code>, and one of <code>gatewayId</code>, <code>natGatewayRef</code>.</td></tr>
+            <tr><td>routes[].destinationCidr</td><td>string</td><td><span class="req">✅</span></td><td>Destination CIDR block for the route (e.g. <code>0.0.0.0/0</code>).</td></tr>
+            <tr><td>routes[].gatewayId</td><td>string</td><td></td><td>Direct gateway ID (IGW, VGW, etc.). Mutually exclusive with <code>natGatewayRef</code>.</td></tr>
+            <tr><td>routes[].natGatewayRef</td><td>string</td><td></td><td>Name of a <code>NatGateway</code> CR. Controller waits for NatGateway to be Ready.</td></tr>
+            <tr><td>subnetAssociations</td><td>[]string</td><td></td><td>Names of <code>Subnet</code> CRs to associate with this route table. Delta sync.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the route table.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>routeTableId</td><td>The ID of the route table.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: prod-public-rt
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  routes:
+    - destinationCidr: 0.0.0.0/0
+      gatewayId: igw-0abc123   # or use InternetGateway CR name via ref
+  subnetAssociations:
+    - prod-public-subnet-1a
+    - prod-public-subnet-1b
+  tags:
+    env: prod
+    type: public
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: prod-private-rt-1a
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  routes:
+    - destinationCidr: 0.0.0.0/0
+      natGatewayRef: prod-nat-1a   # references NatGateway CR
+  subnetAssociations:
+    - prod-private-subnet-1a
+  tags:
+    env: prod
+    type: private</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Routes are diffed on every reconcile — routes in AWS not in spec are deleted; routes in spec not in AWS are created.</li>
+        <li>The local route (VPC CIDR → local) is always preserved and never deleted, even if not specified in spec.</li>
+        <li>Subnet associations are delta-synced: the controller associates subnets in spec not yet associated, and disassociates subnets removed from spec.</li>
+        <li>When using <code>natGatewayRef</code>, the controller waits for the NatGateway CR to be Ready before creating the route.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The controller disassociates all subnets first, then deletes the route table. If this is the main route table of a VPC, deletion is a no-op (AWS does not allow deletion of the main route table).</div>
+    </section>
+
+    <!-- NatGateway -->
+    <section id="natgateway" class="resource-section">
+      <h2>NatGateway <a href="#natgateway" class="anchor">#</a> <span class="resource-badge">✅ Working</span> <span class="resource-badge async">⏱ async</span></h2>
+      <p class="resource-desc">Creates a NAT gateway in the specified subnet. Public NAT gateways automatically allocate an Elastic IP address. Provisioning takes 1–3 minutes.</p>
+      <div class="resource-alert">⏱ Async — takes 1–3 minutes to provision. Controller polls every 15 seconds until the NAT gateway reaches the <code>available</code> state.</div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>subnetRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>Subnet</code> CR to place the NAT gateway in (must be a public subnet for public NAT).</td></tr>
+            <tr><td>subnetRef.id</td><td>string</td><td></td><td>Direct subnet ID (alternative to <code>subnetRef.name</code>).</td></tr>
+            <tr><td>connectivityType</td><td>string</td><td></td><td><code>public</code> or <code>private</code>. Default: <code>public</code>. Public NAT gateways allocate an EIP; private ones do not. Immutable after creation.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the NAT gateway.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>natGatewayId</td><td>The ID of the NAT gateway (e.g. <code>nat-0abc123</code>).</td></tr>
+            <tr><td>elasticIpAllocationId</td><td>The Elastic IP allocation ID (public NAT gateways only).</td></tr>
+            <tr><td>state</td><td>Current state: <code>pending</code>, <code>available</code>, <code>deleting</code>, <code>deleted</code>.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: NatGateway
+metadata:
+  name: prod-nat-1a
+  namespace: networking
+spec:
+  subnetRef:
+    name: prod-public-subnet-1a
+  connectivityType: public
+  tags:
+    env: prod
+    az: us-east-1a</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Public NAT gateways allocate a new Elastic IP address automatically. The EIP allocation ID is stored in <code>status.elasticIpAllocationId</code>.</li>
+        <li>Private NAT gateways do not allocate an EIP and are used for routing between private subnets.</li>
+        <li><code>connectivityType</code> is immutable after creation.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Async (~60–90 seconds).</strong> The controller initiates deletion and polls until the NAT gateway reaches the <code>deleted</code> state, then releases the associated Elastic IP address. The CR remains until AWS confirms full deletion.</div>
+    </section>
+
+    <!-- SecurityGroup -->
+    <section id="securitygroup" class="resource-section">
+      <h2>SecurityGroup <a href="#securitygroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a security group with ingress and egress rules. Rules support IPv4 CIDR, IPv6 CIDR, prefix lists, and references to other security groups — all with per-rule descriptions. Drift detection runs on every reconcile.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>VPC</code> CR.</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>Direct VPC ID (alternative to <code>vpcRef.name</code>).</td></tr>
+            <tr><td>groupName</td><td>string</td><td><span class="req">✅</span></td><td>Name of the security group. Immutable after creation.</td></tr>
+            <tr><td>description</td><td>string</td><td><span class="req">✅</span></td><td>Description of the security group. Immutable after creation.</td></tr>
+            <tr><td>ingressRules</td><td>[]SGRule</td><td></td><td>List of ingress rules.</td></tr>
+            <tr><td>egressRules</td><td>[]SGRule</td><td></td><td>List of egress rules. Default: allow all outbound (0.0.0.0/0, -1).</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the security group.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top:16px;margin-bottom:8px;font-size:0.85rem;color:var(--text-2)">Each SGRule in <code>ingressRules</code> / <code>egressRules</code> supports:</p>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>protocol</td><td>string</td><td>IP protocol: <code>tcp</code>, <code>udp</code>, <code>icmp</code>, <code>icmpv6</code>, or <code>-1</code> (all).</td></tr>
+            <tr><td>fromPort</td><td>int32</td><td>Start of port range. Use <code>-1</code> for ICMP or all protocols.</td></tr>
+            <tr><td>toPort</td><td>int32</td><td>End of port range.</td></tr>
+            <tr><td>cidrIpv4</td><td>string</td><td>IPv4 CIDR block source/destination.</td></tr>
+            <tr><td>cidrIpv6</td><td>string</td><td>IPv6 CIDR block source/destination.</td></tr>
+            <tr><td>prefixListId</td><td>string</td><td>AWS-managed prefix list ID (e.g. for S3 or DynamoDB gateway endpoints).</td></tr>
+            <tr><td>sourceGroupRef</td><td>string</td><td>Name of another <code>SecurityGroup</code> CR in the same namespace.</td></tr>
+            <tr><td>description</td><td>string</td><td>Per-rule description for auditing purposes.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>groupId</td><td>The ID of the security group (e.g. <code>sg-0abc123</code>).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — Web Security Group</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: web-sg
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  groupName: web-sg
+  description: "Web tier security group"
+  ingressRules:
+    - protocol: tcp
+      fromPort: 443
+      toPort: 443
+      cidrIpv4: 0.0.0.0/0
+      description: "HTTPS from internet"
+    - protocol: tcp
+      fromPort: 443
+      toPort: 443
+      cidrIpv6: "::/0"
+      description: "HTTPS from internet (IPv6)"
+    - protocol: tcp
+      fromPort: 80
+      toPort: 80
+      cidrIpv4: 0.0.0.0/0
+      description: "HTTP redirect"
+  egressRules:
+    - protocol: "-1"
+      fromPort: -1
+      toPort: -1
+      cidrIpv4: 0.0.0.0/0
+      description: "All outbound"
+  tags:
+    env: prod
+    tier: web</code></pre>
+      </div>
+
+      <h3>Example — DB Security Group (SG reference)</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: db-sg
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  groupName: db-sg
+  description: "Database tier security group"
+  ingressRules:
+    - protocol: tcp
+      fromPort: 5432
+      toPort: 5432
+      sourceGroupRef: web-sg    # references SecurityGroup CR
+      description: "PostgreSQL from web tier"
+  tags:
+    env: prod
+    tier: db</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>groupName</code> and <code>description</code> are immutable after creation.</li>
+        <li>All rules are diffed on every reconcile cycle. Rules present in AWS but not in spec are deleted; rules in spec but not in AWS are created.</li>
+        <li>When using <code>sourceGroupRef</code>, the controller waits for the referenced security group CR to be Ready.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> AWS refuses to delete a security group that is currently attached to ENIs, RDS instances, Lambda functions, or referenced as a source/destination in another security group's rules.</div>
+    </section>
+
+    <!-- VPCEndpoint -->
+    <section id="vpcendpoint" class="resource-section">
+      <h2>VPCEndpoint <a href="#vpcendpoint" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates Interface or Gateway VPC endpoints for AWS services. Gateway endpoints (S3, DynamoDB) are free; Interface endpoints are billed per hour and per GB.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>vpcRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>VPC</code> CR.</td></tr>
+            <tr><td>vpcRef.id</td><td>string</td><td></td><td>Direct VPC ID.</td></tr>
+            <tr><td>serviceName</td><td>string</td><td><span class="req">✅</span></td><td>AWS service name in the format <code>com.amazonaws.&lt;region&gt;.&lt;service&gt;</code> (e.g. <code>com.amazonaws.us-east-1.s3</code>).</td></tr>
+            <tr><td>endpointType</td><td>string</td><td><span class="req">✅</span></td><td><code>Interface</code> or <code>Gateway</code>.</td></tr>
+            <tr><td>routeTableRefs</td><td>[]string</td><td></td><td>Names of <code>RouteTable</code> CRs to associate (Gateway endpoints only).</td></tr>
+            <tr><td>subnetRefs</td><td>[]string</td><td></td><td>Names of <code>Subnet</code> CRs to place the endpoint ENIs in (Interface endpoints only).</td></tr>
+            <tr><td>securityGroupRefs</td><td>[]string</td><td></td><td>Names of <code>SecurityGroup</code> CRs for the endpoint ENIs (Interface endpoints only).</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the endpoint.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>endpointId</td><td>The ID of the VPC endpoint (e.g. <code>vpce-0abc123</code>).</td></tr>
+            <tr><td>state</td><td>Current endpoint state: <code>pending</code>, <code>available</code>, <code>deleting</code>, etc.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — S3 Gateway Endpoint</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: VPCEndpoint
+metadata:
+  name: s3-gateway-endpoint
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  serviceName: com.amazonaws.us-east-1.s3
+  endpointType: Gateway
+  routeTableRefs:
+    - prod-private-rt-1a
+    - prod-private-rt-1b
+  tags:
+    env: prod
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: VPCEndpoint
+metadata:
+  name: ecr-api-endpoint
+  namespace: networking
+spec:
+  vpcRef:
+    name: prod-vpc
+  serviceName: com.amazonaws.us-east-1.ecr.api
+  endpointType: Interface
+  subnetRefs:
+    - prod-private-subnet-1a
+    - prod-private-subnet-1b
+  securityGroupRefs:
+    - web-sg
+  tags:
+    env: prod</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Gateway endpoints (S3, DynamoDB) are free and add a route to the specified route tables. No ENIs are created.</li>
+        <li>Interface endpoints create ENIs in the specified subnets and are billed per hour and per GB of data processed.</li>
+        <li>The service name format is always <code>com.amazonaws.&lt;region&gt;.&lt;service&gt;</code>. Run <code>aws ec2 describe-vpc-endpoint-services</code> to discover available services in your region.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The VPC endpoint is deleted. Route table entries for Gateway endpoints are removed automatically by AWS.</div>
+    </section>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

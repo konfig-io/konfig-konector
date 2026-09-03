@@ -1,0 +1,283 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mqbrokers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MQBroker
+    listKind: MQBrokerList
+    plural: mqbrokers
+    singular: mqbroker
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.brokerId
+      name: Broker-ID
+      type: string
+    - jsonPath: .status.brokerState
+      name: State
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: MQBroker is the Schema for managing Amazon MQ brokers.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MQBrokerSpec defines the desired state of an Amazon MQ broker.
+            properties:
+              autoMinorVersionUpgrade:
+                description: AutoMinorVersionUpgrade enables automatic patch version
+                  upgrades.
+                type: boolean
+              brokerName:
+                description: BrokerName is the name of the broker. Immutable after
+                  creation.
+                maxLength: 50
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: brokerName is immutable
+                  rule: self == oldSelf
+              deploymentMode:
+                description: DeploymentMode is the broker deployment mode. Immutable
+                  after creation.
+                enum:
+                - SINGLE_INSTANCE
+                - ACTIVE_STANDBY_MULTI_AZ
+                - CLUSTER_MULTI_AZ
+                type: string
+                x-kubernetes-validations:
+                - message: deploymentMode is immutable
+                  rule: self == oldSelf
+              engineType:
+                description: EngineType is the broker engine. Immutable after creation.
+                enum:
+                - ACTIVEMQ
+                - RABBITMQ
+                type: string
+                x-kubernetes-validations:
+                - message: engineType is immutable
+                  rule: self == oldSelf
+              engineVersion:
+                description: EngineVersion is the broker engine version (e.g. 5.17.6,
+                  3.11.20).
+                type: string
+              hostInstanceType:
+                description: HostInstanceType is the broker instance type (e.g. mq.t3.micro).
+                minLength: 1
+                type: string
+              publiclyAccessible:
+                description: PubliclyAccessible enables connections from outside the
+                  VPC.
+                type: boolean
+              securityGroupRefs:
+                description: SecurityGroupRefs are the security groups authorizing
+                  connections.
+                items:
+                  description: SecurityGroupRef references either a managed SecurityGroup
+                    CR or a direct Security Group ID.
+                  properties:
+                    id:
+                      description: ID is a direct AWS Security Group ID (e.g. sg-0abc1234).
+                      type: string
+                    name:
+                      description: Name of a SecurityGroup CR in the same namespace.
+                      type: string
+                  type: object
+                type: array
+              subnetRefs:
+                description: SubnetRefs are the subnets the broker is placed into.
+                items:
+                  description: SubnetRef references either a managed Subnet CR or
+                    a direct Subnet ID.
+                  properties:
+                    id:
+                      description: ID is a direct AWS Subnet ID (e.g. subnet-0abc1234).
+                      type: string
+                    name:
+                      description: Name of a Subnet CR in the same namespace.
+                      type: string
+                  type: object
+                type: array
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+              users:
+                description: Users are the broker users created at provisioning time.
+                items:
+                  description: |-
+                    MQUser defines a broker user. The password is always read from a
+                    Kubernetes Secret and never stored in the CR.
+                  properties:
+                    consoleAccess:
+                      description: |-
+                        ConsoleAccess enables access to the ActiveMQ Web Console.
+                        Does not apply to RabbitMQ brokers.
+                      type: boolean
+                    groups:
+                      description: |-
+                        Groups is the list of ActiveMQ groups the user belongs to.
+                        Does not apply to RabbitMQ brokers.
+                      items:
+                        type: string
+                      type: array
+                    passwordRef:
+                      description: |-
+                        PasswordRef references the Kubernetes Secret holding the user's
+                        password. The password is never written to status or exported.
+                      properties:
+                        key:
+                          description: Key is the key within the Secret whose value
+                            to use.
+                          type: string
+                        name:
+                          description: Name of the Kubernetes Secret.
+                          type: string
+                      required:
+                      - key
+                      - name
+                      type: object
+                    username:
+                      description: Username of the broker user.
+                      maxLength: 100
+                      minLength: 2
+                      type: string
+                  required:
+                  - passwordRef
+                  - username
+                  type: object
+                type: array
+            required:
+            - brokerName
+            - deploymentMode
+            - engineType
+            - hostInstanceType
+            type: object
+          status:
+            description: MQBrokerStatus defines the observed state of MQBroker.
+            properties:
+              brokerArn:
+                description: BrokerARN is the ARN of the broker.
+                type: string
+              brokerId:
+                description: BrokerID is the unique ID Amazon MQ generates for the
+                  broker.
+                type: string
+              brokerState:
+                description: BrokerState is the current broker state (e.g. RUNNING).
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

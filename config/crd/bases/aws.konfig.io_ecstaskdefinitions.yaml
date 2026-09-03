@@ -1,0 +1,308 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecstaskdefinitions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSTaskDefinition
+    listKind: ECSTaskDefinitionList
+    plural: ecstaskdefinitions
+    singular: ecstaskdefinition
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.family
+      name: Family
+      type: string
+    - jsonPath: .status.revision
+      name: Revision
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ECSTaskDefinition is the Schema for managing ECS Task Definitions.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              ECSTaskDefinitionSpec defines the desired state of an ECS Task Definition.
+              A new revision is registered whenever the spec changes.
+            properties:
+              containerDefinitions:
+                description: ContainerDefinitions is the list of containers in the
+                  task.
+                items:
+                  description: ECSContainerDefinition defines a container within a
+                    task definition.
+                  properties:
+                    command:
+                      description: Command overrides the container CMD.
+                      items:
+                        type: string
+                      type: array
+                    cpu:
+                      description: CPU units to reserve for the container. 1024 =
+                        1 vCPU.
+                      format: int32
+                      type: integer
+                    entryPoint:
+                      description: EntryPoint overrides the container ENTRYPOINT.
+                      items:
+                        type: string
+                      type: array
+                    environment:
+                      additionalProperties:
+                        type: string
+                      description: Environment variables for the container.
+                      type: object
+                    essential:
+                      description: 'Essential — if true, stopping this container stops
+                        the entire task. Default: true.'
+                      type: boolean
+                    image:
+                      description: Image is the container image URI.
+                      minLength: 1
+                      type: string
+                    logGroup:
+                      description: LogGroup is a CloudWatch log group name to send
+                        container logs to.
+                      type: string
+                    memory:
+                      description: Memory is the memory in MiB to reserve for the
+                        container.
+                      format: int32
+                      type: integer
+                    name:
+                      description: Name is the container name.
+                      minLength: 1
+                      type: string
+                    portMappings:
+                      description: PortMappings are the ports to expose from the container.
+                      items:
+                        description: ECSPortMapping defines a container port mapping.
+                        properties:
+                          containerPort:
+                            description: ContainerPort is the port exposed by the
+                              container.
+                            format: int32
+                            type: integer
+                          protocol:
+                            description: 'Protocol is the transport protocol: tcp
+                              or udp. Default: tcp.'
+                            enum:
+                            - tcp
+                            - udp
+                            type: string
+                        required:
+                        - containerPort
+                        type: object
+                      type: array
+                  required:
+                  - image
+                  - name
+                  type: object
+                minItems: 1
+                type: array
+              cpu:
+                description: |-
+                  CPU is the number of vCPU units for the task (e.g. "256", "512", "1024").
+                  Required for Fargate.
+                type: string
+              executionRoleArn:
+                description: |-
+                  ExecutionRoleArn is the ARN of the task execution role.
+                  Either executionRoleArn or executionRoleRef must be set for Fargate.
+                type: string
+              executionRoleRef:
+                description: ExecutionRoleRef references an IAMRole CR in the same
+                  namespace.
+                properties:
+                  arn:
+                    description: |-
+                      ARN is a direct AWS IAM role ARN.
+                      If set, Name and Namespace are ignored.
+                    type: string
+                  name:
+                    description: Name of an IAMRole CR in the same namespace.
+                    type: string
+                  namespace:
+                    description: Namespace of the IAMRole CR. Defaults to the referring
+                      object's namespace.
+                    type: string
+                type: object
+              family:
+                description: Family is the task definition family name. Immutable
+                  after creation.
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: family is immutable
+                  rule: self == oldSelf
+              memory:
+                description: |-
+                  Memory is the memory in MiB for the task (e.g. "512", "1024").
+                  Required for Fargate.
+                type: string
+              networkMode:
+                description: NetworkMode is the Docker networking mode.
+                enum:
+                - awsvpc
+                - bridge
+                - host
+                - none
+                type: string
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags.
+                type: object
+              taskRoleArn:
+                description: TaskRoleArn is the ARN of the task role (permissions
+                  for your application code).
+                type: string
+              taskRoleRef:
+                description: TaskRoleRef references an IAMRole CR in the same namespace.
+                properties:
+                  arn:
+                    description: |-
+                      ARN is a direct AWS IAM role ARN.
+                      If set, Name and Namespace are ignored.
+                    type: string
+                  name:
+                    description: Name of an IAMRole CR in the same namespace.
+                    type: string
+                  namespace:
+                    description: Namespace of the IAMRole CR. Defaults to the referring
+                      object's namespace.
+                    type: string
+                type: object
+            required:
+            - containerDefinitions
+            - family
+            type: object
+          status:
+            description: ECSTaskDefinitionStatus defines the observed state of ECSTaskDefinition.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              revision:
+                description: Revision is the current task definition revision number.
+                format: int32
+                type: integer
+              specHash:
+                description: SpecHash is the hash of the spec used to detect changes.
+                type: string
+              taskDefinitionArn:
+                description: TaskDefinitionARN is the full ARN including revision
+                  of the latest registered task definition.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

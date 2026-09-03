@@ -1,0 +1,106 @@
+/*
+Copyright 2026.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// LatticeServiceSpec defines the desired state of a VPC Lattice service.
+type LatticeServiceSpec struct {
+	// Name of the service. Immutable after creation.
+	// +kubebuilder:validation:MinLength=3
+	// +kubebuilder:validation:MaxLength=40
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
+	Name string `json:"name"`
+
+	// AuthType determines how clients are authenticated.
+	// +kubebuilder:validation:Enum=NONE;AWS_IAM
+	// +optional
+	AuthType string `json:"authType,omitempty"`
+
+	// CustomDomainName is the custom domain name of the service.
+	// +optional
+	CustomDomainName string `json:"customDomainName,omitempty"`
+
+	// CertificateARN is the ARN of the ACM certificate for the custom domain.
+	// +optional
+	CertificateARN string `json:"certificateArn,omitempty"`
+
+	// Tags are AWS resource tags to apply.
+	// +optional
+	Tags map[string]string `json:"tags,omitempty"`
+}
+
+// LatticeServiceStatus defines the observed state of LatticeService.
+type LatticeServiceStatus struct {
+	// ARN is the Amazon Resource Name of the service.
+	// +optional
+	ARN string `json:"arn,omitempty"`
+
+	// ID is the unique identifier of the service.
+	// +optional
+	ID string `json:"id,omitempty"`
+
+	// DNSName is the DNS name that clients use to reach the service.
+	// +optional
+	DNSName string `json:"dnsName,omitempty"`
+
+	// Status is the lifecycle status reported by AWS.
+	// +optional
+	Status string `json:"status,omitempty"`
+
+	// Conditions describe the current state of the resource.
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// ObservedGeneration is the most recent .metadata.generation reconciled.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+
+	// LastSyncTime is when the resource was last successfully reconciled.
+	// +optional
+	LastSyncTime *metav1.Time `json:"lastSyncTime,omitempty"`
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="ID",type="string",JSONPath=".status.id"
+// +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
+// LatticeService is the Schema for managing VPC Lattice services.
+type LatticeService struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   LatticeServiceSpec   `json:"spec,omitempty"`
+	Status LatticeServiceStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// LatticeServiceList contains a list of LatticeService
+type LatticeServiceList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []LatticeService `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&LatticeService{}, &LatticeServiceList{})
+}

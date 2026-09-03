@@ -1,0 +1,237 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: vpnconnections.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: VPNConnection
+    listKind: VPNConnectionList
+    plural: vpnconnections
+    singular: vpnconnection
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.vpnConnectionId
+      name: ID
+      type: string
+    - jsonPath: .status.state
+      name: State
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: VPNConnection is the Schema for managing EC2 VPN connections.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: VPNConnectionSpec defines the desired state of an EC2 VPN
+              connection.
+            properties:
+              customerGatewayRef:
+                description: CustomerGatewayRef references the customer gateway.
+                properties:
+                  id:
+                    description: ID is a direct AWS customer gateway ID (cgw-...).
+                      If set, Name is ignored.
+                    type: string
+                  name:
+                    description: Name of a CustomerGateway CR in the same namespace.
+                    type: string
+                type: object
+              staticRoutesOnly:
+                description: |-
+                  StaticRoutesOnly indicates the VPN connection uses static routes only
+                  (required when the customer gateway device does not support BGP).
+                type: boolean
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+              transitGatewayRef:
+                description: |-
+                  TransitGatewayRef references the transit gateway. Exactly one of
+                  VPNGatewayRef or TransitGatewayRef must be set.
+                properties:
+                  name:
+                    description: Name of a TransitGateway CR in the same namespace.
+                    type: string
+                  transitGatewayId:
+                    description: TransitGatewayID is a direct AWS Transit Gateway
+                      ID.
+                    type: string
+                type: object
+              tunnelOptions:
+                description: TunnelOptions configures the VPN tunnels (up to 2).
+                items:
+                  description: VPNTunnelOptions configures one of the two VPN tunnels.
+                  properties:
+                    insideCidr:
+                      description: |-
+                        InsideCIDR is the range of inside IP addresses for the tunnel
+                        (a /30 CIDR block from the 169.254.0.0/16 range).
+                      type: string
+                    presharedKeyRef:
+                      description: |-
+                        PreSharedKeyRef references a Kubernetes Secret holding the tunnel's
+                        pre-shared key. The key material is never written to status or logs.
+                      properties:
+                        key:
+                          description: Key is the key within the Secret whose value
+                            to use.
+                          type: string
+                        name:
+                          description: Name of the Kubernetes Secret.
+                          type: string
+                      required:
+                      - key
+                      - name
+                      type: object
+                  type: object
+                maxItems: 2
+                type: array
+              type:
+                default: ipsec.1
+                description: Type of VPN connection.
+                enum:
+                - ipsec.1
+                type: string
+              vpnGatewayRef:
+                description: |-
+                  VPNGatewayRef references the virtual private gateway. Exactly one of
+                  VPNGatewayRef or TransitGatewayRef must be set.
+                properties:
+                  id:
+                    description: ID is a direct AWS virtual private gateway ID (vgw-...).
+                      If set, Name is ignored.
+                    type: string
+                  name:
+                    description: Name of a VPNGateway CR in the same namespace.
+                    type: string
+                type: object
+            required:
+            - customerGatewayRef
+            type: object
+          status:
+            description: VPNConnectionStatus defines the observed state of VPNConnection.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              state:
+                description: |-
+                  State is the lifecycle state reported by AWS (pending, available,
+                  deleting, deleted).
+                type: string
+              vpnConnectionId:
+                description: VPNConnectionID is the AWS VPN connection identifier.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,36 @@
+# GitLab CI mirror of .github/workflows/ci-cd.yml.
+# The image build/push stage is intentionally omitted here — wire it to your
+# registry of choice (see the build_and_push job in the GitHub workflow for
+# the ECR reference implementation).
+
+stages:
+  - test
+
+variables:
+  ENVTEST_K8S_VERSION: "1.29.5"
+  GOTOOLCHAIN: local
+
+test:
+  stage: test
+  image: golang:1.22
+  cache:
+    key: go-mod
+    paths:
+      - .go-mod-cache/
+  before_script:
+    - export GOMODCACHE="$CI_PROJECT_DIR/.go-mod-cache"
+    - curl -sL https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/local/bin/helm
+  script:
+    - go build ./...
+    - go vet ./...
+    - mkdir -p bin/k8s/1.29.0-linux-amd64
+    - curl -sL "https://github.com/kubernetes-sigs/controller-tools/releases/download/envtest-v${ENVTEST_K8S_VERSION}/envtest-v${ENVTEST_K8S_VERSION}-linux-amd64.tar.gz"
+      | tar -xz -C bin/k8s/1.29.0-linux-amd64 --strip-components=2
+    - KUBEBUILDER_ASSETS="$PWD/bin/k8s/1.29.0-linux-amd64" go test $(go list ./... | grep -v /e2e) -count=1
+    - make manifests generate
+    - |
+      if ! git diff --quiet; then
+        echo "config/ or zz_generated files are stale — run 'make manifests generate' and commit"
+        git diff --stat
+        exit 1
+      fi

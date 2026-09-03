@@ -1,0 +1,223 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: backupplans.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: BackupPlan
+    listKind: BackupPlanList
+    plural: backupplans
+    singular: backupplan
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.planId
+      name: Plan-ID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: BackupPlan is the Schema for managing AWS Backup plans.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: BackupPlanSpec defines the desired state of an AWS Backup
+              plan.
+            properties:
+              planName:
+                description: PlanName is the display name of the backup plan.
+                maxLength: 50
+                minLength: 1
+                type: string
+              rules:
+                description: Rules are the scheduled backup tasks in this plan.
+                items:
+                  description: BackupPlanRule specifies a scheduled backup task.
+                  properties:
+                    completionWindowMinutes:
+                      description: |-
+                        CompletionWindowMinutes is the window after a backup job starts before
+                        it must complete or be canceled.
+                      format: int64
+                      type: integer
+                    lifecycle:
+                      description: Lifecycle defines cold storage transition and expiry
+                        for recovery points.
+                      properties:
+                        deleteAfterDays:
+                          description: |-
+                            DeleteAfterDays is the number of days after creation that a recovery
+                            point is deleted. Must be at least 90 days after
+                            MoveToColdStorageAfterDays.
+                          format: int64
+                          type: integer
+                        moveToColdStorageAfterDays:
+                          description: |-
+                            MoveToColdStorageAfterDays is the number of days after creation that a
+                            recovery point is moved to cold storage.
+                          format: int64
+                          type: integer
+                      type: object
+                    ruleName:
+                      description: RuleName is a display name for the rule.
+                      maxLength: 50
+                      minLength: 1
+                      type: string
+                    scheduleExpression:
+                      description: |-
+                        ScheduleExpression is a CRON expression in UTC specifying when Backup
+                        initiates a backup job.
+                      type: string
+                    startWindowMinutes:
+                      description: |-
+                        StartWindowMinutes is the window after a backup is scheduled before a
+                        job is canceled if it doesn't start. Minimum 60.
+                      format: int64
+                      type: integer
+                    targetBackupVaultName:
+                      description: |-
+                        TargetBackupVaultName is the AWS name of the vault where backups are
+                        stored. Either this or TargetBackupVaultRef must be set.
+                      type: string
+                    targetBackupVaultRef:
+                      description: TargetBackupVaultRef references a BackupVault CR
+                        in the same namespace.
+                      type: string
+                  required:
+                  - ruleName
+                  type: object
+                minItems: 1
+                type: array
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply to the plan.
+                type: object
+            required:
+            - planName
+            - rules
+            type: object
+          status:
+            description: BackupPlanStatus defines the observed state of BackupPlan.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              planArn:
+                description: PlanARN is the ARN of the backup plan.
+                type: string
+              planId:
+                description: PlanID uniquely identifies the backup plan.
+                type: string
+              versionId:
+                description: VersionID is the current version of the backup plan.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

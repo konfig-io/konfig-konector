@@ -1,0 +1,64 @@
+---
+# 1. Create a Route53 hosted zone
+apiVersion: aws.konfig.io/v1alpha1
+kind: HostedZone
+metadata:
+  name: example-com
+  namespace: default
+spec:
+  name: example.com.
+  comment: "Managed by konfig-konector"
+  tags:
+    env: production
+
+---
+# 2. Create a health check for the API
+apiVersion: aws.konfig.io/v1alpha1
+kind: HealthCheck
+metadata:
+  name: api-health
+  namespace: default
+spec:
+  type: HTTPS
+  fqdn: api.example.com
+  port: 443
+  resourcePath: /health
+  requestInterval: 30
+  failureThreshold: 3
+  tags:
+    service: api
+
+---
+# 3. Create an A record pointing to an ALB
+apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: api-record
+  namespace: default
+spec:
+  hostedZoneRef:
+    name: example-com
+  name: api.example.com.
+  type: A
+  alias:
+    dnsName: my-alb-1234567890.us-east-1.elb.amazonaws.com.
+    hostedZoneId: Z35SXDOTRQ7X7K
+    evaluateTargetHealth: true
+  healthCheckRef:
+    name: api-health
+
+---
+# 4. Create a TXT record for domain verification
+apiVersion: aws.konfig.io/v1alpha1
+kind: RecordSet
+metadata:
+  name: txt-verification
+  namespace: default
+spec:
+  hostedZoneRef:
+    name: example-com
+  name: _acme-challenge.example.com.
+  type: TXT
+  ttl: 300
+  records:
+    - '"abc123verificationtoken"'

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAM — konfig-konector Docs</title>
+  <meta name="description" content="API reference for IAMRole, IAMPolicy, IAMPolicyAttachment, IAMRolePolicy, PodIdentityAssociation, IAMUser, IAMGroup, IAMSAMLProvider, IAMOIDCProvider." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">⚙</div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">iam</span>
+    </div>
+
+    <h1 class="docs-page-title">IAM</h1>
+    <p class="docs-page-subtitle">Identity and Access Management resources: roles, policies, users, groups, and identity providers.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <!-- IAMRole -->
+    <section id="iamrole" class="resource-section">
+      <h2>IAMRole <a href="#iamrole" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates and manages IAM roles including trust policies, permissions boundaries, path, max session duration, and tags. Includes drift detection on the trust policy document.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>roleName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the IAM role. Immutable after creation.</td></tr>
+            <tr><td>assumeRolePolicyDocument</td><td>string</td><td><span class="req">✅</span></td><td>JSON trust policy document. Drift detected and re-applied on every sync.</td></tr>
+            <tr><td>description</td><td>string</td><td></td><td>Human-readable description of the role.</td></tr>
+            <tr><td>maxSessionDuration</td><td>int32</td><td></td><td>Maximum session duration in seconds. Range 3600–43200. Default: 3600.</td></tr>
+            <tr><td>path</td><td>string</td><td></td><td>Path for the role. Default: <code>/</code>. By default the operator only manages roles under <code>/konfig/</code> path unless overridden in operator config.</td></tr>
+            <tr><td>permissionsBoundary</td><td>string</td><td></td><td>ARN of the policy to use as a permissions boundary.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the role.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the created IAM role.</td></tr>
+            <tr><td>roleId</td><td>The stable unique ID of the IAM role (e.g. <code>AROA...</code>).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions. Key condition: <code>Ready</code>.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRole
+metadata:
+  name: my-app-role
+  namespace: my-namespace
+spec:
+  roleName: my-app-role
+  description: "Role for my application"
+  maxSessionDuration: 3600
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": { "Service": "pods.eks.amazonaws.com" },
+        "Action": ["sts:AssumeRole", "sts:TagSession"]
+      }]
+    }
+  tags:
+    team: platform
+    env: prod</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>roleName</code> is immutable after creation. To rename a role, delete the CR and recreate it.</li>
+        <li>Drift detection runs on the trust policy document on every reconcile cycle.</li>
+        <li>By default, the operator is configured to only manage IAM roles under the <code>/konfig/</code> path. This restriction can be adjusted in the operator's Helm values.</li>
+        <li>For EKS Pod Identity, the trust policy must allow <code>pods.eks.amazonaws.com</code> as the principal with actions <code>sts:AssumeRole</code> and <code>sts:TagSession</code>.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The controller detaches all managed policies and deletes all inline policies first, then deletes the role. The CR is removed once AWS confirms deletion.</div>
+    </section>
+
+    <!-- IAMPolicy -->
+    <section id="iampolicy" class="resource-section">
+      <h2>IAMPolicy <a href="#iampolicy" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Manages customer-managed IAM policies. Policy document changes create new versions; non-default versions beyond the 5-version limit are automatically deleted.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>policyName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the IAM policy. Immutable after creation.</td></tr>
+            <tr><td>policyDocument</td><td>string</td><td><span class="req">✅</span></td><td>JSON policy document. Changes create a new policy version.</td></tr>
+            <tr><td>description</td><td>string</td><td></td><td>Human-readable description of the policy. Immutable after creation.</td></tr>
+            <tr><td>path</td><td>string</td><td></td><td>Path for the policy. Default: <code>/</code>.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the policy.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the created IAM policy.</td></tr>
+            <tr><td>policyId</td><td>The stable unique ID of the IAM policy.</td></tr>
+            <tr><td>defaultVersionId</td><td>The currently active policy version ID (e.g. <code>v3</code>).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions. Key condition: <code>Ready</code>.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicy
+metadata:
+  name: my-app-policy
+  namespace: my-namespace
+spec:
+  policyName: my-app-policy
+  description: "Grants S3 read access to my application"
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Action": ["s3:GetObject", "s3:ListBucket"],
+        "Resource": [
+          "arn:aws:s3:::my-bucket",
+          "arn:aws:s3:::my-bucket/*"
+        ]
+      }]
+    }
+  tags:
+    team: platform</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Changes to <code>policyDocument</code> create a new version using <code>CreatePolicyVersion</code> with <code>setAsDefault: true</code>.</li>
+        <li>IAM allows a maximum of 5 non-deleted versions per policy. Older non-default versions are automatically deleted when the limit is reached.</li>
+        <li>For attaching AWS managed policies (e.g. <code>arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess</code>), use <code>IAMPolicyAttachment</code> with a direct ARN — you do not need to create an <code>IAMPolicy</code> CR for managed policies.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if attached.</strong> Deletion fails if the policy is still attached to any role, user, or group. Delete all <code>IAMPolicyAttachment</code> and <code>IAMGroupPolicyAttachment</code> CRs that reference this policy first.</div>
+    </section>
+
+    <!-- IAMPolicyAttachment -->
+    <section id="iampolicyattachment" class="resource-section">
+      <h2>IAMPolicyAttachment <a href="#iampolicyattachment" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Attaches a managed IAM policy to an IAM role. Supports referencing other CRs by name or using direct ARNs for AWS managed policies.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>roleRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMRole</code> CR in the same namespace. Mutually exclusive with <code>roleRef.arn</code>.</td></tr>
+            <tr><td>roleRef.arn</td><td>string</td><td></td><td>Direct ARN of the IAM role (for roles not managed by this operator).</td></tr>
+            <tr><td>policyRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMPolicy</code> CR in the same namespace. Mutually exclusive with <code>policyRef.arn</code>.</td></tr>
+            <tr><td>policyRef.arn</td><td>string</td><td></td><td>Direct ARN of the policy (use for AWS managed policies).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>attached</td><td>Boolean indicating whether the policy is currently attached.</td></tr>
+            <tr><td>roleArn</td><td>Resolved ARN of the IAM role.</td></tr>
+            <tr><td>policyArn</td><td>Resolved ARN of the policy.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions. Key condition: <code>Ready</code>.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — CR Reference</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicyAttachment
+metadata:
+  name: my-app-role-policy
+  namespace: my-namespace
+spec:
+  roleRef:
+    name: my-app-role    # references IAMRole CR
+  policyRef:
+    name: my-app-policy  # references IAMPolicy CR</code></pre>
+      </div>
+
+      <h3>Example — AWS Managed Policy</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicyAttachment
+metadata:
+  name: my-app-role-s3-readonly
+  namespace: my-namespace
+spec:
+  roleRef:
+    name: my-app-role
+  policyRef:
+    arn: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>The controller waits for both the role CR and policy CR to be <code>Ready</code> before attempting the attachment.</li>
+        <li>The attachment is verified on every reconcile cycle; if it has been manually removed from AWS, the controller re-attaches it.</li>
+        <li>Exactly one of <code>roleRef.name</code> or <code>roleRef.arn</code> must be specified; same applies to <code>policyRef</code>.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The policy is detached from the role. The <code>IAMRole</code> and <code>IAMPolicy</code> CRs are not affected.</div>
+    </section>
+
+    <!-- IAMRolePolicy -->
+    <section id="iamrolepolicy" class="resource-section">
+      <h2>IAMRolePolicy <a href="#iamrolepolicy" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Embeds an inline policy directly on an IAM role. Inline policies are tightly coupled to the role and do not have their own ARN or version history.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>roleRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMRole</code> CR in the same namespace.</td></tr>
+            <tr><td>roleRef.arn</td><td>string</td><td></td><td>Direct ARN of the role (alternative to <code>roleRef.name</code>).</td></tr>
+            <tr><td>policyName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the inline policy (must be unique within the role).</td></tr>
+            <tr><td>policyDocument</td><td>string</td><td><span class="req">✅</span></td><td>JSON policy document for the inline policy.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>roleArn</td><td>The ARN of the IAM role this policy is embedded in.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRolePolicy
+metadata:
+  name: my-app-inline-policy
+  namespace: my-namespace
+spec:
+  roleRef:
+    name: my-app-role
+  policyName: AllowDynamoDBAccess
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query"],
+        "Resource": "arn:aws:dynamodb:us-east-1:123456789012:table/my-table"
+      }]
+    }</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Prefer <code>IAMPolicy</code> + <code>IAMPolicyAttachment</code> for policies shared across multiple roles.</li>
+        <li>Drift correction is always active — if the inline policy is removed or changed in AWS, the controller re-applies it.</li>
+        <li>Inline policies do not count toward the IAM policy version limit.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The inline policy is removed from the role. The role itself is unaffected.</div>
+    </section>
+
+    <!-- PodIdentityAssociation -->
+    <section id="podidentityassociation" class="resource-section">
+      <h2>PodIdentityAssociation <a href="#podidentityassociation" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Links a Kubernetes ServiceAccount to an IAM role via EKS Pod Identity. Optionally annotates the ServiceAccount with the role ARN for compatibility.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>clusterName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the EKS cluster.</td></tr>
+            <tr><td>targetNamespace</td><td>string</td><td><span class="req">✅</span></td><td>The Kubernetes namespace of the ServiceAccount.</td></tr>
+            <tr><td>serviceAccountName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the Kubernetes ServiceAccount.</td></tr>
+            <tr><td>roleRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMRole</code> CR in the same namespace.</td></tr>
+            <tr><td>roleRef.arn</td><td>string</td><td></td><td>Direct IAM role ARN (alternative to <code>roleRef.name</code>).</td></tr>
+            <tr><td>annotateServiceAccount</td><td>bool</td><td></td><td>If true, annotates the ServiceAccount with <code>eks.amazonaws.com/role-arn</code>. Useful for hybrid IRSA/Pod Identity setups.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags for the association.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>associationId</td><td>The unique ID of the EKS Pod Identity association.</td></tr>
+            <tr><td>associationArn</td><td>The ARN of the association.</td></tr>
+            <tr><td>roleArn</td><td>The resolved IAM role ARN.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRole
+metadata:
+  name: my-app-role
+  namespace: platform
+spec:
+  roleName: my-app-role
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": { "Service": "pods.eks.amazonaws.com" },
+        "Action": ["sts:AssumeRole", "sts:TagSession"]
+      }]
+    }
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: PodIdentityAssociation
+metadata:
+  name: my-app-pod-identity
+  namespace: platform
+spec:
+  clusterName: my-eks-cluster
+  targetNamespace: my-app
+  serviceAccountName: my-app-sa
+  roleRef:
+    name: my-app-role
+  annotateServiceAccount: true
+  tags:
+    team: platform</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Requires the <code>eks-pod-identity-agent</code> addon to be installed on the cluster. See <a href="/docs/eks.html#eksaddon">EKSAddon</a>.</li>
+        <li>Only one association is allowed per (cluster, namespace, serviceAccountName) triple. Creating a second one will fail.</li>
+        <li>The IAM role trust policy must allow <code>pods.eks.amazonaws.com</code> as the principal with both <code>sts:AssumeRole</code> and <code>sts:TagSession</code> actions.</li>
+        <li>The <code>clusterName</code> here refers to the AWS EKS cluster name, not a CR reference.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The EKS Pod Identity association is deleted. The ServiceAccount and IAM role are unaffected.</div>
+    </section>
+
+    <!-- IAMUser -->
+    <section id="iamuser" class="resource-section">
+      <h2>IAMUser <a href="#iamuser" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Manages IAM users with path, permissions boundary, and tag sync. Does not manage access keys — create access keys through the AWS console or CLI.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>userName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the IAM user. Immutable after creation.</td></tr>
+            <tr><td>path</td><td>string</td><td></td><td>Path for the user. Default: <code>/</code>.</td></tr>
+            <tr><td>permissionsBoundary</td><td>string</td><td></td><td>ARN of the policy to use as a permissions boundary.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the user.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the IAM user.</td></tr>
+            <tr><td>userId</td><td>The stable unique ID of the IAM user.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled <code>metadata.generation</code>.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of the last successful reconciliation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMUser
+metadata:
+  name: ci-deploy-user
+  namespace: platform
+spec:
+  userName: ci-deploy-user
+  path: /automation/
+  tags:
+    purpose: ci-cd
+    team: platform</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>userName</code> is immutable after creation.</li>
+        <li>Access key management is intentionally out of scope. Use the AWS console, CLI, or a separate automation to create and rotate access keys.</li>
+        <li>Use <code>IAMGroupMembership</code> to add the user to groups, and <code>IAMPolicyAttachment</code> / <code>IAMGroupPolicyAttachment</code> to attach policies.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> Deletion fails if the user has attached policies, group memberships, or existing access keys. Clean these up first.</div>
+    </section>
+
+    <!-- IAMGroup -->
+    <section id="iamgroup" class="resource-section">
+      <h2>IAMGroup <a href="#iamgroup" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates an IAM group. Group membership and policy attachments are managed via <code>IAMGroupMembership</code> and <code>IAMGroupPolicyAttachment</code> CRs.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>groupName</td><td>string</td><td><span class="req">✅</span></td><td>The name of the IAM group. Immutable after creation.</td></tr>
+            <tr><td>path</td><td>string</td><td></td><td>Path for the group. Default: <code>/</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the IAM group.</td></tr>
+            <tr><td>groupId</td><td>The stable unique ID of the IAM group.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroup
+metadata:
+  name: developers-group
+  namespace: platform
+spec:
+  groupName: developers
+  path: /teams/</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>groupName</code> is immutable after creation.</li>
+        <li>Add users to the group with <code>IAMGroupMembership</code> CRs; attach policies with <code>IAMGroupPolicyAttachment</code> CRs.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if in use.</strong> Deletion fails if the group has member users or attached policies. Delete all <code>IAMGroupMembership</code> and <code>IAMGroupPolicyAttachment</code> CRs for this group first.</div>
+    </section>
+
+    <!-- IAMGroupPolicyAttachment -->
+    <section id="iamgrouppolicyattachment" class="resource-section">
+      <h2>IAMGroupPolicyAttachment <a href="#iamgrouppolicyattachment" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Attaches a managed IAM policy to an IAM group. Supports CR references or direct names/ARNs.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>groupRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMGroup</code> CR in the same namespace.</td></tr>
+            <tr><td>groupRef.groupName</td><td>string</td><td></td><td>Direct IAM group name (alternative to <code>groupRef.name</code>).</td></tr>
+            <tr><td>policyRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMPolicy</code> CR in the same namespace.</td></tr>
+            <tr><td>policyRef.arn</td><td>string</td><td></td><td>Direct policy ARN (use for AWS managed policies).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>attached</td><td>Boolean indicating whether the policy is attached.</td></tr>
+            <tr><td>groupName</td><td>The resolved IAM group name.</td></tr>
+            <tr><td>policyArn</td><td>The resolved policy ARN.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroupPolicyAttachment
+metadata:
+  name: developers-s3-policy
+  namespace: platform
+spec:
+  groupRef:
+    name: developers-group
+  policyRef:
+    arn: arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess</code></pre>
+      </div>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The policy is detached from the group.</div>
+    </section>
+
+    <!-- IAMGroupMembership -->
+    <section id="iamgroupmembership" class="resource-section">
+      <h2>IAMGroupMembership <a href="#iamgroupmembership" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Adds an IAM user to an IAM group. One CR per user-group relationship.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>groupRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMGroup</code> CR in the same namespace.</td></tr>
+            <tr><td>groupRef.groupName</td><td>string</td><td></td><td>Direct IAM group name (alternative to <code>groupRef.name</code>).</td></tr>
+            <tr><td>userRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>IAMUser</code> CR in the same namespace.</td></tr>
+            <tr><td>userRef.userName</td><td>string</td><td></td><td>Direct IAM user name (alternative to <code>userRef.name</code>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>member</td><td>Boolean indicating whether the user is currently a member of the group.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroupMembership
+metadata:
+  name: alice-developers
+  namespace: platform
+spec:
+  groupRef:
+    name: developers-group
+  userRef:
+    name: alice-user</code></pre>
+      </div>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The user is removed from the group. Neither the user nor the group CR is affected.</div>
+    </section>
+
+    <!-- IAMSAMLProvider -->
+    <section id="iamsamlprovider" class="resource-section">
+      <h2>IAMSAMLProvider <a href="#iamsamlprovider" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates a SAML identity provider in IAM for federated authentication. The provider name is immutable and forms part of the ARN.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>name</td><td>string</td><td><span class="req">✅</span></td><td>The name of the SAML provider. Immutable — forms part of the ARN.</td></tr>
+            <tr><td>samlMetadataDocument</td><td>string</td><td><span class="req">✅</span></td><td>The SAML metadata XML document from your identity provider. Drift detected and updated via <code>UpdateSAMLProvider</code>.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the provider.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the SAML provider (e.g. <code>arn:aws:iam::123456789012:saml-provider/MyIdP</code>).</td></tr>
+            <tr><td>validUntil</td><td>The expiration date of the SAML metadata, parsed from the XML.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMSAMLProvider
+metadata:
+  name: my-saml-idp
+  namespace: platform
+spec:
+  name: MyCorpIdP
+  samlMetadataDocument: |
+    &lt;?xml version="1.0"?&gt;
+    &lt;EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" ...&gt;
+      &lt;!-- SAML metadata from your IdP --&gt;
+    &lt;/EntityDescriptor&gt;
+  tags:
+    idp: okta</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>spec.name</code> is immutable after creation — it forms part of the ARN. To rename, delete and recreate.</li>
+        <li>Metadata document changes are applied via <code>UpdateSAMLProvider</code> with drift detection on every reconcile.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The SAML provider is deleted from IAM.</div>
+    </section>
+
+    <!-- IAMOIDCProvider -->
+    <section id="iamoidcprovider" class="resource-section">
+      <h2>IAMOIDCProvider <a href="#iamoidcprovider" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates an OpenID Connect (OIDC) identity provider in IAM for workload identity federation. The URL is immutable; thumbprints and client IDs are mutable with delta sync.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>url</td><td>string</td><td><span class="req">✅</span></td><td>The HTTPS URL of the OIDC provider (e.g. your EKS cluster OIDC issuer). Immutable after creation.</td></tr>
+            <tr><td>clientIDList</td><td>[]string</td><td><span class="req">✅</span></td><td>List of client IDs (audiences) allowed to authenticate. Delta sync — adds new, removes removed.</td></tr>
+            <tr><td>thumbprintList</td><td>[]string</td><td><span class="req">✅</span></td><td>List of server certificate thumbprints. Delta sync.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the provider.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the OIDC provider.</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: IAMOIDCProvider
+metadata:
+  name: my-eks-oidc
+  namespace: platform
+spec:
+  url: https://oidc.eks.us-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B716D3041E
+  clientIDList:
+    - sts.amazonaws.com
+  thumbprintList:
+    - 9e99a48a9960b14926bb7f3b02e22da2b0ab7280
+  tags:
+    cluster: my-eks-cluster</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li><code>url</code> is immutable after creation. The URL is extracted to form the provider ARN.</li>
+        <li><code>thumbprintList</code> and <code>clientIDList</code> support delta sync — the controller adds new entries and removes entries no longer in spec.</li>
+        <li>For EKS clusters, the OIDC issuer URL is available in the cluster's status after provisioning. See <a href="/docs/eks.html#ekscluster">EKSCluster</a>.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The OIDC provider is deleted from IAM.</div>
+    </section>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>

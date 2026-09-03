@@ -1,0 +1,418 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdafunctions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaFunction
+    listKind: LambdaFunctionList
+    plural: lambdafunctions
+    singular: lambdafunction
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.functionName
+      name: Function
+      type: string
+    - jsonPath: .spec.runtime
+      name: Runtime
+      type: string
+    - jsonPath: .status.state
+      name: State
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: LambdaFunction is the Schema for managing AWS Lambda functions.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaFunctionSpec defines the desired state of a Lambda
+              Function.
+            properties:
+              architecture:
+                description: 'Architectures is the instruction set architecture. Default:
+                  x86_64.'
+                enum:
+                - x86_64
+                - arm64
+                type: string
+              code:
+                description: Code defines where the function code lives.
+                properties:
+                  imageUri:
+                    description: ImageURI is an ECR image URI for container image
+                      functions.
+                    type: string
+                  s3:
+                    description: S3 references a zip deployment package in S3.
+                    properties:
+                      s3Bucket:
+                        description: S3Bucket is the S3 bucket containing the deployment
+                          package.
+                        type: string
+                      s3Key:
+                        description: S3Key is the S3 key of the deployment package.
+                        type: string
+                      s3ObjectVersion:
+                        description: S3ObjectVersion is the S3 object version of the
+                          deployment package.
+                        type: string
+                    required:
+                    - s3Bucket
+                    - s3Key
+                    type: object
+                type: object
+              deadLetterConfig:
+                description: DeadLetterConfig configures a dead-letter queue or SNS
+                  topic for failed async invocations.
+                properties:
+                  targetARN:
+                    description: TargetARN is the ARN of an SQS queue or SNS topic.
+                    type: string
+                required:
+                - targetARN
+                type: object
+              description:
+                description: Description is a human-readable description of the function.
+                type: string
+              environment:
+                additionalProperties:
+                  type: string
+                description: Environment variables for the function.
+                type: object
+              ephemeralStorageSize:
+                description: 'EphemeralStorageSize is the /tmp storage size in MB.
+                  Default: 512.'
+                format: int32
+                type: integer
+              fileSystemConfigs:
+                description: FileSystemConfigs mounts EFS access points into the function.
+                items:
+                  description: LambdaFileSystemConfig mounts an EFS access point into
+                    the function.
+                  properties:
+                    arn:
+                      description: ARN is the ARN of the EFS access point.
+                      type: string
+                    localMountPath:
+                      description: LocalMountPath is the path where the file system
+                        is mounted (must start with /mnt/).
+                      type: string
+                  required:
+                  - arn
+                  - localMountPath
+                  type: object
+                type: array
+              functionName:
+                description: FunctionName is the name of the Lambda function. Immutable
+                  after creation.
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: functionName is immutable
+                  rule: self == oldSelf
+              handler:
+                description: Handler is the function entrypoint (e.g. index.handler).
+                  Required for zip deployments.
+                type: string
+              imageConfig:
+                description: ImageConfig overrides the container image configuration.
+                properties:
+                  command:
+                    description: Command overrides the CMD in the Dockerfile.
+                    items:
+                      type: string
+                    type: array
+                  entryPoint:
+                    description: EntryPoint overrides the ENTRYPOINT in the Dockerfile.
+                    items:
+                      type: string
+                    type: array
+                  workingDirectory:
+                    description: WorkingDirectory overrides the working directory.
+                    type: string
+                type: object
+              layers:
+                description: Layers is a list of Lambda layer ARNs to attach.
+                items:
+                  type: string
+                type: array
+              loggingConfig:
+                description: LoggingConfig configures CloudWatch Logs for the function.
+                properties:
+                  applicationLogLevel:
+                    description: 'ApplicationLogLevel is the log level for application
+                      logs: TRACE, DEBUG, INFO, WARN, ERROR, or FATAL.'
+                    enum:
+                    - TRACE
+                    - DEBUG
+                    - INFO
+                    - WARN
+                    - ERROR
+                    - FATAL
+                    type: string
+                  logFormat:
+                    description: 'LogFormat is the format for function logs: Text
+                      or JSON.'
+                    enum:
+                    - Text
+                    - JSON
+                    type: string
+                  logGroup:
+                    description: LogGroup is the CloudWatch log group name. Defaults
+                      to /aws/lambda/{function-name}.
+                    type: string
+                  systemLogLevel:
+                    description: 'SystemLogLevel is the log level for system logs:
+                      DEBUG, INFO, or WARN.'
+                    enum:
+                    - DEBUG
+                    - INFO
+                    - WARN
+                    type: string
+                type: object
+              memorySize:
+                description: 'MemorySize is the memory allocated to the function in
+                  MB. Default: 128.'
+                format: int32
+                maximum: 10240
+                minimum: 128
+                type: integer
+              reservedConcurrency:
+                description: |-
+                  ReservedConcurrency sets the reserved concurrency limit. 0 throttles all invocations.
+                  Set to -1 to explicitly remove a previously set reservation.
+                format: int32
+                type: integer
+              roleArn:
+                description: |-
+                  RoleArn is the IAM execution role ARN for the function.
+                  Either roleArn or roleRef must be set.
+                type: string
+              roleRef:
+                description: RoleRef references an IAMRole CR in the same namespace.
+                properties:
+                  arn:
+                    description: |-
+                      ARN is a direct AWS IAM role ARN.
+                      If set, Name and Namespace are ignored.
+                    type: string
+                  name:
+                    description: Name of an IAMRole CR in the same namespace.
+                    type: string
+                  namespace:
+                    description: Namespace of the IAMRole CR. Defaults to the referring
+                      object's namespace.
+                    type: string
+                type: object
+              runtime:
+                description: |-
+                  Runtime is the function runtime identifier (e.g. provided.al2023, python3.12, nodejs20.x).
+                  Required for zip deployments; omit for container image functions.
+                type: string
+              snapStart:
+                description: SnapStart configures SnapStart for supported runtimes
+                  (Java).
+                properties:
+                  applyOn:
+                    description: 'ApplyOn controls when SnapStart is applied: PublishedVersions
+                      or None.'
+                    enum:
+                    - PublishedVersions
+                    - None
+                    type: string
+                required:
+                - applyOn
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags.
+                type: object
+              timeout:
+                description: 'Timeout is the maximum execution time in seconds. Default:
+                  3.'
+                format: int32
+                maximum: 900
+                minimum: 1
+                type: integer
+              tracingConfig:
+                description: TracingConfig configures AWS X-Ray tracing.
+                properties:
+                  mode:
+                    description: 'Mode is the tracing mode: PassThrough or Active.'
+                    enum:
+                    - PassThrough
+                    - Active
+                    type: string
+                required:
+                - mode
+                type: object
+              vpcConfig:
+                description: VpcConfig places the function inside a VPC.
+                properties:
+                  securityGroupRefs:
+                    description: SecurityGroupRefs are the security groups attached
+                      to the function.
+                    items:
+                      description: SecurityGroupRef references either a managed SecurityGroup
+                        CR or a direct Security Group ID.
+                      properties:
+                        id:
+                          description: ID is a direct AWS Security Group ID (e.g.
+                            sg-0abc1234).
+                          type: string
+                        name:
+                          description: Name of a SecurityGroup CR in the same namespace.
+                          type: string
+                      type: object
+                    type: array
+                  subnetRefs:
+                    description: SubnetRefs are the subnets the function runs in.
+                    items:
+                      description: SubnetRef references either a managed Subnet CR
+                        or a direct Subnet ID.
+                      properties:
+                        id:
+                          description: ID is a direct AWS Subnet ID (e.g. subnet-0abc1234).
+                          type: string
+                        name:
+                          description: Name of a Subnet CR in the same namespace.
+                          type: string
+                      type: object
+                    type: array
+                required:
+                - securityGroupRefs
+                - subnetRefs
+                type: object
+            required:
+            - code
+            - functionName
+            type: object
+          status:
+            description: LambdaFunctionStatus defines the observed state of LambdaFunction.
+            properties:
+              codeSha256:
+                description: CodeSha256 is the SHA256 of the deployed code package.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              functionArn:
+                description: FunctionARN is the ARN of the Lambda function.
+                type: string
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              state:
+                description: 'State is the function state: Pending, Active, Inactive,
+                  Failed.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

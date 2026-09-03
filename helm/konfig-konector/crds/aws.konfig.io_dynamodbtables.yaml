@@ -1,0 +1,244 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: dynamodbtables.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DynamoDBTable
+    listKind: DynamoDBTableList
+    plural: dynamodbtables
+    singular: dynamodbtable
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.arn
+      name: ARN
+      type: string
+    - jsonPath: .status.tableStatus
+      name: Status
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: DynamoDBTable is the Schema for managing DynamoDB Tables.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DynamoDBTableSpec defines the desired state of a DynamoDB
+              Table.
+            properties:
+              attributeDefinitions:
+                description: AttributeDefinitions define the table attributes.
+                items:
+                  description: DynamoDBAttributeDefinition defines a table attribute.
+                  properties:
+                    attributeName:
+                      description: AttributeName is the name of the attribute.
+                      type: string
+                    attributeType:
+                      description: AttributeType is the data type (S=String, N=Number,
+                        B=Binary).
+                      enum:
+                      - S
+                      - "N"
+                      - B
+                      type: string
+                  required:
+                  - attributeName
+                  - attributeType
+                  type: object
+                minItems: 1
+                type: array
+              billingMode:
+                description: BillingMode is the billing mode.
+                enum:
+                - PROVISIONED
+                - PAY_PER_REQUEST
+                type: string
+              keySchema:
+                description: KeySchema defines the primary key.
+                items:
+                  description: DynamoDBKeySchema defines the key schema for a table
+                    or index.
+                  properties:
+                    attributeName:
+                      description: AttributeName is the name of the key attribute.
+                      type: string
+                    keyType:
+                      description: KeyType is HASH or RANGE.
+                      enum:
+                      - HASH
+                      - RANGE
+                      type: string
+                  required:
+                  - attributeName
+                  - keyType
+                  type: object
+                minItems: 1
+                type: array
+              kmsKeyArn:
+                description: KMSKeyARN is the KMS key ARN for SSE.
+                type: string
+              pointInTimeRecovery:
+                description: PointInTimeRecovery enables PITR.
+                type: boolean
+              provisionedThroughput:
+                description: ProvisionedThroughput is required when BillingMode is
+                  PROVISIONED.
+                properties:
+                  readCapacityUnits:
+                    description: ReadCapacityUnits is the read capacity.
+                    format: int64
+                    minimum: 1
+                    type: integer
+                  writeCapacityUnits:
+                    description: WriteCapacityUnits is the write capacity.
+                    format: int64
+                    minimum: 1
+                    type: integer
+                required:
+                - readCapacityUnits
+                - writeCapacityUnits
+                type: object
+              sseEnabled:
+                description: SSEEnabled enables server-side encryption.
+                type: boolean
+              tableName:
+                description: TableName is the name of the table. Immutable.
+                maxLength: 255
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: tableName is immutable
+                  rule: self == oldSelf
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+            required:
+            - attributeDefinitions
+            - keySchema
+            - tableName
+            type: object
+          status:
+            description: DynamoDBTableStatus defines the observed state of DynamoDBTable.
+            properties:
+              arn:
+                description: ARN is the ARN of the DynamoDB table.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              tableStatus:
+                description: TableStatus is the current table status.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

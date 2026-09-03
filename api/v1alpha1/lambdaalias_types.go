@@ -1,0 +1,100 @@
+/*
+Copyright 2026.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// LambdaAliasRoutingConfig defines traffic shifting for a Lambda alias.
+type LambdaAliasRoutingConfig struct {
+	// AdditionalVersionWeights is a map of function version to weight (0.0-1.0).
+	// +optional
+	AdditionalVersionWeights map[string]float64 `json:"additionalVersionWeights,omitempty"`
+}
+
+// LambdaAliasSpec defines the desired state of a Lambda Alias.
+type LambdaAliasSpec struct {
+	// FunctionName is the name or ARN of the Lambda function.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="functionName is immutable"
+	FunctionName string `json:"functionName"`
+
+	// Name is the alias name.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
+	Name string `json:"name"`
+
+	// FunctionVersion is the function version the alias points to.
+	// +kubebuilder:validation:MinLength=1
+	FunctionVersion string `json:"functionVersion"`
+
+	// Description is an optional description.
+	// +optional
+	Description string `json:"description,omitempty"`
+
+	// RoutingConfig enables weighted traffic routing between function versions.
+	// +optional
+	RoutingConfig *LambdaAliasRoutingConfig `json:"routingConfig,omitempty"`
+}
+
+// LambdaAliasStatus defines the observed state of LambdaAlias.
+type LambdaAliasStatus struct {
+	// AliasARN is the ARN of the alias.
+	// +optional
+	AliasARN string `json:"aliasArn,omitempty"`
+
+	// Conditions describe the current state of the resource.
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// ObservedGeneration is the most recent .metadata.generation reconciled.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+
+	// LastSyncTime is when the resource was last successfully reconciled.
+	// +optional
+	LastSyncTime *metav1.Time `json:"lastSyncTime,omitempty"`
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="ARN",type="string",JSONPath=".status.aliasArn"
+// +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
+// LambdaAlias is the Schema for managing Lambda function aliases.
+type LambdaAlias struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   LambdaAliasSpec   `json:"spec,omitempty"`
+	Status LambdaAliasStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// LambdaAliasList contains a list of LambdaAlias.
+type LambdaAliasList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []LambdaAlias `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&LambdaAlias{}, &LambdaAliasList{})
+}

@@ -1,0 +1,343 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: eksclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EKSCluster
+    listKind: EKSClusterList
+    plural: eksclusters
+    singular: ekscluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.clusterName
+      name: Cluster
+      type: string
+    - jsonPath: .status.version
+      name: Version
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: EKSCluster is the Schema for managing EKS Clusters.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EKSClusterSpec defines the desired state of an EKS Cluster.
+            properties:
+              accessConfig:
+                description: AccessConfig configures the cluster authentication mode.
+                properties:
+                  authenticationMode:
+                    description: AuthenticationMode controls how IAM principals are
+                      granted cluster access.
+                    enum:
+                    - API
+                    - API_AND_CONFIG_MAP
+                    - CONFIG_MAP
+                    type: string
+                  bootstrapClusterCreatorAdminPermissions:
+                    description: BootstrapClusterCreatorAdminPermissions grants the
+                      cluster creator admin access.
+                    type: boolean
+                type: object
+              bootstrapSelfManagedAddons:
+                description: |-
+                  BootstrapSelfManagedAddons installs self-managed add-ons on cluster creation.
+                  Immutable after creation.
+                type: boolean
+              clusterName:
+                description: ClusterName is the name of the EKS cluster. Immutable
+                  after creation.
+                maxLength: 100
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: clusterName is immutable
+                  rule: self == oldSelf
+              encryptionConfig:
+                description: EncryptionConfig enables KMS encryption of Kubernetes
+                  secrets.
+                properties:
+                  providerKeyArn:
+                    description: ProviderKeyArn is the KMS key ARN to use for encryption.
+                    type: string
+                  resources:
+                    description: Resources is the list of Kubernetes resources to
+                      encrypt (e.g. ["secrets"]).
+                    items:
+                      type: string
+                    type: array
+                required:
+                - providerKeyArn
+                - resources
+                type: object
+              kubernetesNetworkConfig:
+                description: KubernetesNetworkConfig configures the Kubernetes network.
+                  Immutable after creation.
+                properties:
+                  ipFamily:
+                    description: 'IPFamily is the IP family for the cluster: ipv4
+                      or ipv6. Immutable after creation.'
+                    enum:
+                    - ipv4
+                    - ipv6
+                    type: string
+                  serviceIpv4Cidr:
+                    description: ServiceIPv4CIDR is the CIDR block for Kubernetes
+                      service IPs. Immutable after creation.
+                    type: string
+                type: object
+              logging:
+                description: Logging configures control plane logging.
+                properties:
+                  enabledTypes:
+                    description: |-
+                      EnabledTypes is the list of log types to enable.
+                      Valid values: api, audit, authenticator, controllerManager, scheduler.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              resourcesVpcConfig:
+                description: ResourcesVpcConfig is the VPC configuration for the cluster
+                  control plane.
+                properties:
+                  endpointPrivateAccess:
+                    description: 'EndpointPrivateAccess enables the private API server
+                      endpoint. Default: false.'
+                    type: boolean
+                  endpointPublicAccess:
+                    description: 'EndpointPublicAccess enables the public API server
+                      endpoint. Default: true.'
+                    type: boolean
+                  publicAccessCidrs:
+                    description: 'PublicAccessCidrs restricts access to the public
+                      endpoint. Default: ["0.0.0.0/0"].'
+                    items:
+                      type: string
+                    type: array
+                  securityGroupRefs:
+                    description: SecurityGroupRefs are additional security groups
+                      for the control plane ENIs.
+                    items:
+                      description: SecurityGroupRef references either a managed SecurityGroup
+                        CR or a direct Security Group ID.
+                      properties:
+                        id:
+                          description: ID is a direct AWS Security Group ID (e.g.
+                            sg-0abc1234).
+                          type: string
+                        name:
+                          description: Name of a SecurityGroup CR in the same namespace.
+                          type: string
+                      type: object
+                    type: array
+                  subnetRefs:
+                    description: SubnetRefs are the subnets for the EKS control plane
+                      ENIs. At least 2 in different AZs required.
+                    items:
+                      description: SubnetRef references either a managed Subnet CR
+                        or a direct Subnet ID.
+                      properties:
+                        id:
+                          description: ID is a direct AWS Subnet ID (e.g. subnet-0abc1234).
+                          type: string
+                        name:
+                          description: Name of a Subnet CR in the same namespace.
+                          type: string
+                      type: object
+                    minItems: 1
+                    type: array
+                required:
+                - subnetRefs
+                type: object
+              roleArn:
+                description: |-
+                  RoleArn is the IAM role ARN for the EKS control plane.
+                  Either roleArn or roleRef must be set.
+                type: string
+              roleRef:
+                description: |-
+                  RoleRef is a reference to an IAMRole CR in the same namespace.
+                  Either roleArn or roleRef must be set.
+                properties:
+                  arn:
+                    description: |-
+                      ARN is a direct AWS IAM role ARN.
+                      If set, Name and Namespace are ignored.
+                    type: string
+                  name:
+                    description: Name of an IAMRole CR in the same namespace.
+                    type: string
+                  namespace:
+                    description: Namespace of the IAMRole CR. Defaults to the referring
+                      object's namespace.
+                    type: string
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+              upgradePolicy:
+                description: UpgradePolicy configures the cluster version support
+                  policy.
+                properties:
+                  supportType:
+                    description: SupportType is STANDARD or EXTENDED.
+                    enum:
+                    - STANDARD
+                    - EXTENDED
+                    type: string
+                required:
+                - supportType
+                type: object
+              version:
+                description: Version is the Kubernetes version for the cluster (e.g.
+                  "1.30").
+                type: string
+            required:
+            - clusterName
+            - resourcesVpcConfig
+            type: object
+          status:
+            description: EKSClusterStatus defines the observed state of EKSCluster.
+            properties:
+              certificateAuthority:
+                description: CertificateAuthority is the base64-encoded certificate
+                  authority data.
+                type: string
+              clusterArn:
+                description: ClusterArn is the ARN of the EKS cluster.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpoint:
+                description: Endpoint is the Kubernetes API server endpoint.
+                type: string
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              oidcIssuer:
+                description: OIDCIssuer is the OIDC issuer URL for the cluster (used
+                  for IRSA).
+                type: string
+              status:
+                description: 'Status is the cluster status: CREATING, ACTIVE, DELETING,
+                  FAILED, UPDATING.'
+                type: string
+              version:
+                description: Version is the current Kubernetes version of the cluster.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

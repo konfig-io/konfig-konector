@@ -1,0 +1,243 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: targetgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TargetGroup
+    listKind: TargetGroupList
+    plural: targetgroups
+    singular: targetgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.arn
+      name: ARN
+      type: string
+    - jsonPath: .spec.protocol
+      name: Protocol
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TargetGroup is the Schema for managing ELBv2 Target Groups.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TargetGroupSpec defines the desired state of a Target Group.
+            properties:
+              healthCheck:
+                description: HealthCheck defines the health check configuration.
+                properties:
+                  healthyThreshold:
+                    description: HealthyThreshold is the number of consecutive successes.
+                    format: int32
+                    maximum: 10
+                    minimum: 2
+                    type: integer
+                  intervalSeconds:
+                    description: IntervalSeconds is the health check interval.
+                    format: int32
+                    maximum: 300
+                    minimum: 5
+                    type: integer
+                  path:
+                    description: Path is the health check path (for HTTP/HTTPS).
+                    type: string
+                  port:
+                    description: Port is the health check port (default "traffic-port").
+                    type: string
+                  protocol:
+                    description: Protocol is the health check protocol.
+                    enum:
+                    - HTTP
+                    - HTTPS
+                    - TCP
+                    - TLS
+                    - UDP
+                    - TCP_UDP
+                    type: string
+                  unhealthyThreshold:
+                    description: UnhealthyThreshold is the number of consecutive failures.
+                    format: int32
+                    maximum: 10
+                    minimum: 2
+                    type: integer
+                type: object
+              name:
+                description: Name is the name of the target group. Immutable.
+                maxLength: 32
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              port:
+                description: Port is the port on which targets receive traffic. Immutable.
+                format: int32
+                maximum: 65535
+                minimum: 1
+                type: integer
+                x-kubernetes-validations:
+                - message: port is immutable
+                  rule: self == oldSelf
+              protocol:
+                description: Protocol is the routing protocol.
+                enum:
+                - HTTP
+                - HTTPS
+                - TCP
+                - TLS
+                - UDP
+                - TCP_UDP
+                - GENEVE
+                type: string
+                x-kubernetes-validations:
+                - message: protocol is immutable
+                  rule: self == oldSelf
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+              targetType:
+                description: TargetType is the target type.
+                enum:
+                - instance
+                - ip
+                - lambda
+                - alb
+                type: string
+              vpcRef:
+                description: VPCRef is required for instance, ip, or alb target types.
+                properties:
+                  id:
+                    description: ID is a direct AWS VPC ID (e.g. vpc-0abc1234).
+                    type: string
+                  name:
+                    description: Name of a VPC CR in the same namespace.
+                    type: string
+                type: object
+            required:
+            - name
+            - port
+            - protocol
+            type: object
+          status:
+            description: TargetGroupStatus defines the observed state of TargetGroup.
+            properties:
+              arn:
+                description: ARN is the ARN of the target group.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

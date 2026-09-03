@@ -1,0 +1,556 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3buckets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3Bucket
+    listKind: S3BucketList
+    plural: s3buckets
+    singular: s3bucket
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.bucketName
+      name: Bucket
+      type: string
+    - jsonPath: .spec.region
+      name: Region
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: S3Bucket is the Schema for managing S3 Buckets.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3BucketSpec defines the desired state of an S3 Bucket.
+            properties:
+              accelerateStatus:
+                description: 'AccelerateStatus enables S3 Transfer Acceleration: Enabled
+                  or Suspended.'
+                enum:
+                - Enabled
+                - Suspended
+                type: string
+              blockPublicAccess:
+                description: BlockPublicAccess configures S3 Block Public Access settings.
+                properties:
+                  blockPublicAcls:
+                    description: BlockPublicAcls blocks public ACLs.
+                    type: boolean
+                  blockPublicPolicy:
+                    description: BlockPublicPolicy blocks public bucket policies.
+                    type: boolean
+                  ignorePublicAcls:
+                    description: IgnorePublicAcls ignores existing public ACLs.
+                    type: boolean
+                  restrictPublicBuckets:
+                    description: RestrictPublicBuckets restricts public bucket access.
+                    type: boolean
+                type: object
+              bucketName:
+                description: BucketName is the globally unique name of the bucket.
+                  Immutable after creation.
+                maxLength: 63
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: bucketName is immutable
+                  rule: self == oldSelf
+              corsRules:
+                description: CORSRules configures cross-origin resource sharing.
+                items:
+                  description: S3CORSRule defines a CORS rule for an S3 bucket.
+                  properties:
+                    allowedHeaders:
+                      description: AllowedHeaders specifies which headers are allowed
+                        in a pre-flight request.
+                      items:
+                        type: string
+                      type: array
+                    allowedMethods:
+                      description: AllowedMethods specifies the HTTP methods allowed
+                        (GET, PUT, POST, DELETE, HEAD).
+                      items:
+                        type: string
+                      type: array
+                    allowedOrigins:
+                      description: AllowedOrigins specifies the origins that are allowed.
+                      items:
+                        type: string
+                      type: array
+                    exposeHeaders:
+                      description: ExposeHeaders specifies headers the browser can
+                        access.
+                      items:
+                        type: string
+                      type: array
+                    id:
+                      description: ID is an optional unique identifier for the rule.
+                      type: string
+                    maxAgeSeconds:
+                      description: MaxAgeSeconds specifies how long the browser can
+                        cache the preflight response.
+                      format: int32
+                      type: integer
+                  required:
+                  - allowedMethods
+                  - allowedOrigins
+                  type: object
+                type: array
+              lifecycleRules:
+                description: LifecycleRules configures lifecycle management for objects
+                  in the bucket.
+                items:
+                  description: S3LifecycleRule defines a single S3 lifecycle rule.
+                  properties:
+                    abortIncompleteMultipartUploadDays:
+                      description: AbortIncompleteMultipartUploadDays cancels incomplete
+                        multipart uploads after this many days.
+                      format: int32
+                      type: integer
+                    expirationDate:
+                      description: ExpirationDate is the ISO 8601 date for expiration.
+                      type: string
+                    expirationDays:
+                      description: ExpirationDays is the number of days before objects
+                        expire.
+                      format: int32
+                      type: integer
+                    id:
+                      description: ID is a unique identifier for the rule.
+                      type: string
+                    noncurrentVersionExpirationDays:
+                      description: NoncurrentVersionExpirationDays is the number of
+                        days before noncurrent versions expire.
+                      format: int32
+                      type: integer
+                    noncurrentVersionTransitions:
+                      description: NoncurrentVersionTransitions defines storage class
+                        transitions for noncurrent versions.
+                      items:
+                        description: S3NoncurrentVersionTransition defines a storage
+                          class transition for noncurrent versions.
+                        properties:
+                          noncurrentDays:
+                            description: NoncurrentDays is the number of days before
+                              transitioning.
+                            format: int32
+                            type: integer
+                          storageClass:
+                            description: StorageClass is the target storage class.
+                            type: string
+                        required:
+                        - storageClass
+                        type: object
+                      type: array
+                    prefix:
+                      description: Prefix is the object key prefix to apply the rule
+                        to.
+                      type: string
+                    status:
+                      description: Status is Enabled or Disabled.
+                      enum:
+                      - Enabled
+                      - Disabled
+                      type: string
+                    transitions:
+                      description: Transitions defines storage class transitions.
+                      items:
+                        description: S3LifecycleTransition defines a storage class
+                          transition.
+                        properties:
+                          date:
+                            description: Date is an ISO 8601 date for the transition.
+                            type: string
+                          days:
+                            description: Days is the number of days after object creation.
+                            format: int32
+                            type: integer
+                          storageClass:
+                            description: StorageClass is the target storage class
+                              (e.g. STANDARD_IA, GLACIER).
+                            type: string
+                        required:
+                        - storageClass
+                        type: object
+                      type: array
+                  required:
+                  - status
+                  type: object
+                type: array
+              loggingConfig:
+                description: LoggingConfig configures S3 server access logging.
+                properties:
+                  targetBucket:
+                    description: TargetBucket is the bucket that receives access logs.
+                    type: string
+                  targetPrefix:
+                    description: TargetPrefix is the prefix for log object keys.
+                    type: string
+                required:
+                - targetBucket
+                type: object
+              notificationConfig:
+                description: NotificationConfig configures event notifications.
+                properties:
+                  eventBridgeEnabled:
+                    description: EventBridgeEnabled enables routing events to Amazon
+                      EventBridge.
+                    type: boolean
+                  lambdaFunctionConfigurations:
+                    description: LambdaFunctionConfigurations configures Lambda function
+                      notifications.
+                    items:
+                      description: S3LambdaNotification configures a Lambda function
+                        notification.
+                      properties:
+                        events:
+                          description: Events is the list of S3 event types that trigger
+                            the notification.
+                          items:
+                            type: string
+                          type: array
+                        filterPrefix:
+                          description: FilterPrefix restricts notifications to keys
+                            with this prefix.
+                          type: string
+                        filterSuffix:
+                          description: FilterSuffix restricts notifications to keys
+                            with this suffix.
+                          type: string
+                        id:
+                          description: ID is an optional unique identifier.
+                          type: string
+                        lambdaFunctionArn:
+                          description: LambdaFunctionARN is the ARN of the Lambda
+                            function.
+                          type: string
+                      required:
+                      - events
+                      - lambdaFunctionArn
+                      type: object
+                    type: array
+                  queueConfigurations:
+                    description: QueueConfigurations configures SQS queue notifications.
+                    items:
+                      description: S3QueueNotification configures an SQS queue notification.
+                      properties:
+                        events:
+                          description: Events is the list of S3 event types that trigger
+                            the notification.
+                          items:
+                            type: string
+                          type: array
+                        filterPrefix:
+                          description: FilterPrefix restricts notifications to keys
+                            with this prefix.
+                          type: string
+                        filterSuffix:
+                          description: FilterSuffix restricts notifications to keys
+                            with this suffix.
+                          type: string
+                        id:
+                          description: ID is an optional unique identifier.
+                          type: string
+                        queueArn:
+                          description: QueueARN is the ARN of the SQS queue.
+                          type: string
+                      required:
+                      - events
+                      - queueArn
+                      type: object
+                    type: array
+                  topicConfigurations:
+                    description: TopicConfigurations configures SNS topic notifications.
+                    items:
+                      description: S3TopicNotification configures an SNS topic notification.
+                      properties:
+                        events:
+                          description: Events is the list of S3 event types that trigger
+                            the notification.
+                          items:
+                            type: string
+                          type: array
+                        filterPrefix:
+                          description: FilterPrefix restricts notifications to keys
+                            with this prefix.
+                          type: string
+                        filterSuffix:
+                          description: FilterSuffix restricts notifications to keys
+                            with this suffix.
+                          type: string
+                        id:
+                          description: ID is an optional unique identifier.
+                          type: string
+                        topicArn:
+                          description: TopicARN is the ARN of the SNS topic.
+                          type: string
+                      required:
+                      - events
+                      - topicArn
+                      type: object
+                    type: array
+                type: object
+              objectLockConfig:
+                description: ObjectLockConfig configures S3 Object Lock. ObjectLockEnabled
+                  is immutable after creation.
+                properties:
+                  objectLockEnabled:
+                    description: ObjectLockEnabled enables Object Lock. Immutable
+                      after creation.
+                    type: boolean
+                  rule:
+                    description: Rule is the default retention rule.
+                    properties:
+                      defaultRetention:
+                        description: DefaultRetention is the default retention settings.
+                        properties:
+                          days:
+                            description: Days is the retention period in days.
+                            format: int32
+                            type: integer
+                          mode:
+                            description: Mode is GOVERNANCE or COMPLIANCE.
+                            enum:
+                            - GOVERNANCE
+                            - COMPLIANCE
+                            type: string
+                          years:
+                            description: Years is the retention period in years.
+                            format: int32
+                            type: integer
+                        required:
+                        - mode
+                        type: object
+                    required:
+                    - defaultRetention
+                    type: object
+                required:
+                - objectLockEnabled
+                type: object
+              region:
+                description: |-
+                  Region is the AWS region where the bucket is created.
+                  Defaults to the operator's region if not specified.
+                type: string
+              serverSideEncryption:
+                description: ServerSideEncryption configures default SSE for new objects.
+                properties:
+                  kmsKeyId:
+                    description: KMSKeyID is the KMS key ARN or ID (only for aws:kms).
+                    type: string
+                  sseAlgorithm:
+                    description: 'SSEAlgorithm is the server-side encryption algorithm:
+                      AES256 or aws:kms.'
+                    minLength: 1
+                    type: string
+                required:
+                - sseAlgorithm
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are AWS resource tags to apply.
+                type: object
+              versioning:
+                description: Versioning enables S3 versioning on the bucket.
+                type: boolean
+              websiteConfig:
+                description: WebsiteConfig configures static website hosting.
+                properties:
+                  errorDocument:
+                    description: ErrorDocument is the key name used for 4XX errors.
+                    type: string
+                  indexDocument:
+                    description: IndexDocument is the suffix for the index document
+                      (e.g. index.html).
+                    type: string
+                  redirectAllTo:
+                    description: RedirectAllTo redirects all requests to another hostname.
+                    properties:
+                      hostName:
+                        description: HostName is the hostname to redirect to.
+                        type: string
+                      protocol:
+                        description: Protocol is http or https.
+                        type: string
+                    required:
+                    - hostName
+                    type: object
+                  routingRules:
+                    description: RoutingRules defines conditional redirect rules.
+                    items:
+                      description: S3RoutingRule defines a routing rule for website
+                        configuration.
+                      properties:
+                        condition:
+                          description: Condition is the condition that triggers this
+                            rule.
+                          properties:
+                            httpErrorCodeReturnedEquals:
+                              description: HttpErrorCodeReturnedEquals triggers the
+                                rule when this HTTP error code is returned.
+                              type: string
+                            keyPrefixEquals:
+                              description: KeyPrefixEquals triggers the rule when
+                                the key prefix matches.
+                              type: string
+                          type: object
+                        redirect:
+                          description: Redirect defines where to redirect matching
+                            requests.
+                          properties:
+                            hostName:
+                              description: HostName replaces the hostname in the redirect.
+                              type: string
+                            httpRedirectCode:
+                              description: HttpRedirectCode is the HTTP redirect code
+                                (default 301).
+                              type: string
+                            protocol:
+                              description: Protocol is http or https.
+                              type: string
+                            replaceKeyPrefixWith:
+                              description: ReplaceKeyPrefixWith replaces the key prefix
+                                in the redirect.
+                              type: string
+                            replaceKeyWith:
+                              description: ReplaceKeyWith replaces the entire key
+                                in the redirect.
+                              type: string
+                          type: object
+                      required:
+                      - redirect
+                      type: object
+                    type: array
+                type: object
+            required:
+            - bucketName
+            type: object
+          status:
+            description: S3BucketStatus defines the observed state of S3Bucket.
+            properties:
+              arn:
+                description: ARN is the Amazon Resource Name of the bucket.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              domainName:
+                description: DomainName is the bucket's regional domain name.
+                type: string
+              lastSyncTime:
+                description: LastSyncTime is when the resource was last successfully
+                  reconciled.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent .metadata.generation
+                  reconciled.
+                format: int64
+                type: integer
+              websiteEndpoint:
+                description: WebsiteEndpoint is the website endpoint URL when website
+                  hosting is enabled.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

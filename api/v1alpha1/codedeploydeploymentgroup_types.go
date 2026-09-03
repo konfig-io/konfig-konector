@@ -1,0 +1,93 @@
+/*
+Copyright 2026.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// CodeDeployDeploymentGroupSpec defines the desired state of a CodeDeploy deployment group.
+type CodeDeployDeploymentGroupSpec struct {
+	// ApplicationName is the name of the CodeDeploy application. Immutable.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="applicationName is immutable"
+	ApplicationName string `json:"applicationName"`
+
+	// DeploymentGroupName is the name of the deployment group. Immutable.
+	DeploymentGroupName string `json:"deploymentGroupName"`
+
+	// ServiceRoleARN is the IAM role ARN that allows CodeDeploy to act on the user's behalf.
+	ServiceRoleARN string `json:"serviceRoleARN"`
+
+	// DeploymentConfigName is the deployment configuration name.
+	// +optional
+	DeploymentConfigName string `json:"deploymentConfigName,omitempty"`
+
+	// AutoScalingGroups is the list of Auto Scaling group names.
+	// +optional
+	AutoScalingGroups []string `json:"autoScalingGroups,omitempty"`
+
+	// Tags are metadata tags for the deployment group.
+	// +optional
+	Tags map[string]string `json:"tags,omitempty"`
+}
+
+// CodeDeployDeploymentGroupStatus defines the observed state of CodeDeployDeploymentGroup.
+type CodeDeployDeploymentGroupStatus struct {
+	// DeploymentGroupID is the CodeDeploy deployment group ID.
+	// +optional
+	DeploymentGroupID string `json:"deploymentGroupID,omitempty"`
+
+	// Conditions describe the current state of the resource.
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// ObservedGeneration is the most recent .metadata.generation reconciled.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+
+	// LastSyncTime is when the resource was last successfully reconciled.
+	// +optional
+	LastSyncTime *metav1.Time `json:"lastSyncTime,omitempty"`
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="GroupID",type="string",JSONPath=".status.deploymentGroupID"
+// +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
+// CodeDeployDeploymentGroup is the Schema for managing AWS CodeDeploy deployment groups.
+type CodeDeployDeploymentGroup struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   CodeDeployDeploymentGroupSpec   `json:"spec,omitempty"`
+	Status CodeDeployDeploymentGroupStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// CodeDeployDeploymentGroupList contains a list of CodeDeployDeploymentGroup.
+type CodeDeployDeploymentGroupList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []CodeDeployDeploymentGroup `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&CodeDeployDeploymentGroup{}, &CodeDeployDeploymentGroupList{})
+}

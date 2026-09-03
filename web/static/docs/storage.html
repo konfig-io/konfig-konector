@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Storage (S3) — konfig-konector Docs</title>
+  <meta name="description" content="API reference for S3Bucket and S3BucketPolicy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/docs.css" />
+</head>
+<body class="docs-body">
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">⚙</div>
+      konfig-konector
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#resources">Resources</a></li>
+      <li><a href="/#quickstart">Quick Start</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a class="nav-cta" href="https://github.com/konfig-io/konfig-konector">GitHub →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-sidebar" id="docs-sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/docs/">docs</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">storage</span>
+    </div>
+
+    <h1 class="docs-page-title">Storage (S3)</h1>
+    <p class="docs-page-subtitle">S3 buckets with full feature parity — versioning, encryption, lifecycle rules, CORS, event notifications, static website hosting, Object Lock, and more.</p>
+
+    <div class="api-group-notice">
+      <span>API Group:</span>
+      <code>aws.konfig.io/v1alpha1</code>
+    </div>
+
+    <!-- S3Bucket -->
+    <section id="s3bucket" class="resource-section">
+      <h2>S3Bucket <a href="#s3bucket" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Creates and manages an S3 bucket with comprehensive configuration. All sub-configurations (versioning, encryption, lifecycle, CORS, notifications, website, Object Lock, logging) are applied idempotently on every reconcile.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>bucketName</td><td>string</td><td><span class="req">✅</span></td><td>Globally unique bucket name. Immutable after creation.</td></tr>
+            <tr><td>region</td><td>string</td><td></td><td>AWS region for the bucket. Required for non-us-east-1 regions. Immutable.</td></tr>
+            <tr><td>versioning</td><td>bool</td><td></td><td>Enable S3 versioning.</td></tr>
+            <tr><td>serverSideEncryption.sseAlgorithm</td><td>string</td><td></td><td><code>AES256</code> or <code>aws:kms</code>.</td></tr>
+            <tr><td>serverSideEncryption.kmsKeyId</td><td>string</td><td></td><td>KMS key ID or ARN (for <code>aws:kms</code> algorithm).</td></tr>
+            <tr><td>blockPublicAccess.blockPublicAcls</td><td>bool</td><td></td><td>Block public ACLs.</td></tr>
+            <tr><td>blockPublicAccess.blockPublicPolicy</td><td>bool</td><td></td><td>Block public bucket policies.</td></tr>
+            <tr><td>blockPublicAccess.ignorePublicAcls</td><td>bool</td><td></td><td>Ignore public ACLs.</td></tr>
+            <tr><td>blockPublicAccess.restrictPublicBuckets</td><td>bool</td><td></td><td>Restrict public bucket access.</td></tr>
+            <tr><td>lifecycleRules</td><td>[]LifecycleRule</td><td></td><td>Object lifecycle rules.</td></tr>
+            <tr><td>lifecycleRules[].id</td><td>string</td><td></td><td>Unique rule ID.</td></tr>
+            <tr><td>lifecycleRules[].status</td><td>string</td><td></td><td><code>Enabled</code> or <code>Disabled</code>.</td></tr>
+            <tr><td>lifecycleRules[].prefix</td><td>string</td><td></td><td>Object key prefix filter.</td></tr>
+            <tr><td>lifecycleRules[].expirationDays</td><td>int32</td><td></td><td>Days after object creation to expire.</td></tr>
+            <tr><td>lifecycleRules[].expirationDate</td><td>string</td><td></td><td>Specific date for expiration (RFC3339).</td></tr>
+            <tr><td>lifecycleRules[].noncurrentVersionExpirationDays</td><td>int32</td><td></td><td>Days after a version becomes non-current to expire it.</td></tr>
+            <tr><td>lifecycleRules[].transitions</td><td>[]Transition</td><td></td><td>Storage class transitions. Each: <code>days</code> or <code>date</code>, <code>storageClass</code>.</td></tr>
+            <tr><td>lifecycleRules[].noncurrentVersionTransitions</td><td>[]NoncurrentTransition</td><td></td><td>Noncurrent version transitions. Each: <code>noncurrentDays</code>, <code>storageClass</code>.</td></tr>
+            <tr><td>lifecycleRules[].abortIncompleteMultipartUploadDays</td><td>int32</td><td></td><td>Days after initiation to abort incomplete multipart uploads.</td></tr>
+            <tr><td>corsRules</td><td>[]CORSRule</td><td></td><td>CORS configuration rules.</td></tr>
+            <tr><td>corsRules[].id</td><td>string</td><td></td><td>Optional rule ID.</td></tr>
+            <tr><td>corsRules[].allowedHeaders</td><td>[]string</td><td></td><td>Allowed request headers.</td></tr>
+            <tr><td>corsRules[].allowedMethods</td><td>[]string</td><td></td><td>Allowed HTTP methods (<code>GET</code>, <code>PUT</code>, <code>POST</code>, <code>DELETE</code>, <code>HEAD</code>).</td></tr>
+            <tr><td>corsRules[].allowedOrigins</td><td>[]string</td><td></td><td>Allowed origin domains.</td></tr>
+            <tr><td>corsRules[].exposeHeaders</td><td>[]string</td><td></td><td>Response headers to expose to browsers.</td></tr>
+            <tr><td>corsRules[].maxAgeSeconds</td><td>int32</td><td></td><td>Browser preflight cache duration in seconds.</td></tr>
+            <tr><td>notificationConfig.lambdaFunctionConfigurations</td><td>[]LambdaNotification</td><td></td><td>Lambda function event notifications. Each: <code>id</code>, <code>lambdaFunctionARN</code>, <code>events</code> ([]string), <code>filterPrefix</code>, <code>filterSuffix</code>.</td></tr>
+            <tr><td>notificationConfig.queueConfigurations</td><td>[]QueueNotification</td><td></td><td>SQS queue event notifications. Same fields with <code>queueArn</code>.</td></tr>
+            <tr><td>notificationConfig.topicConfigurations</td><td>[]TopicNotification</td><td></td><td>SNS topic event notifications. Same fields with <code>topicArn</code>.</td></tr>
+            <tr><td>notificationConfig.eventBridgeEnabled</td><td>bool</td><td></td><td>Send all events to EventBridge.</td></tr>
+            <tr><td>websiteConfig.indexDocument</td><td>string</td><td></td><td>Index document filename (e.g. <code>index.html</code>).</td></tr>
+            <tr><td>websiteConfig.errorDocument</td><td>string</td><td></td><td>Error document filename (e.g. <code>error.html</code>).</td></tr>
+            <tr><td>websiteConfig.redirectAllTo.hostName</td><td>string</td><td></td><td>Redirect all requests to this hostname.</td></tr>
+            <tr><td>websiteConfig.redirectAllTo.protocol</td><td>string</td><td></td><td>Protocol for redirect: <code>http</code> or <code>https</code>.</td></tr>
+            <tr><td>websiteConfig.routingRules</td><td>string</td><td></td><td>JSON routing rules for conditional redirects.</td></tr>
+            <tr><td>accelerateStatus</td><td>string</td><td></td><td><code>Enabled</code> or <code>Suspended</code>. Transfer Acceleration.</td></tr>
+            <tr><td>objectLockConfig.objectLockEnabled</td><td>string</td><td></td><td><code>Enabled</code>. Immutable once set at bucket creation.</td></tr>
+            <tr><td>objectLockConfig.rule.defaultRetention.mode</td><td>string</td><td></td><td><code>GOVERNANCE</code> or <code>COMPLIANCE</code>.</td></tr>
+            <tr><td>objectLockConfig.rule.defaultRetention.days</td><td>int32</td><td></td><td>Retention period in days.</td></tr>
+            <tr><td>objectLockConfig.rule.defaultRetention.years</td><td>int32</td><td></td><td>Retention period in years (mutually exclusive with days).</td></tr>
+            <tr><td>loggingConfig.targetBucket</td><td>string</td><td></td><td>Destination bucket name for server access logs.</td></tr>
+            <tr><td>loggingConfig.targetPrefix</td><td>string</td><td></td><td>Key prefix for log objects.</td></tr>
+            <tr><td>tags</td><td>map[string]string</td><td></td><td>AWS tags applied to the bucket.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>arn</td><td>The ARN of the bucket (e.g. <code>arn:aws:s3:::my-bucket</code>).</td></tr>
+            <tr><td>domainName</td><td>The bucket's regional domain name (e.g. <code>my-bucket.s3.us-east-1.amazonaws.com</code>).</td></tr>
+            <tr><td>websiteEndpoint</td><td>Static website hosting endpoint (if <code>websiteConfig</code> is configured).</td></tr>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — Basic with Encryption</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: S3Bucket
+metadata:
+  name: prod-app-data
+  namespace: storage
+spec:
+  bucketName: my-company-prod-app-data
+  region: us-east-1
+  versioning: true
+  serverSideEncryption:
+    sseAlgorithm: aws:kms
+    kmsKeyId: arn:aws:kms:us-east-1:123456789012:key/mrk-abc123
+  blockPublicAccess:
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  loggingConfig:
+    targetBucket: my-company-access-logs
+    targetPrefix: prod-app-data/
+  tags:
+    env: prod
+    team: platform</code></pre>
+      </div>
+
+      <h3>Example — Full-Featured with Lifecycle and Notifications</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: S3Bucket
+metadata:
+  name: prod-media-bucket
+  namespace: storage
+spec:
+  bucketName: my-company-prod-media
+  region: us-east-1
+  versioning: true
+  serverSideEncryption:
+    sseAlgorithm: AES256
+  blockPublicAccess:
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  lifecycleRules:
+    - id: transition-to-ia
+      status: Enabled
+      prefix: uploads/
+      transitions:
+        - days: 30
+          storageClass: STANDARD_IA
+        - days: 90
+          storageClass: GLACIER
+      noncurrentVersionTransitions:
+        - noncurrentDays: 30
+          storageClass: STANDARD_IA
+      noncurrentVersionExpirationDays: 90
+      abortIncompleteMultipartUploadDays: 7
+  notificationConfig:
+    queueConfigurations:
+      - id: new-upload-notify
+        queueArn: arn:aws:sqs:us-east-1:123456789012:media-processing-queue
+        events:
+          - s3:ObjectCreated:*
+        filterPrefix: uploads/
+    eventBridgeEnabled: true
+  tags:
+    env: prod
+    team: media</code></pre>
+      </div>
+
+      <h3>Example — Static Website with CORS</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: S3Bucket
+metadata:
+  name: prod-static-site
+  namespace: storage
+spec:
+  bucketName: my-company-www
+  region: us-east-1
+  versioning: false
+  serverSideEncryption:
+    sseAlgorithm: AES256
+  websiteConfig:
+    indexDocument: index.html
+    errorDocument: 404.html
+  corsRules:
+    - id: allow-cdn
+      allowedMethods:
+        - GET
+        - HEAD
+      allowedOrigins:
+        - https://www.example.com
+        - https://app.example.com
+      allowedHeaders:
+        - "*"
+      exposeHeaders:
+        - ETag
+      maxAgeSeconds: 3600
+  tags:
+    env: prod
+    purpose: static-website</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>Bucket names are globally unique across all AWS accounts and regions.</li>
+        <li>The <code>region</code> field is required for any region other than <code>us-east-1</code>. It is immutable after creation.</li>
+        <li>All sub-configurations (versioning, encryption, lifecycle, CORS, notifications, website, logging) are applied idempotently — each has its own AWS API call and is reconciled independently.</li>
+        <li><code>objectLockConfig.objectLockEnabled</code> can only be set at bucket creation time and cannot be changed afterward.</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Blocked if bucket not empty.</strong> S3 does not allow deletion of non-empty buckets. Empty the bucket (delete all objects and versions) before deleting the CR. For versioned buckets, all versions and delete markers must be removed.</div>
+    </section>
+
+    <!-- S3BucketPolicy -->
+    <section id="s3bucketpolicy" class="resource-section">
+      <h2>S3BucketPolicy <a href="#s3bucketpolicy" class="anchor">#</a> <span class="resource-badge">✅ Working</span></h2>
+      <p class="resource-desc">Attaches a resource-based IAM policy to an S3 bucket. The controller waits for the referenced S3Bucket CR to be Ready before creating the policy.</p>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>bucketRef.name</td><td>string</td><td><span class="req">✅</span></td><td>Name of the <code>S3Bucket</code> CR in the same namespace.</td></tr>
+            <tr><td>bucketRef.bucketName</td><td>string</td><td></td><td>Direct bucket name (alternative to <code>bucketRef.name</code>).</td></tr>
+            <tr><td>policyDocument</td><td>string</td><td><span class="req">✅</span></td><td>JSON IAM policy document for the bucket resource policy.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap">
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>conditions</td><td>Standard Kubernetes conditions.</td></tr>
+            <tr><td>observedGeneration</td><td>Last reconciled generation.</td></tr>
+            <tr><td>lastSyncTime</td><td>RFC3339 timestamp of last sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Example — HTTPS-Only Policy</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: S3BucketPolicy
+metadata:
+  name: prod-app-data-https-only
+  namespace: storage
+spec:
+  bucketRef:
+    name: prod-app-data
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Sid": "DenyHTTP",
+        "Effect": "Deny",
+        "Principal": "*",
+        "Action": "s3:*",
+        "Resource": [
+          "arn:aws:s3:::my-company-prod-app-data",
+          "arn:aws:s3:::my-company-prod-app-data/*"
+        ],
+        "Condition": {
+          "Bool": { "aws:SecureTransport": "false" }
+        }
+      }]
+    }</code></pre>
+      </div>
+
+      <h3>Example — Cross-Account Read Access</h3>
+      <div class="code-wrap">
+        <div class="code-wrap-header"><span>yaml</span><button class="code-copy-btn">copy</button></div>
+        <pre><code class="language-yaml">apiVersion: aws.konfig.io/v1alpha1
+kind: S3BucketPolicy
+metadata:
+  name: prod-app-data-cross-account
+  namespace: storage
+spec:
+  bucketRef:
+    name: prod-app-data
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Sid": "AllowCrossAccountRead",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::987654321012:role/analytics-role"
+        },
+        "Action": ["s3:GetObject", "s3:ListBucket"],
+        "Resource": [
+          "arn:aws:s3:::my-company-prod-app-data",
+          "arn:aws:s3:::my-company-prod-app-data/*"
+        ]
+      }]
+    }</code></pre>
+      </div>
+
+      <h3>Notes</h3>
+      <ul class="notes-list">
+        <li>The controller waits for the <code>S3Bucket</code> CR to be Ready before applying the policy.</li>
+        <li>ARNs in the policy document must be specified manually — the operator does not automatically resolve CR references within the JSON.</li>
+        <li>Policy changes replace the entire bucket policy (no delta merge).</li>
+      </ul>
+
+      <h3>Deletion</h3>
+      <div class="deletion-note"><strong>Immediate.</strong> The bucket policy is deleted. The bucket itself is not affected.</div>
+    </section>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>
