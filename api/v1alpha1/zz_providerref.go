@@ -451,10 +451,14 @@ func (o *LatticeService) GetProviderRef() *ProviderRef { return o.Spec.ProviderR
 func (o *LatticeServiceNetwork) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
 
 // GetProviderRef implements ProviderScoped.
-func (o *LatticeServiceNetworkServiceAssociation) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+func (o *LatticeServiceNetworkServiceAssociation) GetProviderRef() *ProviderRef {
+	return o.Spec.ProviderRef
+}
 
 // GetProviderRef implements ProviderScoped.
-func (o *LatticeServiceNetworkVpcAssociation) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+func (o *LatticeServiceNetworkVpcAssociation) GetProviderRef() *ProviderRef {
+	return o.Spec.ProviderRef
+}
 
 // GetProviderRef implements ProviderScoped.
 func (o *LatticeTargetGroup) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
