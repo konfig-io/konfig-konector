@@ -60,6 +60,10 @@ func (r *LambdaProvisionedConcurrencyReconciler) Reconcile(ctx context.Context, 
 	if err := r.Get(ctx, req.NamespacedName, pc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, pc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !pc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(pc, awsv1alpha1.FinalizerName) {

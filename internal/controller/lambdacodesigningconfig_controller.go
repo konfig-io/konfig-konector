@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	lambdahelper "github.com/konfig-io/konfig-konector/internal/aws/lambda"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LambdaCodeSigningConfigReconciler reconciles LambdaCodeSigningConfig objects.
 type LambdaCodeSigningConfigReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
-	LambdaClient *awslambda.Client
+	LambdaClient *multi.Lambda
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=lambdacodesigningconfigs,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *LambdaCodeSigningConfigReconciler) Reconcile(ctx context.Context, req c
 	obj := &awsv1alpha1.LambdaCodeSigningConfig{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

@@ -42,3 +42,9 @@ variable "cluster_name" {
   description = "Name of the EKS cluster the operator runs on (used for the Pod Identity association and addon)."
   type        = string
 }
+
+variable "spoke_role_arns" {
+  description = "IAM role ARNs in other AWS accounts the operator may assume (multi-account). Each must trust the operator role; see terraform/spoke."
+  type        = list(string)
+  default     = []
+}

@@ -23,6 +23,12 @@ import (
 // GrafanaWorkspaceSpec defines the desired state of an Amazon Managed
 // Grafana workspace.
 type GrafanaWorkspaceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// WorkspaceName is the name of the workspace. It does not have to be unique.
 	// +kubebuilder:validation:MinLength=1
 	WorkspaceName string `json:"workspaceName"`

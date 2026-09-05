@@ -32,13 +32,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CodeBuildProjectReconciler reconciles CodeBuildProject objects.
 type CodeBuildProjectReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
-	CodeBuildClient *awscb.Client
+	CodeBuildClient *multi.CodeBuild
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=codebuildprojects,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *CodeBuildProjectReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	obj := &awsv1alpha1.CodeBuildProject{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

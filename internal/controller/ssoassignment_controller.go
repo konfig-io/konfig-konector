@@ -65,6 +65,10 @@ func (r *SSOAssignmentReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if err := r.Get(ctx, req.NamespacedName, sa); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sa); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !sa.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(sa, awsv1alpha1.FinalizerName) {

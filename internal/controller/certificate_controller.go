@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	acmhelper "github.com/konfig-io/konfig-konector/internal/aws/acm"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CertificateReconciler reconciles Certificate objects.
 type CertificateReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ACMClient *awsacm.Client
+	ACMClient *multi.ACM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=certificates,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *CertificateReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	cert := &awsv1alpha1.Certificate{}
 	if err := r.Get(ctx, req.NamespacedName, cert); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cert); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !cert.DeletionTimestamp.IsZero() {

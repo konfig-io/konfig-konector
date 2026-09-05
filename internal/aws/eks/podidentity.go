@@ -33,7 +33,7 @@ func IsNotFound(err error) bool {
 }
 
 // PodIdentityAPI is the narrow subset of the EKS SDK client used by the Pod
-// Identity association helpers in this file. *eks.Client satisfies it.
+// Identity association helpers in this file. *multi.EKS satisfies it.
 type PodIdentityAPI interface {
 	ListPodIdentityAssociations(ctx context.Context, params *eks.ListPodIdentityAssociationsInput, optFns ...func(*eks.Options)) (*eks.ListPodIdentityAssociationsOutput, error)
 	DescribePodIdentityAssociation(ctx context.Context, params *eks.DescribePodIdentityAssociationInput, optFns ...func(*eks.Options)) (*eks.DescribePodIdentityAssociationOutput, error)

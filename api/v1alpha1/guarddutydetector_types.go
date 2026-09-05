@@ -36,6 +36,12 @@ type GuardDutyFeature struct {
 // GuardDutyDetectorSpec defines the desired state of a GuardDuty detector.
 // GuardDuty supports one detector per account per region.
 type GuardDutyDetectorSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Enable specifies whether the detector is enabled.
 	// +optional
 	// +kubebuilder:default=true

@@ -23,6 +23,12 @@ import (
 // LambdaProvisionedConcurrencySpec defines the desired state of a Lambda
 // provisioned concurrency config.
 type LambdaProvisionedConcurrencySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FunctionName is a direct Lambda function name or ARN. Either
 	// functionName or functionRef must be set.
 	// +optional

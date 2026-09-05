@@ -22,6 +22,12 @@ import (
 
 // CloudMapNamespaceSpec defines the desired state of a Cloud Map namespace.
 type CloudMapNamespaceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the namespace (e.g. example.local). Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253

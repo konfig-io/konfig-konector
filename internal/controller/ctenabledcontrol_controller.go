@@ -65,6 +65,10 @@ func (r *CTEnabledControlReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err := r.Get(ctx, req.NamespacedName, ec); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ec); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ec.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ec, awsv1alpha1.FinalizerName) {

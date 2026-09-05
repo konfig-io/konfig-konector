@@ -61,6 +61,10 @@ func (r *InspectorEnablerReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err := r.Get(ctx, req.NamespacedName, ins); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ins); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ins.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ins, awsv1alpha1.FinalizerName) {

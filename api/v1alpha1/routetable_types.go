@@ -36,6 +36,12 @@ type RouteEntry struct {
 
 // RouteTableSpec defines the desired state of an AWS Route Table.
 type RouteTableSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC this route table belongs to.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 

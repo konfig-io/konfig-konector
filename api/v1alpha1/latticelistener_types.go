@@ -63,6 +63,12 @@ type LatticeDefaultAction struct {
 
 // LatticeListenerSpec defines the desired state of a VPC Lattice listener.
 type LatticeListenerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ServiceRef references the service the listener belongs to.
 	ServiceRef LatticeServiceRef `json:"serviceRef"`
 

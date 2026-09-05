@@ -62,6 +62,10 @@ func (r *SNSTopicReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, t); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, t); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !t.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(t, awsv1alpha1.FinalizerName) {

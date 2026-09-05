@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	sfnhelper "github.com/konfig-io/konfig-konector/internal/aws/sfn"
 )
 
@@ -39,7 +40,7 @@ import (
 type ActivityReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	SFNClient *awssfn.Client
+	SFNClient *multi.SFN
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=activities,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *ActivityReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	obj := &awsv1alpha1.Activity{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

@@ -62,6 +62,10 @@ func (r *XRayGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err := r.Get(ctx, req.NamespacedName, g); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, g); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !g.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(g, awsv1alpha1.FinalizerName) {

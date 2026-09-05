@@ -44,6 +44,12 @@ type AliasTarget struct {
 
 // RecordSetSpec defines the desired state of a Route53 DNS record set.
 type RecordSetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// HostedZoneRef references the hosted zone that owns this record.
 	HostedZoneRef HostedZoneRef `json:"hostedZoneRef"`
 

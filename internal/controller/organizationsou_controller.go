@@ -81,6 +81,10 @@ func (r *OrganizationsOUReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, ou); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ou); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ou.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ou, awsv1alpha1.FinalizerName) {

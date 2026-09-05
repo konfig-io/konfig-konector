@@ -62,6 +62,10 @@ func (r *RDSEventSubscriptionReconciler) Reconcile(ctx context.Context, req ctrl
 	if err := r.Get(ctx, req.NamespacedName, es); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, es); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !es.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(es, awsv1alpha1.FinalizerName) {

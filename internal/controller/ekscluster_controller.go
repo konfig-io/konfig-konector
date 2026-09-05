@@ -67,6 +67,10 @@ func (r *EKSClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cluster); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !cluster.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(cluster, awsv1alpha1.FinalizerName) {

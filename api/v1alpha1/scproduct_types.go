@@ -39,6 +39,12 @@ type SCProvisioningArtifact struct {
 
 // SCProductSpec defines the desired state of an AWS Service Catalog product.
 type SCProductSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the product.
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`

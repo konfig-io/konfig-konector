@@ -32,6 +32,12 @@ type ResolverTargetIP struct {
 
 // ResolverRuleSpec defines the desired state of a Route53 Resolver rule.
 type ResolverRuleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the friendly name of the rule.
 	Name string `json:"name"`
 

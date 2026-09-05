@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // RouteTableReconciler reconciles RouteTable objects.
 type RouteTableReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=routetables,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *RouteTableReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	rt := &awsv1alpha1.RouteTable{}
 	if err := r.Get(ctx, req.NamespacedName, rt); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rt); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !rt.DeletionTimestamp.IsZero() {

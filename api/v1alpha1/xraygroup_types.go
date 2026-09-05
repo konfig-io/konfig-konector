@@ -34,6 +34,12 @@ type XRayInsightsConfiguration struct {
 
 // XRayGroupSpec defines the desired state of an X-Ray group.
 type XRayGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupName is the case-sensitive name of the group. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=32

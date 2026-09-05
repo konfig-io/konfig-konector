@@ -22,6 +22,12 @@ import (
 
 // VPCSpec defines the desired state of an AWS VPC.
 type VPCSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// CIDRBlock is the IPv4 CIDR for the VPC (e.g. "10.0.0.0/16").
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:Pattern=`^\d+\.\d+\.\d+\.\d+/\d+$`

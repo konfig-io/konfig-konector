@@ -24,6 +24,12 @@ import (
 // auto scaling configuration. Configurations are immutable versioned
 // resources in AWS: spec changes after creation are not supported.
 type AppRunnerAutoScalingSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the auto scaling configuration. Immutable after creation.
 	// +kubebuilder:validation:MinLength=4
 	// +kubebuilder:validation:MaxLength=32

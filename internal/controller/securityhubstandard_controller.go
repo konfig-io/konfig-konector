@@ -61,6 +61,10 @@ func (r *SecurityHubStandardReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err := r.Get(ctx, req.NamespacedName, std); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, std); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !std.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(std, awsv1alpha1.FinalizerName) {

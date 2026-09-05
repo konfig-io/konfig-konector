@@ -22,6 +22,12 @@ import (
 
 // TrailSpec defines the desired state of a CloudTrail trail.
 type TrailSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TrailName is the name of the trail. Immutable after creation.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=128

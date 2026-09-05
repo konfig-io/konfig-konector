@@ -61,6 +61,10 @@ func (r *SSMMaintenanceWindowReconciler) Reconcile(ctx context.Context, req ctrl
 	if err := r.Get(ctx, req.NamespacedName, mw); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, mw); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !mw.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(mw, awsv1alpha1.FinalizerName) {

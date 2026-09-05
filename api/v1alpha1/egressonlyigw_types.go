@@ -22,6 +22,12 @@ import (
 
 // EgressOnlyIGWSpec defines the desired state of an Egress-Only Internet Gateway.
 type EgressOnlyIGWSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef is the VPC to attach the egress-only IGW to.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 

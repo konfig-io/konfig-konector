@@ -33,13 +33,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // KMSKeyPolicyReconciler reconciles KMSKeyPolicy objects.
 type KMSKeyPolicyReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	KMSClient *awskms.Client
+	KMSClient *multi.KMS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=kmskeypolicies,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *KMSKeyPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	kp := &awsv1alpha1.KMSKeyPolicy{}
 	if err := r.Get(ctx, req.NamespacedName, kp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, kp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !kp.DeletionTimestamp.IsZero() {

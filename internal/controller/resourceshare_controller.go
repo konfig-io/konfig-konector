@@ -78,6 +78,10 @@ func (r *ResourceShareReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if err := r.Get(ctx, req.NamespacedName, rs); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rs); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !rs.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(rs, awsv1alpha1.FinalizerName) {

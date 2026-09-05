@@ -34,13 +34,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // DelegationSignerRecordReconciler reconciles DelegationSignerRecord objects.
 type DelegationSignerRecordReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	Route53Client *awsroute53.Client
+	Route53Client *multi.Route53
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=delegationsignerrecords,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *DelegationSignerRecordReconciler) Reconcile(ctx context.Context, req ct
 	obj := &awsv1alpha1.DelegationSignerRecord{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

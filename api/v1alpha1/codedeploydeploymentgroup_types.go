@@ -22,6 +22,12 @@ import (
 
 // CodeDeployDeploymentGroupSpec defines the desired state of a CodeDeploy deployment group.
 type CodeDeployDeploymentGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ApplicationName is the name of the CodeDeploy application. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="applicationName is immutable"
 	ApplicationName string `json:"applicationName"`

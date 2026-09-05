@@ -22,6 +22,12 @@ import (
 
 // IAMGroupMembershipSpec defines the desired state of IAMGroupMembership.
 type IAMGroupMembershipSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupRef references the IAMGroup CR or a direct AWS group name.
 	GroupRef GroupRef `json:"groupRef"`
 

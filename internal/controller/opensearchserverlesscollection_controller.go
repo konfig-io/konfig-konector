@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	osshelper "github.com/konfig-io/konfig-konector/internal/aws/opensearchserverless"
 )
 
@@ -39,7 +40,7 @@ import (
 type OpenSearchServerlessCollectionReconciler struct {
 	client.Client
 	Scheme                     *runtime.Scheme
-	OpenSearchServerlessClient *awsoss.Client
+	OpenSearchServerlessClient *multi.OpenSearchServerless
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=opensearchserverlesscollections,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *OpenSearchServerlessCollectionReconciler) Reconcile(ctx context.Context
 	obj := &awsv1alpha1.OpenSearchServerlessCollection{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

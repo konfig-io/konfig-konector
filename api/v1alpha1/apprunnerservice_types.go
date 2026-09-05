@@ -129,6 +129,12 @@ type AppRunnerHealthCheckConfiguration struct {
 
 // AppRunnerServiceSpec defines the desired state of an App Runner service.
 type AppRunnerServiceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ServiceName is the name of the service. Immutable after creation.
 	// +kubebuilder:validation:MinLength=4
 	// +kubebuilder:validation:MaxLength=40

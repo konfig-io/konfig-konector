@@ -22,6 +22,12 @@ import (
 
 // ResourceShareSpec defines the desired state of an AWS RAM resource share.
 type ResourceShareSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the resource share.
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`

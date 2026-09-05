@@ -28,13 +28,13 @@ import (
 )
 
 // HostedZoneGetAPI is the narrow Route53 client subset needed by GetHostedZone.
-// It is satisfied by *route53.Client.
+// It is satisfied by *multi.Route53.
 type HostedZoneGetAPI interface {
 	GetHostedZone(ctx context.Context, params *route53.GetHostedZoneInput, optFns ...func(*route53.Options)) (*route53.GetHostedZoneOutput, error)
 }
 
 // HostedZoneDeleteAPI is the narrow Route53 client subset needed by
-// DeleteHostedZone. It is satisfied by *route53.Client.
+// DeleteHostedZone. It is satisfied by *multi.Route53.
 type HostedZoneDeleteAPI interface {
 	route53.ListResourceRecordSetsAPIClient
 	ChangeResourceRecordSets(ctx context.Context, params *route53.ChangeResourceRecordSetsInput, optFns ...func(*route53.Options)) (*route53.ChangeResourceRecordSetsOutput, error)
@@ -42,7 +42,7 @@ type HostedZoneDeleteAPI interface {
 }
 
 // TagSyncAPI is the narrow Route53 client subset needed by SyncTags.
-// It is satisfied by *route53.Client.
+// It is satisfied by *multi.Route53.
 type TagSyncAPI interface {
 	ListTagsForResource(ctx context.Context, params *route53.ListTagsForResourceInput, optFns ...func(*route53.Options)) (*route53.ListTagsForResourceOutput, error)
 	ChangeTagsForResource(ctx context.Context, params *route53.ChangeTagsForResourceInput, optFns ...func(*route53.Options)) (*route53.ChangeTagsForResourceOutput, error)

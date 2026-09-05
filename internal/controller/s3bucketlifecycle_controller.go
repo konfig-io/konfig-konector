@@ -32,13 +32,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // S3BucketLifecycleReconciler reconciles S3BucketLifecycle objects.
 type S3BucketLifecycleReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
-	S3Client *awss3.Client
+	S3Client *multi.S3
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=s3bucketlifecycles,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *S3BucketLifecycleReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	obj := &awsv1alpha1.S3BucketLifecycle{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

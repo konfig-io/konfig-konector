@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cwhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudwatch"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CompositeAlarmReconciler reconciles CompositeAlarm objects.
 type CompositeAlarmReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CloudWatchClient *awscw.Client
+	CloudWatchClient *multi.CloudWatch
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=compositealarms,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CompositeAlarmReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	obj := &awsv1alpha1.CompositeAlarm{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

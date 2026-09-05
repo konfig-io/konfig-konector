@@ -67,6 +67,10 @@ func (r *VPCReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	if err := r.Get(ctx, req.NamespacedName, vpc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, vpc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !vpc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(vpc, awsv1alpha1.FinalizerName) {

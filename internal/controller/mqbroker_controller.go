@@ -67,6 +67,10 @@ func (r *MQBrokerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, broker); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, broker); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !broker.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(broker, awsv1alpha1.FinalizerName) {

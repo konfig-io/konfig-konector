@@ -69,6 +69,10 @@ func (r *HostedZoneReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := r.Get(ctx, req.NamespacedName, hz); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, hz); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !hz.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(hz, awsv1alpha1.FinalizerName) {

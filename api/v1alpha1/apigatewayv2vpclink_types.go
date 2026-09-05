@@ -22,6 +22,12 @@ import (
 
 // APIGatewayV2VpcLinkSpec defines the desired state of an API Gateway v2 VPC link.
 type APIGatewayV2VpcLinkSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the VPC link.
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`

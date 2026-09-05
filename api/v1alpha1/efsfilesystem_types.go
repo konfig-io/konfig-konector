@@ -22,6 +22,12 @@ import (
 
 // EFSFileSystemSpec defines the desired state of an EFS File System.
 type EFSFileSystemSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PerformanceMode sets the performance mode of the file system.
 	// +kubebuilder:validation:Enum=generalPurpose;maxIO
 	// +optional

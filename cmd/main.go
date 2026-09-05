@@ -37,6 +37,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	awsclient "github.com/konfig-io/konfig-konector/internal/aws"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	"github.com/konfig-io/konfig-konector/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
@@ -132,6 +133,16 @@ func main() {
 		setupLog.Error(err, "unable to initialise AWS clients")
 		os.Exit(1)
 	}
+
+	// Multi-account: every reconcile resolves its AWSProvider (spec.providerRef,
+	// namespace annotation, or operator default) and the SDK wrappers apply
+	// the resulting credentials/region per call.
+	controller.SetProviderResolver(&provider.Resolver{
+		Client:          mgr.GetClient(),
+		STS:             awsClients.STS,
+		BaseCredentials: awsClients.Config.Credentials,
+		BaseRegion:      awsClients.Config.Region,
+	})
 
 	// Use the operator pod name (or a fixed string) as the caller reference prefix
 	// for Route53 idempotency tokens.

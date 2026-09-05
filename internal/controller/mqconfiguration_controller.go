@@ -59,6 +59,10 @@ func (r *MQConfigurationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, cfg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cfg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !cfg.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(cfg, awsv1alpha1.FinalizerName) {

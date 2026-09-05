@@ -39,6 +39,12 @@ type MSKBrokerNodeGroupInfo struct {
 
 // MSKClusterSpec defines the desired state of an MSK provisioned cluster.
 type MSKClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the cluster. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
 	ClusterName string `json:"clusterName"`

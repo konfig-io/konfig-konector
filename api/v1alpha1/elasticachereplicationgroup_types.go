@@ -22,6 +22,12 @@ import (
 
 // ElastiCacheReplicationGroupSpec defines the desired state of an ElastiCache Replication Group.
 type ElastiCacheReplicationGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ReplicationGroupID is the identifier for the replication group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=40

@@ -19,6 +19,8 @@ package ec2
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsec2 "github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -42,7 +44,7 @@ func GetVPC(ctx context.Context, client DescribeVpcsAPI, vpcID string) (*types.V
 }
 
 // SyncVPCTags updates the tags on a VPC to match the desired map.
-func SyncVPCTags(ctx context.Context, client *awsec2.Client, vpcID string, desired map[string]string) error {
+func SyncVPCTags(ctx context.Context, client *multi.EC2, vpcID string, desired map[string]string) error {
 	out, err := client.DescribeTags(ctx, &awsec2.DescribeTagsInput{
 		Filters: []types.Filter{
 			{Name: aws.String("resource-id"), Values: []string{vpcID}},

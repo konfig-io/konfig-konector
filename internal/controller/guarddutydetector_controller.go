@@ -63,6 +63,10 @@ func (r *GuardDutyDetectorReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	if err := r.Get(ctx, req.NamespacedName, det); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, det); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !det.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(det, awsv1alpha1.FinalizerName) {

@@ -67,6 +67,12 @@ type S3QueueNotificationConfig struct {
 
 // S3BucketNotificationSpec defines the desired state of S3BucketNotification.
 type S3BucketNotificationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BucketName is the name of the S3 bucket.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="bucketName is immutable"

@@ -23,6 +23,12 @@ import (
 // CostAnomalyMonitorSpec defines the desired state of a Cost Explorer
 // anomaly monitor.
 type CostAnomalyMonitorSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// MonitorName is the name of the monitor.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024

@@ -32,6 +32,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	iamhelper "github.com/konfig-io/konfig-konector/internal/aws/iam"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
@@ -40,7 +41,7 @@ import (
 type IAMOIDCProviderReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	IAMClient *awsiam.Client
+	IAMClient *multi.IAM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=iamoidcproviders,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *IAMOIDCProviderReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	prov := &awsv1alpha1.IAMOIDCProvider{}
 	if err := r.Get(ctx, req.NamespacedName, prov); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, prov); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !prov.DeletionTimestamp.IsZero() {

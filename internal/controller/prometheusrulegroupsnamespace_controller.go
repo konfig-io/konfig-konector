@@ -84,6 +84,10 @@ func (r *PrometheusRuleGroupsNamespaceReconciler) Reconcile(ctx context.Context,
 	if err := r.Get(ctx, req.NamespacedName, ns); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ns); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ns.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ns, awsv1alpha1.FinalizerName) {

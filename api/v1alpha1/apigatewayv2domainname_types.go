@@ -22,6 +22,12 @@ import (
 
 // APIGatewayV2DomainNameSpec defines the desired state of an API Gateway v2 domain name.
 type APIGatewayV2DomainNameSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DomainName is the custom domain name (e.g. api.example.com).
 	// Immutable after creation.
 	// +kubebuilder:validation:MinLength=1

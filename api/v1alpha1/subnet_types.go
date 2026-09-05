@@ -22,6 +22,12 @@ import (
 
 // SubnetSpec defines the desired state of an AWS Subnet.
 type SubnetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC this subnet belongs to.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 

@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cfnhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudformation"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CloudFormationStackReconciler reconciles CloudFormationStack objects.
 type CloudFormationStackReconciler struct {
 	client.Client
 	Scheme               *runtime.Scheme
-	CloudFormationClient *awscfn.Client
+	CloudFormationClient *multi.CloudFormation
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=cloudformationstacks,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *CloudFormationStackReconciler) Reconcile(ctx context.Context, req ctrl.
 	obj := &awsv1alpha1.CloudFormationStack{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

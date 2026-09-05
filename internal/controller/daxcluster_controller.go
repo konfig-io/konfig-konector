@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	daxhelper "github.com/konfig-io/konfig-konector/internal/aws/dax"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // DAXClusterReconciler reconciles DAXCluster objects.
 type DAXClusterReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	DAXClient *awsdax.Client
+	DAXClient *multi.DAX
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=daxclusters,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *DAXClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	obj := &awsv1alpha1.DAXCluster{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

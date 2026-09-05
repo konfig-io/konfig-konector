@@ -53,6 +53,12 @@ type CFDefaultCacheBehavior struct {
 
 // CloudFrontDistributionSpec defines the desired state of a CloudFront Distribution.
 type CloudFrontDistributionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Origins is the list of origins for this distribution.
 	// +kubebuilder:validation:MinItems=1
 	Origins []CFOrigin `json:"origins"`

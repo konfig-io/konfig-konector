@@ -63,6 +63,10 @@ func (r *IAMInstanceProfileReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if err := r.Get(ctx, req.NamespacedName, ip); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ip); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ip.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ip, awsv1alpha1.FinalizerName) {

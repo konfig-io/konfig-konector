@@ -22,6 +22,12 @@ import (
 
 // EventBusSpec defines the desired state of an EventBridge Event Bus.
 type EventBusSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// EventBusName is the name of the event bus. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256

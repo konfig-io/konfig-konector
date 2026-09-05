@@ -63,6 +63,10 @@ func (r *GlueTriggerReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, tr); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, tr); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !tr.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(tr, awsv1alpha1.FinalizerName) {

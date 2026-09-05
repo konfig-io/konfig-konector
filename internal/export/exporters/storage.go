@@ -87,7 +87,7 @@ func listOwnedBuckets(ctx context.Context, clients *awsclient.Clients) ([]string
 	if err != nil {
 		return nil, fmt.Errorf("list buckets: %w", err)
 	}
-	region := clients.S3.Options().Region
+	region := clients.Config.Region
 	var names []string
 	for _, b := range out.Buckets {
 		name := aws.ToString(b.Name)
@@ -112,7 +112,7 @@ func exportS3Buckets(ctx context.Context, clients *awsclient.Clients, opts *expo
 	if err != nil {
 		return nil, err
 	}
-	region := clients.S3.Options().Region
+	region := clients.Config.Region
 	var objs []client.Object
 	for _, name := range names {
 		b := &awsv1alpha1.S3Bucket{

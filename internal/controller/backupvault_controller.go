@@ -61,6 +61,10 @@ func (r *BackupVaultReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, vault); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, vault); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !vault.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(vault, awsv1alpha1.FinalizerName) {

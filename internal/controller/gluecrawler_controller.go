@@ -64,6 +64,10 @@ func (r *GlueCrawlerReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, cr); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cr); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !cr.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(cr, awsv1alpha1.FinalizerName) {

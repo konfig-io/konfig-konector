@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cognitohelper "github.com/konfig-io/konfig-konector/internal/aws/cognito"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // IdentityProviderReconciler reconciles IdentityProvider objects.
 type IdentityProviderReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	CognitoClient *awscognito.Client
+	CognitoClient *multi.Cognito
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=identityproviders,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *IdentityProviderReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	idp := &awsv1alpha1.IdentityProvider{}
 	if err := r.Get(ctx, req.NamespacedName, idp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, idp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !idp.DeletionTimestamp.IsZero() {

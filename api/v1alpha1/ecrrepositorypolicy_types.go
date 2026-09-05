@@ -32,6 +32,12 @@ type ECRRepositoryRef struct {
 
 // ECRRepositoryPolicySpec defines the desired state of an ECR Repository Policy.
 type ECRRepositoryPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RepositoryRef references the ECR repository.
 	RepositoryRef ECRRepositoryRef `json:"repositoryRef"`
 

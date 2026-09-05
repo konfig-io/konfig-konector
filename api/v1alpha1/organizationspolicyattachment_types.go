@@ -37,6 +37,12 @@ type OrganizationsPolicyRef struct {
 // successfully from the organization's management (or delegated
 // administrator) account.
 type OrganizationsPolicyAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PolicyRef references the policy to attach.
 	PolicyRef OrganizationsPolicyRef `json:"policyRef"`
 

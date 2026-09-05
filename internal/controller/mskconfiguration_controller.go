@@ -32,13 +32,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	kafkahelper "github.com/konfig-io/konfig-konector/internal/aws/kafka"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // MSKConfigurationReconciler reconciles MSKConfiguration objects.
 type MSKConfigurationReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	KafkaClient *awskafka.Client
+	KafkaClient *multi.Kafka
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=mskconfigurations,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *MSKConfigurationReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	obj := &awsv1alpha1.MSKConfiguration{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

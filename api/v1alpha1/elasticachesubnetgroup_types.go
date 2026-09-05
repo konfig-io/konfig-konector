@@ -22,6 +22,12 @@ import (
 
 // ElastiCacheSubnetGroupSpec defines the desired state of an ElastiCache Subnet Group.
 type ElastiCacheSubnetGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// SubnetGroupName is the name of the subnet group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255

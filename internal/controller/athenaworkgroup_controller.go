@@ -63,6 +63,10 @@ func (r *AthenaWorkGroupReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, wg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, wg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !wg.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(wg, awsv1alpha1.FinalizerName) {

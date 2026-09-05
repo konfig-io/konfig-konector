@@ -62,6 +62,10 @@ func (r *CodeArtifactDomainReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if err := r.Get(ctx, req.NamespacedName, d); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, d); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !d.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(d, awsv1alpha1.FinalizerName) {

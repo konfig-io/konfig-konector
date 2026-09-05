@@ -22,6 +22,12 @@ import (
 
 // VPNGatewaySpec defines the desired state of an EC2 virtual private gateway.
 type VPNGatewaySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Type of VPN connection the virtual private gateway supports.
 	// +kubebuilder:validation:Enum=ipsec.1
 	// +kubebuilder:default="ipsec.1"

@@ -57,6 +57,12 @@ type VPNTunnelOptions struct {
 
 // VPNConnectionSpec defines the desired state of an EC2 VPN connection.
 type VPNConnectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// CustomerGatewayRef references the customer gateway.
 	CustomerGatewayRef CustomerGatewayRef `json:"customerGatewayRef"`
 

@@ -49,6 +49,12 @@ type LambdaURLCORSConfig struct {
 
 // LambdaFunctionURLSpec defines the desired state of a Lambda Function URL.
 type LambdaFunctionURLSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FunctionName is the name or ARN of the Lambda function.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="functionName is immutable"

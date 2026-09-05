@@ -45,6 +45,12 @@ type MetricTransformation struct {
 
 // MetricFilterSpec defines the desired state of a Metric Filter.
 type MetricFilterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// LogGroupRef references the log group.
 	LogGroupRef LogGroupRef `json:"logGroupRef"`
 

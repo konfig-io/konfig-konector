@@ -32,6 +32,12 @@ type TransitGatewayRef struct {
 
 // TransitGatewayVpcAttachmentSpec defines the desired state of a TGW VPC attachment.
 type TransitGatewayVpcAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TransitGatewayRef references the Transit Gateway to attach to.
 	TransitGatewayRef TransitGatewayRef `json:"transitGatewayRef"`
 

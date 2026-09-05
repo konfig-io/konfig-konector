@@ -22,6 +22,12 @@ import (
 
 // DBInstanceSpec defines the desired state of an RDS DB Instance.
 type DBInstanceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DBInstanceIdentifier is the unique name for the DB instance. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63

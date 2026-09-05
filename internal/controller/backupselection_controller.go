@@ -62,6 +62,10 @@ func (r *BackupSelectionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, sel); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sel); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !sel.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(sel, awsv1alpha1.FinalizerName) {

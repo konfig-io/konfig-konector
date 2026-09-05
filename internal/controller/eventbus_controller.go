@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ebhelper "github.com/konfig-io/konfig-konector/internal/aws/eventbridge"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EventBusReconciler reconciles EventBus objects.
 type EventBusReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	EventBridgeClient *awseb.Client
+	EventBridgeClient *multi.EventBridge
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eventbuses,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	eb := &awsv1alpha1.EventBus{}
 	if err := r.Get(ctx, req.NamespacedName, eb); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, eb); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !eb.DeletionTimestamp.IsZero() {

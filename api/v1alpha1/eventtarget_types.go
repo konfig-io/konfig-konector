@@ -51,6 +51,12 @@ type EventTargetEntry struct {
 
 // EventTargetSpec defines the desired state of an EventBridge Target set.
 type EventTargetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// EventRuleRef references the event rule.
 	EventRuleRef EventRuleRef `json:"eventRuleRef"`
 

@@ -76,6 +76,10 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, b); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, b); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !b.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(b, awsv1alpha1.FinalizerName) {

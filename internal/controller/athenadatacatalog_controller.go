@@ -63,6 +63,10 @@ func (r *AthenaDataCatalogReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	if err := r.Get(ctx, req.NamespacedName, dc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, dc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !dc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(dc, awsv1alpha1.FinalizerName) {

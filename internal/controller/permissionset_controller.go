@@ -80,6 +80,10 @@ func (r *PermissionSetReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if err := r.Get(ctx, req.NamespacedName, ps); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ps); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ps.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ps, awsv1alpha1.FinalizerName) {

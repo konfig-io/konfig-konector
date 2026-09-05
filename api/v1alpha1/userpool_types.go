@@ -43,6 +43,12 @@ type UserPoolPasswordPolicy struct {
 
 // UserPoolSpec defines the desired state of a Cognito User Pool.
 type UserPoolSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PoolName is the name of the user pool. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128

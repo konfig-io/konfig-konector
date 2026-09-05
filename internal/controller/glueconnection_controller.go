@@ -68,6 +68,10 @@ func (r *GlueConnectionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err := r.Get(ctx, req.NamespacedName, conn); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, conn); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !conn.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(conn, awsv1alpha1.FinalizerName) {

@@ -22,6 +22,12 @@ import (
 
 // KinesisStreamSpec defines the desired state of a Kinesis Data Stream.
 type KinesisStreamSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// StreamName is the name of the stream. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="streamName is immutable"
 	StreamName string `json:"streamName"`

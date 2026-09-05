@@ -67,6 +67,10 @@ func (r *SQSQueueReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, q); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, q); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !q.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(q, awsv1alpha1.FinalizerName) {

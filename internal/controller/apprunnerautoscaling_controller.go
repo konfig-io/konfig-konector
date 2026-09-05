@@ -60,6 +60,10 @@ func (r *AppRunnerAutoScalingReconciler) Reconcile(ctx context.Context, req ctrl
 	if err := r.Get(ctx, req.NamespacedName, asc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, asc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !asc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(asc, awsv1alpha1.FinalizerName) {

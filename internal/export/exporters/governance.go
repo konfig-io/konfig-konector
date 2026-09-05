@@ -52,7 +52,7 @@ func init() {
 }
 
 func exportTrails(ctx context.Context, clients *awsclient.Clients, opts *export.Options) ([]client.Object, error) {
-	region := clients.CloudTrail.Options().Region
+	region := clients.Config.Region
 	out, err := clients.CloudTrail.DescribeTrails(ctx, &awscloudtrail.DescribeTrailsInput{
 		IncludeShadowTrails: aws.Bool(false),
 	})

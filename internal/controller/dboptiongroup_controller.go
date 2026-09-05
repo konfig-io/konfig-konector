@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	rdshelper "github.com/konfig-io/konfig-konector/internal/aws/rds"
 )
 
@@ -40,7 +41,7 @@ import (
 type DBOptionGroupReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	RDSClient *awsrds.Client
+	RDSClient *multi.RDS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dboptiongroups,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *DBOptionGroupReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	og := &awsv1alpha1.DBOptionGroup{}
 	if err := r.Get(ctx, req.NamespacedName, og); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, og); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !og.DeletionTimestamp.IsZero() {

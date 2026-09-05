@@ -65,6 +65,10 @@ func (r *PrivateCAReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err := r.Get(ctx, req.NamespacedName, ca); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ca); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ca.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ca, awsv1alpha1.FinalizerName) {

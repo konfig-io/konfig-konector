@@ -46,6 +46,12 @@ type CostAnomalySubscriber struct {
 // CostAnomalySubscriptionSpec defines the desired state of a Cost Explorer
 // anomaly subscription.
 type CostAnomalySubscriptionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// SubscriptionName is the name of the subscription.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024

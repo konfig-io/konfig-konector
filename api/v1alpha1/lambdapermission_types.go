@@ -22,6 +22,12 @@ import (
 
 // LambdaPermissionSpec defines the desired state of a Lambda Permission.
 type LambdaPermissionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FunctionRef references the Lambda function to grant permission on.
 	// Either functionRef or functionArn must be set.
 	// +optional

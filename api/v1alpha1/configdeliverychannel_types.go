@@ -22,6 +22,12 @@ import (
 
 // ConfigDeliveryChannelSpec defines the desired state of an AWS Config delivery channel.
 type ConfigDeliveryChannelSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ChannelName is the name of the delivery channel. AWS uses "default" by
 	// convention. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1

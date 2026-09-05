@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awseks "github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -34,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ekshelper "github.com/konfig-io/konfig-konector/internal/aws/eks"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EKSNodeGroupReconciler reconciles EKSNodeGroup objects.
 type EKSNodeGroupReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EKSClient *awseks.Client
+	EKSClient *multi.EKS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eksnodegroups,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +53,10 @@ func (r *EKSNodeGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	ng := &awsv1alpha1.EKSNodeGroup{}
 	if err := r.Get(ctx, req.NamespacedName, ng); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ng); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !ng.DeletionTimestamp.IsZero() {

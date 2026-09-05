@@ -37,6 +37,12 @@ type PermissionSetRef struct {
 // polls the assignment operation status. Assignments only reconcile
 // successfully from the account where the Identity Center instance lives.
 type SSOAssignmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// InstanceArn is the ARN of the IAM Identity Center instance. Immutable
 	// after creation.
 	// +kubebuilder:validation:MinLength=10

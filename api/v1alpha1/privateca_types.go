@@ -71,6 +71,12 @@ type PrivateCARevocationConfiguration struct {
 
 // PrivateCASpec defines the desired state of a Private Certificate Authority.
 type PrivateCASpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Type of the certificate authority. Immutable after creation.
 	// +kubebuilder:validation:Enum=ROOT;SUBORDINATE
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="type is immutable"

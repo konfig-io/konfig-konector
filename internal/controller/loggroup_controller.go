@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	logshelper "github.com/konfig-io/konfig-konector/internal/aws/cloudwatchlogs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LogGroupReconciler reconciles LogGroup objects.
 type LogGroupReconciler struct {
 	client.Client
 	Scheme     *runtime.Scheme
-	LogsClient *awslogs.Client
+	LogsClient *multi.CloudWatchLogs
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=loggroups,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *LogGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	lg := &awsv1alpha1.LogGroup{}
 	if err := r.Get(ctx, req.NamespacedName, lg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, lg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !lg.DeletionTimestamp.IsZero() {

@@ -22,6 +22,12 @@ import (
 
 // LambdaCodeSigningConfigSpec defines the desired state of a Lambda Code Signing Config.
 type LambdaCodeSigningConfigSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AllowedPublisherARNs are the signing profile version ARNs.
 	// +kubebuilder:validation:MinItems=1
 	AllowedPublisherARNs []string `json:"allowedPublisherArns"`

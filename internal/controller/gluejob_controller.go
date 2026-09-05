@@ -63,6 +63,10 @@ func (r *GlueJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if err := r.Get(ctx, req.NamespacedName, job); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, job); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !job.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(job, awsv1alpha1.FinalizerName) {

@@ -35,6 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	rdshelper "github.com/konfig-io/konfig-konector/internal/aws/rds"
 )
 
@@ -42,7 +43,7 @@ import (
 type DBClusterReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	RDSClient *awsrds.Client
+	RDSClient *multi.RDS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dbclusters,verbs=get;list;watch;create;update;patch;delete
@@ -55,6 +56,10 @@ func (r *DBClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	dbc := &awsv1alpha1.DBCluster{}
 	if err := r.Get(ctx, req.NamespacedName, dbc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, dbc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !dbc.DeletionTimestamp.IsZero() {

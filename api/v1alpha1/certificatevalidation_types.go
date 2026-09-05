@@ -22,6 +22,12 @@ import (
 
 // CertificateValidationSpec defines the desired state of CertificateValidation.
 type CertificateValidationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// CertificateRef references the Certificate CR to watch.
 	CertificateRef ResourceRef `json:"certificateRef"`
 }

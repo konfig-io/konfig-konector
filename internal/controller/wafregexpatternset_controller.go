@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	wafhelper "github.com/konfig-io/konfig-konector/internal/aws/wafv2"
 )
 
@@ -39,7 +40,7 @@ import (
 type WAFRegexPatternSetReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	WAFv2Client *awswafv2.Client
+	WAFv2Client *multi.WAFv2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=wafregexpatternsets,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *WAFRegexPatternSetReconciler) Reconcile(ctx context.Context, req ctrl.R
 	obj := &awsv1alpha1.WAFRegexPatternSet{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

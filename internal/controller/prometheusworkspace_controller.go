@@ -67,6 +67,10 @@ func (r *PrometheusWorkspaceReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err := r.Get(ctx, req.NamespacedName, ws); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ws); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !ws.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(ws, awsv1alpha1.FinalizerName) {

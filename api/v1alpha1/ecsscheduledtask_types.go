@@ -63,6 +63,12 @@ type ECSScheduledTaskTarget struct {
 
 // ECSScheduledTaskSpec defines the desired state of an ECS Scheduled Task.
 type ECSScheduledTaskSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RuleName is the name for the EventBridge rule.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="ruleName is immutable"
 	RuleName string `json:"ruleName"`

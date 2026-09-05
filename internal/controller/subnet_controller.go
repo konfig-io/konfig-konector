@@ -67,6 +67,10 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	if err := r.Get(ctx, req.NamespacedName, sn); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sn); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !sn.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(sn, awsv1alpha1.FinalizerName) {

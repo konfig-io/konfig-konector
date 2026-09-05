@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	elbv2helper "github.com/konfig-io/konfig-konector/internal/aws/elbv2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ListenerRuleReconciler reconciles ListenerRule objects.
 type ListenerRuleReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	ELBv2Client *awselbv2.Client
+	ELBv2Client *multi.ELBv2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=listenerrules,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *ListenerRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	lr := &awsv1alpha1.ListenerRule{}
 	if err := r.Get(ctx, req.NamespacedName, lr); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, lr); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !lr.DeletionTimestamp.IsZero() {

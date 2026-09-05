@@ -46,6 +46,12 @@ type TargetTrackingConfiguration struct {
 
 // ScalingPolicySpec defines the desired state of a Scaling Policy.
 type ScalingPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AutoScalingGroupRef references the AutoScalingGroup CR.
 	AutoScalingGroupRef ResourceRef `json:"autoScalingGroupRef"`
 

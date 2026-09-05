@@ -21,6 +21,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
@@ -28,7 +30,7 @@ import (
 )
 
 // ServiceAPI is the narrow ECS client surface needed by the service helpers.
-// *ecs.Client satisfies it, so callers passing a real client are unaffected.
+// *multi.ECS satisfies it, so callers passing a real client are unaffected.
 type ServiceAPI interface {
 	DescribeServices(ctx context.Context, params *ecs.DescribeServicesInput, optFns ...func(*ecs.Options)) (*ecs.DescribeServicesOutput, error)
 	CreateService(ctx context.Context, params *ecs.CreateServiceInput, optFns ...func(*ecs.Options)) (*ecs.CreateServiceOutput, error)
@@ -55,7 +57,7 @@ func IsNotFound(err error) bool {
 }
 
 // DescribeCluster returns the ECS cluster or nil if not found.
-func DescribeCluster(ctx context.Context, c *ecs.Client, clusterName string) (*types.Cluster, error) {
+func DescribeCluster(ctx context.Context, c *multi.ECS, clusterName string) (*types.Cluster, error) {
 	out, err := c.DescribeClusters(ctx, &ecs.DescribeClustersInput{
 		Clusters: []string{clusterName},
 	})
@@ -75,7 +77,7 @@ type CreateClusterInput struct {
 	Tags              map[string]string
 }
 
-func CreateCluster(ctx context.Context, c *ecs.Client, in CreateClusterInput) (*types.Cluster, error) {
+func CreateCluster(ctx context.Context, c *multi.ECS, in CreateClusterInput) (*types.Cluster, error) {
 	input := &ecs.CreateClusterInput{
 		ClusterName: aws.String(in.ClusterName),
 	}
@@ -104,7 +106,7 @@ func CreateCluster(ctx context.Context, c *ecs.Client, in CreateClusterInput) (*
 	return out.Cluster, nil
 }
 
-func DeleteCluster(ctx context.Context, c *ecs.Client, clusterName string) error {
+func DeleteCluster(ctx context.Context, c *multi.ECS, clusterName string) error {
 	_, err := c.DeleteCluster(ctx, &ecs.DeleteClusterInput{Cluster: aws.String(clusterName)})
 	return err
 }
@@ -237,7 +239,7 @@ type TaskDefinitionInput struct {
 	Tags             map[string]string
 }
 
-func RegisterTaskDefinition(ctx context.Context, c *ecs.Client, in TaskDefinitionInput) (*types.TaskDefinition, error) {
+func RegisterTaskDefinition(ctx context.Context, c *multi.ECS, in TaskDefinitionInput) (*types.TaskDefinition, error) {
 	input := &ecs.RegisterTaskDefinitionInput{
 		Family:                  aws.String(in.Family),
 		ContainerDefinitions:    in.ContainerDefs,
@@ -271,7 +273,7 @@ func RegisterTaskDefinition(ctx context.Context, c *ecs.Client, in TaskDefinitio
 	return out.TaskDefinition, nil
 }
 
-func DeregisterTaskDefinition(ctx context.Context, c *ecs.Client, taskDefArn string) error {
+func DeregisterTaskDefinition(ctx context.Context, c *multi.ECS, taskDefArn string) error {
 	_, err := c.DeregisterTaskDefinition(ctx, &ecs.DeregisterTaskDefinitionInput{
 		TaskDefinition: aws.String(taskDefArn),
 	})

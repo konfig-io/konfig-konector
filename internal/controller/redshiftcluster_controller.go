@@ -70,6 +70,10 @@ func (r *RedshiftClusterReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, rc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !rc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(rc, awsv1alpha1.FinalizerName) {

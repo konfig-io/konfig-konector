@@ -70,6 +70,10 @@ func (r *SecurityGroupReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if err := r.Get(ctx, req.NamespacedName, sg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !sg.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(sg, awsv1alpha1.FinalizerName) {

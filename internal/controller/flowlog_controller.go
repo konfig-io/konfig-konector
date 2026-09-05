@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // FlowLogReconciler reconciles FlowLog objects.
 type FlowLogReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=flowlogs,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *FlowLogReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	fl := &awsv1alpha1.FlowLog{}
 	if err := r.Get(ctx, req.NamespacedName, fl); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, fl); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !fl.DeletionTimestamp.IsZero() {

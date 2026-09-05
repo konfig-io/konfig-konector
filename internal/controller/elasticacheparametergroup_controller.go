@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	elasticachehelper "github.com/konfig-io/konfig-konector/internal/aws/elasticache"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ElastiCacheParameterGroupReconciler reconciles ElastiCacheParameterGroup objects.
 type ElastiCacheParameterGroupReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	ElastiCacheClient *awselasticache.Client
+	ElastiCacheClient *multi.ElastiCache
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=elasticacheparametergroups,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *ElastiCacheParameterGroupReconciler) Reconcile(ctx context.Context, req
 	obj := &awsv1alpha1.ElastiCacheParameterGroup{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

@@ -22,6 +22,12 @@ import (
 
 // CertificateSpec defines the desired state of an ACM Certificate.
 type CertificateSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DomainName is the primary domain name for the certificate. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="domainName is immutable"

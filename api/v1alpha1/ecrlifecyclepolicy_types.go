@@ -22,6 +22,12 @@ import (
 
 // ECRLifecyclePolicySpec defines the desired state of an ECR Lifecycle Policy.
 type ECRLifecyclePolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RepositoryRef references the ECR repository.
 	RepositoryRef ECRRepositoryRef `json:"repositoryRef"`
 

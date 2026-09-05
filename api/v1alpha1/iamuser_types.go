@@ -22,6 +22,12 @@ import (
 
 // IAMUserSpec defines the desired state of an AWS IAM User.
 type IAMUserSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// UserName is the name of the IAM user. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64

@@ -34,13 +34,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ScalingPolicyReconciler reconciles ScalingPolicy objects.
 type ScalingPolicyReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	AutoScalingClient *awsas.Client
+	AutoScalingClient *multi.AutoScaling
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=scalingpolicies,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *ScalingPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	sp := &awsv1alpha1.ScalingPolicy{}
 	if err := r.Get(ctx, req.NamespacedName, sp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sp.DeletionTimestamp.IsZero() {

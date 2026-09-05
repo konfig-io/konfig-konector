@@ -25,7 +25,7 @@ import (
 )
 
 // PolicyAPI is the narrow subset of the IAM SDK client used by the managed
-// policy helpers in this file. *iam.Client satisfies it.
+// policy helpers in this file. *multi.IAM satisfies it.
 type PolicyAPI interface {
 	GetPolicy(ctx context.Context, params *iam.GetPolicyInput, optFns ...func(*iam.Options)) (*iam.GetPolicyOutput, error)
 	GetPolicyVersion(ctx context.Context, params *iam.GetPolicyVersionInput, optFns ...func(*iam.Options)) (*iam.GetPolicyVersionOutput, error)
@@ -35,12 +35,12 @@ type PolicyAPI interface {
 	DeletePolicy(ctx context.Context, params *iam.DeletePolicyInput, optFns ...func(*iam.Options)) (*iam.DeletePolicyOutput, error)
 }
 
-// AttachedPolicyAPI is the subset used by IsPolicyAttached. *iam.Client satisfies it.
+// AttachedPolicyAPI is the subset used by IsPolicyAttached. *multi.IAM satisfies it.
 type AttachedPolicyAPI interface {
 	ListAttachedRolePolicies(ctx context.Context, params *iam.ListAttachedRolePoliciesInput, optFns ...func(*iam.Options)) (*iam.ListAttachedRolePoliciesOutput, error)
 }
 
-// InlinePolicyAPI is the subset used by GetInlinePolicy. *iam.Client satisfies it.
+// InlinePolicyAPI is the subset used by GetInlinePolicy. *multi.IAM satisfies it.
 type InlinePolicyAPI interface {
 	GetRolePolicy(ctx context.Context, params *iam.GetRolePolicyInput, optFns ...func(*iam.Options)) (*iam.GetRolePolicyOutput, error)
 }

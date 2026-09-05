@@ -32,7 +32,7 @@ func IsNotFound(err error) bool {
 }
 
 // RoleAPI is the narrow subset of the IAM SDK client used by the role helpers
-// in this file. *iam.Client satisfies it; tests may supply a fake.
+// in this file. *multi.IAM satisfies it; tests may supply a fake.
 type RoleAPI interface {
 	GetRole(ctx context.Context, params *iam.GetRoleInput, optFns ...func(*iam.Options)) (*iam.GetRoleOutput, error)
 	CreateRole(ctx context.Context, params *iam.CreateRoleInput, optFns ...func(*iam.Options)) (*iam.CreateRoleOutput, error)

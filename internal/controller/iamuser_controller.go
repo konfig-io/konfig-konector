@@ -30,6 +30,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	iamhelper "github.com/konfig-io/konfig-konector/internal/aws/iam"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
@@ -38,7 +39,7 @@ import (
 type IAMUserReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	IAMClient *awsiam.Client
+	IAMClient *multi.IAM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=iamusers,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *IAMUserReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	user := &awsv1alpha1.IAMUser{}
 	if err := r.Get(ctx, req.NamespacedName, user); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, user); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !user.DeletionTimestamp.IsZero() {

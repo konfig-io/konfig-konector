@@ -19,12 +19,14 @@ package eks
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
 
-func DescribeAccessEntry(ctx context.Context, c *eks.Client, clusterName, principalArn string) (*types.AccessEntry, error) {
+func DescribeAccessEntry(ctx context.Context, c *multi.EKS, clusterName, principalArn string) (*types.AccessEntry, error) {
 	out, err := c.DescribeAccessEntry(ctx, &eks.DescribeAccessEntryInput{
 		ClusterName:  aws.String(clusterName),
 		PrincipalArn: aws.String(principalArn),
@@ -44,7 +46,7 @@ type AccessEntryInput struct {
 	Tags             map[string]string
 }
 
-func CreateAccessEntry(ctx context.Context, c *eks.Client, in AccessEntryInput) (*types.AccessEntry, error) {
+func CreateAccessEntry(ctx context.Context, c *multi.EKS, in AccessEntryInput) (*types.AccessEntry, error) {
 	input := &eks.CreateAccessEntryInput{
 		ClusterName:      aws.String(in.ClusterName),
 		PrincipalArn:     aws.String(in.PrincipalArn),
@@ -64,7 +66,7 @@ func CreateAccessEntry(ctx context.Context, c *eks.Client, in AccessEntryInput) 
 	return out.AccessEntry, nil
 }
 
-func UpdateAccessEntry(ctx context.Context, c *eks.Client, in AccessEntryInput) error {
+func UpdateAccessEntry(ctx context.Context, c *multi.EKS, in AccessEntryInput) error {
 	input := &eks.UpdateAccessEntryInput{
 		ClusterName:      aws.String(in.ClusterName),
 		PrincipalArn:     aws.String(in.PrincipalArn),
@@ -77,7 +79,7 @@ func UpdateAccessEntry(ctx context.Context, c *eks.Client, in AccessEntryInput) 
 	return err
 }
 
-func DeleteAccessEntry(ctx context.Context, c *eks.Client, clusterName, principalArn string) error {
+func DeleteAccessEntry(ctx context.Context, c *multi.EKS, clusterName, principalArn string) error {
 	_, err := c.DeleteAccessEntry(ctx, &eks.DeleteAccessEntryInput{
 		ClusterName:  aws.String(clusterName),
 		PrincipalArn: aws.String(principalArn),
@@ -93,7 +95,7 @@ type PolicyAssociationInput struct {
 	Namespaces   []string
 }
 
-func AssociateAccessPolicy(ctx context.Context, c *eks.Client, in PolicyAssociationInput) error {
+func AssociateAccessPolicy(ctx context.Context, c *multi.EKS, in PolicyAssociationInput) error {
 	_, err := c.AssociateAccessPolicy(ctx, &eks.AssociateAccessPolicyInput{
 		ClusterName:  aws.String(in.ClusterName),
 		PrincipalArn: aws.String(in.PrincipalArn),
@@ -106,7 +108,7 @@ func AssociateAccessPolicy(ctx context.Context, c *eks.Client, in PolicyAssociat
 	return err
 }
 
-func DisassociateAccessPolicy(ctx context.Context, c *eks.Client, clusterName, principalArn, policyArn string) error {
+func DisassociateAccessPolicy(ctx context.Context, c *multi.EKS, clusterName, principalArn, policyArn string) error {
 	_, err := c.DisassociateAccessPolicy(ctx, &eks.DisassociateAccessPolicyInput{
 		ClusterName:  aws.String(clusterName),
 		PrincipalArn: aws.String(principalArn),
@@ -115,7 +117,7 @@ func DisassociateAccessPolicy(ctx context.Context, c *eks.Client, clusterName, p
 	return err
 }
 
-func ListAssociatedAccessPolicies(ctx context.Context, c *eks.Client, clusterName, principalArn string) ([]types.AssociatedAccessPolicy, error) {
+func ListAssociatedAccessPolicies(ctx context.Context, c *multi.EKS, clusterName, principalArn string) ([]types.AssociatedAccessPolicy, error) {
 	var policies []types.AssociatedAccessPolicy
 	paginator := eks.NewListAssociatedAccessPoliciesPaginator(c, &eks.ListAssociatedAccessPoliciesInput{
 		ClusterName:  aws.String(clusterName),

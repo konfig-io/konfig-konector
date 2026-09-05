@@ -34,6 +34,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	snshelper "github.com/konfig-io/konfig-konector/internal/aws/sns"
 )
 
@@ -41,7 +42,7 @@ import (
 type SNSSubscriptionReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	SNSClient *awssns.Client
+	SNSClient *multi.SNS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=snssubscriptions,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *SNSSubscriptionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	sub := &awsv1alpha1.SNSSubscription{}
 	if err := r.Get(ctx, req.NamespacedName, sub); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sub); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sub.DeletionTimestamp.IsZero() {

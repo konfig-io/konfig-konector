@@ -22,6 +22,12 @@ import (
 
 // KMSGrantSpec defines the desired state of a KMS Grant.
 type KMSGrantSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// KeyID is the KMS key ID or ARN to grant permissions on.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="keyId is immutable"
 	KeyID string `json:"keyId"`

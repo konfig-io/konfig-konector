@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awseks "github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -34,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ekshelper "github.com/konfig-io/konfig-konector/internal/aws/eks"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EKSFargateProfileReconciler reconciles EKSFargateProfile objects.
 type EKSFargateProfileReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EKSClient *awseks.Client
+	EKSClient *multi.EKS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eksfargateprofiles,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +53,10 @@ func (r *EKSFargateProfileReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	fp := &awsv1alpha1.EKSFargateProfile{}
 	if err := r.Get(ctx, req.NamespacedName, fp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, fp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !fp.DeletionTimestamp.IsZero() {

@@ -66,6 +66,10 @@ func (r *TrailReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	if err := r.Get(ctx, req.NamespacedName, trail); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, trail); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !trail.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(trail, awsv1alpha1.FinalizerName) {

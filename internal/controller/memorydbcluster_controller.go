@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	memorydbhelper "github.com/konfig-io/konfig-konector/internal/aws/memorydb"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // MemoryDBClusterReconciler reconciles MemoryDBCluster objects.
 type MemoryDBClusterReconciler struct {
 	client.Client
 	Scheme         *runtime.Scheme
-	MemoryDBClient *awsmemorydb.Client
+	MemoryDBClient *multi.MemoryDB
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=memorydbclusters,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *MemoryDBClusterReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	obj := &awsv1alpha1.MemoryDBCluster{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

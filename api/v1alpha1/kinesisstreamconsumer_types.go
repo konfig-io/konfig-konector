@@ -22,6 +22,12 @@ import (
 
 // KinesisStreamConsumerSpec defines the desired state of a Kinesis enhanced fan-out consumer.
 type KinesisStreamConsumerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ConsumerName is the name of the consumer. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="consumerName is immutable"
 	ConsumerName string `json:"consumerName"`

@@ -33,6 +33,12 @@ import (
 //   - otherwise the AWS account is ABANDONED (left untouched) and a condition
 //     message records that the account was not closed.
 type OrganizationsAccountSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Email is the email address of the account owner. Immutable; must not be
 	// associated with any other AWS account.
 	// +kubebuilder:validation:MinLength=6

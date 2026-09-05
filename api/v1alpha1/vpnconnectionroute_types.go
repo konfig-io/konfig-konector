@@ -34,6 +34,12 @@ type VPNConnectionRef struct {
 // VPNConnectionRouteSpec defines the desired state of a static route on a
 // VPN connection.
 type VPNConnectionRouteSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPNConnectionRef references the VPN connection to add the route to.
 	VPNConnectionRef VPNConnectionRef `json:"vpnConnectionRef"`
 

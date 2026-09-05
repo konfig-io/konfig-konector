@@ -46,6 +46,12 @@ type SCPortfolioRef struct {
 // SCPortfolioProductAssociationSpec associates a Service Catalog product with
 // a portfolio.
 type SCPortfolioProductAssociationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ProductRef references the product to associate.
 	ProductRef SCProductRef `json:"productRef"`
 

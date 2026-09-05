@@ -22,6 +22,12 @@ import (
 
 // ElasticIPSpec defines the desired state of an Elastic IP address.
 type ElasticIPSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Domain is the domain for the Elastic IP. Defaults to "vpc".
 	// +kubebuilder:validation:Enum=vpc
 	// +optional

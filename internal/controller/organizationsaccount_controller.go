@@ -73,6 +73,10 @@ func (r *OrganizationsAccountReconciler) Reconcile(ctx context.Context, req ctrl
 	if err := r.Get(ctx, req.NamespacedName, acct); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, acct); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !acct.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(acct, awsv1alpha1.FinalizerName) {

@@ -68,6 +68,10 @@ func (r *KMSKeyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	if err := r.Get(ctx, req.NamespacedName, k); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, k); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !k.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(k, awsv1alpha1.FinalizerName) {

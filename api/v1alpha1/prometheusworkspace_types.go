@@ -23,6 +23,12 @@ import (
 // PrometheusWorkspaceSpec defines the desired state of an Amazon Managed
 // Service for Prometheus workspace.
 type PrometheusWorkspaceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Alias is a friendly name assigned to the workspace. It does not need to
 	// be unique and can be updated.
 	// +optional

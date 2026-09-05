@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ecrhelper "github.com/konfig-io/konfig-konector/internal/aws/ecr"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ECRRepositoryPolicyReconciler reconciles ECRRepositoryPolicy objects.
 type ECRRepositoryPolicyReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ECRClient *awsecr.Client
+	ECRClient *multi.ECR
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ecrrepositorypolicies,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *ECRRepositoryPolicyReconciler) Reconcile(ctx context.Context, req ctrl.
 	rp := &awsv1alpha1.ECRRepositoryPolicy{}
 	if err := r.Get(ctx, req.NamespacedName, rp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !rp.DeletionTimestamp.IsZero() {

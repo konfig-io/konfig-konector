@@ -61,6 +61,10 @@ func (r *SCPortfolioProductAssociationReconciler) Reconcile(ctx context.Context,
 	if err := r.Get(ctx, req.NamespacedName, assoc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, assoc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !assoc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(assoc, awsv1alpha1.FinalizerName) {

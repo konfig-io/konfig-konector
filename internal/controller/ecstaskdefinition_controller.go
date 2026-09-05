@@ -23,7 +23,6 @@ import (
 	"errors"
 	"fmt"
 
-	awsecs "github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -35,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ecshelper "github.com/konfig-io/konfig-konector/internal/aws/ecs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ECSTaskDefinitionReconciler reconciles ECSTaskDefinition objects.
 type ECSTaskDefinitionReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ECSClient *awsecs.Client
+	ECSClient *multi.ECS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ecstaskdefinitions,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +54,10 @@ func (r *ECSTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	td := &awsv1alpha1.ECSTaskDefinition{}
 	if err := r.Get(ctx, req.NamespacedName, td); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, td); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !td.DeletionTimestamp.IsZero() {

@@ -62,6 +62,10 @@ func (r *BatchJobDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if err := r.Get(ctx, req.NamespacedName, jd); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, jd); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !jd.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(jd, awsv1alpha1.FinalizerName) {

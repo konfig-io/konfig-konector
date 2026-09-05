@@ -65,6 +65,10 @@ func (r *CodeArtifactRepositoryReconciler) Reconcile(ctx context.Context, req ct
 	if err := r.Get(ctx, req.NamespacedName, repo); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, repo); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !repo.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(repo, awsv1alpha1.FinalizerName) {

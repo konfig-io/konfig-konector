@@ -60,6 +60,10 @@ func (r *RDSGlobalClusterReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err := r.Get(ctx, req.NamespacedName, gc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, gc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !gc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(gc, awsv1alpha1.FinalizerName) {

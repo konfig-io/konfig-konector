@@ -63,6 +63,10 @@ func (r *IAMPolicyAttachmentReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err := r.Get(ctx, req.NamespacedName, att); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, att); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !att.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(att, awsv1alpha1.FinalizerName) {

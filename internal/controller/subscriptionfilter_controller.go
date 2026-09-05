@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	logshelper "github.com/konfig-io/konfig-konector/internal/aws/cloudwatchlogs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // SubscriptionFilterReconciler reconciles SubscriptionFilter objects.
 type SubscriptionFilterReconciler struct {
 	client.Client
 	Scheme     *runtime.Scheme
-	LogsClient *awslogs.Client
+	LogsClient *multi.CloudWatchLogs
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=subscriptionfilters,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *SubscriptionFilterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	sf := &awsv1alpha1.SubscriptionFilter{}
 	if err := r.Get(ctx, req.NamespacedName, sf); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sf); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sf.DeletionTimestamp.IsZero() {

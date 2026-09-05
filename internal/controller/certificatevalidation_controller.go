@@ -33,13 +33,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CertificateValidationReconciler reconciles CertificateValidation objects.
 type CertificateValidationReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ACMClient *awsacm.Client
+	ACMClient *multi.ACM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=certificatevalidations,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CertificateValidationReconciler) Reconcile(ctx context.Context, req ctr
 	cv := &awsv1alpha1.CertificateValidation{}
 	if err := r.Get(ctx, req.NamespacedName, cv); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cv); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !cv.DeletionTimestamp.IsZero() {

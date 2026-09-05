@@ -62,6 +62,10 @@ func (r *PrometheusAlertManagerDefinitionReconciler) Reconcile(ctx context.Conte
 	if err := r.Get(ctx, req.NamespacedName, def); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, def); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !def.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(def, awsv1alpha1.FinalizerName) {

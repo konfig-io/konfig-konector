@@ -40,6 +40,12 @@ type BlockDeviceMapping struct {
 
 // LaunchTemplateSpec defines the desired state of an EC2 Launch Template.
 type LaunchTemplateSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// LaunchTemplateName is the name of the launch template. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128

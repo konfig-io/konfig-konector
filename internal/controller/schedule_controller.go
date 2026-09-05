@@ -64,6 +64,10 @@ func (r *ScheduleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, s); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, s); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !s.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(s, awsv1alpha1.FinalizerName) {

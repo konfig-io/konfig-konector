@@ -61,6 +61,10 @@ func (r *ConfigRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := r.Get(ctx, req.NamespacedName, rule); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rule); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !rule.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(rule, awsv1alpha1.FinalizerName) {

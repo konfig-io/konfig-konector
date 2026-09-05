@@ -22,6 +22,12 @@ import (
 
 // SSMMaintenanceWindowSpec defines the desired state of an SSM maintenance window.
 type SSMMaintenanceWindowSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the maintenance window.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=128

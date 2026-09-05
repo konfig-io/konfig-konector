@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	lambdahelper "github.com/konfig-io/konfig-konector/internal/aws/lambda"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LambdaFunctionURLReconciler reconciles LambdaFunctionURL objects.
 type LambdaFunctionURLReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
-	LambdaClient *awslambda.Client
+	LambdaClient *multi.Lambda
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=lambdafunctionurls,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *LambdaFunctionURLReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	obj := &awsv1alpha1.LambdaFunctionURL{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

@@ -62,6 +62,10 @@ func (r *IAMRoleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if err := r.Get(ctx, req.NamespacedName, role); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, role); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	// Handle deletion.
 	if !role.DeletionTimestamp.IsZero() {

@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ElasticIPReconciler reconciles ElasticIP objects.
 type ElasticIPReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=elasticips,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *ElasticIPReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	eip := &awsv1alpha1.ElasticIP{}
 	if err := r.Get(ctx, req.NamespacedName, eip); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, eip); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !eip.DeletionTimestamp.IsZero() {

@@ -61,6 +61,10 @@ func (r *AthenaNamedQueryReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err := r.Get(ctx, req.NamespacedName, nq); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, nq); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !nq.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(nq, awsv1alpha1.FinalizerName) {

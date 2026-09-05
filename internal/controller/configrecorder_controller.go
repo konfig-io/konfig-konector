@@ -64,6 +64,10 @@ func (r *ConfigRecorderReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err := r.Get(ctx, req.NamespacedName, rec); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rec); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !rec.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(rec, awsv1alpha1.FinalizerName) {

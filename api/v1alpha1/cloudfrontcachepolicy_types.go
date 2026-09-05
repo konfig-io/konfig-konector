@@ -22,6 +22,12 @@ import (
 
 // CloudFrontCachePolicySpec defines the desired state of a CloudFront Cache Policy.
 type CloudFrontCachePolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the unique name of the cache policy.
 	Name string `json:"name"`
 

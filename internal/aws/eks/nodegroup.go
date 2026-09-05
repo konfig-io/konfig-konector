@@ -19,12 +19,14 @@ package eks
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
 
-func DescribeNodegroup(ctx context.Context, c *eks.Client, clusterName, nodegroupName string) (*types.Nodegroup, error) {
+func DescribeNodegroup(ctx context.Context, c *multi.EKS, clusterName, nodegroupName string) (*types.Nodegroup, error) {
 	out, err := c.DescribeNodegroup(ctx, &eks.DescribeNodegroupInput{
 		ClusterName:   aws.String(clusterName),
 		NodegroupName: aws.String(nodegroupName),
@@ -62,7 +64,7 @@ type CreateNodegroupInput struct {
 	NodeRepairEnabled  *bool
 }
 
-func CreateNodegroup(ctx context.Context, c *eks.Client, in CreateNodegroupInput) (*types.Nodegroup, error) {
+func CreateNodegroup(ctx context.Context, c *multi.EKS, in CreateNodegroupInput) (*types.Nodegroup, error) {
 	input := &eks.CreateNodegroupInput{
 		ClusterName:   aws.String(in.ClusterName),
 		NodegroupName: aws.String(in.NodegroupName),
@@ -131,7 +133,7 @@ func CreateNodegroup(ctx context.Context, c *eks.Client, in CreateNodegroupInput
 	return out.Nodegroup, nil
 }
 
-func UpdateNodegroupConfig(ctx context.Context, c *eks.Client, clusterName, nodegroupName string, in CreateNodegroupInput) error {
+func UpdateNodegroupConfig(ctx context.Context, c *multi.EKS, clusterName, nodegroupName string, in CreateNodegroupInput) error {
 	input := &eks.UpdateNodegroupConfigInput{
 		ClusterName:   aws.String(clusterName),
 		NodegroupName: aws.String(nodegroupName),
@@ -157,7 +159,7 @@ func UpdateNodegroupConfig(ctx context.Context, c *eks.Client, clusterName, node
 	return err
 }
 
-func DeleteNodegroup(ctx context.Context, c *eks.Client, clusterName, nodegroupName string) error {
+func DeleteNodegroup(ctx context.Context, c *multi.EKS, clusterName, nodegroupName string) error {
 	_, err := c.DeleteNodegroup(ctx, &eks.DeleteNodegroupInput{
 		ClusterName:   aws.String(clusterName),
 		NodegroupName: aws.String(nodegroupName),

@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ecrhelper "github.com/konfig-io/konfig-konector/internal/aws/ecr"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ECRLifecyclePolicyReconciler reconciles ECRLifecyclePolicy objects.
 type ECRLifecyclePolicyReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ECRClient *awsecr.Client
+	ECRClient *multi.ECR
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ecrlifecyclepolicies,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *ECRLifecyclePolicyReconciler) Reconcile(ctx context.Context, req ctrl.R
 	lp := &awsv1alpha1.ECRLifecyclePolicy{}
 	if err := r.Get(ctx, req.NamespacedName, lp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, lp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !lp.DeletionTimestamp.IsZero() {

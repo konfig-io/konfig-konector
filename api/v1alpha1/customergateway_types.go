@@ -22,6 +22,12 @@ import (
 
 // CustomerGatewaySpec defines the desired state of an EC2 customer gateway.
 type CustomerGatewaySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BGPASN is the customer gateway device's Border Gateway Protocol
 	// Autonomous System Number. Immutable after creation.
 	// +kubebuilder:validation:Minimum=1

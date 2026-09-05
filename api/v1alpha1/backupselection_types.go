@@ -31,6 +31,12 @@ type BackupSelectionTag struct {
 
 // BackupSelectionSpec defines the desired state of an AWS Backup selection.
 type BackupSelectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PlanRef is the name of a BackupPlan CR in the same namespace.
 	// +kubebuilder:validation:MinLength=1
 	PlanRef string `json:"planRef"`

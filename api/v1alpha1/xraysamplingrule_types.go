@@ -23,6 +23,12 @@ import (
 // XRaySamplingRuleSpec defines the desired state of an X-Ray sampling rule.
 // Matcher fields default to "*" (match everything) when omitted.
 type XRaySamplingRuleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RuleName is the name of the sampling rule. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=32

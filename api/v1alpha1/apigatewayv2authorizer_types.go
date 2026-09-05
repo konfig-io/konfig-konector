@@ -33,6 +33,12 @@ type JWTConfiguration struct {
 
 // APIGatewayV2AuthorizerSpec defines the desired state of an API Gateway v2 authorizer.
 type APIGatewayV2AuthorizerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// APIRef references the APIGatewayV2API this authorizer belongs to.
 	APIRef APIRef `json:"apiRef"`
 

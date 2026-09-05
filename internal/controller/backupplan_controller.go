@@ -63,6 +63,10 @@ func (r *BackupPlanReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := r.Get(ctx, req.NamespacedName, plan); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, plan); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !plan.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(plan, awsv1alpha1.FinalizerName) {

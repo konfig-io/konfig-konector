@@ -76,6 +76,12 @@ type NACLICMPTypeCode struct {
 
 // NetworkACLSpec defines the desired state of a Network ACL.
 type NetworkACLSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC in which to create the NACL.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 

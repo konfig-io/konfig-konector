@@ -37,6 +37,12 @@ type OpenSearchClusterConfig struct {
 
 // OpenSearchDomainSpec defines the desired state of an OpenSearch Service domain.
 type OpenSearchDomainSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DomainName is the name of the domain. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="domainName is immutable"
 	DomainName string `json:"domainName"`

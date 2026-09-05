@@ -24,6 +24,7 @@ import (
 	"time"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	k8stypes "k8s.io/apimachinery/pkg/types"
@@ -289,4 +290,28 @@ func resolveEKSClusterName(ctx context.Context, c client.Client, namespace strin
 		return "", &dependencyNotReady{msg: fmt.Sprintf("EKSCluster %s/%s is not yet ACTIVE (status: %s)", namespace, ref.Name, clusterCR.Status.Status)}
 	}
 	return clusterCR.Spec.ClusterName, nil
+}
+
+// providerResolver is set once at startup by SetProviderResolver. When nil
+// (unit tests) every reconcile runs against the operator's own credentials.
+var providerResolver *provider.Resolver
+
+// SetProviderResolver installs the multi-account resolver used by every
+// controller to scope AWS calls to the resource's AWSProvider.
+func SetProviderResolver(r *provider.Resolver) { providerResolver = r }
+
+// withProviderScope attaches the resolved AWS account/region scope for obj to
+// ctx. The generated multi-account SDK wrappers read it on every call.
+func withProviderScope(ctx context.Context, obj provider.ProviderScoped) (context.Context, error) {
+	if providerResolver == nil {
+		return ctx, nil
+	}
+	s, err := providerResolver.ForObject(ctx, obj)
+	if err != nil {
+		return ctx, fmt.Errorf("resolve AWS provider: %w", err)
+	}
+	if s == nil {
+		return ctx, nil
+	}
+	return provider.WithScope(ctx, s), nil
 }

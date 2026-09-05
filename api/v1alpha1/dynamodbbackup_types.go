@@ -22,6 +22,12 @@ import (
 
 // DynamoDBBackupSpec defines the desired state of a DynamoDB on-demand backup.
 type DynamoDBBackupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TableName is the name of the DynamoDB table to back up.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tableName is immutable"
 	TableName string `json:"tableName"`

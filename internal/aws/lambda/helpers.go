@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
@@ -56,7 +58,7 @@ func IsConflict(err error) bool {
 }
 
 // FunctionAPI is the narrow subset of the Lambda SDK client used by the
-// function lifecycle helpers. *lambda.Client satisfies it, so existing
+// function lifecycle helpers. *multi.Lambda satisfies it, so existing
 // callers keep compiling.
 type FunctionAPI interface {
 	GetFunction(ctx context.Context, params *lambda.GetFunctionInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionOutput, error)
@@ -348,7 +350,7 @@ func DeleteFunction(ctx context.Context, c FunctionAPI, name string) error {
 }
 
 // GetEventSourceMapping fetches an event source mapping by UUID.
-func GetEventSourceMapping(ctx context.Context, c *lambda.Client, uuid string) (*lambda.GetEventSourceMappingOutput, error) {
+func GetEventSourceMapping(ctx context.Context, c *multi.Lambda, uuid string) (*lambda.GetEventSourceMappingOutput, error) {
 	out, err := c.GetEventSourceMapping(ctx, &lambda.GetEventSourceMappingInput{UUID: aws.String(uuid)})
 	if err != nil {
 		return nil, err
@@ -366,7 +368,7 @@ type EventSourceMappingInput struct {
 	FilterPatterns                 []string
 }
 
-func CreateEventSourceMapping(ctx context.Context, c *lambda.Client, in EventSourceMappingInput) (*lambda.CreateEventSourceMappingOutput, error) {
+func CreateEventSourceMapping(ctx context.Context, c *multi.Lambda, in EventSourceMappingInput) (*lambda.CreateEventSourceMappingOutput, error) {
 	input := &lambda.CreateEventSourceMappingInput{
 		FunctionName:   aws.String(in.FunctionArn),
 		EventSourceArn: aws.String(in.EventSourceArn),
@@ -398,7 +400,7 @@ func CreateEventSourceMapping(ctx context.Context, c *lambda.Client, in EventSou
 	return out, nil
 }
 
-func UpdateEventSourceMapping(ctx context.Context, c *lambda.Client, uuid string, in EventSourceMappingInput) error {
+func UpdateEventSourceMapping(ctx context.Context, c *multi.Lambda, uuid string, in EventSourceMappingInput) error {
 	input := &lambda.UpdateEventSourceMappingInput{
 		UUID:         aws.String(uuid),
 		FunctionName: aws.String(in.FunctionArn),
@@ -416,7 +418,7 @@ func UpdateEventSourceMapping(ctx context.Context, c *lambda.Client, uuid string
 	return err
 }
 
-func DeleteEventSourceMapping(ctx context.Context, c *lambda.Client, uuid string) error {
+func DeleteEventSourceMapping(ctx context.Context, c *multi.Lambda, uuid string) error {
 	_, err := c.DeleteEventSourceMapping(ctx, &lambda.DeleteEventSourceMappingInput{UUID: aws.String(uuid)})
 	return err
 }
@@ -431,7 +433,7 @@ type policyDoc struct {
 }
 
 // StatementExists checks whether a given Sid is in the function's resource policy.
-func StatementExists(ctx context.Context, c *lambda.Client, functionName, statementId string) (bool, error) {
+func StatementExists(ctx context.Context, c *multi.Lambda, functionName, statementId string) (bool, error) {
 	out, err := c.GetPolicy(ctx, &lambda.GetPolicyInput{FunctionName: aws.String(functionName)})
 	if IsNotFound(err) {
 		return false, nil
@@ -463,7 +465,7 @@ type AddPermissionInput struct {
 	SourceAccount string
 }
 
-func AddPermission(ctx context.Context, c *lambda.Client, in AddPermissionInput) error {
+func AddPermission(ctx context.Context, c *multi.Lambda, in AddPermissionInput) error {
 	input := &lambda.AddPermissionInput{
 		FunctionName: aws.String(in.FunctionName),
 		StatementId:  aws.String(in.StatementId),
@@ -483,7 +485,7 @@ func AddPermission(ctx context.Context, c *lambda.Client, in AddPermissionInput)
 	return err
 }
 
-func RemovePermission(ctx context.Context, c *lambda.Client, functionName, statementId string) error {
+func RemovePermission(ctx context.Context, c *multi.Lambda, functionName, statementId string) error {
 	_, err := c.RemovePermission(ctx, &lambda.RemovePermissionInput{
 		FunctionName: aws.String(functionName),
 		StatementId:  aws.String(statementId),

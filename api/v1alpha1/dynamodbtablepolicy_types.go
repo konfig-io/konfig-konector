@@ -22,6 +22,12 @@ import (
 
 // DynamoDBTablePolicySpec defines the desired state of a DynamoDB resource policy.
 type DynamoDBTablePolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ResourceARN is the ARN of the DynamoDB table or stream to attach the policy to.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="resourceARN is immutable"
 	ResourceARN string `json:"resourceARN"`

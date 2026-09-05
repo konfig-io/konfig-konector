@@ -61,6 +61,10 @@ func (r *LambdaEventInvokeConfigReconciler) Reconcile(ctx context.Context, req c
 	if err := r.Get(ctx, req.NamespacedName, eic); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, eic); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !eic.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(eic, awsv1alpha1.FinalizerName) {

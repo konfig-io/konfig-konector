@@ -20,6 +20,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
@@ -28,7 +30,7 @@ import (
 // ── SAML Provider ────────────────────────────────────────────────────────────
 
 // GetSAMLProvider fetches a SAML provider by ARN. Returns nil, nil if not found.
-func GetSAMLProvider(ctx context.Context, client *iam.Client, providerARN string) (*iam.GetSAMLProviderOutput, error) {
+func GetSAMLProvider(ctx context.Context, client *multi.IAM, providerARN string) (*iam.GetSAMLProviderOutput, error) {
 	out, err := client.GetSAMLProvider(ctx, &iam.GetSAMLProviderInput{
 		SAMLProviderArn: aws.String(providerARN),
 	})
@@ -43,7 +45,7 @@ func GetSAMLProvider(ctx context.Context, client *iam.Client, providerARN string
 }
 
 // CreateSAMLProvider creates a new SAML identity provider.
-func CreateSAMLProvider(ctx context.Context, client *iam.Client, input *iam.CreateSAMLProviderInput) (string, error) {
+func CreateSAMLProvider(ctx context.Context, client *multi.IAM, input *iam.CreateSAMLProviderInput) (string, error) {
 	out, err := client.CreateSAMLProvider(ctx, input)
 	if err != nil {
 		return "", err
@@ -52,7 +54,7 @@ func CreateSAMLProvider(ctx context.Context, client *iam.Client, input *iam.Crea
 }
 
 // UpdateSAMLProvider replaces the metadata document of an existing SAML provider.
-func UpdateSAMLProvider(ctx context.Context, client *iam.Client, providerARN, metadataDoc string) error {
+func UpdateSAMLProvider(ctx context.Context, client *multi.IAM, providerARN, metadataDoc string) error {
 	_, err := client.UpdateSAMLProvider(ctx, &iam.UpdateSAMLProviderInput{
 		SAMLProviderArn:      aws.String(providerARN),
 		SAMLMetadataDocument: aws.String(metadataDoc),
@@ -61,7 +63,7 @@ func UpdateSAMLProvider(ctx context.Context, client *iam.Client, providerARN, me
 }
 
 // DeleteSAMLProvider deletes a SAML identity provider. Returns nil if not found.
-func DeleteSAMLProvider(ctx context.Context, client *iam.Client, providerARN string) error {
+func DeleteSAMLProvider(ctx context.Context, client *multi.IAM, providerARN string) error {
 	_, err := client.DeleteSAMLProvider(ctx, &iam.DeleteSAMLProviderInput{
 		SAMLProviderArn: aws.String(providerARN),
 	})
@@ -72,7 +74,7 @@ func DeleteSAMLProvider(ctx context.Context, client *iam.Client, providerARN str
 }
 
 // SyncSAMLTags reconciles AWS tags on a SAML provider.
-func SyncSAMLTags(ctx context.Context, client *iam.Client, providerARN string, desired map[string]string) error {
+func SyncSAMLTags(ctx context.Context, client *multi.IAM, providerARN string, desired map[string]string) error {
 	out, err := client.ListSAMLProviderTags(ctx, &iam.ListSAMLProviderTagsInput{
 		SAMLProviderArn: aws.String(providerARN),
 	})
@@ -120,7 +122,7 @@ func SyncSAMLTags(ctx context.Context, client *iam.Client, providerARN string, d
 // ── OIDC Provider ────────────────────────────────────────────────────────────
 
 // GetOIDCProvider fetches an OIDC provider by ARN. Returns nil, nil if not found.
-func GetOIDCProvider(ctx context.Context, client *iam.Client, providerARN string) (*iam.GetOpenIDConnectProviderOutput, error) {
+func GetOIDCProvider(ctx context.Context, client *multi.IAM, providerARN string) (*iam.GetOpenIDConnectProviderOutput, error) {
 	out, err := client.GetOpenIDConnectProvider(ctx, &iam.GetOpenIDConnectProviderInput{
 		OpenIDConnectProviderArn: aws.String(providerARN),
 	})
@@ -135,7 +137,7 @@ func GetOIDCProvider(ctx context.Context, client *iam.Client, providerARN string
 }
 
 // CreateOIDCProvider creates a new OIDC identity provider. Returns the new provider ARN.
-func CreateOIDCProvider(ctx context.Context, client *iam.Client, input *iam.CreateOpenIDConnectProviderInput) (string, error) {
+func CreateOIDCProvider(ctx context.Context, client *multi.IAM, input *iam.CreateOpenIDConnectProviderInput) (string, error) {
 	out, err := client.CreateOpenIDConnectProvider(ctx, input)
 	if err != nil {
 		return "", err
@@ -144,7 +146,7 @@ func CreateOIDCProvider(ctx context.Context, client *iam.Client, input *iam.Crea
 }
 
 // DeleteOIDCProvider deletes an OIDC identity provider. Returns nil if not found.
-func DeleteOIDCProvider(ctx context.Context, client *iam.Client, providerARN string) error {
+func DeleteOIDCProvider(ctx context.Context, client *multi.IAM, providerARN string) error {
 	_, err := client.DeleteOpenIDConnectProvider(ctx, &iam.DeleteOpenIDConnectProviderInput{
 		OpenIDConnectProviderArn: aws.String(providerARN),
 	})
@@ -155,7 +157,7 @@ func DeleteOIDCProvider(ctx context.Context, client *iam.Client, providerARN str
 }
 
 // SyncOIDCThumbprints replaces the thumbprint list on an OIDC provider.
-func SyncOIDCThumbprints(ctx context.Context, client *iam.Client, providerARN string, thumbprints []string) error {
+func SyncOIDCThumbprints(ctx context.Context, client *multi.IAM, providerARN string, thumbprints []string) error {
 	_, err := client.UpdateOpenIDConnectProviderThumbprint(ctx, &iam.UpdateOpenIDConnectProviderThumbprintInput{
 		OpenIDConnectProviderArn: aws.String(providerARN),
 		ThumbprintList:           thumbprints,
@@ -164,7 +166,7 @@ func SyncOIDCThumbprints(ctx context.Context, client *iam.Client, providerARN st
 }
 
 // SyncOIDCClientIDs reconciles the client ID list on an OIDC provider.
-func SyncOIDCClientIDs(ctx context.Context, client *iam.Client, providerARN string, current, desired []string) error {
+func SyncOIDCClientIDs(ctx context.Context, client *multi.IAM, providerARN string, current, desired []string) error {
 	currentSet := make(map[string]struct{}, len(current))
 	for _, id := range current {
 		currentSet[id] = struct{}{}
@@ -198,7 +200,7 @@ func SyncOIDCClientIDs(ctx context.Context, client *iam.Client, providerARN stri
 }
 
 // SyncOIDCTags reconciles AWS tags on an OIDC provider.
-func SyncOIDCTags(ctx context.Context, client *iam.Client, providerARN string, desired map[string]string) error {
+func SyncOIDCTags(ctx context.Context, client *multi.IAM, providerARN string, desired map[string]string) error {
 	out, err := client.ListOpenIDConnectProviderTags(ctx, &iam.ListOpenIDConnectProviderTagsInput{
 		OpenIDConnectProviderArn: aws.String(providerARN),
 	})

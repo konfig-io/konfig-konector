@@ -61,6 +61,10 @@ func (r *ScalableTargetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err := r.Get(ctx, req.NamespacedName, st); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, st); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !st.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(st, awsv1alpha1.FinalizerName) {

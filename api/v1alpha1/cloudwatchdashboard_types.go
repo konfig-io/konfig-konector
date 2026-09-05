@@ -22,6 +22,12 @@ import (
 
 // CloudWatchDashboardSpec defines the desired state of a CloudWatch Dashboard.
 type CloudWatchDashboardSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DashboardName is the name of the dashboard.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="dashboardName is immutable"
 	DashboardName string `json:"dashboardName"`

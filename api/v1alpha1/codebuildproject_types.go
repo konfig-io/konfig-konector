@@ -66,6 +66,12 @@ type CodeBuildEnvironment struct {
 
 // CodeBuildProjectSpec defines the desired state of a CodeBuild project.
 type CodeBuildProjectSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the project name. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`

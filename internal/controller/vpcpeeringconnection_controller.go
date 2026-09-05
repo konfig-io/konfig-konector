@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // VPCPeeringConnectionReconciler reconciles VPCPeeringConnection objects.
 type VPCPeeringConnectionReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=vpcpeeringconnections,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *VPCPeeringConnectionReconciler) Reconcile(ctx context.Context, req ctrl
 	vpc := &awsv1alpha1.VPCPeeringConnection{}
 	if err := r.Get(ctx, req.NamespacedName, vpc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, vpc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !vpc.DeletionTimestamp.IsZero() {

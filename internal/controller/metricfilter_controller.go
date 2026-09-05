@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	logshelper "github.com/konfig-io/konfig-konector/internal/aws/cloudwatchlogs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // MetricFilterReconciler reconciles MetricFilter objects.
 type MetricFilterReconciler struct {
 	client.Client
 	Scheme     *runtime.Scheme
-	LogsClient *awslogs.Client
+	LogsClient *multi.CloudWatchLogs
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=metricfilters,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *MetricFilterReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	mf := &awsv1alpha1.MetricFilter{}
 	if err := r.Get(ctx, req.NamespacedName, mf); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, mf); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !mf.DeletionTimestamp.IsZero() {

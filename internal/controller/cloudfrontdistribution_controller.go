@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cfhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudfront"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CloudFrontDistributionReconciler reconciles CloudFrontDistribution objects.
 type CloudFrontDistributionReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CloudFrontClient *awscf.Client
+	CloudFrontClient *multi.CloudFront
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=cloudfrontdistributions,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CloudFrontDistributionReconciler) Reconcile(ctx context.Context, req ct
 	obj := &awsv1alpha1.CloudFrontDistribution{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

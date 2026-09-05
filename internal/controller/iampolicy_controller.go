@@ -64,6 +64,10 @@ func (r *IAMPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err := r.Get(ctx, req.NamespacedName, p); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, p); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !p.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(p, awsv1alpha1.FinalizerName) {

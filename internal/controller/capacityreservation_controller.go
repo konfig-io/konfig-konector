@@ -62,6 +62,10 @@ func (r *CapacityReservationReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !obj.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(obj, awsv1alpha1.FinalizerName) {

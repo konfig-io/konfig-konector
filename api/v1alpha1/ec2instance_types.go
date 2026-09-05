@@ -22,6 +22,12 @@ import (
 
 // EC2InstanceSpec defines the desired state of an EC2 Instance.
 type EC2InstanceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ImageID is the AMI ID. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="imageId is immutable"

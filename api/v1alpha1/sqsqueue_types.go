@@ -33,6 +33,12 @@ type SQSRedrivePolicy struct {
 
 // SQSQueueSpec defines the desired state of an SQS Queue.
 type SQSQueueSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// QueueName is the name of the queue. Immutable after creation.
 	// FIFO queues must end with ".fifo".
 	// +kubebuilder:validation:MinLength=1

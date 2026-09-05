@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	wafhelper "github.com/konfig-io/konfig-konector/internal/aws/wafv2"
 )
 
@@ -40,7 +41,7 @@ import (
 type IPSetReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	WAFv2Client *awswafv2.Client
+	WAFv2Client *multi.WAFv2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ipsets,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *IPSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	ip := &awsv1alpha1.IPSet{}
 	if err := r.Get(ctx, req.NamespacedName, ip); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ip); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !ip.DeletionTimestamp.IsZero() {

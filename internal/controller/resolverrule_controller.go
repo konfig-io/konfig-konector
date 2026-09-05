@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	r53rhelper "github.com/konfig-io/konfig-konector/internal/aws/route53resolver"
 )
 
@@ -39,7 +40,7 @@ import (
 type ResolverRuleReconciler struct {
 	client.Client
 	Scheme                *runtime.Scheme
-	Route53ResolverClient *awsr53r.Client
+	Route53ResolverClient *multi.Route53Resolver
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=resolverrules,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *ResolverRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	obj := &awsv1alpha1.ResolverRule{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

@@ -22,6 +22,12 @@ import (
 
 // CapacityReservationSpec defines the desired state of an EC2 capacity reservation.
 type CapacityReservationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// InstanceType for which to reserve capacity. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="instanceType is immutable"

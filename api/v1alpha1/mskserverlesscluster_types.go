@@ -32,6 +32,12 @@ type MSKServerlessVpcConfig struct {
 
 // MSKServerlessClusterSpec defines the desired state of an MSK serverless cluster.
 type MSKServerlessClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the serverless cluster. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
 	ClusterName string `json:"clusterName"`

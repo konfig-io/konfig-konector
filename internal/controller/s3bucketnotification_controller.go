@@ -32,13 +32,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // S3BucketNotificationReconciler reconciles S3BucketNotification objects.
 type S3BucketNotificationReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
-	S3Client *awss3.Client
+	S3Client *multi.S3
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=s3bucketnotifications,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *S3BucketNotificationReconciler) Reconcile(ctx context.Context, req ctrl
 	obj := &awsv1alpha1.S3BucketNotification{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

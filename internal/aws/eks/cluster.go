@@ -19,13 +19,15 @@ package eks
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
 
 // ClusterAPI is the narrow subset of the EKS SDK client used by the cluster
-// helpers. *eks.Client satisfies it, so existing callers keep compiling.
+// helpers. *multi.EKS satisfies it, so existing callers keep compiling.
 type ClusterAPI interface {
 	DescribeCluster(ctx context.Context, params *eks.DescribeClusterInput, optFns ...func(*eks.Options)) (*eks.DescribeClusterOutput, error)
 	CreateCluster(ctx context.Context, params *eks.CreateClusterInput, optFns ...func(*eks.Options)) (*eks.CreateClusterOutput, error)
@@ -179,7 +181,7 @@ func DeleteCluster(ctx context.Context, c ClusterAPI, name string) error {
 	return err
 }
 
-func TagCluster(ctx context.Context, c *eks.Client, arn string, tags map[string]string) error {
+func TagCluster(ctx context.Context, c *multi.EKS, arn string, tags map[string]string) error {
 	if len(tags) == 0 {
 		return nil
 	}

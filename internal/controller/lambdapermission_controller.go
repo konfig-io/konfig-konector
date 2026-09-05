@@ -20,7 +20,6 @@ import (
 	"context"
 	"errors"
 
-	awslambda "github.com/aws/aws-sdk-go-v2/service/lambda"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,13 +31,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	lambdahelper "github.com/konfig-io/konfig-konector/internal/aws/lambda"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LambdaPermissionReconciler reconciles LambdaPermission objects.
 type LambdaPermissionReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
-	LambdaClient *awslambda.Client
+	LambdaClient *multi.Lambda
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=lambdapermissions,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +51,10 @@ func (r *LambdaPermissionReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	perm := &awsv1alpha1.LambdaPermission{}
 	if err := r.Get(ctx, req.NamespacedName, perm); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, perm); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !perm.DeletionTimestamp.IsZero() {

@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	kmshelper "github.com/konfig-io/konfig-konector/internal/aws/kms"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // KMSAliasReconciler reconciles KMSAlias objects.
 type KMSAliasReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	KMSClient *awskms.Client
+	KMSClient *multi.KMS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=kmsalias,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *KMSAliasReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	a := &awsv1alpha1.KMSAlias{}
 	if err := r.Get(ctx, req.NamespacedName, a); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, a); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !a.DeletionTimestamp.IsZero() {

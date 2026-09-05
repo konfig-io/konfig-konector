@@ -19,12 +19,14 @@ package eks
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
 
-func DescribeAddon(ctx context.Context, c *eks.Client, clusterName, addonName string) (*types.Addon, error) {
+func DescribeAddon(ctx context.Context, c *multi.EKS, clusterName, addonName string) (*types.Addon, error) {
 	out, err := c.DescribeAddon(ctx, &eks.DescribeAddonInput{
 		ClusterName: aws.String(clusterName),
 		AddonName:   aws.String(addonName),
@@ -45,7 +47,7 @@ type AddonInput struct {
 	Tags                map[string]string
 }
 
-func CreateAddon(ctx context.Context, c *eks.Client, in AddonInput) (*types.Addon, error) {
+func CreateAddon(ctx context.Context, c *multi.EKS, in AddonInput) (*types.Addon, error) {
 	input := &eks.CreateAddonInput{
 		ClusterName: aws.String(in.ClusterName),
 		AddonName:   aws.String(in.AddonName),
@@ -70,7 +72,7 @@ func CreateAddon(ctx context.Context, c *eks.Client, in AddonInput) (*types.Addo
 	return out.Addon, nil
 }
 
-func UpdateAddon(ctx context.Context, c *eks.Client, in AddonInput) error {
+func UpdateAddon(ctx context.Context, c *multi.EKS, in AddonInput) error {
 	input := &eks.UpdateAddonInput{
 		ClusterName: aws.String(in.ClusterName),
 		AddonName:   aws.String(in.AddonName),
@@ -91,7 +93,7 @@ func UpdateAddon(ctx context.Context, c *eks.Client, in AddonInput) error {
 	return err
 }
 
-func DeleteAddon(ctx context.Context, c *eks.Client, clusterName, addonName string) error {
+func DeleteAddon(ctx context.Context, c *multi.EKS, clusterName, addonName string) error {
 	_, err := c.DeleteAddon(ctx, &eks.DeleteAddonInput{
 		ClusterName: aws.String(clusterName),
 		AddonName:   aws.String(addonName),

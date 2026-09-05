@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	efshelper "github.com/konfig-io/konfig-konector/internal/aws/efs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EFSMountTargetReconciler reconciles EFSMountTarget objects.
 type EFSMountTargetReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EFSClient *awsefs.Client
+	EFSClient *multi.EFS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=efsmounttargets,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *EFSMountTargetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	obj := &awsv1alpha1.EFSMountTarget{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

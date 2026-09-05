@@ -63,6 +63,10 @@ func (r *RedshiftParameterGroupReconciler) Reconcile(ctx context.Context, req ct
 	if err := r.Get(ctx, req.NamespacedName, pg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, pg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !pg.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(pg, awsv1alpha1.FinalizerName) {

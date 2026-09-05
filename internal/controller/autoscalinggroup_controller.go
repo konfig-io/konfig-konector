@@ -36,13 +36,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	asghelper "github.com/konfig-io/konfig-konector/internal/aws/autoscaling"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // AutoScalingGroupReconciler reconciles AutoScalingGroup objects.
 type AutoScalingGroupReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ASGClient *awsautoscaling.Client
+	ASGClient *multi.AutoScaling
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=autoscalinggroups,verbs=get;list;watch;create;update;patch;delete
@@ -55,6 +56,10 @@ func (r *AutoScalingGroupReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	asg := &awsv1alpha1.AutoScalingGroup{}
 	if err := r.Get(ctx, req.NamespacedName, asg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, asg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !asg.DeletionTimestamp.IsZero() {

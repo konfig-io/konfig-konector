@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cphelper "github.com/konfig-io/konfig-konector/internal/aws/codepipeline"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CodePipelineReconciler reconciles CodePipeline objects.
 type CodePipelineReconciler struct {
 	client.Client
 	Scheme             *runtime.Scheme
-	CodePipelineClient *awscp.Client
+	CodePipelineClient *multi.CodePipeline
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=codepipelines,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CodePipelineReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	obj := &awsv1alpha1.CodePipeline{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {

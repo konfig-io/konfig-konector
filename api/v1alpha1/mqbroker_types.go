@@ -45,6 +45,12 @@ type MQUser struct {
 
 // MQBrokerSpec defines the desired state of an Amazon MQ broker.
 type MQBrokerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BrokerName is the name of the broker. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=50

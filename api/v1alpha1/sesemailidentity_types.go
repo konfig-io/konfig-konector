@@ -22,6 +22,12 @@ import (
 
 // SESEmailIdentitySpec defines the desired state of an SES Email Identity.
 type SESEmailIdentitySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// EmailIdentity is the email address or domain to verify.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="emailIdentity is immutable"
 	EmailIdentity string `json:"emailIdentity"`

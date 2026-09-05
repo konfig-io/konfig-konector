@@ -23,6 +23,12 @@ import (
 // ScalableTargetSpec defines the desired state of an Application Auto Scaling
 // scalable target.
 type ScalableTargetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ServiceNamespace is the AWS service namespace of the scalable resource.
 	// Immutable after creation.
 	// +kubebuilder:validation:Enum=ecs;elasticmapreduce;ec2;appstream;dynamodb;rds;sagemaker;custom-resource;comprehend;lambda;cassandra;kafka;elasticache;neptune;workspaces

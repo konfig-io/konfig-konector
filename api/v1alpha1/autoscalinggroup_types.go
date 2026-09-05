@@ -37,6 +37,12 @@ type LaunchTemplateRef struct {
 
 // AutoScalingGroupSpec defines the desired state of an EC2 Auto Scaling Group.
 type AutoScalingGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AutoScalingGroupName is the name of the Auto Scaling group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255

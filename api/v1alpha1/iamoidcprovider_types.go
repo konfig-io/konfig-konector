@@ -22,6 +22,12 @@ import (
 
 // IAMOIDCProviderSpec defines the desired state of an AWS IAM OIDC Provider.
 type IAMOIDCProviderSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// URL is the OIDC issuer URL. Immutable after creation — AWS uses this as the provider identifier.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="url is immutable"

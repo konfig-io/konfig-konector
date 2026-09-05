@@ -63,6 +63,10 @@ func (r *GlueDatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	if err := r.Get(ctx, req.NamespacedName, db); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, db); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !db.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(db, awsv1alpha1.FinalizerName) {

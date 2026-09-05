@@ -37,6 +37,12 @@ type LambdaLayerContent struct {
 
 // LambdaLayerVersionSpec defines the desired state of a Lambda Layer Version.
 type LambdaLayerVersionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// LayerName is the name of the layer.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="layerName is immutable"

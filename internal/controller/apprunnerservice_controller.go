@@ -66,6 +66,10 @@ func (r *AppRunnerServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err := r.Get(ctx, req.NamespacedName, svc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, svc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !svc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(svc, awsv1alpha1.FinalizerName) {

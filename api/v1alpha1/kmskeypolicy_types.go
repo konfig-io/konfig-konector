@@ -22,6 +22,12 @@ import (
 
 // KMSKeyPolicySpec defines the desired state of a KMS Key Policy.
 type KMSKeyPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// KeyRef references the KMS key.
 	KeyRef KMSKeyRef `json:"keyRef"`
 

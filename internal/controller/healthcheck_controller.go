@@ -73,6 +73,10 @@ func (r *HealthCheckReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, hc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, hc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !hc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(hc, awsv1alpha1.FinalizerName) {

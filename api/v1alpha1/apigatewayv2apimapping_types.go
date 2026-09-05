@@ -33,6 +33,12 @@ type DomainNameRef struct {
 
 // APIGatewayV2ApiMappingSpec defines the desired state of an API mapping.
 type APIGatewayV2ApiMappingSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// APIRef references the APIGatewayV2API to map.
 	APIRef APIRef `json:"apiRef"`
 

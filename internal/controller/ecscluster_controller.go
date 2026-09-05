@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awsecs "github.com/aws/aws-sdk-go-v2/service/ecs"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -32,13 +31,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ecshelper "github.com/konfig-io/konfig-konector/internal/aws/ecs"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // ECSClusterReconciler reconciles ECSCluster objects.
 type ECSClusterReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	ECSClient *awsecs.Client
+	ECSClient *multi.ECS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ecsclusters,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +51,10 @@ func (r *ECSClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	cluster := &awsv1alpha1.ECSCluster{}
 	if err := r.Get(ctx, req.NamespacedName, cluster); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cluster); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !cluster.DeletionTimestamp.IsZero() {

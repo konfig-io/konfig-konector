@@ -32,6 +32,12 @@ type ElasticIPRef struct {
 
 // EIPAssociationSpec defines the desired state of an EIP association.
 type EIPAssociationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ElasticIPRef references the ElasticIP to associate.
 	ElasticIPRef ElasticIPRef `json:"elasticIpRef"`
 

@@ -22,6 +22,12 @@ import (
 
 // VPCPeeringConnectionSpec defines the desired state of a VPC Peering Connection.
 type VPCPeeringConnectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef is the requester VPC (local).
 	VPCRef VPCResourceRef `json:"vpcRef"`
 

@@ -22,6 +22,12 @@ import (
 
 // IAMPolicyAttachmentSpec defines the desired state of IAMPolicyAttachment.
 type IAMPolicyAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RoleRef references the IAMRole CR to attach the policy to.
 	RoleRef RoleRef `json:"roleRef"`
 

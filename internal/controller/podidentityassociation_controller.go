@@ -62,6 +62,10 @@ func (r *PodIdentityAssociationReconciler) Reconcile(ctx context.Context, req ct
 	if err := r.Get(ctx, req.NamespacedName, pia); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, pia); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !pia.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(pia, awsv1alpha1.FinalizerName) {
