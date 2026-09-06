@@ -47,6 +47,8 @@ help: ## Display this help.
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd:allowDangerousTypes=true webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	rm -f helm/konfig-konector/crds/*.yaml && cp config/crd/bases/*.yaml helm/konfig-konector/crds/
+	python3 hack/gen-helm-rbac.py
 
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
@@ -205,6 +207,10 @@ GOBIN=$(LOCALBIN) go install $${package} ;\
 mv "$$(echo "$(1)" | sed "s/-$(3)$$//")" $(1) ;\
 }
 endef
+
+.PHONY: parity
+parity: ## Regenerate docs/terraform-parity.md by diffing kinds against the Terraform AWS provider.
+	python3 hack/parity.py
 
 .PHONY: gen-reference
 gen-reference: ## Regenerate examples/ and the website API reference from CRD schemas.

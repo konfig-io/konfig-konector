@@ -753,3 +753,6 @@ func (o *HostedZoneVPCAssociation) GetProviderRef() *ProviderRef { return o.Spec
 
 // GetProviderRef implements ProviderScoped.
 func (o *VPCEndpointService) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+
+// GetProviderRef implements ProviderScoped.
+func (o *CloudControlResource) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }

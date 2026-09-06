@@ -42,6 +42,10 @@ func init() {
 			EC2Client: clients.EC2}).SetupWithManager(mgr); err != nil {
 			return fmt.Errorf("VPCEndpointService: %w", err)
 		}
+		if err := (&CloudControlResourceReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),
+			CCClient: clients.CloudControl}).SetupWithManager(mgr); err != nil {
+			return fmt.Errorf("CloudControlResource: %w", err)
+		}
 		return nil
 	})
 }

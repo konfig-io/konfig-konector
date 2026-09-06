@@ -50,10 +50,29 @@ spec:
             description: VPCPeeringConnectionSpec defines the desired state of a VPC
               Peering Connection.
             properties:
+              accepterProviderRef:
+                description: |-
+                  AccepterProviderRef names the AWSProvider for the accepter VPC's account.
+                  When set the controller accepts the request on the peer's behalf and
+                  Ready only becomes True once the connection is active on both sides.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
               autoAccept:
                 description: |-
-                  AutoAccept controls whether to automatically accept the peering request
-                  for same-account, same-region peers.
+                  AutoAccept makes the controller accept the peering request itself. For
+                  same-account peers this uses the resource's own provider (in PeerRegion
+                  when set). For cross-account peers set AccepterProviderRef as well so the
+                  acceptance runs with the accepter account's credentials.
                 type: boolean
               peerOwnerId:
                 description: |-
@@ -72,6 +91,23 @@ spec:
                 x-kubernetes-validations:
                 - message: peerVpcId is immutable
                   rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
               tags:
                 additionalProperties:
                   type: string
@@ -95,6 +131,12 @@ spec:
             description: VPCPeeringConnectionStatus defines the observed state of
               VPCPeeringConnection.
             properties:
+              accepterAccountId:
+                description: AccepterAccountID is the account that owns the accepter
+                  VPC.
+                type: string
+              accepterVpcId:
+                type: string
               conditions:
                 description: Conditions describe the current state of the resource.
                 items:
@@ -177,6 +219,10 @@ spec:
                 type: integer
               peeringId:
                 description: PeeringID is the VPC peering connection ID.
+                type: string
+              requesterVpcId:
+                description: RequesterVPCID and AccepterVPCID are the two VPCs as
+                  reported by AWS.
                 type: string
               status:
                 description: Status is the current state of the peering connection.
