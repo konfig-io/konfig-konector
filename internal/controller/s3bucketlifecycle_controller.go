@@ -33,6 +33,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+	s3helper "github.com/konfig-io/konfig-konector/internal/aws/s3"
 )
 
 // S3BucketLifecycleReconciler reconciles S3BucketLifecycle objects.
@@ -157,7 +158,7 @@ func (r *S3BucketLifecycleReconciler) deleteLifecycle(ctx context.Context, obj *
 	_, err := r.S3Client.DeleteBucketLifecycle(ctx, &awss3.DeleteBucketLifecycleInput{
 		Bucket: aws.String(obj.Spec.BucketName),
 	})
-	if err != nil {
+	if err != nil && !s3helper.IsNotFound(err) {
 		return fmt.Errorf("delete bucket lifecycle: %w", err)
 	}
 	return nil

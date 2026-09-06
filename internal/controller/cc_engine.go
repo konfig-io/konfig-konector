@@ -147,7 +147,7 @@ func (r *CloudControlKindReconciler) pollRequest(ctx context.Context, obj cfn.Cl
 		st.RequestToken, st.Operation = "", ""
 		return true, persistStatus(ctx, r.Client, obj)
 	case cctypes.OperationStatusFailed, cctypes.OperationStatusCancelComplete:
-		if st.Operation == "DELETE" && ev.ErrorCode == cctypes.HandlerErrorCodeNotFound {
+		if st.Operation == "DELETE" && cchelper.DeleteFailureMeansGone(string(ev.ErrorCode), aws.ToString(ev.StatusMessage)) {
 			// The resource (or its parent) is already gone: deletion is complete.
 			st.RequestToken, st.Operation = "", ""
 			return true, persistStatus(ctx, r.Client, obj)
@@ -265,9 +265,20 @@ func (r *CloudControlKindReconciler) deleteResource(ctx context.Context, obj cfn
 		if errors.Is(err, errPendingAcceptance) {
 			return false, nil
 		}
-		return done, err
+		if err == nil {
+			return done, nil
+		}
+		// The delete request failed: fall through, re-check existence and retry.
+		log.FromContext(ctx).Info("delete request failed; re-checking resource", "error", err.Error())
 	}
 	if st.Identifier == "" {
+		return true, nil
+	}
+	// Verify the resource still exists before (re)issuing a delete: a previous
+	// delete may have completed even though its request status reported a
+	// transient failure (e.g. "not empty" while children were still deleting).
+	if _, err := r.CCClient.GetResource(ctx, &awscc.GetResourceInput{TypeName: aws.String(obj.CloudControlTypeName()), Identifier: aws.String(st.Identifier)}); cchelper.IsNotFound(err) {
+		st.RequestToken, st.Operation = "", ""
 		return true, nil
 	}
 	out, err := r.CCClient.DeleteResource(ctx, &awscc.DeleteResourceInput{
@@ -285,7 +296,7 @@ func (r *CloudControlKindReconciler) deleteResource(ctx context.Context, obj cfn
 	if err := persistStatus(ctx, r.Client, obj); err != nil {
 		return false, err
 	}
-	if out.ProgressEvent.OperationStatus == cctypes.OperationStatusFailed && out.ProgressEvent.ErrorCode == cctypes.HandlerErrorCodeNotFound {
+	if out.ProgressEvent.OperationStatus == cctypes.OperationStatusFailed && cchelper.DeleteFailureMeansGone(string(out.ProgressEvent.ErrorCode), aws.ToString(out.ProgressEvent.StatusMessage)) {
 		return true, nil
 	}
 	return out.ProgressEvent.OperationStatus == cctypes.OperationStatusSuccess, nil

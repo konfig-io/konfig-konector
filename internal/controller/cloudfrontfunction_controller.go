@@ -164,8 +164,10 @@ func (r *CloudFrontFunctionReconciler) reconcileCFFunction(ctx context.Context, 
 }
 
 func (r *CloudFrontFunctionReconciler) deleteCFFunction(ctx context.Context, obj *awsv1alpha1.CloudFrontFunction) error {
-	etag := obj.Status.ETag
-	if etag == "" {
+	// Always fetch the current ETag: the one in status goes stale after any
+	// update and CloudFront answers 412 PreconditionFailed.
+	var etag string
+	{
 		descOut, err := r.CloudFrontClient.DescribeFunction(ctx, &awscf.DescribeFunctionInput{
 			Name: aws.String(obj.Spec.Name),
 		})

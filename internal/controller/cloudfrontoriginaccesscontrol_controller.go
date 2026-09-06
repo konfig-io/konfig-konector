@@ -196,8 +196,9 @@ func (r *CloudFrontOriginAccessControlReconciler) deleteOAC(ctx context.Context,
 		}
 		obj.Status.ID = id
 	}
-	etag := obj.Status.ETag
-	if etag == "" {
+	// Always fetch the current ETag (see CloudFrontFunction).
+	var etag string
+	{
 		getOut, err := r.CloudFrontClient.GetOriginAccessControl(ctx, &awscf.GetOriginAccessControlInput{
 			Id: aws.String(obj.Status.ID),
 		})

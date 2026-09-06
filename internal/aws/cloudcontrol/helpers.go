@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 
 	"github.com/aws/smithy-go"
 )
@@ -159,4 +160,21 @@ func collapseSingletons(v interface{}) interface{} {
 		return out
 	}
 	return v
+}
+
+// DeleteFailureMeansGone reports whether a FAILED delete progress event
+// indicates the resource (or its parent) no longer exists. Handlers are
+// inconsistent: some return HandlerErrorCode NotFound, others wrap the
+// service's 404 in GeneralServiceException with a message.
+func DeleteFailureMeansGone(errorCode string, statusMessage string) bool {
+	if errorCode == "NotFound" {
+		return true
+	}
+	m := strings.ToLower(statusMessage)
+	for _, needle := range []string{"does not exist", "not found", "nosuchentity", "nosuchbucket", "resourcenotfound", "status code: 404"} {
+		if strings.Contains(m, needle) {
+			return true
+		}
+	}
+	return false
 }
