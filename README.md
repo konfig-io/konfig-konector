@@ -6,13 +6,16 @@ konfig-konector is a Kubernetes operator that lets you declare AWS resources —
 
 Think of it as [Google Config Connector](https://cloud.google.com/config-connector/docs/overview), but for AWS and purpose-built for EKS teams who want to manage cloud infrastructure the same way they manage applications.
 
-**Contents:** [Supported Resources](#supported-resources) · [Installation](#installation) · [Usage](#usage) · [Cross-resource References](#cross-resource-references) · [Exporting an Existing Account](#exporting-an-existing-account) · [Drift Detection](#drift-detection) · [Architecture](#architecture) · [Building from Source](#building-from-source) · [Contributing](#contributing)
+**Contents:** [Supported Resources](#supported-resources) · [Installation](#installation) · [Usage](#usage) · [Multi-account](#multi-account-and-cross-account) · [Cross-resource References](#cross-resource-references) · [Exporting an Existing Account](#exporting-an-existing-account) · [Drift Detection](#drift-detection) · [Architecture](#architecture) · [Building from Source](#building-from-source) · [Contributing](#contributing)
 
 ## Why konfig-konector?
 
 | | konfig-konector | ACK | Crossplane |
 |---|---|---|---|
 | Unified IAM + EKS Pod Identity + DNS | ✅ | Fragmented across repos | ✅ |
+| Multi-account from one instance (AWSProvider, per-resource or per-namespace) | ✅ | ❌ | ProviderConfig |
+| Two-sided cross-account handshakes (peering, TGW, RAM, Route53, PrivateLink) | ✅ | ❌ | ❌ |
+| Escape hatch for any Cloud Control type | ✅ `CloudControlResource` | ❌ | ❌ |
 | Deep EKS Pod Identity integration | ✅ | ❌ | ❌ |
 | Single operator binary | ✅ | One per service | ❌ |
 | Drift detection & auto-correction | ✅ | Partial | ✅ |
@@ -20,16 +23,21 @@ Think of it as [Google Config Connector](https://cloud.google.com/config-connect
 
 ## Supported Resources
 
-The operator ships **241 resource kinds across ~74 AWS services** — IAM, EC2/VPC,
+The operator ships **246 resource kinds across ~75 AWS services** — IAM, EC2/VPC,
 RDS/Aurora, S3, DynamoDB, Lambda, ECS, EKS, ElastiCache, SQS/SNS/EventBridge,
 Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
 List every kind with `konfig-export --list`, browse the generated API reference
 at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
 full-options examples in [`examples/`](examples/) — one per kind, generated from
-the CRD schemas (`make gen-reference`). A few highlights:
+the CRD schemas (`make gen-reference`). Anything without a native kind yet can be
+managed through `CloudControlResource`, which drives any AWS Cloud Control API
+type; see [`docs/terraform-parity.md`](docs/terraform-parity.md) for the measured
+gap against the Terraform AWS provider (`make parity`). A few highlights:
 
 | Kind | AWS Service | Notes |
 |---|---|---|
+| `AWSProvider` | STS | Cluster-scoped account/region target; see [Multi-account](#multi-account-and-cross-account) |
+| `CloudControlResource` | Cloud Control API | Any `AWS::Service::Type` |
 | `IAMRole` | IAM | |
 | `IAMPolicy` | IAM | |
 | `IAMPolicyAttachment` | IAM | |
@@ -45,6 +53,11 @@ the CRD schemas (`make gen-reference`). A few highlights:
 | `NatGateway` | EC2 | Async — polls until `available` |
 | `SecurityGroup` | EC2 | |
 | `VPCEndpoint` | EC2 | Interface and Gateway types |
+| `VPCEndpointService` | EC2 | PrivateLink provider side; auto-accepts consumer connections |
+| `VPCPeeringConnection` | EC2 | Cross-account/region; accepts under `accepterProviderRef` |
+| `TransitGatewayVpcAttachment` | EC2 | Accepts shared-TGW attachments under the owner provider |
+| `ResourceShareInvitation` | RAM | Accepts shares in the receiving account |
+| `HostedZoneVPCAssociation` | Route53 | Cross-account private zone ↔ VPC handshake |
 | `KeyPair` | EC2 | |
 | `EC2Instance` | EC2 | Async — polls until `running` |
 | `LaunchTemplate` | EC2 | New version created on spec change |
@@ -66,11 +79,11 @@ All resources use the API group `aws.konfig.io/v1alpha1`.
 
 ## Prerequisites
 
-- **Kubernetes** 1.27+ running on EKS
+- **Kubernetes** 1.27+ running on EKS (any cluster works with `aws.credentialsSecret`; see [docs/multi-account.md](docs/multi-account.md))
 - **EKS Pod Identity Agent** addon installed on your cluster
 - **Helm** 3.x
 - **Terraform** 1.0+ (for bootstrapping the operator IAM role)
-- **Go** 1.22+ (for building from source)
+- **Go** 1.24+ (for building from source)
 - **Docker** (for building the image)
 
 ## Installation
@@ -153,7 +166,7 @@ kubectl get pods -n konfig-system
 kubectl get crds | grep konfig.io | head
 # autoscalinggroups.aws.konfig.io
 # dbinstances.aws.konfig.io
-# ... (241 CRDs total)
+# ... (246 CRDs total)
 ```
 
 ## Usage
@@ -415,6 +428,39 @@ spec:
   records:
     - "1.2.3.4"
 ```
+
+## Multi-account and Cross-account
+
+A single instance manages any number of AWS accounts. Declare each account as
+a cluster-scoped `AWSProvider` (a role to assume plus a default region), then
+select it per resource with `spec.providerRef`, per namespace with the
+`aws.konfig.io/provider` annotation, or mark one provider `default: true` as
+the primary account for everything else.
+
+```yaml
+apiVersion: aws.konfig.io/v1alpha1
+kind: AWSProvider
+metadata: {name: prod}
+spec:
+  default: true
+  roleArn: arn:aws:iam::111122223333:role/konfig-konector-spoke
+  region: us-east-1
+  allowedNamespaces: ["prod-*"]
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SQSQueue
+metadata: {name: orders, namespace: prod-api}
+spec:
+  providerRef: {name: prod, region: us-west-2}
+  queueName: orders
+```
+
+Relationships that need actions in two accounts are handled end to end and
+only report `Ready` once AWS confirms both sides: `VPCPeeringConnection`
+(`accepterProviderRef`), `TransitGatewayVpcAttachment` (`accepterProviderRef`),
+`ResourceShareInvitation`, `HostedZoneVPCAssociation` (`vpcProviderRef`) and
+`VPCEndpointService`. The `terraform/spoke` module creates the per-account role.
+Full details in [docs/multi-account.md](docs/multi-account.md).
 
 ## Cross-resource References
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Route 53 — konfig-konector Docs</title>
-  <meta name="description" content="API reference for DelegationSignerRecord, HealthCheck, HostedZone, RecordSet." />
+  <meta name="description" content="API reference for HealthCheck, HostedZone, HostedZoneVPCAssociation, RecordSet." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -48,53 +48,6 @@
       <code>aws.konfig.io/v1alpha1</code>
     </div>
 
-    <section id="delegationsignerrecord" class="resource-section">
-      <h2>DelegationSignerRecord <a href="#delegationsignerrecord" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
-      <p class="resource-desc">DelegationSignerRecord is the Schema for managing DS records in Route53 for DNSSEC delegation.</p>
-      <p class="resource-desc"><code>kubectl get delegationsignerrecords</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/route53/delegationsignerrecord.yaml">example on GitHub</a></p>
-
-      <h3>Example</h3>
-      <div class="code-wrap"><pre><code class="language-yaml"># DelegationSignerRecord — Route 53
-# Full-options example generated from the CRD schema. Optional fields are
-# included with sample values; delete what you don&#x27;t need. Field reference:
-# https://konfig-konector.io/docs/route53.html#delegationsignerrecord
-apiVersion: aws.konfig.io/v1alpha1
-kind: DelegationSignerRecord
-metadata:
-  name: example-delegationsignerrecord
-  namespace: default
-spec:
-  childZoneName: example-delegationsignerrecord
-  dsRecord: example
-  hostedZoneID: Z0ABC123EXAMPLE
-  ttl: 1
-</code></pre></div>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap"><table class="docs-table">
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>childZoneName</code></td><td>string</td><td><span class="req">yes</span></td><td>ChildZoneName is the domain name of the child zone.</td></tr>
-<tr><td><code>dsRecord</code></td><td>string</td><td><span class="req">yes</span></td><td>DSRecord is the full DS record value (e.g.</td></tr>
-<tr><td><code>hostedZoneID</code></td><td>string</td><td><span class="req">yes</span></td><td>HostedZoneID is the Route53 hosted zone ID of the parent zone.</td></tr>
-<tr><td><code>ttl</code></td><td>integer</td><td>—</td><td>TTL is the TTL in seconds for the DS record.</td></tr>
-</tbody></table></div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap"><table class="docs-table">
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>changeID</code></td><td>string</td><td>—</td><td>ChangeID is the Route53 change ID for the DS record change.</td></tr>
-<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
-<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
-<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
-<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
-<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
-<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
-<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
-<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
-<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
-</tbody></table></div>
-    </section>
-
     <section id="healthcheck" class="resource-section">
       <h2>HealthCheck <a href="#healthcheck" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
       <p class="resource-desc">HealthCheck is the Schema for managing AWS Route53 Health Checks.</p>
@@ -115,6 +68,9 @@ spec:
   fqdn: example
   ipAddress: example
   port: 1
+  providerRef:
+    name: example-healthcheck
+    region: us-east-1
   requestInterval: 1
   resourcePath: example
   searchString: example
@@ -131,6 +87,9 @@ spec:
 <tr><td><code>fqdn</code></td><td>string</td><td>—</td><td>FQDN is the fully qualified domain name of the endpoint.</td></tr>
 <tr><td><code>ipAddress</code></td><td>string</td><td>—</td><td>IPAddress is the IPv4 or IPv6 address of the endpoint.</td></tr>
 <tr><td><code>port</code></td><td>integer</td><td>—</td><td>Port is the port on the endpoint to connect to.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>requestInterval</code></td><td>enum</td><td>—</td><td>RequestInterval is the frequency of health checks in seconds (10 or 30). Allowed: <code>10, 30</code></td></tr>
 <tr><td><code>resourcePath</code></td><td>string</td><td>—</td><td>ResourcePath is the path that Route53 requests when performing health checks (HTTP/HTTPS).</td></tr>
 <tr><td><code>searchString</code></td><td>string</td><td>—</td><td>SearchString is the string to search for in HTTP/HTTPS responses.</td></tr>
@@ -173,6 +132,9 @@ spec:
   comment: Managed by konfig-konector
   name: example-hostedzone
   private: false
+  providerRef:
+    name: example-hostedzone
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -188,6 +150,9 @@ spec:
 <tr><td><code>delegationSetId</code></td><td>string</td><td>—</td><td>DelegationSetID is the reusable delegation set ID to assign to this zone.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the DNS zone name (e.g.</td></tr>
 <tr><td><code>private</code></td><td>boolean</td><td>—</td><td>Private indicates this is a private hosted zone (requires VPCRef).</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags applied to the hosted zone.</td></tr>
 <tr><td><code>vpcRef</code></td><td>object</td><td>—</td><td>VPCRef is required when Private is true.</td></tr>
 <tr><td><code>vpcRef.id</code></td><td>string</td><td><span class="req">yes</span></td><td>ID is the VPC ID.</td></tr>
@@ -208,6 +173,72 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>nameServers</code></td><td>array&lt;string&gt;</td><td>—</td><td>NameServers are the authoritative name servers for the zone.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="hostedzonevpcassociation" class="resource-section">
+      <h2>HostedZoneVPCAssociation <a href="#hostedzonevpcassociation" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">HostedZoneVPCAssociation associates a VPC (optionally in another account) with a Route53 private hosted zone.</p>
+      <p class="resource-desc"><code>kubectl get hostedzonevpcassociations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/route53/hostedzonevpcassociation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># HostedZoneVPCAssociation — Route 53
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/route53.html#hostedzonevpcassociation
+apiVersion: aws.konfig.io/v1alpha1
+kind: HostedZoneVPCAssociation
+metadata:
+  name: example-hostedzonevpcassociation
+  namespace: default
+spec:
+  hostedZoneRef:
+    name: example-hostedzone
+  providerRef:
+    name: example-hostedzonevpcassociation
+    region: us-east-1
+  vpcProviderRef:
+    name: example-hostedzonevpcassociation
+    region: us-east-1
+  vpcRef:
+    name: example-vpc
+  vpcRegion: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>hostedZoneRef</code></td><td>object</td><td><span class="req">yes</span></td><td>HostedZoneRef is the private hosted zone.</td></tr>
+<tr><td><code>hostedZoneRef.id</code></td><td>string</td><td>—</td><td>ID is a direct hosted zone ID (e.g.</td></tr>
+<tr><td><code>hostedZoneRef.name</code></td><td>string</td><td>—</td><td>Name of a HostedZone CR.</td></tr>
+<tr><td><code>hostedZoneRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the HostedZone CR.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>vpcProviderRef</code></td><td>object</td><td>—</td><td>VPCProviderRef names the AWSProvider of the account owning the VPC when it differs from the zone's account.</td></tr>
+<tr><td><code>vpcProviderRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>vpcProviderRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>vpcRef</code></td><td>object</td><td><span class="req">yes</span></td><td>VPCRef is the VPC to associate (CR name or direct ID).</td></tr>
+<tr><td><code>vpcRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS VPC ID (e.g.</td></tr>
+<tr><td><code>vpcRef.name</code></td><td>string</td><td>—</td><td>Name of a VPC CR in the same namespace.</td></tr>
+<tr><td><code>vpcRegion</code></td><td>string</td><td><span class="req">yes</span></td><td>VPCRegion is the region of the VPC.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>associated</code></td><td>boolean</td><td>—</td><td>Associated is true once AWS reports the VPC on the zone.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>hostedZoneId</code></td><td>string</td><td>—</td><td>HostedZoneID and VPCID are the resolved identifiers.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>vpcId</code></td><td>string</td><td>—</td><td></td></tr>
 </tbody></table></div>
     </section>
 
@@ -237,6 +268,9 @@ spec:
   hostedZoneRef:
     name: example-hostedzone
   name: example-recordset
+  providerRef:
+    name: example-recordset
+    region: us-east-1
   records:
   - example
   setIdentifier: example
@@ -260,6 +294,9 @@ spec:
 <tr><td><code>hostedZoneRef.id</code></td><td>string</td><td>—</td><td>ID is a direct Route53 hosted zone ID (e.g.</td></tr>
 <tr><td><code>hostedZoneRef.name</code></td><td>string</td><td>—</td><td>Name of a HostedZone CR in the same namespace.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the DNS record name (e.g.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>records</code></td><td>array&lt;string&gt;</td><td>—</td><td>Records are the record values.</td></tr>
 <tr><td><code>setIdentifier</code></td><td>string</td><td>—</td><td>SetIdentifier is a unique identifier to differentiate records with the same name and type in weighted, latency, failover, or geolocation routing.</td></tr>
 <tr><td><code>ttl</code></td><td>integer</td><td>—</td><td>TTL is the time-to-live for the record in seconds.</td></tr>

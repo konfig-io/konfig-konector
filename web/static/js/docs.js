@@ -5,8 +5,7 @@ const SIDEBAR_DATA = [
     label: "ACM",
     href: "/docs/acm.html",
     items: [
-      { label: "Certificate", anchor: "certificate" },
-      { label: "CertificateValidation", anchor: "certificatevalidation" }
+      { label: "Certificate", anchor: "certificate" }
     ]
   },
   {
@@ -84,8 +83,7 @@ const SIDEBAR_DATA = [
     label: "Auto Scaling",
     href: "/docs/autoscaling.html",
     items: [
-      { label: "AutoScalingGroup", anchor: "autoscalinggroup" },
-      { label: "ScalingPolicy", anchor: "scalingpolicy" }
+      { label: "AutoScalingGroup", anchor: "autoscalinggroup" }
     ]
   },
   {
@@ -124,6 +122,14 @@ const SIDEBAR_DATA = [
     href: "/docs/budgets.html",
     items: [
       { label: "Budget", anchor: "budget" }
+    ]
+  },
+  {
+    id: "cloudcontrol",
+    label: "Cloud Control API",
+    href: "/docs/cloudcontrol.html",
+    items: [
+      { label: "CloudControlResource", anchor: "cloudcontrolresource" }
     ]
   },
   {
@@ -190,14 +196,6 @@ const SIDEBAR_DATA = [
     items: [
       { label: "CodeArtifactDomain", anchor: "codeartifactdomain" },
       { label: "CodeArtifactRepository", anchor: "codeartifactrepository" }
-    ]
-  },
-  {
-    id: "codebuild",
-    label: "CodeBuild",
-    href: "/docs/codebuild.html",
-    items: [
-      { label: "CodeBuildProject", anchor: "codebuildproject" }
     ]
   },
   {
@@ -308,6 +306,7 @@ const SIDEBAR_DATA = [
       { label: "TransitGatewayVpcAttachment", anchor: "transitgatewayvpcattachment" },
       { label: "VPC", anchor: "vpc" },
       { label: "VPCEndpoint", anchor: "vpcendpoint" },
+      { label: "VPCEndpointService", anchor: "vpcendpointservice" },
       { label: "VPCPeeringConnection", anchor: "vpcpeeringconnection" },
       { label: "VPNConnection", anchor: "vpnconnection" },
       { label: "VPNConnectionRoute", anchor: "vpnconnectionroute" },
@@ -379,14 +378,6 @@ const SIDEBAR_DATA = [
       { label: "EventBus", anchor: "eventbus" },
       { label: "EventRule", anchor: "eventrule" },
       { label: "EventTarget", anchor: "eventtarget" }
-    ]
-  },
-  {
-    id: "pipes",
-    label: "EventBridge Pipes",
-    href: "/docs/pipes.html",
-    items: [
-      { label: "EventBridgePipe", anchor: "eventbridgepipe" }
     ]
   },
   {
@@ -469,8 +460,7 @@ const SIDEBAR_DATA = [
     items: [
       { label: "KMSAlias", anchor: "kmsalias" },
       { label: "KMSGrant", anchor: "kmsgrant" },
-      { label: "KMSKey", anchor: "kmskey" },
-      { label: "KMSKeyPolicy", anchor: "kmskeypolicy" }
+      { label: "KMSKey", anchor: "kmskey" }
     ]
   },
   {
@@ -537,6 +527,56 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "multi",
+    label: "MULTI",
+    href: "/docs/multi.html",
+    items: [
+      { label: "Activity", anchor: "activity" },
+      { label: "CertificateValidation", anchor: "certificatevalidation" },
+      { label: "CodeBuildProject", anchor: "codebuildproject" },
+      { label: "DBCluster", anchor: "dbcluster" },
+      { label: "DBClusterParameterGroup", anchor: "dbclusterparametergroup" },
+      { label: "DBOptionGroup", anchor: "dboptiongroup" },
+      { label: "DBParameterGroup", anchor: "dbparametergroup" },
+      { label: "DBProxy", anchor: "dbproxy" },
+      { label: "DBSnapshot", anchor: "dbsnapshot" },
+      { label: "DBSubnetGroup", anchor: "dbsubnetgroup" },
+      { label: "DelegationSignerRecord", anchor: "delegationsignerrecord" },
+      { label: "EventBridgePipe", anchor: "eventbridgepipe" },
+      { label: "IPSet", anchor: "ipset" },
+      { label: "KMSKeyPolicy", anchor: "kmskeypolicy" },
+      { label: "OpenSearchAccessPolicy", anchor: "opensearchaccesspolicy" },
+      { label: "OpenSearchDomain", anchor: "opensearchdomain" },
+      { label: "OpenSearchServerlessCollection", anchor: "opensearchserverlesscollection" },
+      { label: "ResolverEndpoint", anchor: "resolverendpoint" },
+      { label: "ResolverRule", anchor: "resolverrule" },
+      { label: "S3BucketCORS", anchor: "s3bucketcors" },
+      { label: "S3BucketLifecycle", anchor: "s3bucketlifecycle" },
+      { label: "S3BucketNotification", anchor: "s3bucketnotification" },
+      { label: "S3BucketPolicy", anchor: "s3bucketpolicy" },
+      { label: "S3BucketReplication", anchor: "s3bucketreplication" },
+      { label: "SESConfigurationSet", anchor: "sesconfigurationset" },
+      { label: "SESEmailIdentity", anchor: "sesemailidentity" },
+      { label: "SNSSubscription", anchor: "snssubscription" },
+      { label: "SSMDocument", anchor: "ssmdocument" },
+      { label: "ScalingPolicy", anchor: "scalingpolicy" },
+      { label: "SecretRotation", anchor: "secretrotation" },
+      { label: "ShieldProtection", anchor: "shieldprotection" },
+      { label: "StateMachine", anchor: "statemachine" },
+      { label: "WAFRegexPatternSet", anchor: "wafregexpatternset" },
+      { label: "WAFRuleGroup", anchor: "wafrulegroup" },
+      { label: "WebACL", anchor: "webacl" }
+    ]
+  },
+  {
+    id: "provider",
+    label: "Multi-Account Provider",
+    href: "/docs/provider.html",
+    items: [
+      { label: "AWSProvider", anchor: "awsprovider" }
+    ]
+  },
+  {
     id: "networkfirewall",
     label: "Network Firewall",
     href: "/docs/networkfirewall.html",
@@ -544,23 +584,6 @@ const SIDEBAR_DATA = [
       { label: "Firewall", anchor: "firewall" },
       { label: "FirewallPolicy", anchor: "firewallpolicy" },
       { label: "FirewallRuleGroup", anchor: "firewallrulegroup" }
-    ]
-  },
-  {
-    id: "opensearch",
-    label: "OpenSearch",
-    href: "/docs/opensearch.html",
-    items: [
-      { label: "OpenSearchDomain", anchor: "opensearchdomain" }
-    ]
-  },
-  {
-    id: "opensearchserverless",
-    label: "OpenSearch Serverless",
-    href: "/docs/opensearchserverless.html",
-    items: [
-      { label: "OpenSearchAccessPolicy", anchor: "opensearchaccesspolicy" },
-      { label: "OpenSearchServerlessCollection", anchor: "opensearchserverlesscollection" }
     ]
   },
   {
@@ -579,7 +602,8 @@ const SIDEBAR_DATA = [
     label: "RAM",
     href: "/docs/ram.html",
     items: [
-      { label: "ResourceShare", anchor: "resourceshare" }
+      { label: "ResourceShare", anchor: "resourceshare" },
+      { label: "ResourceShareInvitation", anchor: "resourceshareinvitation" }
     ]
   },
   {
@@ -587,14 +611,7 @@ const SIDEBAR_DATA = [
     label: "RDS & Aurora",
     href: "/docs/rds.html",
     items: [
-      { label: "DBCluster", anchor: "dbcluster" },
-      { label: "DBClusterParameterGroup", anchor: "dbclusterparametergroup" },
       { label: "DBInstance", anchor: "dbinstance" },
-      { label: "DBOptionGroup", anchor: "dboptiongroup" },
-      { label: "DBParameterGroup", anchor: "dbparametergroup" },
-      { label: "DBProxy", anchor: "dbproxy" },
-      { label: "DBSnapshot", anchor: "dbsnapshot" },
-      { label: "DBSubnetGroup", anchor: "dbsubnetgroup" },
       { label: "RDSEventSubscription", anchor: "rdseventsubscription" },
       { label: "RDSGlobalCluster", anchor: "rdsglobalcluster" }
     ]
@@ -614,19 +631,10 @@ const SIDEBAR_DATA = [
     label: "Route 53",
     href: "/docs/route53.html",
     items: [
-      { label: "DelegationSignerRecord", anchor: "delegationsignerrecord" },
       { label: "HealthCheck", anchor: "healthcheck" },
       { label: "HostedZone", anchor: "hostedzone" },
+      { label: "HostedZoneVPCAssociation", anchor: "hostedzonevpcassociation" },
       { label: "RecordSet", anchor: "recordset" }
-    ]
-  },
-  {
-    id: "route53resolver",
-    label: "Route 53 Resolver",
-    href: "/docs/route53resolver.html",
-    items: [
-      { label: "ResolverEndpoint", anchor: "resolverendpoint" },
-      { label: "ResolverRule", anchor: "resolverrule" }
     ]
   },
   {
@@ -634,12 +642,7 @@ const SIDEBAR_DATA = [
     label: "S3",
     href: "/docs/s3.html",
     items: [
-      { label: "S3Bucket", anchor: "s3bucket" },
-      { label: "S3BucketCORS", anchor: "s3bucketcors" },
-      { label: "S3BucketLifecycle", anchor: "s3bucketlifecycle" },
-      { label: "S3BucketNotification", anchor: "s3bucketnotification" },
-      { label: "S3BucketPolicy", anchor: "s3bucketpolicy" },
-      { label: "S3BucketReplication", anchor: "s3bucketreplication" }
+      { label: "S3Bucket", anchor: "s3bucket" }
     ]
   },
   {
@@ -655,8 +658,7 @@ const SIDEBAR_DATA = [
     label: "Secrets Manager",
     href: "/docs/secretsmanager.html",
     items: [
-      { label: "Secret", anchor: "secret" },
-      { label: "SecretRotation", anchor: "secretrotation" }
+      { label: "Secret", anchor: "secret" }
     ]
   },
   {
@@ -679,28 +681,10 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "sesv2",
-    label: "SES",
-    href: "/docs/sesv2.html",
-    items: [
-      { label: "SESConfigurationSet", anchor: "sesconfigurationset" },
-      { label: "SESEmailIdentity", anchor: "sesemailidentity" }
-    ]
-  },
-  {
-    id: "shield",
-    label: "Shield",
-    href: "/docs/shield.html",
-    items: [
-      { label: "ShieldProtection", anchor: "shieldprotection" }
-    ]
-  },
-  {
     id: "sns",
     label: "SNS",
     href: "/docs/sns.html",
     items: [
-      { label: "SNSSubscription", anchor: "snssubscription" },
       { label: "SNSTopic", anchor: "snstopic" }
     ]
   },
@@ -718,19 +702,9 @@ const SIDEBAR_DATA = [
     href: "/docs/ssm.html",
     items: [
       { label: "SSMAssociation", anchor: "ssmassociation" },
-      { label: "SSMDocument", anchor: "ssmdocument" },
       { label: "SSMMaintenanceWindow", anchor: "ssmmaintenancewindow" },
       { label: "SSMParameter", anchor: "ssmparameter" },
       { label: "SSMPatchBaseline", anchor: "ssmpatchbaseline" }
-    ]
-  },
-  {
-    id: "sfn",
-    label: "Step Functions",
-    href: "/docs/sfn.html",
-    items: [
-      { label: "Activity", anchor: "activity" },
-      { label: "StateMachine", anchor: "statemachine" }
     ]
   },
   {
@@ -744,17 +718,6 @@ const SIDEBAR_DATA = [
       { label: "LatticeServiceNetworkServiceAssociation", anchor: "latticeservicenetworkserviceassociation" },
       { label: "LatticeServiceNetworkVpcAssociation", anchor: "latticeservicenetworkvpcassociation" },
       { label: "LatticeTargetGroup", anchor: "latticetargetgroup" }
-    ]
-  },
-  {
-    id: "wafv2",
-    label: "WAFv2",
-    href: "/docs/wafv2.html",
-    items: [
-      { label: "IPSet", anchor: "ipset" },
-      { label: "WAFRegexPatternSet", anchor: "wafregexpatternset" },
-      { label: "WAFRuleGroup", anchor: "wafrulegroup" },
-      { label: "WebACL", anchor: "webacl" }
     ]
   },
   {

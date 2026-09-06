@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SSM — konfig-konector Docs</title>
-  <meta name="description" content="API reference for SSMAssociation, SSMDocument, SSMMaintenanceWindow, SSMParameter, SSMPatchBaseline." />
+  <meta name="description" content="API reference for SSMAssociation, SSMMaintenanceWindow, SSMParameter, SSMPatchBaseline." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">SSM</h1>
-    <p class="docs-page-subtitle">5 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">4 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -70,6 +70,9 @@ spec:
     name: example-ssmassociation
   name: example-ssmassociation
   parameters: {}
+  providerRef:
+    name: example-ssmassociation
+    region: us-east-1
   scheduleExpression: example
   targets:
   - key: example
@@ -86,6 +89,9 @@ spec:
 <tr><td><code>documentRef.name</code></td><td>string</td><td>—</td><td>Name of an SSMDocument CR in the same namespace.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td>—</td><td>Name is a direct SSM document name to associate.</td></tr>
 <tr><td><code>parameters</code></td><td>map&lt;string&gt;</td><td>—</td><td>Parameters passed to the document.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>scheduleExpression</code></td><td>string</td><td>—</td><td>ScheduleExpression is a cron or rate expression for re-application.</td></tr>
 <tr><td><code>targets</code></td><td>array&lt;object&gt;</td><td>—</td><td>Targets select the managed nodes.</td></tr>
 <tr><td><code>targets[].key</code></td><td>string</td><td><span class="req">yes</span></td><td>Key is the target key, e.g.</td></tr>
@@ -105,60 +111,6 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
-</tbody></table></div>
-    </section>
-
-    <section id="ssmdocument" class="resource-section">
-      <h2>SSMDocument <a href="#ssmdocument" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
-      <p class="resource-desc">SSMDocument is the Schema for managing SSM documents.</p>
-      <p class="resource-desc"><code>kubectl get ssmdocuments</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ssm/ssmdocument.yaml">example on GitHub</a></p>
-
-      <h3>Example</h3>
-      <div class="code-wrap"><pre><code class="language-yaml"># SSMDocument — SSM
-# Full-options example generated from the CRD schema. Optional fields are
-# included with sample values; delete what you don&#x27;t need. Field reference:
-# https://konfig-konector.io/docs/ssm.html#ssmdocument
-apiVersion: aws.konfig.io/v1alpha1
-kind: SSMDocument
-metadata:
-  name: example-ssmdocument
-  namespace: default
-spec:
-  content: example
-  documentFormat: JSON
-  documentType: Command
-  name: example-ssmdocument
-  tags:
-    environment: dev
-    team: platform
-  versionName: example-ssmdocument
-</code></pre></div>
-
-      <h3>Spec</h3>
-      <div class="docs-table-wrap"><table class="docs-table">
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>content</code></td><td>string</td><td><span class="req">yes</span></td><td>Content is the document content in JSON or YAML format.</td></tr>
-<tr><td><code>documentFormat</code></td><td>enum</td><td>—</td><td>DocumentFormat is the format of the document (JSON or YAML). Allowed: <code>JSON, YAML, TEXT</code></td></tr>
-<tr><td><code>documentType</code></td><td>enum</td><td>—</td><td>DocumentType is the type of the document. Allowed: <code>Command, Policy, Automation, Session, Package, ApplicationConfiguration, ApplicationConfigurationSchema, DeploymentStrategy…</code></td></tr>
-<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the SSM document.</td></tr>
-<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are metadata tags for the document.</td></tr>
-<tr><td><code>versionName</code></td><td>string</td><td>—</td><td>VersionName is an optional version identifier.</td></tr>
-</tbody></table></div>
-
-      <h3>Status</h3>
-      <div class="docs-table-wrap"><table class="docs-table">
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
-<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
-<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
-<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
-<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
-<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
-<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
-<tr><td><code>documentVersion</code></td><td>string</td><td>—</td><td>DocumentVersion is the current version of the document.</td></tr>
-<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
-<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
-<tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the current status of the document.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -183,6 +135,9 @@ spec:
   description: Managed by konfig-konector
   duration: 1
   name: example-ssmmaintenancewindow
+  providerRef:
+    name: example-ssmmaintenancewindow
+    region: us-east-1
   schedule: example
   tags:
     environment: dev
@@ -198,6 +153,9 @@ spec:
 <tr><td><code>description</code></td><td>string</td><td>—</td><td>Description of the maintenance window.</td></tr>
 <tr><td><code>duration</code></td><td>integer</td><td><span class="req">yes</span></td><td>Duration of the maintenance window in hours.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the maintenance window.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>schedule</code></td><td>string</td><td><span class="req">yes</span></td><td>Schedule is a cron or rate expression, e.g.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply on creation.</td></tr>
 <tr><td><code>timezone</code></td><td>string</td><td>—</td><td>Timezone in IANA format, e.g.</td></tr>
@@ -239,6 +197,9 @@ spec:
   kmsKeyId: arn:aws:kms:us-east-1:123456789012:key/1234abcd-12ab-34cd-56ef-1234567890ab
   overwrite: false
   parameterName: example-ssmparameter
+  providerRef:
+    name: example-ssmparameter
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -257,6 +218,9 @@ spec:
 <tr><td><code>kmsKeyId</code></td><td>string</td><td>—</td><td>KMSKeyID is the KMS key ID for SecureString parameters.</td></tr>
 <tr><td><code>overwrite</code></td><td>boolean</td><td>—</td><td>Overwrite allows updating an existing parameter.</td></tr>
 <tr><td><code>parameterName</code></td><td>string</td><td><span class="req">yes</span></td><td>ParameterName is the full name of the parameter (e.g.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 <tr><td><code>tier</code></td><td>enum</td><td>—</td><td>Tier is the parameter tier. Allowed: <code>Standard, Advanced, Intelligent-Tiering</code></td></tr>
 <tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type is the parameter type. Allowed: <code>String, StringList, SecureString</code></td></tr>
@@ -311,6 +275,9 @@ spec:
   description: Managed by konfig-konector
   name: example-ssmpatchbaseline
   operatingSystem: example
+  providerRef:
+    name: example-ssmpatchbaseline
+    region: us-east-1
   rejectedPatches:
   - example
   tags:
@@ -331,6 +298,9 @@ spec:
 <tr><td><code>description</code></td><td>string</td><td>—</td><td>Description of the patch baseline.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the patch baseline.</td></tr>
 <tr><td><code>operatingSystem</code></td><td>string</td><td><span class="req">yes</span></td><td>OperatingSystem the baseline applies to, e.g.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>rejectedPatches</code></td><td>array&lt;string&gt;</td><td>—</td><td>RejectedPatches is an explicit list of rejected patch IDs.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply on creation.</td></tr>
 </tbody></table></div>

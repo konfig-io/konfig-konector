@@ -5,7 +5,7 @@ schemas by `hack/gen-reference.py` (`make gen-reference`). Optional fields
 carry sample values — delete what you don't need. Hand-written end-to-end
 scenarios live at the top level of this directory.
 
-- [ACM](acm/) — 2 kinds
+- [ACM](acm/) — 1 kinds
 - [ACM PCA](acmpca/) — 1 kinds
 - [Amazon MQ](mq/) — 2 kinds
 - [API Gateway](apigateway/) — 3 kinds
@@ -13,11 +13,12 @@ scenarios live at the top level of this directory.
 - [App Runner](apprunner/) — 2 kinds
 - [Application Auto Scaling](applicationautoscaling/) — 2 kinds
 - [Athena](athena/) — 3 kinds
-- [Auto Scaling](autoscaling/) — 2 kinds
+- [Auto Scaling](autoscaling/) — 1 kinds
 - [AWS Config](configservice/) — 3 kinds
 - [Backup](backup/) — 3 kinds
 - [Batch](batch/) — 3 kinds
 - [Budgets](budgets/) — 1 kinds
+- [Cloud Control API](cloudcontrol/) — 1 kinds
 - [Cloud Map](servicediscovery/) — 2 kinds
 - [CloudFormation](cloudformation/) — 2 kinds
 - [CloudFront](cloudfront/) — 4 kinds
@@ -25,7 +26,6 @@ scenarios live at the top level of this directory.
 - [CloudWatch](cloudwatch/) — 3 kinds
 - [CloudWatch Logs](cloudwatchlogs/) — 3 kinds
 - [CodeArtifact](codeartifact/) — 2 kinds
-- [CodeBuild](codebuild/) — 1 kinds
 - [CodeCommit](codecommit/) — 1 kinds
 - [CodeDeploy](codedeploy/) — 2 kinds
 - [CodePipeline](codepipeline/) — 1 kinds
@@ -35,14 +35,13 @@ scenarios live at the top level of this directory.
 - [Data Firehose](firehose/) — 1 kinds
 - [DAX](dax/) — 1 kinds
 - [DynamoDB](dynamodb/) — 4 kinds
-- [EC2 & VPC](ec2/) — 28 kinds
+- [EC2 & VPC](ec2/) — 29 kinds
 - [ECR](ecr/) — 3 kinds
 - [ECS](ecs/) — 4 kinds
 - [EFS](efs/) — 3 kinds
 - [EKS](eks/) — 7 kinds
 - [ElastiCache](elasticache/) — 4 kinds
 - [EventBridge](eventbridge/) — 4 kinds
-- [EventBridge Pipes](pipes/) — 1 kinds
 - [EventBridge Scheduler](scheduler/) — 2 kinds
 - [Glue](glue/) — 5 kinds
 - [GuardDuty](guardduty/) — 1 kinds
@@ -50,33 +49,28 @@ scenarios live at the top level of this directory.
 - [IAM Identity Center](ssoadmin/) — 2 kinds
 - [Inspector](inspector2/) — 1 kinds
 - [Kinesis](kinesis/) — 2 kinds
-- [KMS](kms/) — 4 kinds
+- [KMS](kms/) — 3 kinds
 - [Lambda](lambda/) — 9 kinds
 - [Load Balancing](elbv2/) — 4 kinds
 - [Managed Grafana](grafana/) — 1 kinds
 - [Managed Prometheus](amp/) — 3 kinds
 - [MemoryDB](memorydb/) — 1 kinds
 - [MSK](kafka/) — 3 kinds
+- [MULTI](multi/) — 35 kinds
+- [Multi-Account Provider](provider/) — 1 kinds
 - [Network Firewall](networkfirewall/) — 3 kinds
-- [OpenSearch](opensearch/) — 1 kinds
-- [OpenSearch Serverless](opensearchserverless/) — 2 kinds
 - [Organizations](organizations/) — 4 kinds
-- [RAM](ram/) — 1 kinds
-- [RDS & Aurora](rds/) — 10 kinds
+- [RAM](ram/) — 2 kinds
+- [RDS & Aurora](rds/) — 3 kinds
 - [Redshift](redshift/) — 3 kinds
 - [Route 53](route53/) — 4 kinds
-- [Route 53 Resolver](route53resolver/) — 2 kinds
-- [S3](s3/) — 6 kinds
+- [S3](s3/) — 1 kinds
 - [S3 Control](s3control/) — 1 kinds
-- [Secrets Manager](secretsmanager/) — 2 kinds
+- [Secrets Manager](secretsmanager/) — 1 kinds
 - [Security Hub](securityhub/) — 2 kinds
 - [Service Catalog](servicecatalog/) — 3 kinds
-- [SES](sesv2/) — 2 kinds
-- [Shield](shield/) — 1 kinds
-- [SNS](sns/) — 2 kinds
+- [SNS](sns/) — 1 kinds
 - [SQS](sqs/) — 1 kinds
-- [SSM](ssm/) — 5 kinds
-- [Step Functions](sfn/) — 2 kinds
+- [SSM](ssm/) — 4 kinds
 - [VPC Lattice](vpclattice/) — 6 kinds
-- [WAFv2](wafv2/) — 4 kinds
 - [X-Ray](xray/) — 2 kinds

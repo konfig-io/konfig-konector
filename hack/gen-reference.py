@@ -56,6 +56,7 @@ SERVICE_LABELS = {
     "sesv2": "SES", "sfn": "Step Functions", "shield": "Shield",
     "sns": "SNS", "sqs": "SQS", "ssm": "SSM", "ssoadmin": "IAM Identity Center",
     "vpclattice": "VPC Lattice", "wafv2": "WAFv2", "xray": "X-Ray",
+    "provider": "Multi-Account Provider", "cloudcontrol": "Cloud Control API",
 }
 
 MAX_DEPTH = 5
