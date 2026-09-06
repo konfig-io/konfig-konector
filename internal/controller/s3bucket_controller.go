@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	s3helper "github.com/konfig-io/konfig-konector/internal/aws/s3"
 )
 
@@ -120,7 +121,13 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1.S3Bucket) error {
 	region := b.Spec.Region
 	if region == "" {
-		region = os.Getenv("AWS_REGION")
+		// Prefer the AWSProvider scope's region (multi-account/region), then
+		// the operator's own.
+		if sc := provider.ScopeFrom(ctx); sc != nil && sc.Region != "" {
+			region = sc.Region
+		} else {
+			region = os.Getenv("AWS_REGION")
+		}
 	}
 
 	// Check if bucket exists. HeadBucket returns HTTP 404 for missing buckets.
