@@ -105,6 +105,9 @@ type TransitGatewayVpcAttachmentStatus struct {
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
+// STATUS: WIP. The cross-account path of this kind (acting under another
+// account's AWSProvider) is implemented and unit-tested but has not yet been
+// verified against a second live AWS account. Same-account use is verified.
 // TransitGatewayVpcAttachment is the Schema for managing TGW VPC attachments.
 type TransitGatewayVpcAttachment struct {
 	metav1.TypeMeta   `json:",inline"`

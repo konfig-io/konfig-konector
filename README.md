@@ -14,7 +14,7 @@ Think of it as [Google Config Connector](https://cloud.google.com/config-connect
 |---|---|---|---|
 | Unified IAM + EKS Pod Identity + DNS | ✅ | Fragmented across repos | ✅ |
 | Multi-account from one instance (AWSProvider, per-resource or per-namespace) | ✅ | ❌ | ProviderConfig |
-| Two-sided cross-account handshakes (peering, TGW, RAM, Route53, PrivateLink) | ✅ | ❌ | ❌ |
+| Two-sided cross-account handshakes (peering, TGW, RAM, Route53, PrivateLink) | 🚧 WIP (unit-tested, live verification pending) | ❌ | ❌ |
 | Escape hatch for any Cloud Control type | ✅ `CloudControlResource` | ❌ | ❌ |
 | Deep EKS Pod Identity integration | ✅ | ❌ | ❌ |
 | Single operator binary | ✅ | One per service | ❌ |
@@ -466,7 +466,9 @@ Relationships that need actions in two accounts are handled end to end and
 only report `Ready` once AWS confirms both sides: `VPCPeeringConnection`
 (`accepterProviderRef`), `TransitGatewayVpcAttachment` (`accepterProviderRef`),
 `ResourceShareInvitation`, `HostedZoneVPCAssociation` (`vpcProviderRef`) and
-`VPCEndpointService`. The `terraform/spoke` module creates the per-account role.
+`VPCEndpointService`. **These cross-account paths are WIP:** implemented and
+unit-tested, same-account paths verified live, second-account verification
+pending. The `terraform/spoke` module creates the per-account role.
 Every resource records the account and region it landed in under
 `status.awsProvider`; an `AWSProvider` cannot be deleted while resources reference
 it; and `--set webhook.enabled=true` adds an admission webhook that rejects

@@ -111,6 +111,11 @@ SERVICE_LABELS = {
 
 MAX_DEPTH = 5
 
+# Kinds whose cross-account behaviour is implemented and unit-tested but not yet
+# verified against a second live AWS account.
+WIP_KINDS = {"VPCPeeringConnection", "TransitGatewayVpcAttachment", "ResourceShareInvitation",
+             "HostedZoneVPCAssociation", "VPCEndpointService"}
+
 
 def load_crds():
     """Native CRDs from the Helm chart plus generated Cloud Control kinds from
@@ -477,6 +482,10 @@ def render_service_page(service, label, kinds_data):
                         "namespaces. Restrict with AWSProvider.allowedNamespaces and RBAC. ") + desc
         else:
             badge = '<span class="resource-badge">GA</span>'
+            if kind in WIP_KINDS:
+                badge += (' <span class="resource-badge" style="background:rgba(251,191,36,.18);color:#fbbf24" '
+                          'title="Cross-account acceptance is implemented and unit-tested; not yet verified against a second live AWS account">'
+                          'WIP · CROSS-ACCOUNT</span>')
         parts.append(f"""
     <section id="{anchor}" class="resource-section">
       <h2>{kind} <a href="#{anchor}" class="anchor">#</a> {badge}</h2>

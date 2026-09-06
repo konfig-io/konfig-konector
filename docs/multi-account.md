@@ -146,7 +146,14 @@ credential chain picks up `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` /
 `AWS_SESSION_TOKEN` from the environment. Providers with `roleArn` work the
 same way on top of those base credentials.
 
-## Two-sided resources: sharing, peering, acceptance
+## Two-sided resources: sharing, peering, acceptance (WIP)
+
+> **Status: work in progress.** The two-sided kinds below are implemented and
+> unit-tested, and their same-account paths (for example cross-region peering
+> with `autoAccept`) are verified live. Their **cross-account** paths, acting
+> under a second account's `AWSProvider`, have not yet been exercised against a
+> second live AWS account. Treat them as preview until that verification lands;
+> they carry a `WIP · CROSS-ACCOUNT` badge on the reference site.
 
 Some AWS relationships need an action in **both** accounts. These kinds do the
 whole handshake from one cluster and only report `Ready=True` once AWS says the
