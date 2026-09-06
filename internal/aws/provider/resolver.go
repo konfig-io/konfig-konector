@@ -50,7 +50,10 @@ type ProviderScoped interface {
 // credential providers per provider generation.
 type Resolver struct {
 	Client client.Client
-	// STS is the operator-credential STS client used for role assumption.
+	// STS is the operator-credential STS client used for role assumption. It
+	// MUST be an unscoped client (*sts.Client, not the multi wrapper): the
+	// wrapper applies the scope's credentials to every call, and the scope's
+	// credentials are the assume-role cache itself, which deadlocks.
 	STS STSAPI
 	// BaseCredentials are the operator's own credentials (Pod Identity).
 	BaseCredentials aws.CredentialsProvider
