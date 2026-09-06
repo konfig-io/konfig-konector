@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ECR — konfig-konector Docs</title>
-  <meta name="description" content="API reference for ECRLifecyclePolicy, ECRRepository, ECRRepositoryPolicy." />
+  <meta name="description" content="API reference for ECRLifecyclePolicy, ECRPublicRepository, ECRPullThroughCacheRule, ECRPullTimeUpdateExclusion, ECRRegistryPolicy, ECRRegistryScanningConfiguration, ECRReplicationConfiguration, ECRRepository, ECRRepositoryCreationTemplate, ECRRepositoryPolicy, ECRSigningConfiguration." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">ECR</h1>
-    <p class="docs-page-subtitle">3 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">11 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -66,6 +66,9 @@ metadata:
 spec:
   lifecyclePolicyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
     &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-ecrlifecyclepolicy
+    region: us-east-1
   repositoryRef:
     name: example-ecrlifecyclepolicy
     repositoryName: example-ecrlifecyclepolicy
@@ -75,6 +78,9 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>lifecyclePolicyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>LifecyclePolicyDocument is the JSON lifecycle policy.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>repositoryRef</code></td><td>object</td><td><span class="req">yes</span></td><td>RepositoryRef references the ECR repository.</td></tr>
 <tr><td><code>repositoryRef.name</code></td><td>string</td><td>—</td><td>Name of an ECRRepository CR in the same namespace.</td></tr>
 <tr><td><code>repositoryRef.repositoryName</code></td><td>string</td><td>—</td><td>RepositoryName is a direct AWS ECR repository name.</td></tr>
@@ -83,6 +89,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -92,6 +102,394 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrpublicrepository" class="resource-section">
+      <h2>ECRPublicRepository <a href="#ecrpublicrepository" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::PublicRepository</span></h2>
+      <p class="resource-desc">ECRPublicRepository manages AWS::ECR::PublicRepository through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrpublicrepositories</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrpublicrepository.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRPublicRepository — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrpublicrepository
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRPublicRepository
+metadata:
+  name: example-ecrpublicrepository
+  namespace: default
+spec:
+  providerRef:
+    name: example-ecrpublicrepository
+    region: us-east-1
+  repositoryCatalogData:
+    aboutText: example
+    architectures:
+    - example
+    operatingSystems:
+    - example
+    repositoryDescription: Managed by konfig-konector
+    usageText: example
+  repositoryName: example-ecrpublicrepository
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>repositoryCatalogData</code></td><td>object</td><td>—</td><td>The details about the repository that are publicly visible in the Amazon ECR Public Gallery.</td></tr>
+<tr><td><code>repositoryCatalogData.aboutText</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>repositoryCatalogData.architectures</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>repositoryCatalogData.operatingSystems</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>repositoryCatalogData.repositoryDescription</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>repositoryCatalogData.usageText</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>repositoryName</code></td><td>string</td><td>—</td><td>The name to use for the public repository.</td></tr>
+<tr><td><code>repositoryPolicyText</code></td><td>object</td><td>—</td><td>The JSON repository policy text to apply to the public repository.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrpullthroughcacherule" class="resource-section">
+      <h2>ECRPullThroughCacheRule <a href="#ecrpullthroughcacherule" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::PullThroughCacheRule</span></h2>
+      <p class="resource-desc">ECRPullThroughCacheRule manages AWS::ECR::PullThroughCacheRule through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrpullthroughcacherules</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrpullthroughcacherule.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRPullThroughCacheRule — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrpullthroughcacherule
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRPullThroughCacheRule
+metadata:
+  name: example-ecrpullthroughcacherule
+  namespace: default
+spec:
+  credentialArn: arn:aws:iam::123456789012:role/example-role
+  customRoleArn: arn:aws:iam::123456789012:role/example-role
+  ecrRepositoryPrefix: example
+  providerRef:
+    name: example-ecrpullthroughcacherule
+    region: us-east-1
+  upstreamRegistry: example
+  upstreamRegistryUrl: example
+  upstreamRepositoryPrefix: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>credentialArn</code></td><td>string</td><td>—</td><td>The ARN of the Secrets Manager secret associated with the pull through cache rule.</td></tr>
+<tr><td><code>customRoleArn</code></td><td>string</td><td>—</td><td>The ARN of the IAM role associated with the pull through cache rule.</td></tr>
+<tr><td><code>ecrRepositoryPrefix</code></td><td>string</td><td>—</td><td>The Amazon ECR repository prefix associated with the pull through cache rule.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>upstreamRegistry</code></td><td>string</td><td>—</td><td>The name of the upstream source registry associated with the pull through cache rule.</td></tr>
+<tr><td><code>upstreamRegistryUrl</code></td><td>string</td><td>—</td><td>The upstream registry URL associated with the pull through cache rule.</td></tr>
+<tr><td><code>upstreamRepositoryPrefix</code></td><td>string</td><td>—</td><td>The upstream repository prefix associated with the pull through cache rule.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrpulltimeupdateexclusion" class="resource-section">
+      <h2>ECRPullTimeUpdateExclusion <a href="#ecrpulltimeupdateexclusion" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::PullTimeUpdateExclusion</span></h2>
+      <p class="resource-desc">ECRPullTimeUpdateExclusion manages AWS::ECR::PullTimeUpdateExclusion through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrpulltimeupdateexclusions</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrpulltimeupdateexclusion.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRPullTimeUpdateExclusion — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrpulltimeupdateexclusion
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRPullTimeUpdateExclusion
+metadata:
+  name: example-ecrpulltimeupdateexclusion
+  namespace: default
+spec:
+  principalArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-ecrpulltimeupdateexclusion
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>principalArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the IAM principal to remove from the pull time update exclusion list.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrregistrypolicy" class="resource-section">
+      <h2>ECRRegistryPolicy <a href="#ecrregistrypolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::RegistryPolicy</span></h2>
+      <p class="resource-desc">ECRRegistryPolicy manages AWS::ECR::RegistryPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrregistrypolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrregistrypolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRRegistryPolicy — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrregistrypolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRRegistryPolicy
+metadata:
+  name: example-ecrregistrypolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-ecrregistrypolicy
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyText</code></td><td>object</td><td><span class="req">yes</span></td><td>The JSON policy text for your registry.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>registryId</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrregistryscanningconfiguration" class="resource-section">
+      <h2>ECRRegistryScanningConfiguration <a href="#ecrregistryscanningconfiguration" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::RegistryScanningConfiguration</span></h2>
+      <p class="resource-desc">ECRRegistryScanningConfiguration manages AWS::ECR::RegistryScanningConfiguration through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrregistryscanningconfigurations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrregistryscanningconfiguration.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRRegistryScanningConfiguration — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrregistryscanningconfiguration
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRRegistryScanningConfiguration
+metadata:
+  name: example-ecrregistryscanningconfiguration
+  namespace: default
+spec:
+  providerRef:
+    name: example-ecrregistryscanningconfiguration
+    region: us-east-1
+  rules:
+  - repositoryFilters:
+    - filter: example
+      filterType: WILDCARD
+    scanFrequency: SCAN_ON_PUSH
+  scanType: BASIC
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>The scanning rules associated with the registry.</td></tr>
+<tr><td><code>rules[].repositoryFilters</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>The details of a scanning repository filter.</td></tr>
+<tr><td><code>rules[].repositoryFilters[].filter</code></td><td>string</td><td><span class="req">yes</span></td><td>The filter to use when scanning.</td></tr>
+<tr><td><code>rules[].repositoryFilters[].filterType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The type associated with the filter. Allowed: <code>WILDCARD</code></td></tr>
+<tr><td><code>rules[].scanFrequency</code></td><td>enum</td><td><span class="req">yes</span></td><td>The frequency that scans are performed at for a private registry. Allowed: <code>SCAN_ON_PUSH, CONTINUOUS_SCAN</code></td></tr>
+<tr><td><code>scanType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The type of scanning configured for the registry. Allowed: <code>BASIC, ENHANCED</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>registryId</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrreplicationconfiguration" class="resource-section">
+      <h2>ECRReplicationConfiguration <a href="#ecrreplicationconfiguration" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::ReplicationConfiguration</span></h2>
+      <p class="resource-desc">ECRReplicationConfiguration manages AWS::ECR::ReplicationConfiguration through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrreplicationconfigurations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrreplicationconfiguration.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRReplicationConfiguration — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrreplicationconfiguration
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRReplicationConfiguration
+metadata:
+  name: example-ecrreplicationconfiguration
+  namespace: default
+spec:
+  providerRef:
+    name: example-ecrreplicationconfiguration
+    region: us-east-1
+  replicationConfiguration:
+    rules:
+    - destinations:
+      - region: us-east-1
+        registryId: example-id
+      repositoryFilters:
+      - filter: example
+        filterType: PREFIX_MATCH
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>replicationConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>The replication configuration for a registry.</td></tr>
+<tr><td><code>replicationConfiguration.rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>An array of objects representing the replication destinations and repository filters for a replication configuration.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].destinations</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>An array of objects representing the destination for a replication rule.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].destinations[].region</code></td><td>string</td><td><span class="req">yes</span></td><td>The Region to replicate to.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].destinations[].registryId</code></td><td>string</td><td><span class="req">yes</span></td><td>The AWS account ID of the Amazon ECR private registry to replicate to.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].repositoryFilters</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of objects representing the filters for a replication rule.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].repositoryFilters[].filter</code></td><td>string</td><td><span class="req">yes</span></td><td>The repository filter details.</td></tr>
+<tr><td><code>replicationConfiguration.rules[].repositoryFilters[].filterType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The repository filter type. Allowed: <code>PREFIX_MATCH</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>registryId</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -114,6 +512,9 @@ spec:
   encryptionType: AES256
   imageTagMutability: MUTABLE
   kmsKeyArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-ecrrepository
+    region: us-east-1
   repositoryName: example-ecrrepository
   scanOnPush: false
   tags:
@@ -127,6 +528,9 @@ spec:
 <tr><td><code>encryptionType</code></td><td>enum</td><td>—</td><td>EncryptionType is the encryption type for the repository. Allowed: <code>AES256, KMS</code></td></tr>
 <tr><td><code>imageTagMutability</code></td><td>enum</td><td>—</td><td>ImageTagMutability controls whether image tags can be overwritten. Allowed: <code>MUTABLE, IMMUTABLE</code></td></tr>
 <tr><td><code>kmsKeyArn</code></td><td>string</td><td>—</td><td>KMSKeyARN is the KMS key ARN for KMS encryption.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>repositoryName</code></td><td>string</td><td><span class="req">yes</span></td><td>RepositoryName is the name of the repository.</td></tr>
 <tr><td><code>scanOnPush</code></td><td>boolean</td><td>—</td><td>ScanOnPush enables automatic image scanning on push.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
@@ -136,6 +540,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the repository.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -146,6 +554,94 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>repositoryUri</code></td><td>string</td><td>—</td><td>RepositoryURI is the URI of the repository.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrrepositorycreationtemplate" class="resource-section">
+      <h2>ECRRepositoryCreationTemplate <a href="#ecrrepositorycreationtemplate" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::RepositoryCreationTemplate</span></h2>
+      <p class="resource-desc">ECRRepositoryCreationTemplate manages AWS::ECR::RepositoryCreationTemplate through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrrepositorycreationtemplates</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrrepositorycreationtemplate.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRRepositoryCreationTemplate — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrrepositorycreationtemplate
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRRepositoryCreationTemplate
+metadata:
+  name: example-ecrrepositorycreationtemplate
+  namespace: default
+spec:
+  appliedFor:
+  - example
+  customRoleArn: arn:aws:iam::123456789012:role/example-role
+  description: Managed by konfig-konector
+  encryptionConfiguration:
+    encryptionType: AES256
+    kmsKey: example
+  imageTagMutability: MUTABLE
+  imageTagMutabilityExclusionFilters:
+  - imageTagMutabilityExclusionFilterType: WILDCARD
+    imageTagMutabilityExclusionFilterValue: example
+  lifecyclePolicy: example
+  prefix: example
+  providerRef:
+    name: example-ecrrepositorycreationtemplate
+    region: us-east-1
+  repositoryPolicy: example
+  resourceTags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>appliedFor</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>A list of enumerable Strings representing the repository creation scenarios that this template will apply towards.</td></tr>
+<tr><td><code>customRoleArn</code></td><td>string</td><td>—</td><td>The ARN of the role to be assumed by Amazon ECR.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>The description associated with the repository creation template.</td></tr>
+<tr><td><code>encryptionConfiguration</code></td><td>object</td><td>—</td><td>The encryption configuration associated with the repository creation template.</td></tr>
+<tr><td><code>encryptionConfiguration.encryptionType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The encryption type to use. Allowed: <code>AES256, KMS, KMS_DSSE</code></td></tr>
+<tr><td><code>encryptionConfiguration.kmsKey</code></td><td>string</td><td>—</td><td>If you use the ``KMS`` encryption type, specify the KMS key to use for encryption.</td></tr>
+<tr><td><code>imageTagMutability</code></td><td>enum</td><td>—</td><td>The tag mutability setting for the repository. Allowed: <code>MUTABLE, IMMUTABLE, IMMUTABLE_WITH_EXCLUSION, MUTABLE_WITH_EXCLUSION</code></td></tr>
+<tr><td><code>imageTagMutabilityExclusionFilters</code></td><td>array&lt;object&gt;</td><td>—</td><td>A list of filters that specify which image tags are excluded from the repository creation template's image tag mutability setting.</td></tr>
+<tr><td><code>imageTagMutabilityExclusionFilters[].imageTagMutabilityExclusionFilterType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>WILDCARD</code></td></tr>
+<tr><td><code>imageTagMutabilityExclusionFilters[].imageTagMutabilityExclusionFilterValue</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>lifecyclePolicy</code></td><td>string</td><td>—</td><td>The lifecycle policy to use for repositories created using the template.</td></tr>
+<tr><td><code>prefix</code></td><td>string</td><td><span class="req">yes</span></td><td>The repository namespace prefix associated with the repository creation template.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>repositoryPolicy</code></td><td>string</td><td>—</td><td>The repository policy to apply to repositories created using the template.</td></tr>
+<tr><td><code>resourceTags</code></td><td>array&lt;object&gt;</td><td>—</td><td>The metadata to apply to the repository to help you categorize and organize.</td></tr>
+<tr><td><code>resourceTags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>resourceTags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>createdAt</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>updatedAt</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -167,6 +663,9 @@ metadata:
 spec:
   policyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
     &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-ecrrepositorypolicy
+    region: us-east-1
   repositoryRef:
     name: example-ecrrepositorypolicy
     repositoryName: example-ecrrepositorypolicy
@@ -176,6 +675,9 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>policyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>PolicyDocument is the JSON resource policy to apply.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>repositoryRef</code></td><td>object</td><td><span class="req">yes</span></td><td>RepositoryRef references the ECR repository.</td></tr>
 <tr><td><code>repositoryRef.name</code></td><td>string</td><td>—</td><td>Name of an ECRRepository CR in the same namespace.</td></tr>
 <tr><td><code>repositoryRef.repositoryName</code></td><td>string</td><td>—</td><td>RepositoryName is a direct AWS ECR repository name.</td></tr>
@@ -184,6 +686,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -193,6 +699,70 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ecrsigningconfiguration" class="resource-section">
+      <h2>ECRSigningConfiguration <a href="#ecrsigningconfiguration" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::ECR::SigningConfiguration</span></h2>
+      <p class="resource-desc">ECRSigningConfiguration manages AWS::ECR::SigningConfiguration through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ecrsigningconfigurations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/ecr/ecrsigningconfiguration.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># ECRSigningConfiguration — ECR
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/ecr.html#ecrsigningconfiguration
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRSigningConfiguration
+metadata:
+  name: example-ecrsigningconfiguration
+  namespace: default
+spec:
+  providerRef:
+    name: example-ecrsigningconfiguration
+    region: us-east-1
+  rules:
+  - repositoryFilters:
+    - filter: example
+      filterType: WILDCARD_MATCH
+    signingProfileArn: arn:aws:iam::123456789012:role/example-role
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Array of signing rules that define which repositories should be signed and with which signing profiles.</td></tr>
+<tr><td><code>rules[].repositoryFilters</code></td><td>array&lt;object&gt;</td><td>—</td><td>Optional array of repository filters.</td></tr>
+<tr><td><code>rules[].repositoryFilters[].filter</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>rules[].repositoryFilters[].filterType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>WILDCARD_MATCH</code></td></tr>
+<tr><td><code>rules[].signingProfileArn</code></td><td>string</td><td><span class="req">yes</span></td><td>AWS Signer signing profile ARN to use for matched repositories.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>registryId</code></td><td>string</td><td>—</td><td>12-digit AWS account ID of the ECR registry.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

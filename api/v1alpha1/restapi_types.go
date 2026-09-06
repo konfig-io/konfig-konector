@@ -22,6 +22,12 @@ import (
 
 // RestAPISpec defines the desired state of an API Gateway REST API.
 type RestAPISpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the REST API.
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`
@@ -61,6 +67,9 @@ type RestAPISpec struct {
 
 // RestAPIStatus defines the observed state of RestAPI.
 type RestAPIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// APIID is the REST API identifier.
 	// +optional
 	APIID string `json:"apiId,omitempty"`

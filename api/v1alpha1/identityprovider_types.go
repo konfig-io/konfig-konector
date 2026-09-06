@@ -22,6 +22,12 @@ import (
 
 // IdentityProviderSpec defines the desired state of a Cognito Identity Provider.
 type IdentityProviderSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// UserPoolRef references the user pool.
 	UserPoolRef UserPoolRef `json:"userPoolRef"`
 
@@ -50,6 +56,9 @@ type IdentityProviderSpec struct {
 
 // IdentityProviderStatus defines the observed state of IdentityProvider.
 type IdentityProviderStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

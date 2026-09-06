@@ -150,7 +150,7 @@ func TestVPCReconcile(t *testing.T) {
 
 	newVPC := func(mutate ...func(*awsv1alpha1.VPC)) *awsv1alpha1.VPC {
 		v := &awsv1alpha1.VPC{
-			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace},
+			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec:       awsv1alpha1.VPCSpec{CIDRBlock: "10.0.0.0/16"},
 		}
 		for _, m := range mutate {

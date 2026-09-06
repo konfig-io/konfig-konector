@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ebhelper "github.com/konfig-io/konfig-konector/internal/aws/eventbridge"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EventRuleReconciler reconciles EventRule objects.
 type EventRuleReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	EventBridgeClient *awseb.Client
+	EventBridgeClient *multi.EventBridge
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eventrules,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *EventRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	er := &awsv1alpha1.EventRule{}
 	if err := r.Get(ctx, req.NamespacedName, er); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, er); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !er.DeletionTimestamp.IsZero() {
@@ -78,6 +83,10 @@ func (r *EventRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if err := r.Update(ctx, er); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileEventRule(ctx, er); err != nil {

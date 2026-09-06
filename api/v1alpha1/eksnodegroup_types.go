@@ -80,6 +80,12 @@ type EKSNodeRepairConfig struct {
 
 // EKSNodeGroupSpec defines the desired state of an EKS Managed Node Group.
 type EKSNodeGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the EKS cluster name. Either clusterName or clusterRef must be set.
 	// +optional
 	ClusterName string `json:"clusterName,omitempty"`
@@ -167,6 +173,9 @@ type EKSNodeGroupSpec struct {
 
 // EKSNodeGroupStatus defines the observed state of EKSNodeGroup.
 type EKSNodeGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NodegroupArn is the ARN of the node group.
 	// +optional
 	NodegroupArn string `json:"nodegroupArn,omitempty"`

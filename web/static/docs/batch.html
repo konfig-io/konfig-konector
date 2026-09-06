@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Batch — konfig-konector Docs</title>
-  <meta name="description" content="API reference for BatchComputeEnvironment, BatchJobDefinition, BatchJobQueue." />
+  <meta name="description" content="API reference for BatchComputeEnvironment, BatchConsumableResource, BatchJobDefinition, BatchJobQueue, BatchQuotaShare, BatchSchedulingPolicy, BatchServiceEnvironment." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">Batch</h1>
-    <p class="docs-page-subtitle">3 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">7 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -77,6 +77,9 @@ spec:
     - name: example-subnetrefs
     type: FARGATE
   name: example-batchcomputeenvironment
+  providerRef:
+    name: example-batchcomputeenvironment
+    region: us-east-1
   state: ENABLED
   tags:
     environment: dev
@@ -101,6 +104,9 @@ spec:
 <tr><td><code>computeResources.subnetRefs[].name</code></td><td>string</td><td>—</td><td>Name of a Subnet CR in the same namespace.</td></tr>
 <tr><td><code>computeResources.type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type of compute resource. Allowed: <code>FARGATE, FARGATE_SPOT, EC2, SPOT</code></td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the compute environment.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>state</code></td><td>enum</td><td>—</td><td>State of the compute environment. Allowed: <code>ENABLED, DISABLED</code></td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 <tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type of the compute environment. Allowed: <code>MANAGED, UNMANAGED</code></td></tr>
@@ -109,6 +115,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>computeEnvironmentArn</code></td><td>string</td><td>—</td><td>ComputeEnvironmentARN is the ARN of the compute environment.</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
@@ -120,6 +130,73 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the current compute environment status (e.g.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="batchconsumableresource" class="resource-section">
+      <h2>BatchConsumableResource <a href="#batchconsumableresource" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Batch::ConsumableResource</span></h2>
+      <p class="resource-desc">BatchConsumableResource manages AWS::Batch::ConsumableResource through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get batchconsumableresources</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/batch/batchconsumableresource.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BatchConsumableResource — Batch
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/batch.html#batchconsumableresource
+apiVersion: aws.konfig.io/v1alpha1
+kind: BatchConsumableResource
+metadata:
+  name: example-batchconsumableresource
+  namespace: default
+spec:
+  consumableResourceName: example-batchconsumableresource
+  providerRef:
+    name: example-batchconsumableresource
+    region: us-east-1
+  resourceType: REPLENISHABLE
+  tags:
+    environment: dev
+    team: platform
+  totalQuantity: 1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>consumableResourceName</code></td><td>string</td><td>—</td><td>Name of ConsumableResource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>REPLENISHABLE, NON_REPLENISHABLE</code></td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>A key-value pair to associate with a resource.</td></tr>
+<tr><td><code>totalQuantity</code></td><td>integer</td><td><span class="req">yes</span></td><td>Total Quantity of ConsumableResource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>availableQuantity</code></td><td>integer</td><td>—</td><td>Available Quantity of ConsumableResource.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>consumableResourceArn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>createdAt</code></td><td>integer</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>inUseQuantity</code></td><td>integer</td><td>—</td><td>In-use Quantity of ConsumableResource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -157,6 +234,9 @@ spec:
   name: example-batchjobdefinition
   platformCapabilities:
   - example
+  providerRef:
+    name: example-batchjobdefinition
+    region: us-east-1
   retryStrategy:
     attempts: 1
   tags:
@@ -189,6 +269,9 @@ spec:
 <tr><td><code>containerProperties.resourceRequirements[].value</code></td><td>string</td><td><span class="req">yes</span></td><td>Value is the quantity of the resource (e.g.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the job definition.</td></tr>
 <tr><td><code>platformCapabilities</code></td><td>array&lt;string&gt;</td><td>—</td><td>PlatformCapabilities required by the job (EC2 or FARGATE).</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>retryStrategy</code></td><td>object</td><td>—</td><td>RetryStrategy configures retries for failed jobs.</td></tr>
 <tr><td><code>retryStrategy.attempts</code></td><td>integer</td><td><span class="req">yes</span></td><td>Attempts is the number of times to move a job to RUNNABLE status (1-10).</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
@@ -200,6 +283,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -237,6 +324,9 @@ spec:
     order: 1
   name: example-batchjobqueue
   priority: 1
+  providerRef:
+    name: example-batchjobqueue
+    region: us-east-1
   state: ENABLED
   tags:
     environment: dev
@@ -253,6 +343,9 @@ spec:
 <tr><td><code>computeEnvironmentOrder[].order</code></td><td>integer</td><td><span class="req">yes</span></td><td>Order in which compute environments are tried (ascending).</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the job queue.</td></tr>
 <tr><td><code>priority</code></td><td>integer</td><td><span class="req">yes</span></td><td>Priority of the job queue.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>state</code></td><td>enum</td><td>—</td><td>State of the job queue. Allowed: <code>ENABLED, DISABLED</code></td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 </tbody></table></div>
@@ -260,6 +353,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -271,6 +368,232 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the current job queue status (e.g.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="batchquotashare" class="resource-section">
+      <h2>BatchQuotaShare <a href="#batchquotashare" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Batch::QuotaShare</span></h2>
+      <p class="resource-desc">BatchQuotaShare manages AWS::Batch::QuotaShare through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get batchquotashares</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/batch/batchquotashare.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BatchQuotaShare — Batch
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/batch.html#batchquotashare
+apiVersion: aws.konfig.io/v1alpha1
+kind: BatchQuotaShare
+metadata:
+  name: example-batchquotashare
+  namespace: default
+spec:
+  capacityLimits:
+  - capacityUnit: example
+    maxCapacity: 1
+  jobQueue: example
+  preemptionConfiguration:
+    inSharePreemption: ENABLED
+  providerRef:
+    name: example-batchquotashare
+    region: us-east-1
+  quotaShareName: example-batchquotashare
+  resourceSharingConfiguration:
+    borrowLimit: 1
+    strategy: RESERVE
+  state: ENABLED
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>capacityLimits</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>A list that specifies the quantity and type of compute capacity allocated to the quota share.</td></tr>
+<tr><td><code>capacityLimits[].capacityUnit</code></td><td>string</td><td><span class="req">yes</span></td><td>The unit of compute capacity for the capacityLimit.</td></tr>
+<tr><td><code>capacityLimits[].maxCapacity</code></td><td>integer</td><td><span class="req">yes</span></td><td>The maximum capacity available for the quota share.</td></tr>
+<tr><td><code>jobQueue</code></td><td>string</td><td><span class="req">yes</span></td><td>The AWS Batch job queue associated with the quota share.</td></tr>
+<tr><td><code>preemptionConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>Specifies the preemption behavior for jobs in a quota share.</td></tr>
+<tr><td><code>preemptionConfiguration.inSharePreemption</code></td><td>enum</td><td><span class="req">yes</span></td><td>Specifies whether jobs within a quota share can be preempted by another, higher priority job in the same quota share. Allowed: <code>ENABLED, DISABLED</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>quotaShareName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the quota share.</td></tr>
+<tr><td><code>resourceSharingConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>Specifies whether a quota share reserves, lends, or both lends and borrows idle compute capacity.</td></tr>
+<tr><td><code>resourceSharingConfiguration.borrowLimit</code></td><td>integer</td><td>—</td><td>The maximum percentage of additional capacity that the quota share can borrow from other shares.</td></tr>
+<tr><td><code>resourceSharingConfiguration.strategy</code></td><td>enum</td><td><span class="req">yes</span></td><td>The resource sharing strategy for the quota share. Allowed: <code>RESERVE, LEND, LEND_AND_BORROW</code></td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>The state of the quota share. Allowed: <code>ENABLED, DISABLED</code></td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>The tags that you apply to the quota share to help you categorize and organize your resources.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>quotaShareArn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the quota share.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="batchschedulingpolicy" class="resource-section">
+      <h2>BatchSchedulingPolicy <a href="#batchschedulingpolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Batch::SchedulingPolicy</span></h2>
+      <p class="resource-desc">BatchSchedulingPolicy manages AWS::Batch::SchedulingPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get batchschedulingpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/batch/batchschedulingpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BatchSchedulingPolicy — Batch
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/batch.html#batchschedulingpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: BatchSchedulingPolicy
+metadata:
+  name: example-batchschedulingpolicy
+  namespace: default
+spec:
+  fairsharePolicy:
+    computeReservation: 1
+    shareDecaySeconds: 300
+    shareDistribution:
+    - shareIdentifier: example
+      weightFactor: 1
+  name: example-batchschedulingpolicy
+  providerRef:
+    name: example-batchschedulingpolicy
+    region: us-east-1
+  quotaSharePolicy:
+    idleResourceAssignmentStrategy: FIFO
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>fairsharePolicy</code></td><td>object</td><td>—</td><td>BatchSchedulingPolicyFairsharePolicy is a nested property type of AWS::Batch::SchedulingPolicy.</td></tr>
+<tr><td><code>fairsharePolicy.computeReservation</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>fairsharePolicy.shareDecaySeconds</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>fairsharePolicy.shareDistribution</code></td><td>array&lt;object&gt;</td><td>—</td><td>List of Share Attributes</td></tr>
+<tr><td><code>fairsharePolicy.shareDistribution[].shareIdentifier</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>fairsharePolicy.shareDistribution[].weightFactor</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>name</code></td><td>string</td><td>—</td><td>Name of Scheduling Policy.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>quotaSharePolicy</code></td><td>object</td><td>—</td><td>BatchSchedulingPolicyQuotaSharePolicy is a nested property type of AWS::Batch::SchedulingPolicy.</td></tr>
+<tr><td><code>quotaSharePolicy.idleResourceAssignmentStrategy</code></td><td>enum</td><td>—</td><td>Allowed: <code>FIFO</code></td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>A key-value pair to associate with a resource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="batchserviceenvironment" class="resource-section">
+      <h2>BatchServiceEnvironment <a href="#batchserviceenvironment" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Batch::ServiceEnvironment</span></h2>
+      <p class="resource-desc">BatchServiceEnvironment manages AWS::Batch::ServiceEnvironment through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get batchserviceenvironments</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/batch/batchserviceenvironment.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># BatchServiceEnvironment — Batch
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/batch.html#batchserviceenvironment
+apiVersion: aws.konfig.io/v1alpha1
+kind: BatchServiceEnvironment
+metadata:
+  name: example-batchserviceenvironment
+  namespace: default
+spec:
+  capacityLimits:
+  - capacityUnit: example
+    maxCapacity: 2
+  providerRef:
+    name: example-batchserviceenvironment
+    region: us-east-1
+  serviceEnvironmentName: example-batchserviceenvironment
+  serviceEnvironmentType: example
+  state: example
+  tags:
+    environment: dev
+    team: platform
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>capacityLimits</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>capacityLimits[].capacityUnit</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>capacityLimits[].maxCapacity</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>serviceEnvironmentName</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>serviceEnvironmentType</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>state</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>A key-value pair to associate with a resource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>serviceEnvironmentArn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

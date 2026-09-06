@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // NetworkACLReconciler reconciles NetworkACL objects.
 type NetworkACLReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=networkacls,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *NetworkACLReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	nacl := &awsv1alpha1.NetworkACL{}
 	if err := r.Get(ctx, req.NamespacedName, nacl); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, nacl); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !nacl.DeletionTimestamp.IsZero() {
@@ -78,6 +83,10 @@ func (r *NetworkACLReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		if err := r.Update(ctx, nacl); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileNetworkACL(ctx, nacl); err != nil {

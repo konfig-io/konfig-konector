@@ -22,6 +22,12 @@ import (
 
 // ECRRepositorySpec defines the desired state of an ECR Repository.
 type ECRRepositorySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RepositoryName is the name of the repository. Immutable.
 	// +kubebuilder:validation:MinLength=2
 	// +kubebuilder:validation:MaxLength=256
@@ -53,6 +59,9 @@ type ECRRepositorySpec struct {
 
 // ECRRepositoryStatus defines the observed state of ECRRepository.
 type ECRRepositoryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the repository.
 	// +optional
 	ARN string `json:"arn,omitempty"`

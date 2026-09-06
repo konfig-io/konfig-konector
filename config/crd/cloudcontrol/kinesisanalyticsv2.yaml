@@ -1,0 +1,868 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: kinesisanalyticsv2applications.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: KinesisAnalyticsV2Application
+    listKind: KinesisAnalyticsV2ApplicationList
+    plural: kinesisanalyticsv2applications
+    singular: kinesisanalyticsv2application
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KinesisAnalyticsV2Application manages AWS::KinesisAnalyticsV2::Application through the AWS Cloud Control API.
+          Creates an Amazon Kinesis Data Analytics application. For information about creating a Kinesis Data Analytics
+          application, see [Creating an
+          Application](https://docs.aws.amazon.com/kinesisanalytics/latest/java/getting-started.html).
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KinesisAnalyticsV2ApplicationSpec is the desired state of
+              AWS::KinesisAnalyticsV2::Application.
+            properties:
+              applicationConfiguration:
+                description: Use this parameter to configure the application.
+                properties:
+                  applicationCodeConfiguration:
+                    description: The code location and type parameters for a Flink-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      codeContent:
+                        description: The location and type of the application code.
+                        properties:
+                          s3ContentLocation:
+                            description: Information about the Amazon S3 bucket that
+                              contains the application code.
+                            properties:
+                              bucketARN:
+                                description: The Amazon Resource Name (ARN) for the
+                                  S3 bucket containing the application code.
+                                maxLength: 2048
+                                minLength: 1
+                                type: string
+                              fileKey:
+                                description: The file key for the object containing
+                                  the application code.
+                                maxLength: 1024
+                                minLength: 1
+                                type: string
+                              objectVersion:
+                                description: The version of the object containing
+                                  the application code.
+                                maxLength: 1024
+                                type: string
+                            required:
+                            - bucketARN
+                            - fileKey
+                            type: object
+                          textContent:
+                            description: The text-format code for a Flink-based Kinesis
+                              Data Analytics application.
+                            maxLength: 102400
+                            type: string
+                          zipFileContent:
+                            description: The zip-format code for a Flink-based Kinesis
+                              Data Analytics application.
+                            type: string
+                        type: object
+                      codeContentType:
+                        description: Specifies whether the code content is in text
+                          or zip format.
+                        enum:
+                        - PLAINTEXT
+                        - ZIPFILE
+                        type: string
+                    required:
+                    - codeContent
+                    - codeContentType
+                    type: object
+                  applicationEncryptionConfiguration:
+                    description: Describes whether customer managed key is enabled
+                      and key details for customer data encryption
+                    properties:
+                      keyId:
+                        description: KMS KeyId. Can be either key uuid or full key
+                          arn or key alias arn or short key alias
+                        maxLength: 2048
+                        type: string
+                      keyType:
+                        description: |-
+                          Specifies whether application data is encrypted using service key: AWS_OWNED_KEY or customer key:
+                          CUSTOMER_MANAGED_KEY
+                        enum:
+                        - AWS_OWNED_KEY
+                        - CUSTOMER_MANAGED_KEY
+                        type: string
+                    required:
+                    - keyType
+                    type: object
+                  applicationSnapshotConfiguration:
+                    description: Describes whether snapshots are enabled for a Flink-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      snapshotsEnabled:
+                        description: Describes whether snapshots are enabled for a
+                          Flink-based Kinesis Data Analytics application.
+                        type: boolean
+                    required:
+                    - snapshotsEnabled
+                    type: object
+                  applicationSystemRollbackConfiguration:
+                    description: Describes whether system initiated rollbacks are
+                      enabled for a Flink-based Kinesis Data Analytics application.
+                    properties:
+                      rollbackEnabled:
+                        description: Describes whether system initiated rollbacks
+                          are enabled for a Flink-based Kinesis Data Analytics application.
+                        type: boolean
+                    required:
+                    - rollbackEnabled
+                    type: object
+                  environmentProperties:
+                    description: Describes execution properties for a Flink-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      propertyGroups:
+                        description: Describes the execution property groups.
+                        items:
+                          description: KinesisAnalyticsV2ApplicationPropertyGroup
+                            is a nested property type of AWS::KinesisAnalyticsV2::Application.
+                          properties:
+                            propertyGroupId:
+                              description: Describes the key of an application execution
+                                property key-value pair.
+                              maxLength: 50
+                              type: string
+                            propertyMap:
+                              additionalProperties:
+                                type: string
+                              description: Describes the value of an application execution
+                                property key-value pair.
+                              type: object
+                          type: object
+                        type: array
+                    type: object
+                  flinkApplicationConfiguration:
+                    description: The creation and update parameters for a Flink-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      checkpointConfiguration:
+                        description: |-
+                          Describes an application's checkpointing configuration. Checkpointing is the process of persisting application
+                          state for fault tolerance. For more information, see Checkpoints for Fault Tolerance in the Apache Flink
+                          Documentation.
+                        properties:
+                          checkpointInterval:
+                            description: Describes the interval in milliseconds between
+                              checkpoint operations.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          checkpointingEnabled:
+                            description: Describes whether checkpointing is enabled
+                              for a Flink-based Kinesis Data Analytics application.
+                            type: boolean
+                          configurationType:
+                            description: |-
+                              Describes whether the application uses Kinesis Data Analytics' default checkpointing behavior. You must set
+                              this property to `CUSTOM` in order to set the `CheckpointingEnabled`, `CheckpointInterval`, or
+                              `MinPauseBetweenCheckpoints` parameters.
+                            enum:
+                            - DEFAULT
+                            - CUSTOM
+                            type: string
+                          minPauseBetweenCheckpoints:
+                            description: |-
+                              Describes the minimum time in milliseconds after a checkpoint operation completes that a new checkpoint
+                              operation can start. If a checkpoint operation takes longer than the CheckpointInterval, the application
+                              otherwise performs continual checkpoint operations. For more information, see Tuning Checkpointing in the
+                              Apache Flink Documentation.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                        required:
+                        - configurationType
+                        type: object
+                      monitoringConfiguration:
+                        description: Describes configuration parameters for Amazon
+                          CloudWatch logging for an application.
+                        properties:
+                          configurationType:
+                            description: |-
+                              Describes whether to use the default CloudWatch logging configuration for an application. You must set this
+                              property to CUSTOM in order to set the LogLevel or MetricsLevel parameters.
+                            enum:
+                            - DEFAULT
+                            - CUSTOM
+                            type: string
+                          logLevel:
+                            description: Describes the verbosity of the CloudWatch
+                              Logs for an application.
+                            enum:
+                            - DEBUG
+                            - INFO
+                            - WARN
+                            - ERROR
+                            type: string
+                          metricsLevel:
+                            description: |-
+                              Describes the granularity of the CloudWatch Logs for an application. The Parallelism level is not recommended
+                              for applications with a Parallelism over 64 due to excessive costs.
+                            enum:
+                            - APPLICATION
+                            - OPERATOR
+                            - PARALLELISM
+                            - TASK
+                            type: string
+                        required:
+                        - configurationType
+                        type: object
+                      parallelismConfiguration:
+                        description: Describes parameters for how an application executes
+                          multiple tasks simultaneously.
+                        properties:
+                          autoScalingEnabled:
+                            description: |-
+                              Describes whether the Kinesis Data Analytics service can increase the parallelism of the application in
+                              response to increased throughput.
+                            type: boolean
+                          configurationType:
+                            description: |-
+                              Describes whether the application uses the default parallelism for the Kinesis Data Analytics service. You
+                              must set this property to `CUSTOM` in order to change your application's `AutoScalingEnabled`, `Parallelism`,
+                              or `ParallelismPerKPU` properties.
+                            enum:
+                            - CUSTOM
+                            - DEFAULT
+                            type: string
+                          parallelism:
+                            description: |-
+                              Describes the initial number of parallel tasks that a Java-based Kinesis Data Analytics application can
+                              perform. The Kinesis Data Analytics service can increase this number automatically if
+                              ParallelismConfiguration:AutoScalingEnabled is set to true.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          parallelismPerKPU:
+                            description: |-
+                              Describes the number of parallel tasks that a Java-based Kinesis Data Analytics application can perform per
+                              Kinesis Processing Unit (KPU) used by the application. For more information about KPUs, see Amazon Kinesis
+                              Data Analytics Pricing.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                        required:
+                        - configurationType
+                        type: object
+                    type: object
+                  sqlApplicationConfiguration:
+                    description: The creation and update parameters for a SQL-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      inputs:
+                        description: The array of Input objects describing the input
+                          streams used by the application.
+                        items:
+                          description: KinesisAnalyticsV2ApplicationInput is a nested
+                            property type of AWS::KinesisAnalyticsV2::Application.
+                          properties:
+                            inputParallelism:
+                              description: Describes the number of in-application
+                                streams to create.
+                              properties:
+                                count:
+                                  description: The number of in-application streams
+                                    to create.
+                                  format: int64
+                                  maximum: 64
+                                  minimum: 1
+                                  type: integer
+                              type: object
+                            inputProcessingConfiguration:
+                              description: |-
+                                The InputProcessingConfiguration for the input. An input processor transforms records as they are received
+                                from the stream, before the application's SQL code executes. Currently, the only input processing
+                                configuration available is InputLambdaProcessor.
+                              properties:
+                                inputLambdaProcessor:
+                                  description: |-
+                                    The InputLambdaProcessor that is used to preprocess the records in the stream before being processed by your
+                                    application code.
+                                  properties:
+                                    resourceARN:
+                                      description: The ARN of the Amazon Lambda function
+                                        that operates on records in the stream.
+                                      maxLength: 2048
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - resourceARN
+                                  type: object
+                              type: object
+                            inputSchema:
+                              description: |-
+                                Describes the format of the data in the streaming source, and how each data element maps to corresponding
+                                columns in the in-application stream that is being created.
+                              properties:
+                                recordColumns:
+                                  description: A list of `RecordColumn` objects.
+                                  items:
+                                    description: KinesisAnalyticsV2ApplicationRecordColumn
+                                      is a nested property type of AWS::KinesisAnalyticsV2::Application.
+                                    properties:
+                                      mapping:
+                                        description: A reference to the data element
+                                          in the streaming input or the reference
+                                          data source.
+                                        maxLength: 65535
+                                        type: string
+                                      name:
+                                        description: The name of the column that is
+                                          created in the in-application input stream
+                                          or reference table.
+                                        maxLength: 256
+                                        minLength: 1
+                                        type: string
+                                      sqlType:
+                                        description: The type of column created in
+                                          the in-application input stream or reference
+                                          table.
+                                        maxLength: 100
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - name
+                                    - sqlType
+                                    type: object
+                                  type: array
+                                recordEncoding:
+                                  description: Specifies the encoding of the records
+                                    in the streaming source. For example, UTF-8.
+                                  enum:
+                                  - UTF-8
+                                  type: string
+                                recordFormat:
+                                  description: Specifies the format of the records
+                                    on the streaming source.
+                                  properties:
+                                    mappingParameters:
+                                      description: |-
+                                        When you configure application input at the time of creating or updating an application, provides additional
+                                        mapping information specific to the record format (such as JSON, CSV, or record fields delimited by some
+                                        delimiter) on the streaming source.
+                                      properties:
+                                        csvMappingParameters:
+                                          description: Provides additional mapping
+                                            information when the record format uses
+                                            delimiters (for example, CSV).
+                                          properties:
+                                            recordColumnDelimiter:
+                                              description: The column delimiter. For
+                                                example, in a CSV format, a comma
+                                                (",") is the typical column delimiter.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              type: string
+                                            recordRowDelimiter:
+                                              description: The row delimiter. For
+                                                example, in a CSV format, '\n' is
+                                                the typical row delimiter.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              type: string
+                                          required:
+                                          - recordColumnDelimiter
+                                          - recordRowDelimiter
+                                          type: object
+                                        jsonMappingParameters:
+                                          description: Provides additional mapping
+                                            information when JSON is the record format
+                                            on the streaming source.
+                                          properties:
+                                            recordRowPath:
+                                              description: The path to the top-level
+                                                parent that contains the records.
+                                              maxLength: 65535
+                                              minLength: 1
+                                              type: string
+                                          required:
+                                          - recordRowPath
+                                          type: object
+                                      type: object
+                                    recordFormatType:
+                                      description: The type of record format.
+                                      enum:
+                                      - CSV
+                                      - JSON
+                                      type: string
+                                  required:
+                                  - recordFormatType
+                                  type: object
+                              required:
+                              - recordColumns
+                              - recordFormat
+                              type: object
+                            kinesisFirehoseInput:
+                              description: |-
+                                If the streaming source is an Amazon Kinesis Data Firehose delivery stream, identifies the delivery stream's
+                                ARN.
+                              properties:
+                                resourceARN:
+                                  description: The Amazon Resource Name (ARN) of the
+                                    delivery stream.
+                                  maxLength: 2048
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - resourceARN
+                              type: object
+                            kinesisStreamsInput:
+                              description: If the streaming source is an Amazon Kinesis
+                                data stream, identifies the stream's Amazon Resource
+                                Name (ARN).
+                              properties:
+                                resourceARN:
+                                  description: The ARN of the input Kinesis data stream
+                                    to read.
+                                  maxLength: 2048
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - resourceARN
+                              type: object
+                            namePrefix:
+                              description: |-
+                                The name prefix to use when creating an in-application stream. Suppose that you specify a prefix
+                                `"MyInApplicationStream"`. Kinesis Data Analytics then creates one or more (as per the InputParallelism count
+                                you specified) in-application streams with the names `"MyInApplicationStream_001"`,
+                                `"MyInApplicationStream_002"`, and so on.
+                              maxLength: 32
+                              minLength: 1
+                              type: string
+                          required:
+                          - inputSchema
+                          - namePrefix
+                          type: object
+                        type: array
+                    type: object
+                  vpcConfigurations:
+                    description: The array of descriptions of VPC configurations available
+                      to the application.
+                    items:
+                      description: KinesisAnalyticsV2ApplicationVpcConfiguration is
+                        a nested property type of AWS::KinesisAnalyticsV2::Application.
+                      properties:
+                        securityGroupIds:
+                          description: The array of SecurityGroup IDs used by the
+                            VPC configuration.
+                          items:
+                            type: string
+                          type: array
+                        subnetIds:
+                          description: The array of Subnet IDs used by the VPC configuration.
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - securityGroupIds
+                      - subnetIds
+                      type: object
+                    type: array
+                  zeppelinApplicationConfiguration:
+                    description: The configuration parameters for a Kinesis Data Analytics
+                      Studio notebook.
+                    properties:
+                      catalogConfiguration:
+                        description: The Amazon Glue Data Catalog that you use in
+                          queries in a Kinesis Data Analytics Studio notebook.
+                        properties:
+                          glueDataCatalogConfiguration:
+                            description: |-
+                              The configuration parameters for the default Amazon Glue database. You use this database for Apache Flink SQL
+                              queries and table API transforms that you write in a Kinesis Data Analytics Studio notebook.
+                            properties:
+                              databaseARN:
+                                description: The Amazon Resource Name (ARN) of the
+                                  database.
+                                maxLength: 2048
+                                type: string
+                            type: object
+                        type: object
+                      customArtifactsConfiguration:
+                        description: A list of CustomArtifactConfiguration objects.
+                        items:
+                          description: KinesisAnalyticsV2ApplicationCustomArtifactConfiguration
+                            is a nested property type of AWS::KinesisAnalyticsV2::Application.
+                          properties:
+                            artifactType:
+                              description: |-
+                                Set this to either `UDF` or `DEPENDENCY_JAR`. `UDF` stands for user-defined functions. This type of artifact
+                                must be in an S3 bucket. A `DEPENDENCY_JAR` can be in either Maven or an S3 bucket.
+                              enum:
+                              - DEPENDENCY_JAR
+                              - UDF
+                              type: string
+                            mavenReference:
+                              description: The parameters required to fully specify
+                                a Maven reference.
+                              properties:
+                                artifactId:
+                                  description: The artifact ID of the Maven reference.
+                                  maxLength: 256
+                                  minLength: 1
+                                  type: string
+                                groupId:
+                                  description: The group ID of the Maven reference.
+                                  maxLength: 256
+                                  minLength: 1
+                                  type: string
+                                version:
+                                  description: The version of the Maven reference.
+                                  maxLength: 256
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - artifactId
+                              - groupId
+                              - version
+                              type: object
+                            s3ContentLocation:
+                              description: The location of the custom artifacts.
+                              properties:
+                                bucketARN:
+                                  description: The Amazon Resource Name (ARN) for
+                                    the S3 bucket containing the application code.
+                                  maxLength: 2048
+                                  minLength: 1
+                                  type: string
+                                fileKey:
+                                  description: The file key for the object containing
+                                    the application code.
+                                  maxLength: 1024
+                                  minLength: 1
+                                  type: string
+                                objectVersion:
+                                  description: The version of the object containing
+                                    the application code.
+                                  maxLength: 1024
+                                  type: string
+                              required:
+                              - bucketARN
+                              - fileKey
+                              type: object
+                          required:
+                          - artifactType
+                          type: object
+                        type: array
+                      deployAsApplicationConfiguration:
+                        description: |-
+                          The information required to deploy a Kinesis Data Analytics Studio notebook as an application with durable
+                          state.
+                        properties:
+                          s3ContentLocation:
+                            description: |-
+                              The description of an Amazon S3 object that contains the Amazon Data Analytics application, including the
+                              Amazon Resource Name (ARN) of the S3 bucket, the name of the Amazon S3 object that contains the data, and the
+                              version number of the Amazon S3 object that contains the data.
+                            properties:
+                              basePath:
+                                description: The base path for the S3 bucket.
+                                maxLength: 1024
+                                type: string
+                              bucketARN:
+                                description: The Amazon Resource Name (ARN) of the
+                                  S3 bucket.
+                                maxLength: 2048
+                                minLength: 1
+                                type: string
+                            required:
+                            - bucketARN
+                            type: object
+                        required:
+                        - s3ContentLocation
+                        type: object
+                      monitoringConfiguration:
+                        description: The monitoring configuration of a Kinesis Data
+                          Analytics Studio notebook.
+                        properties:
+                          logLevel:
+                            description: |-
+                              The verbosity of the CloudWatch Logs for an application. You can set it to `INFO`, `WARN`, `ERROR`, or
+                              `DEBUG`.
+                            enum:
+                            - DEBUG
+                            - INFO
+                            - WARN
+                            - ERROR
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              applicationDescription:
+                description: The description of the application.
+                maxLength: 1024
+                type: string
+              applicationMaintenanceConfiguration:
+                description: Used to configure start of maintenance window.
+                properties:
+                  applicationMaintenanceWindowStartTime:
+                    description: The start time for the maintenance window.
+                    type: string
+                required:
+                - applicationMaintenanceWindowStartTime
+                type: object
+              applicationMode:
+                description: |-
+                  To create a Kinesis Data Analytics Studio notebook, you must set the mode to `INTERACTIVE`. However, for a
+                  Kinesis Data Analytics for Apache Flink application, the mode is optional.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - INTERACTIVE
+                - STREAMING
+                type: string
+              applicationName:
+                description: |-
+                  The name of the application.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              runConfiguration:
+                description: |-
+                  Specifies run configuration (start parameters) of a Kinesis Data Analytics application. Evaluated on update
+                  for RUNNING applications an only.
+                properties:
+                  applicationRestoreConfiguration:
+                    description: Describes the restore behavior of a restarting application.
+                    properties:
+                      applicationRestoreType:
+                        description: Specifies how the application should be restored.
+                        enum:
+                        - SKIP_RESTORE_FROM_SNAPSHOT
+                        - RESTORE_FROM_LATEST_SNAPSHOT
+                        - RESTORE_FROM_CUSTOM_SNAPSHOT
+                        type: string
+                      snapshotName:
+                        description: |-
+                          The identifier of an existing snapshot of application state to use to restart an application. The application
+                          uses this value if RESTORE_FROM_CUSTOM_SNAPSHOT is specified for the ApplicationRestoreType.
+                        maxLength: 256
+                        type: string
+                    required:
+                    - applicationRestoreType
+                    type: object
+                  flinkRunConfiguration:
+                    description: Describes the starting parameters for a Flink-based
+                      Kinesis Data Analytics application.
+                    properties:
+                      allowNonRestoredState:
+                        description: |-
+                          When restoring from a snapshot, specifies whether the runtime is allowed to skip a state that cannot be mapped
+                          to the new program. Defaults to false. If you update your application without specifying this parameter,
+                          AllowNonRestoredState will be set to false, even if it was previously set to true.
+                        type: boolean
+                    type: object
+                type: object
+              runtimeEnvironment:
+                description: The runtime environment for the application.
+                type: string
+              serviceExecutionRole:
+                description: Specifies the IAM role that the application uses to access
+                  external resources.
+                maxLength: 2048
+                minLength: 1
+                type: string
+              tags:
+                description: |-
+                  A list of one or more tags to assign to the application. A tag is a key-value pair that identifies an
+                  application. Note that the maximum number of application tags includes system tags. The maximum number of
+                  user-defined application tags is 50.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - runtimeEnvironment
+            - serviceExecutionRole
+            type: object
+          status:
+            description: KinesisAnalyticsV2ApplicationStatus is the observed state
+              of AWS::KinesisAnalyticsV2::Application.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

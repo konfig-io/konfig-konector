@@ -22,6 +22,12 @@ import (
 
 // RedshiftClusterSpec defines the desired state of a Redshift cluster.
 type RedshiftClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterIdentifier is the unique identifier of the cluster. Immutable
 	// after creation.
 	// +kubebuilder:validation:MinLength=1
@@ -91,6 +97,9 @@ type RedshiftClusterSpec struct {
 
 // RedshiftClusterStatus defines the observed state of RedshiftCluster.
 type RedshiftClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterIdentifier is the identifier of the cluster in AWS.
 	// +optional
 	ClusterIdentifier string `json:"clusterIdentifier,omitempty"`

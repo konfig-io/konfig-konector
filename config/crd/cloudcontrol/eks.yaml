@@ -1,0 +1,684 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ekscapabilities.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EKSCapability
+    listKind: EKSCapabilityList
+    plural: ekscapabilities
+    singular: ekscapability
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          EKSCapability manages AWS::EKS::Capability through the AWS Cloud Control API. Resource Type definition for EKS
+          Capability.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EKSCapabilitySpec is the desired state of AWS::EKS::Capability.
+            properties:
+              capabilityName:
+                description: |-
+                  A unique name for the capability. The name must be unique within your cluster and can contain alphanumeric
+                  characters, hyphens, and underscores.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 100
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: capabilityName is immutable
+                  rule: self == oldSelf
+              clusterName:
+                description: |-
+                  The name of the EKS cluster where you want to create the capability.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 100
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: clusterName is immutable
+                  rule: self == oldSelf
+              configuration:
+                description: |-
+                  The configuration settings for the capability. The structure of this object varies depending on the capability
+                  type. For Argo CD capabilities, you can configure IAM Identity Center integration, RBAC role mappings, and
+                  network access settings.
+                properties:
+                  ack:
+                    description: EKSCapabilityAck is a nested property type of AWS::EKS::Capability.
+                    properties:
+                      disabledServices:
+                        description: A list of ACK service names to disable. Controllers
+                          for services in this list are not installed or managed.
+                        items:
+                          type: string
+                        type: array
+                      enableCrossNamespace:
+                        description: |-
+                          Whether cross-namespace references are enabled for ACK controllers. When not specified, the service default
+                          applies.
+                        type: boolean
+                    type: object
+                  argoCd:
+                    description: EKSCapabilityArgoCd is a nested property type of
+                      AWS::EKS::Capability.
+                    properties:
+                      awsIdc:
+                        description: EKSCapabilityAwsIdc is a nested property type
+                          of AWS::EKS::Capability.
+                        properties:
+                          idcInstanceArn:
+                            description: The ARN of the IAM Identity Center instance
+                              to use for authentication.
+                            type: string
+                          idcManagedApplicationArn:
+                            description: |-
+                              The ARN of the managed application created in IAM Identity Center for this Argo CD capability. This
+                              application is automatically created and managed by EKS.
+                            type: string
+                          idcRegion:
+                            description: The Region where your IAM Identity Center
+                              instance is located.
+                            type: string
+                        required:
+                        - idcInstanceArn
+                        type: object
+                      namespace:
+                        description: |-
+                          The Kubernetes namespace where Argo CD resources will be created. If not specified, the default namespace is
+                          used.
+                        type: string
+                      networkAccess:
+                        description: EKSCapabilityNetworkAccess is a nested property
+                          type of AWS::EKS::Capability.
+                        properties:
+                          vpceIds:
+                            description: |-
+                              A list of VPC endpoint IDs to associate with the managed Argo CD API server endpoint. Each VPC endpoint
+                              provides private connectivity from a specific VPC to the Argo CD server. You can specify multiple VPC endpoint
+                              IDs to enable access from multiple VPCs.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      rbacRoleMappings:
+                        description: |-
+                          A list of role mappings that define which IAM Identity Center users or groups have which Argo CD roles. Each
+                          mapping associates an Argo CD role (ADMIN, EDITOR, or VIEWER) with one or more IAM Identity Center identities.
+                        items:
+                          description: EKSCapabilityArgoCdRoleMapping is a nested
+                            property type of AWS::EKS::Capability.
+                          properties:
+                            identities:
+                              description: A list of IAM Identity Center identities
+                                (users or groups) that should be assigned this Argo
+                                CD role.
+                              items:
+                                description: EKSCapabilitySsoIdentity is a nested
+                                  property type of AWS::EKS::Capability.
+                                properties:
+                                  id:
+                                    description: The unique identifier of the IAM
+                                      Identity Center user or group.
+                                    type: string
+                                  type:
+                                    description: The type of identity. Valid values
+                                      are SSO_USER or SSO_GROUP.
+                                    enum:
+                                    - SSO_USER
+                                    - SSO_GROUP
+                                    type: string
+                                required:
+                                - id
+                                - type
+                                type: object
+                              type: array
+                            role:
+                              description: |-
+                                The Argo CD role to assign. Valid values are: ADMIN (full administrative access to Argo CD), EDITOR (edit
+                                access to Argo CD resources), or VIEWER (read-only access to Argo CD resources).
+                              enum:
+                              - ADMIN
+                              - EDITOR
+                              - VIEWER
+                              type: string
+                          required:
+                          - identities
+                          - role
+                          type: object
+                        type: array
+                      serverUrl:
+                        description: The URL of the Argo CD server. Use this URL to
+                          access the Argo CD web interface and API.
+                        type: string
+                    required:
+                    - awsIdc
+                    type: object
+                type: object
+              deletePropagationPolicy:
+                description: |-
+                  Specifies how Kubernetes resources managed by the capability should be handled when the capability is deleted.
+                  Currently, the only supported value is RETAIN which retains all Kubernetes resources managed by the capability
+                  when the capability is deleted.
+                enum:
+                - RETAIN
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the IAM role that the capability uses to interact with AWS services. This
+                  role must have a trust policy that allows the EKS service principal to assume it, and it must have the
+                  necessary permissions for the capability type you're creating.
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              type:
+                description: |-
+                  The type of capability to create. Valid values are: ACK (AWS Controllers for Kubernetes, which lets you manage
+                  AWS resources directly from Kubernetes), ARGOCD (Argo CD for GitOps-based continuous delivery), or KRO (Kube
+                  Resource Orchestrator for composing and managing custom Kubernetes resources).
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - ARGOCD
+                - ACK
+                - KRO
+                type: string
+                x-kubernetes-validations:
+                - message: type is immutable
+                  rule: self == oldSelf
+            required:
+            - capabilityName
+            - clusterName
+            - deletePropagationPolicy
+            - roleArn
+            - type
+            type: object
+          status:
+            description: EKSCapabilityStatus is the observed state of AWS::EKS::Capability.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the capability.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The Unix epoch timestamp in seconds for when the capability was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              modifiedAt:
+                description: |-
+                  The Unix epoch timestamp in seconds for when the capability was last modified.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The current status of the capability. Valid values include: CREATING (the capability is being created), ACTIVE
+                  (the capability is running and available), UPDATING (the capability is being updated), DELETING (the
+                  capability is being deleted), CREATE_FAILED (the capability creation failed), UPDATE_FAILED (the capability
+                  update failed), or DELETE_FAILED (the capability deletion failed).
+                  Read-only: reported by AWS after creation.
+                type: string
+              version:
+                description: |-
+                  The version of the capability software that is currently running.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ekscertificateauthorities.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EKSCertificateAuthority
+    listKind: EKSCertificateAuthorityList
+    plural: ekscertificateauthorities
+    singular: ekscertificateauthority
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          EKSCertificateAuthority manages AWS::EKS::CertificateAuthority through the AWS Cloud Control API. Resource
+          Type definition for EKS CertificateAuthority.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EKSCertificateAuthoritySpec is the desired state of AWS::EKS::CertificateAuthority.
+            properties:
+              clusterName:
+                description: |-
+                  The name of the EKS cluster that the certificate authority belongs to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 100
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: clusterName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - clusterName
+            type: object
+          status:
+            description: EKSCertificateAuthorityStatus is the observed state of AWS::EKS::CertificateAuthority.
+            properties:
+              activatedAt:
+                description: |-
+                  The timestamp when the certificate authority was activated.
+                  Read-only: reported by AWS after creation.
+                type: string
+              activatedBy:
+                description: |-
+                  The entity that activated the certificate authority.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the certificate authority was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              createdBy:
+                description: |-
+                  The entity that created the certificate authority.
+                  Read-only: reported by AWS after creation.
+                type: string
+              data:
+                description: |-
+                  The Base64 encoded certificate authority data.
+                  Read-only: reported by AWS after creation.
+                type: string
+              distributionStatus:
+                description: |-
+                  The distribution status of the certificate authority.
+                  Read-only: reported by AWS after creation.
+                type: string
+              id:
+                description: |-
+                  The unique identifier of the certificate authority.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              rollbackAvailable:
+                description: |-
+                  Whether activation of this certificate authority can still be rolled back.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              scheduledEvents:
+                description: |-
+                  The scheduled auto-activation events for the certificate authority.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  finalAutoActivation:
+                    description: The deadline by which EKS will auto-activate this
+                      certificate authority (notAfter minus 45 days).
+                    type: string
+                  firstAutoActivation:
+                    description: The earliest date EKS may auto-activate this certificate
+                      authority (notAfter minus 6 months).
+                    type: string
+                type: object
+              signingStatus:
+                description: |-
+                  The signing status of the certificate authority.
+                  Read-only: reported by AWS after creation.
+                type: string
+              validity:
+                description: |-
+                  The validity period of the certificate authority.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  notAfter:
+                    description: The end of the validity period for the certificate
+                      authority.
+                    type: string
+                  notBefore:
+                    description: The start of the validity period for the certificate
+                      authority.
+                    type: string
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

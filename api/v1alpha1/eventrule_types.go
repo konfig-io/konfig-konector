@@ -32,6 +32,12 @@ type EventBusRef struct {
 
 // EventRuleSpec defines the desired state of an EventBridge Rule.
 type EventRuleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// EventBusRef references the event bus. Omit for the default bus.
 	// +optional
 	EventBusRef *EventBusRef `json:"eventBusRef,omitempty"`
@@ -70,6 +76,9 @@ type EventRuleSpec struct {
 
 // EventRuleStatus defines the observed state of EventRule.
 type EventRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the rule.
 	// +optional
 	ARN string `json:"arn,omitempty"`

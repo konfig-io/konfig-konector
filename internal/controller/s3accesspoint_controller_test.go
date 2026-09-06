@@ -77,7 +77,7 @@ func TestS3AccessPointReconcile(t *testing.T) {
 	apARN := "arn:aws:s3:us-east-1:123456789012:accesspoint/my-ap"
 	apCR := func(mutate ...func(*awsv1alpha1.S3AccessPoint)) *awsv1alpha1.S3AccessPoint {
 		ap := &awsv1alpha1.S3AccessPoint{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-ap", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-ap", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.S3AccessPointSpec{
 				Name:      "my-ap",
 				AccountID: "123456789012",
@@ -144,7 +144,7 @@ func TestS3AccessPointReconcile(t *testing.T) {
 				ap.Spec.BucketRef = awsv1alpha1.S3BucketRef{Name: "my-bucket-cr"}
 			}),
 			&awsv1alpha1.S3Bucket{
-				ObjectMeta: metav1.ObjectMeta{Name: "my-bucket-cr", Namespace: "default"},
+				ObjectMeta: metav1.ObjectMeta{Name: "my-bucket-cr", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 				Spec:       awsv1alpha1.S3BucketSpec{BucketName: "my-bucket"},
 			},
 		)

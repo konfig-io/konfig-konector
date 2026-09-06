@@ -30,8 +30,11 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: TransitGatewayVpcAttachment is the Schema for managing TGW VPC
-          attachments.
+        description: |-
+          STATUS: WIP. The cross-account path of this kind (acting under another
+          account's AWSProvider) is implemented and unit-tested but has not yet been
+          verified against a second live AWS account. Same-account use is verified.
+          TransitGatewayVpcAttachment is the Schema for managing TGW VPC attachments.
         properties:
           apiVersion:
             description: |-
@@ -54,6 +57,24 @@ spec:
             description: TransitGatewayVpcAttachmentSpec defines the desired state
               of a TGW VPC attachment.
             properties:
+              accepterProviderRef:
+                description: |-
+                  AccepterProviderRef names the AWSProvider of the account that owns the
+                  Transit Gateway when it is shared into this account via RAM. When set
+                  the controller accepts the attachment on the owner's behalf and Ready
+                  only becomes True once the attachment is available.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
               applianceModeSupport:
                 description: ApplianceModeSupport enables appliance mode for the attachment.
                 type: boolean
@@ -63,6 +84,23 @@ spec:
               ipv6Support:
                 description: IPv6Support enables IPv6 for the attachment.
                 type: boolean
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
               subnetRefs:
                 description: SubnetRefs are the subnets in each availability zone
                   to attach.
@@ -118,6 +156,21 @@ spec:
               attachmentId:
                 description: AttachmentID is the AWS TGW VPC attachment ID.
                 type: string
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
               conditions:
                 description: Conditions describe the current state of the resource.
                 items:

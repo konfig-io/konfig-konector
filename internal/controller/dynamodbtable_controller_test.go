@@ -97,8 +97,9 @@ func ddbScheme(t *testing.T) *runtime.Scheme {
 func ddbTableCR(mutate ...func(*awsv1alpha1.DynamoDBTable)) *awsv1alpha1.DynamoDBTable {
 	tbl := &awsv1alpha1.DynamoDBTable{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-table",
-			Namespace: "default",
+			Name:       "my-table",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.DynamoDBTableSpec{
 			TableName: "my-table",

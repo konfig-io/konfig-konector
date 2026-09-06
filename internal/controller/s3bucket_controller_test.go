@@ -165,8 +165,9 @@ func s3BucketScheme(t *testing.T) *runtime.Scheme {
 func s3BucketCR(mutate ...func(*awsv1alpha1.S3Bucket)) *awsv1alpha1.S3Bucket {
 	b := &awsv1alpha1.S3Bucket{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-bucket",
-			Namespace: "default",
+			Name:       "my-bucket",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.S3BucketSpec{
 			BucketName: "my-bucket",

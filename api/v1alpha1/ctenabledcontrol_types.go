@@ -25,6 +25,12 @@ import (
 // polls GetControlOperation. Only reconciles successfully from the Control
 // Tower management account.
 type CTEnabledControlSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ControlIdentifier is the ARN of the control to enable. Immutable after
 	// creation.
 	// +kubebuilder:validation:MinLength=10
@@ -44,6 +50,9 @@ type CTEnabledControlSpec struct {
 
 // CTEnabledControlStatus defines the observed state of CTEnabledControl.
 type CTEnabledControlStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the EnabledControl resource.
 	// +optional
 	ARN string `json:"arn,omitempty"`

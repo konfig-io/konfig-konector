@@ -33,6 +33,12 @@ type SNSTopicRef struct {
 
 // SNSSubscriptionSpec defines the desired state of an SNS Subscription.
 type SNSSubscriptionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TopicRef references the SNS topic to subscribe to.
 	TopicRef SNSTopicRef `json:"topicRef"`
 
@@ -57,6 +63,9 @@ type SNSSubscriptionSpec struct {
 
 // SNSSubscriptionStatus defines the observed state of SNSSubscription.
 type SNSSubscriptionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SubscriptionARN is the ARN of the subscription.
 	// +optional
 	SubscriptionARN string `json:"subscriptionArn,omitempty"`

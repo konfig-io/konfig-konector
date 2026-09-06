@@ -24,6 +24,12 @@ import (
 // organizational unit. OUs only reconcile successfully from the
 // organization's management (or delegated administrator) account.
 type OrganizationsOUSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the friendly name of the organizational unit.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -47,6 +53,9 @@ type OrganizationsOUSpec struct {
 
 // OrganizationsOUStatus defines the observed state of OrganizationsOU.
 type OrganizationsOUStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// OUID is the unique identifier (ou-...) of the organizational unit.
 	// +optional
 	OUID string `json:"ouId,omitempty"`

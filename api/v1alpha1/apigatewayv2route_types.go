@@ -44,6 +44,12 @@ type AuthorizerRef struct {
 
 // APIGatewayV2RouteSpec defines the desired state of an API Gateway v2 route.
 type APIGatewayV2RouteSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// APIRef references the APIGatewayV2API this route belongs to.
 	APIRef APIRef `json:"apiRef"`
 
@@ -86,6 +92,9 @@ type APIGatewayV2RouteSpec struct {
 
 // APIGatewayV2RouteStatus defines the observed state of APIGatewayV2Route.
 type APIGatewayV2RouteStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RouteID is the route identifier.
 	// +optional
 	RouteID string `json:"routeId,omitempty"`

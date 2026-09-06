@@ -22,6 +22,12 @@ import (
 
 // DAXClusterSpec defines the desired state of a DAX Cluster.
 type DAXClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the cluster identifier.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
@@ -64,6 +70,9 @@ type DAXClusterSpec struct {
 
 // DAXClusterStatus defines the observed state of DAXCluster.
 type DAXClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterARN is the ARN of the cluster.
 	// +optional
 	ClusterARN string `json:"clusterArn,omitempty"`

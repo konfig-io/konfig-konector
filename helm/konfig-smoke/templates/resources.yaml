@@ -1,0 +1,697 @@
+# Free-tier smoke test: one minimal instance of every kind that costs nothing
+# to create and hold briefly. Apply, wait for Ready, then delete the namespace.
+#   kubectl create ns smoke && kubectl apply -n smoke -f test/smoke/free-tier.yaml
+# Account-specific values (account ID, region) are for the scratch account.
+---
+# ── IAM ──────────────────────────────────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRole
+metadata: {name: role}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  roleName: kk-smoke-role
+  assumeRolePolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":["scheduler.amazonaws.com","states.amazonaws.com","codebuild.amazonaws.com","events.amazonaws.com"]},"Action":"sts:AssumeRole"}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicy
+metadata: {name: policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  policyName: kk-smoke-policy
+  policyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["sqs:SendMessage","logs:*"],"Resource":"*"}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicyAttachment
+metadata: {name: attach}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  roleRef: {name: role}
+  policyRef: {name: policy}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRolePolicy
+metadata: {name: inline}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  roleRef: {name: role}
+  policyName: kk-smoke-inline
+  policyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"sqs:GetQueueAttributes","Resource":"*"}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroup
+metadata: {name: group}
+spec: {groupName: kk-smoke-group{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMUser
+metadata: {name: user}
+spec: {userName: kk-smoke-user{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroupMembership
+metadata: {name: membership}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  groupRef: {name: group}
+  userRef: {name: user}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroupPolicyAttachment
+metadata: {name: group-attach}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  groupRef: {name: group}
+  policyRef: {name: policy}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMInstanceProfile
+metadata: {name: profile}
+spec: {instanceProfileName: kk-smoke-profile{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+# ── Messaging ────────────────────────────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: SQSQueue
+metadata: {name: queue}
+spec: {queueName: kk-smoke-queue{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SNSTopic
+metadata: {name: topic}
+spec: {topicName: kk-smoke-topic{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SNSSubscription
+metadata: {name: sub}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  topicRef: {name: topic}
+  protocol: sqs
+  endpoint: arn:aws:sqs:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-queue
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EventBus
+metadata: {name: bus}
+spec: {eventBusName: kk-smoke-bus{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EventRule
+metadata: {name: rule}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  ruleName: kk-smoke-rule
+  scheduleExpression: rate(1 day)
+  state: DISABLED
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EventTarget
+metadata: {name: target}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  eventRuleRef: {name: rule}
+  targets:
+    - id: sqs
+      arn: arn:aws:sqs:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-queue
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ScheduleGroup
+metadata: {name: sched-group}
+spec: {name: kk-smoke-schedules{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: Schedule
+metadata: {name: schedule}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  name: kk-smoke-schedule
+  groupRef: {name: sched-group}
+  scheduleExpression: rate(1 day)
+  state: DISABLED
+  flexibleTimeWindow: {mode: "OFF"}
+  target:
+    arn: arn:aws:sqs:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-queue
+    roleRef: {name: role}
+---
+# ── Observability ────────────────────────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogGroup
+metadata: {name: lg}
+spec: {logGroupName: /kk-smoke/app, retentionInDays: 1{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: MetricFilter
+metadata: {name: mf}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  filterName: kk-smoke-errors
+  filterPattern: ERROR
+  logGroupRef: {name: lg}
+  metricTransformations:
+    - {metricName: Errors, metricNamespace: KKSmoke, metricValue: "1"}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CloudWatchAlarm
+metadata: {name: alarm}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  alarmName: kk-smoke-alarm
+  namespace: KKSmoke
+  metricName: Errors
+  statistic: Sum
+  period: 300
+  evaluationPeriods: 1
+  threshold: 1
+  comparisonOperator: GreaterThanOrEqualToThreshold
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CloudWatchDashboard
+metadata: {name: dash}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  dashboardName: kk-smoke
+  dashboardBody: '{"widgets":[{"type":"text","x":0,"y":0,"width":6,"height":3,"properties":{"markdown":"kk smoke"}}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: XRayGroup
+metadata: {name: xray-group}
+spec: {groupName: kk-smoke, filterExpression: 'service("kk-smoke")'{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: XRaySamplingRule
+metadata: {name: xray-rule}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  ruleName: kk-smoke
+  priority: 9000
+  fixedRate: 0.05
+  reservoirSize: 1
+  serviceName: "*"
+  serviceType: "*"
+  host: "*"
+  httpMethod: "*"
+  urlPath: "*"
+  resourceArn: "*"
+---
+# ── Config / data ────────────────────────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: SSMParameter
+metadata: {name: param}
+spec: {parameterName: /kk-smoke/param, type: String, value: hello{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: DynamoDBTable
+metadata: {name: table}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  tableName: kk-smoke
+  billingMode: PAY_PER_REQUEST
+  attributeDefinitions: [{attributeName: pk, attributeType: S}]
+  keySchema: [{attributeName: pk, keyType: HASH}]
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3Bucket
+metadata: {name: bucket}
+spec: {bucketName: kk-smoke-{{ .Values.accountId }}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3BucketPolicy
+metadata: {name: bucket-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  bucketRef: {name: bucket}
+  policyDocument: '{"Version":"2012-10-17","Statement":[{"Sid":"DenyInsecure","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::kk-smoke-{{ .Values.accountId }}","arn:aws:s3:::kk-smoke-{{ .Values.accountId }}/*"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3BucketLifecycle
+metadata: {name: bucket-lifecycle}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  bucketName: kk-smoke-{{ .Values.accountId }}
+  rules:
+    - {id: expire, status: Enabled, expirationDays: 1, prefix: tmp/}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRRepository
+metadata: {name: repo}
+spec: {repositoryName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECRLifecyclePolicy
+metadata: {name: repo-lifecycle}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  repositoryRef: {name: repo}
+  lifecyclePolicyDocument: '{"rules":[{"rulePriority":1,"description":"keep 5","selection":{"tagStatus":"any","countType":"imageCountMoreThan","countNumber":5},"action":{"type":"expire"}}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: GlueDatabase
+metadata: {name: gluedb}
+spec: {name: kk_smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: AthenaWorkGroup
+metadata: {name: athena}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: BackupVault
+metadata: {name: vault}
+spec: {vaultName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: BackupPlan
+metadata: {name: plan}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  planName: kk-smoke
+  rules:
+    - ruleName: daily
+      targetBackupVaultRef: vault
+      scheduleExpression: cron(0 5 ? * * *)
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: Budget
+metadata: {name: budget}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  accountId: {{ .Values.accountId | quote }}
+  budgetName: kk-smoke
+  budgetType: COST
+  limitAmount: "5"
+  limitUnit: USD
+  timeUnit: MONTHLY
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CostAnomalyMonitor
+metadata: {name: anomaly}
+spec: {monitorName: kk-smoke, monitorType: DIMENSIONAL, monitorDimension: SERVICE{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+# ── Networking ───────────────────────────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: VPC
+metadata: {name: vpc}
+spec: {cidrBlock: 10.77.0.0/16, enableDnsSupport: true, enableDnsHostnames: true, tags: {Name: kk-smoke}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: Subnet
+metadata: {name: subnet-a}
+spec: {vpcRef: {name: vpc}, cidrBlock: 10.77.1.0/24, availabilityZone: {{ .Values.region }}a{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: Subnet
+metadata: {name: subnet-b}
+spec: {vpcRef: {name: vpc}, cidrBlock: 10.77.2.0/24, availabilityZone: {{ .Values.region }}b{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: InternetGateway
+metadata: {name: igw}
+spec: {vpcRef: {name: vpc}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EgressOnlyIGW
+metadata: {name: eigw}
+spec: {vpcRef: {name: vpc}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RouteTable
+metadata: {name: rt}
+spec: {vpcRef: {name: vpc}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SecurityGroup
+metadata: {name: sg}
+spec: {vpcRef: {name: vpc}, groupName: kk-smoke, description: kk smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: NetworkACL
+metadata: {name: nacl}
+spec: {vpcRef: {name: vpc}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ManagedPrefixList
+metadata: {name: prefixlist}
+spec: {name: kk-smoke, addressFamily: IPv4, maxEntries: 5{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: VPCEndpoint
+metadata: {name: s3-endpoint}
+spec: {vpcRef: {name: vpc}, serviceName: com.amazonaws.{{ .Values.region }}.s3, endpointType: Gateway{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: PlacementGroup
+metadata: {name: pg}
+spec: {groupName: kk-smoke, strategy: spread{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: KeyPair
+metadata: {name: keypair}
+spec: {keyName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: LaunchTemplate
+metadata: {name: lt}
+spec: {launchTemplateName: kk-smoke, imageId: {{ .Values.amiId }}, instanceType: t3.micro{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: AutoScalingGroup
+metadata: {name: asg}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  autoScalingGroupName: kk-smoke
+  launchTemplateRef: {name: lt}
+  minSize: 0
+  maxSize: 0
+  desiredCapacity: 0
+  vpcZoneIdentifier: [{name: subnet-a}, {name: subnet-b}]
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: TargetGroup
+metadata: {name: tg}
+spec: {name: kk-smoke, port: 80, protocol: HTTP, vpcRef: {name: vpc}, targetType: ip{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+# ── Database groups (free without instances) ─────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: DBSubnetGroup
+metadata: {name: dbsng}
+spec: {dbSubnetGroupName: kk-smoke, description: kk smoke, subnetRefs: [{name: subnet-a}, {name: subnet-b}]{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: DBParameterGroup
+metadata: {name: dbpg}
+spec: {dbParameterGroupName: kk-smoke, dbParameterGroupFamily: postgres16, description: kk smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: DBClusterParameterGroup
+metadata: {name: dbcpg}
+spec: {dbClusterParameterGroupName: kk-smoke, dbParameterGroupFamily: aurora-postgresql16, description: kk smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ElastiCacheSubnetGroup
+metadata: {name: ecsng}
+spec: {subnetGroupName: kk-smoke, description: kk smoke, subnetRefs: [{name: subnet-a}, {name: subnet-b}]{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ElastiCacheParameterGroup
+metadata: {name: ecpg}
+spec: {cacheParameterGroupName: kk-smoke, cacheParameterGroupFamily: redis7{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RedshiftSubnetGroup
+metadata: {name: rssng}
+spec: {name: kk-smoke, description: kk smoke, subnetRefs: [{name: subnet-a}, {name: subnet-b}]{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RedshiftParameterGroup
+metadata: {name: rspg}
+spec: {name: kk-smoke, family: redshift-1.0, description: kk smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+# ── Compute / delivery (creation is free) ────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECSCluster
+metadata: {name: ecs}
+spec: {clusterName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ECSTaskDefinition
+metadata: {name: taskdef}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  family: kk-smoke
+  containerDefinitions:
+    - {name: app, image: public.ecr.aws/docker/library/busybox:latest, memory: 64}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CodeDeployApplication
+metadata: {name: cdapp}
+spec: {applicationName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CodeArtifactDomain
+metadata: {name: cadomain}
+spec: {domainName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CodeArtifactRepository
+metadata: {name: carepo}
+spec: {domainRef: {name: cadomain}, repositoryName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CodeBuildProject
+metadata: {name: codebuild}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  name: kk-smoke
+  serviceRoleARN: arn:aws:iam::{{ .Values.accountId }}:role/kk-smoke-role
+  source: {type: NO_SOURCE, buildspec: "version: 0.2\nphases:\n  build:\n    commands:\n      - echo hi\n"}
+  artifacts: {type: NO_ARTIFACTS}
+  environment: {type: LINUX_CONTAINER, computeType: BUILD_GENERAL1_SMALL, image: aws/codebuild/standard:7.0}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: StateMachine
+metadata: {name: sfn}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  name: kk-smoke
+  roleARN: arn:aws:iam::{{ .Values.accountId }}:role/kk-smoke-role
+  definition: '{"StartAt":"Done","States":{"Done":{"Type":"Pass","End":true}}}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: Activity
+metadata: {name: activity}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: UserPool
+metadata: {name: userpool}
+spec: {poolName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: UserPoolClient
+metadata: {name: userpool-client}
+spec: {userPoolRef: {name: userpool}, clientName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: APIGatewayV2API
+metadata: {name: httpapi}
+spec: {name: kk-smoke, protocolType: HTTP{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: RestAPI
+metadata: {name: restapi}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SESConfigurationSet
+metadata: {name: sesconfig}
+spec: {configurationSetName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SCPortfolio
+metadata: {name: portfolio}
+spec: {displayName: kk-smoke, providerName: kk{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ResourceShare
+metadata: {name: share}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CloudFrontFunction
+metadata: {name: cffunc}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  name: kk-smoke
+  runtime: cloudfront-js-2.0
+  functionCode: "function handler(event) { return event.request; }"
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CloudFrontCachePolicy
+metadata: {name: cfcache}
+spec: {name: kk-smoke, minTtl: 1, defaultTtl: 60, maxTtl: 300{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CloudFrontOriginAccessControl
+metadata: {name: cfoac}
+spec: {name: kk-smoke, originAccessControlOriginType: s3, signingBehavior: always, signingProtocol: sigv4{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SSMMaintenanceWindow
+metadata: {name: mw}
+spec: {name: kk-smoke, schedule: "cron(0 2 ? * SUN *)", duration: 2, cutoff: 1, allowUnassociatedTargets: true{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SSMPatchBaseline
+metadata: {name: patch}
+spec: {name: kk-smoke, operatingSystem: AMAZON_LINUX_2023, approvedPatches: [kernel]{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: PrometheusWorkspace
+metadata: {name: amp}
+spec: {alias: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+# ── Generated (Cloud Control) kinds ──────────────────────────────────────────
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsQueryDefinition
+metadata: {name: cc-query}
+spec: {name: kk-smoke/errors, queryString: "fields @timestamp | limit 5"{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EC2DHCPOptions
+metadata: {name: cc-dhcp}
+spec: {domainName: kk-smoke.internal, domainNameServers: [AmazonProvidedDNS]{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMGroupPolicy
+metadata: {name: cc-group-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  groupName: kk-smoke-group
+  policyName: kk-smoke-cc
+  policyDocument: {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": "sqs:ListQueues", "Resource": "*"}]}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMUserPolicy
+metadata: {name: cc-user-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  userName: kk-smoke-user
+  policyName: kk-smoke-cc
+  policyDocument: {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": "sqs:ListQueues", "Resource": "*"}]}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SQSQueueInlinePolicy
+metadata: {name: cc-queue-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  queue: https://sqs.{{ .Values.region }}.amazonaws.com/{{ .Values.accountId }}/kk-smoke-queue
+  policyDocument: {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "sns.amazonaws.com"}, "Action": "sqs:SendMessage", "Resource": "arn:aws:sqs:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-queue"}]}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: SNSTopicInlinePolicy
+metadata: {name: cc-topic-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  topicArn: arn:aws:sns:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-topic
+  policyDocument: {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "arn:aws:iam::{{ .Values.accountId }}:root"}, "Action": "SNS:Publish", "Resource": "arn:aws:sns:{{ .Values.region }}:{{ .Values.accountId }}:kk-smoke-topic"}]}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EventSchemasRegistry
+metadata: {name: cc-registry}
+spec: {registryName: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: EventSchemasSchema
+metadata: {name: cc-schema}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  registryName: kk-smoke
+  schemaName: kk-smoke-event
+  type: OpenApi3
+  content: '{"openapi":"3.0.0","info":{"version":"1.0.0","title":"Event"},"paths":{},"components":{"schemas":{"Event":{"type":"object","properties":{"id":{"type":"string"}}}}}}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: AppConfigApplication
+metadata: {name: cc-appconfig}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: ResourceGroupsGroup
+metadata: {name: cc-rg}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  name: kk-smoke
+  resourceQuery:
+    type: TAG_FILTERS_1_0
+    query: {resourceTypeFilters: ["AWS::AllSupported"], tagFilters: [{key: Name, values: [kk-smoke]}]}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: GlueRegistry
+metadata: {name: cc-glue-registry}
+spec: {name: kk-smoke{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: GlueClassifier
+metadata: {name: cc-glue-classifier}
+spec: {jsonClassifier: {name: kk-smoke, jsonPath: "$.id"}{{- with $.Values.providerRef }}, providerRef: {name: {{ . }}}{{- end }}}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: CodeDeployDeploymentConfig
+metadata: {name: cc-cd-config}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  deploymentConfigName: kk-smoke
+  computePlatform: Server
+  minimumHealthyHosts: {type: HOST_COUNT, value: 0}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: XRayResourcePolicy
+metadata: {name: cc-xray-policy}
+spec:
+{{- with $.Values.providerRef }}
+  providerRef: {name: {{ . }}}
+{{- end }}
+  policyName: kk-smoke
+  policyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"logs.amazonaws.com"},"Action":["xray:PutTraceSegments"],"Resource":"*"}]}'

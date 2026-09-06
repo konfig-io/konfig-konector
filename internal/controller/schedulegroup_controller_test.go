@@ -32,7 +32,7 @@ import (
 
 func scheduleGroupCR(mutate ...func(*awsv1alpha1.ScheduleGroup)) *awsv1alpha1.ScheduleGroup {
 	sg := &awsv1alpha1.ScheduleGroup{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.ScheduleGroupSpec{Name: "my-group", Tags: map[string]string{"env": "test"}},
 	}
 	for _, m := range mutate {

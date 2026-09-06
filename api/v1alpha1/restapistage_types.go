@@ -33,6 +33,12 @@ type RestAPIDeploymentRef struct {
 
 // RestAPIStageSpec defines the desired state of a REST API stage.
 type RestAPIStageSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RestAPIRef references the RestAPI this stage belongs to.
 	RestAPIRef APIRef `json:"restApiRef"`
 
@@ -63,6 +69,9 @@ type RestAPIStageSpec struct {
 
 // RestAPIStageStatus defines the observed state of RestAPIStage.
 type RestAPIStageStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StageName is the stage name in AWS (also the primary identifier
 	// together with the API ID).
 	// +optional

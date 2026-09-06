@@ -41,6 +41,12 @@ type RuleCondition struct {
 
 // ListenerRuleSpec defines the desired state of a Listener Rule.
 type ListenerRuleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ListenerRef references the Listener.
 	ListenerRef ListenerRef `json:"listenerRef"`
 
@@ -64,6 +70,9 @@ type ListenerRuleSpec struct {
 
 // ListenerRuleStatus defines the observed state of ListenerRule.
 type ListenerRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the listener rule.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -61,6 +61,10 @@ func (r *BackupVaultReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, vault); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, vault); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !vault.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(vault, awsv1alpha1.FinalizerName) {
@@ -84,6 +88,10 @@ func (r *BackupVaultReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if err := r.Update(ctx, vault); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileVault(ctx, vault); err != nil {

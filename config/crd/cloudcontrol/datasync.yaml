@@ -1,0 +1,4192 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasyncagents.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncAgent
+    listKind: DataSyncAgentList
+    plural: datasyncagents
+    singular: datasyncagent
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncAgent manages AWS::DataSync::Agent through the AWS Cloud Control API. Resource schema for
+          AWS::DataSync::Agent.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncAgentSpec is the desired state of AWS::DataSync::Agent.
+            properties:
+              activationKey:
+                description: |-
+                  Activation key of the Agent.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 29
+                type: string
+              agentName:
+                description: The name configured for the agent. Text reference used
+                  to identify the agent in the console.
+                maxLength: 256
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroupArns:
+                description: |-
+                  The ARNs of the security group used to protect your data transfer task subnets.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              subnetArns:
+                description: |-
+                  The ARNs of the subnets in which DataSync will create elastic network interfaces for each data transfer task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              vpcEndpointId:
+                description: |-
+                  The ID of the VPC endpoint that the agent has access to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            type: object
+          status:
+            description: DataSyncAgentStatus is the observed state of AWS::DataSync::Agent.
+            properties:
+              agentArn:
+                description: |-
+                  The DataSync Agent ARN.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpointType:
+                description: |-
+                  The service endpoints that the agent will connect to.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - FIPS
+                - PUBLIC
+                - PRIVATE_LINK
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationazureblobs.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationAzureBlob
+    listKind: DataSyncLocationAzureBlobList
+    plural: datasynclocationazureblobs
+    singular: datasynclocationazureblob
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationAzureBlob manages AWS::DataSync::LocationAzureBlob through the AWS Cloud Control API. Resource
+          Type definition for AWS::DataSync::LocationAzureBlob.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationAzureBlobSpec is the desired state of AWS::DataSync::LocationAzureBlob.
+            properties:
+              agentArns:
+                description: |-
+                  Specifies the Amazon Resource Name (ARN) of the DataSync agent that can connect with your Azure Blob Storage
+                  container. If you are setting up an agentless cross-cloud transfer, you do not need to specify a value for
+                  this parameter.
+                items:
+                  type: string
+                type: array
+              azureAccessTier:
+                description: Specifies an access tier for the objects you're transferring
+                  into your Azure Blob Storage container.
+                enum:
+                - HOT
+                - COOL
+                - ARCHIVE
+                type: string
+              azureBlobAuthenticationType:
+                description: The specific authentication type that you want DataSync
+                  to use to access your Azure Blob Container.
+                enum:
+                - SAS
+                - NONE
+                type: string
+              azureBlobContainerUrl:
+                description: |-
+                  The URL of the Azure Blob container that was described.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 325
+                type: string
+              azureBlobSasConfiguration:
+                description: DataSyncLocationAzureBlobAzureBlobSasConfiguration is
+                  a nested property type of AWS::DataSync::LocationAzureBlob.
+                properties:
+                  azureBlobSasToken:
+                    description: |-
+                      Specifies the shared access signature (SAS) token, which indicates the permissions DataSync needs to access
+                      your Azure Blob Storage container.
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                required:
+                - azureBlobSasToken
+                type: object
+              azureBlobType:
+                description: Specifies a blob type for the objects you're transferring
+                  into your Azure Blob Storage container.
+                enum:
+                - BLOCK
+                type: string
+              cmkSecretConfig:
+                description: DataSyncLocationAzureBlobCmkSecretConfig is a nested
+                  property type of AWS::DataSync::LocationAzureBlob.
+                properties:
+                  kmsKeyArn:
+                    description: |-
+                      Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                      DataSync provides this key to AWS Secrets Manager.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret,
+                      managed by DataSync.
+                    maxLength: 2048
+                    type: string
+                type: object
+              customSecretConfig:
+                description: DataSyncLocationAzureBlobCustomSecretConfig is a nested
+                  property type of AWS::DataSync::LocationAzureBlob.
+                properties:
+                  secretAccessRoleArn:
+                    description: |-
+                      Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                      specified for SecretArn.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for a customer created AWS Secrets
+                      Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretAccessRoleArn
+                - secretArn
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              subdirectory:
+                description: The subdirectory in the Azure Blob Container that is
+                  used to read data from the Azure Blob Source Location.
+                maxLength: 1024
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - azureBlobAuthenticationType
+            type: object
+          status:
+            description: DataSyncLocationAzureBlobStatus is the observed state of
+              AWS::DataSync::LocationAzureBlob.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Azure Blob Location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the Azure Blob Location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              managedSecretConfig:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretArn
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationefses.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationEFS
+    listKind: DataSyncLocationEFSList
+    plural: datasynclocationefses
+    singular: datasynclocationefs
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationEFS manages AWS::DataSync::LocationEFS through the AWS Cloud Control API. Resource schema for
+          AWS::DataSync::LocationEFS.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationEFSSpec is the desired state of AWS::DataSync::LocationEFS.
+            properties:
+              accessPointArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the Amazon EFS Access point that DataSync uses when accessing the EFS file
+                  system.
+                maxLength: 128
+                type: string
+              ec2Config:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  securityGroupArns:
+                    description: The Amazon Resource Names (ARNs) of the security
+                      groups that are configured for the Amazon EC2 resource.
+                    items:
+                      type: string
+                    type: array
+                  subnetArn:
+                    description: The ARN of the subnet that DataSync uses to access
+                      the target EFS file system.
+                    maxLength: 128
+                    type: string
+                required:
+                - securityGroupArns
+                - subnetArn
+                type: object
+              efsFilesystemArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the Amazon EFS file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+              fileSystemAccessRoleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the AWS IAM role that the DataSync will assume when mounting the EFS file
+                  system.
+                maxLength: 128
+                type: string
+              inTransitEncryption:
+                description: Protocol that is used for encrypting the traffic exchanged
+                  between the DataSync Agent and the EFS file system.
+                enum:
+                - NONE
+                - TLS1_2
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              subdirectory:
+                description: |-
+                  A subdirectory in the location's path. This subdirectory in the EFS file system is used to read data from the
+                  EFS source location or write data to the EFS destination.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - ec2Config
+            type: object
+          status:
+            description: DataSyncLocationEFSStatus is the observed state of AWS::DataSync::LocationEFS.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon EFS file system location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the EFS location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationfsxlustres.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationFSxLustre
+    listKind: DataSyncLocationFSxLustreList
+    plural: datasynclocationfsxlustres
+    singular: datasynclocationfsxlustre
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationFSxLustre manages AWS::DataSync::LocationFSxLustre through the AWS Cloud Control API. Resource
+          schema for AWS::DataSync::LocationFSxLustre.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationFSxLustreSpec is the desired state of AWS::DataSync::LocationFSxLustre.
+            properties:
+              fsxFilesystemArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the FSx for Lustre file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroupArns:
+                description: |-
+                  The ARNs of the security groups that are to use to configure the FSx for Lustre file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              subdirectory:
+                description: A subdirectory in the location's path.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - securityGroupArns
+            type: object
+          status:
+            description: DataSyncLocationFSxLustreStatus is the observed state of
+              AWS::DataSync::LocationFSxLustre.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon FSx for Lustre file system location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the FSx for Lustre location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationfsxontaps.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationFSxONTAP
+    listKind: DataSyncLocationFSxONTAPList
+    plural: datasynclocationfsxontaps
+    singular: datasynclocationfsxontap
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationFSxONTAP manages AWS::DataSync::LocationFSxONTAP through the AWS Cloud Control API. Resource
+          Type definition for AWS::DataSync::LocationFSxONTAP.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationFSxONTAPSpec is the desired state of AWS::DataSync::LocationFSxONTAP.
+            properties:
+              protocol:
+                description: DataSyncLocationFSxONTAPProtocol is a nested property
+                  type of AWS::DataSync::LocationFSxONTAP.
+                properties:
+                  nfs:
+                    description: DataSyncLocationFSxONTAPNFS is a nested property
+                      type of AWS::DataSync::LocationFSxONTAP.
+                    properties:
+                      mountOptions:
+                        description: DataSyncLocationFSxONTAPNfsMountOptions is a
+                          nested property type of AWS::DataSync::LocationFSxONTAP.
+                        properties:
+                          version:
+                            description: The specific NFS version that you want DataSync
+                              to use to mount your NFS share.
+                            enum:
+                            - AUTOMATIC
+                            - NFS3
+                            - NFS4_0
+                            - NFS4_1
+                            type: string
+                        type: object
+                    required:
+                    - mountOptions
+                    type: object
+                  smb:
+                    description: DataSyncLocationFSxONTAPSMB is a nested property
+                      type of AWS::DataSync::LocationFSxONTAP.
+                    properties:
+                      cmkSecretConfig:
+                        description: DataSyncLocationFSxONTAPCmkSecretConfig is a
+                          nested property type of AWS::DataSync::LocationFSxONTAP.
+                        properties:
+                          kmsKeyArn:
+                            description: |-
+                              Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                              DataSync provides this key to AWS Secrets Manager.
+                            maxLength: 2048
+                            type: string
+                          secretArn:
+                            description: Specifies the ARN for an AWS Secrets Manager
+                              secret, managed by DataSync.
+                            maxLength: 2048
+                            type: string
+                        type: object
+                      customSecretConfig:
+                        description: DataSyncLocationFSxONTAPCustomSecretConfig is
+                          a nested property type of AWS::DataSync::LocationFSxONTAP.
+                        properties:
+                          secretAccessRoleArn:
+                            description: |-
+                              Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                              specified for SecretArn.
+                            maxLength: 2048
+                            type: string
+                          secretArn:
+                            description: Specifies the ARN for a customer created
+                              AWS Secrets Manager secret.
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - secretAccessRoleArn
+                        - secretArn
+                        type: object
+                      domain:
+                        description: The name of the Windows domain that the SMB server
+                          belongs to.
+                        maxLength: 253
+                        type: string
+                      managedSecretConfig:
+                        description: DataSyncLocationFSxONTAPManagedSecretConfig is
+                          a nested property type of AWS::DataSync::LocationFSxONTAP.
+                        properties:
+                          secretArn:
+                            description: Specifies the ARN for an AWS Secrets Manager
+                              secret.
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - secretArn
+                        type: object
+                      mountOptions:
+                        description: DataSyncLocationFSxONTAPSmbMountOptions is a
+                          nested property type of AWS::DataSync::LocationFSxONTAP.
+                        properties:
+                          version:
+                            description: The specific SMB version that you want DataSync
+                              to use to mount your SMB share.
+                            enum:
+                            - AUTOMATIC
+                            - SMB2
+                            - SMB3
+                            type: string
+                        type: object
+                      password:
+                        description: |-
+                          The password of the user who can mount the share and has the permissions to access files and folders in the
+                          SMB share.
+                        maxLength: 104
+                        type: string
+                      user:
+                        description: The user who can mount the share, has the permissions
+                          to access files and folders in the SMB share.
+                        maxLength: 104
+                        type: string
+                    required:
+                    - mountOptions
+                    - user
+                    type: object
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroupArns:
+                description: |-
+                  The ARNs of the security groups that are to use to configure the FSx ONTAP file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              storageVirtualMachineArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the FSx ONTAP SVM.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 162
+                type: string
+                x-kubernetes-validations:
+                - message: storageVirtualMachineArn is immutable
+                  rule: self == oldSelf
+              subdirectory:
+                description: A subdirectory in the location's path.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - securityGroupArns
+            - storageVirtualMachineArn
+            type: object
+          status:
+            description: DataSyncLocationFSxONTAPStatus is the observed state of AWS::DataSync::LocationFSxONTAP.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              fsxFilesystemArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the FSx ONAP file system.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon FSx ONTAP file system location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the FSx ONTAP file system that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4360
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationfsxopenzfses.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationFSxOpenZFS
+    listKind: DataSyncLocationFSxOpenZFSList
+    plural: datasynclocationfsxopenzfses
+    singular: datasynclocationfsxopenzfs
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationFSxOpenZFS manages AWS::DataSync::LocationFSxOpenZFS through the AWS Cloud Control API.
+          Resource schema for AWS::DataSync::LocationFSxOpenZFS.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationFSxOpenZFSSpec is the desired state of AWS::DataSync::LocationFSxOpenZFS.
+            properties:
+              fsxFilesystemArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the FSx OpenZFS file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+              protocol:
+                description: DataSyncLocationFSxOpenZFSProtocol is a nested property
+                  type of AWS::DataSync::LocationFSxOpenZFS.
+                properties:
+                  nfs:
+                    description: DataSyncLocationFSxOpenZFSNFS is a nested property
+                      type of AWS::DataSync::LocationFSxOpenZFS.
+                    properties:
+                      mountOptions:
+                        description: DataSyncLocationFSxOpenZFSMountOptions is a nested
+                          property type of AWS::DataSync::LocationFSxOpenZFS.
+                        properties:
+                          version:
+                            description: The specific NFS version that you want DataSync
+                              to use to mount your NFS share.
+                            enum:
+                            - AUTOMATIC
+                            - NFS3
+                            - NFS4_0
+                            - NFS4_1
+                            type: string
+                        type: object
+                    required:
+                    - mountOptions
+                    type: object
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroupArns:
+                description: |-
+                  The ARNs of the security groups that are to use to configure the FSx OpenZFS file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              subdirectory:
+                description: A subdirectory in the location's path.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - protocol
+            - securityGroupArns
+            type: object
+          status:
+            description: DataSyncLocationFSxOpenZFSStatus is the observed state of
+              AWS::DataSync::LocationFSxOpenZFS.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon FSx OpenZFS file system location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the FSx OpenZFS that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationfsxwindows.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationFSxWindows
+    listKind: DataSyncLocationFSxWindowsList
+    plural: datasynclocationfsxwindows
+    singular: datasynclocationfsxwindows
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationFSxWindows manages AWS::DataSync::LocationFSxWindows through the AWS Cloud Control API.
+          Resource Type definition for AWS::DataSync::LocationFSxWindows.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationFSxWindowsSpec is the desired state of AWS::DataSync::LocationFSxWindows.
+            properties:
+              cmkSecretConfig:
+                description: DataSyncLocationFSxWindowsCmkSecretConfig is a nested
+                  property type of AWS::DataSync::LocationFSxWindows.
+                properties:
+                  kmsKeyArn:
+                    description: |-
+                      Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                      DataSync provides this key to AWS Secrets Manager.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret,
+                      managed by DataSync.
+                    maxLength: 2048
+                    type: string
+                type: object
+              customSecretConfig:
+                description: DataSyncLocationFSxWindowsCustomSecretConfig is a nested
+                  property type of AWS::DataSync::LocationFSxWindows.
+                properties:
+                  secretAccessRoleArn:
+                    description: |-
+                      Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                      specified for SecretArn.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for a customer created AWS Secrets
+                      Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretAccessRoleArn
+                - secretArn
+                type: object
+              domain:
+                description: The name of the Windows domain that the FSx for Windows
+                  server belongs to.
+                maxLength: 253
+                type: string
+              fsxFilesystemArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the FSx for Windows file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+              password:
+                description: |-
+                  The password of the user who has the permissions to access files and folders in the FSx for Windows file
+                  system.
+                maxLength: 104
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroupArns:
+                description: |-
+                  The ARNs of the security groups that are to use to configure the FSx for Windows file system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              subdirectory:
+                description: A subdirectory in the location's path.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              user:
+                description: The user who has the permissions to access files and
+                  folders in the FSx for Windows file system.
+                maxLength: 104
+                type: string
+            required:
+            - securityGroupArns
+            - user
+            type: object
+          status:
+            description: DataSyncLocationFSxWindowsStatus is the observed state of
+              AWS::DataSync::LocationFSxWindows.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon FSx for Windows file system location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the FSx for Windows location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              managedSecretConfig:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretArn
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationhdfses.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationHDFS
+    listKind: DataSyncLocationHDFSList
+    plural: datasynclocationhdfses
+    singular: datasynclocationhdfs
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationHDFS manages AWS::DataSync::LocationHDFS through the AWS Cloud Control API. Resource Type
+          definition for AWS::DataSync::LocationHDFS.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationHDFSSpec is the desired state of AWS::DataSync::LocationHDFS.
+            properties:
+              agentArns:
+                description: ARN(s) of the agent(s) to use for an HDFS location.
+                items:
+                  type: string
+                type: array
+              authenticationType:
+                description: The authentication mode used to determine identity of
+                  user.
+                enum:
+                - SIMPLE
+                - KERBEROS
+                type: string
+              blockSize:
+                description: Size of chunks (blocks) in bytes that the data is divided
+                  into when stored in the HDFS cluster.
+                format: int64
+                maximum: 1073741824
+                minimum: 1048576
+                type: integer
+              cmkSecretConfig:
+                description: DataSyncLocationHDFSCmkSecretConfig is a nested property
+                  type of AWS::DataSync::LocationHDFS.
+                properties:
+                  kmsKeyArn:
+                    description: |-
+                      Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                      DataSync provides this key to AWS Secrets Manager.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret,
+                      managed by DataSync.
+                    maxLength: 2048
+                    type: string
+                type: object
+              customSecretConfig:
+                description: DataSyncLocationHDFSCustomSecretConfig is a nested property
+                  type of AWS::DataSync::LocationHDFS.
+                properties:
+                  secretAccessRoleArn:
+                    description: |-
+                      Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                      specified for SecretArn.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for a customer created AWS Secrets
+                      Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretAccessRoleArn
+                - secretArn
+                type: object
+              kerberosKeytab:
+                description: The Base64 string representation of the Keytab file.
+                maxLength: 87384
+                type: string
+              kerberosKrb5Conf:
+                description: |-
+                  The string representation of the Krb5Conf file, or the presigned URL to access the Krb5.conf file within an S3
+                  bucket.
+                maxLength: 174764
+                type: string
+              kerberosPrincipal:
+                description: The unique identity, or principal, to which Kerberos
+                  can assign tickets.
+                maxLength: 256
+                type: string
+              kmsKeyProviderUri:
+                description: |-
+                  The identifier for the Key Management Server where the encryption keys that encrypt data inside HDFS clusters
+                  are stored.
+                maxLength: 255
+                type: string
+              nameNodes:
+                description: An array of Name Node(s) of the HDFS location.
+                items:
+                  description: DataSyncLocationHDFSNameNode is a nested property type
+                    of AWS::DataSync::LocationHDFS.
+                  properties:
+                    hostname:
+                      description: The DNS name or IP address of the Name Node in
+                        the customer's on premises HDFS cluster.
+                      maxLength: 255
+                      type: string
+                    port:
+                      description: The port on which the Name Node is listening on
+                        for client requests.
+                      format: int64
+                      maximum: 65536
+                      minimum: 1
+                      type: integer
+                  required:
+                  - hostname
+                  - port
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              qopConfiguration:
+                description: DataSyncLocationHDFSQopConfiguration is a nested property
+                  type of AWS::DataSync::LocationHDFS.
+                properties:
+                  dataTransferProtection:
+                    description: Configuration for Data Transfer Protection.
+                    enum:
+                    - AUTHENTICATION
+                    - INTEGRITY
+                    - PRIVACY
+                    - DISABLED
+                    type: string
+                  rpcProtection:
+                    description: Configuration for RPC Protection.
+                    enum:
+                    - AUTHENTICATION
+                    - INTEGRITY
+                    - PRIVACY
+                    - DISABLED
+                    type: string
+                type: object
+              replicationFactor:
+                description: Number of copies of each block that exists inside the
+                  HDFS cluster.
+                format: int64
+                maximum: 512
+                minimum: 1
+                type: integer
+              simpleUser:
+                description: The user name that has read and write permissions on
+                  the specified HDFS cluster.
+                maxLength: 256
+                type: string
+              subdirectory:
+                description: |-
+                  The subdirectory in HDFS that is used to read data from the HDFS source location or write data to the HDFS
+                  destination.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - agentArns
+            - authenticationType
+            - nameNodes
+            type: object
+          status:
+            description: DataSyncLocationHDFSStatus is the observed state of AWS::DataSync::LocationHDFS.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the HDFS location.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the HDFS location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              managedSecretConfig:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretArn
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationnfses.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationNFS
+    listKind: DataSyncLocationNFSList
+    plural: datasynclocationnfses
+    singular: datasynclocationnfs
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationNFS manages AWS::DataSync::LocationNFS through the AWS Cloud Control API. Resource schema for
+          AWS::DataSync::LocationNFS
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationNFSSpec is the desired state of AWS::DataSync::LocationNFS.
+            properties:
+              mountOptions:
+                description: DataSyncLocationNFSMountOptions is a nested property
+                  type of AWS::DataSync::LocationNFS.
+                properties:
+                  version:
+                    description: The specific NFS version that you want DataSync to
+                      use to mount your NFS share.
+                    enum:
+                    - AUTOMATIC
+                    - NFS3
+                    - NFS4_0
+                    - NFS4_1
+                    type: string
+                type: object
+              onPremConfig:
+                description: DataSyncLocationNFSOnPremConfig is a nested property
+                  type of AWS::DataSync::LocationNFS.
+                properties:
+                  agentArns:
+                    description: ARN(s) of the agent(s) to use for an NFS location.
+                    items:
+                      type: string
+                    type: array
+                required:
+                - agentArns
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serverHostname:
+                description: The name of the NFS server. This value is the IP address
+                  or DNS name of the NFS server.
+                maxLength: 255
+                type: string
+              subdirectory:
+                description: |-
+                  The subdirectory in the NFS file system that is used to read data from the NFS source location or write data
+                  to the NFS destination.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - onPremConfig
+            type: object
+          status:
+            description: DataSyncLocationNFSStatus is the observed state of AWS::DataSync::LocationNFS.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the NFS location.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the NFS location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationobjectstorages.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationObjectStorage
+    listKind: DataSyncLocationObjectStorageList
+    plural: datasynclocationobjectstorages
+    singular: datasynclocationobjectstorage
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationObjectStorage manages AWS::DataSync::LocationObjectStorage through the AWS Cloud Control API.
+          Resource Type definition for AWS::DataSync::LocationObjectStorage.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationObjectStorageSpec is the desired state of
+              AWS::DataSync::LocationObjectStorage.
+            properties:
+              accessKey:
+                description: Optional. The access key is used if credentials are required
+                  to access the self-managed object storage server.
+                maxLength: 200
+                type: string
+              agentArns:
+                description: |-
+                  Specifies the Amazon Resource Names (ARNs) of the DataSync agents that can connect with your object storage
+                  system. If you are setting up an agentless cross-cloud transfer, you do not need to specify a value for this
+                  parameter.
+                items:
+                  type: string
+                type: array
+              bucketName:
+                description: |-
+                  The name of the bucket on the self-managed object storage server.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                type: string
+              cmkSecretConfig:
+                description: DataSyncLocationObjectStorageCmkSecretConfig is a nested
+                  property type of AWS::DataSync::LocationObjectStorage.
+                properties:
+                  kmsKeyArn:
+                    description: |-
+                      Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                      DataSync provides this key to AWS Secrets Manager.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret,
+                      managed by DataSync.
+                    maxLength: 2048
+                    type: string
+                type: object
+              customSecretConfig:
+                description: DataSyncLocationObjectStorageCustomSecretConfig is a
+                  nested property type of AWS::DataSync::LocationObjectStorage.
+                properties:
+                  secretAccessRoleArn:
+                    description: |-
+                      Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                      specified for SecretArn.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for a customer created AWS Secrets
+                      Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretAccessRoleArn
+                - secretArn
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              secretKey:
+                description: Optional. The secret key is used if credentials are required
+                  to access the self-managed object storage server.
+                maxLength: 200
+                type: string
+              serverCertificate:
+                description: X.509 PEM content containing a certificate authority
+                  or chain to trust.
+                maxLength: 32768
+                type: string
+              serverHostname:
+                description: |-
+                  The name of the self-managed object storage server. This value is the IP address or Domain Name Service (DNS)
+                  name of the object storage server.
+                maxLength: 255
+                type: string
+              serverPort:
+                description: The port that your self-managed server accepts inbound
+                  network traffic on.
+                format: int64
+                maximum: 65536
+                minimum: 1
+                type: integer
+              serverProtocol:
+                description: The protocol that the object storage server uses to communicate.
+                enum:
+                - HTTPS
+                - HTTP
+                type: string
+              subdirectory:
+                description: The subdirectory in the self-managed object storage server
+                  that is used to read data from.
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: DataSyncLocationObjectStorageStatus is the observed state
+              of AWS::DataSync::LocationObjectStorage.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the object storage location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              managedSecretConfig:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretArn
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocations3s.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationS3
+    listKind: DataSyncLocationS3List
+    plural: datasynclocations3s
+    singular: datasynclocations3
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationS3 manages AWS::DataSync::LocationS3 through the AWS Cloud Control API. Resource schema for
+          AWS::DataSync::LocationS3
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationS3Spec is the desired state of AWS::DataSync::LocationS3.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3BucketArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon S3 bucket.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 156
+                type: string
+              s3Config:
+                description: DataSyncLocationS3S3Config is a nested property type
+                  of AWS::DataSync::LocationS3.
+                properties:
+                  bucketAccessRoleArn:
+                    description: The ARN of the IAM role of the Amazon S3 bucket.
+                    maxLength: 2048
+                    type: string
+                required:
+                - bucketAccessRoleArn
+                type: object
+              s3StorageClass:
+                description: The Amazon S3 storage class you want to store your files
+                  in when this location is used as a task destination.
+                enum:
+                - STANDARD
+                - STANDARD_IA
+                - ONEZONE_IA
+                - INTELLIGENT_TIERING
+                - GLACIER
+                - GLACIER_INSTANT_RETRIEVAL
+                - DEEP_ARCHIVE
+                type: string
+              subdirectory:
+                description: |-
+                  A subdirectory in the Amazon S3 bucket. This subdirectory in Amazon S3 is used to read data from the S3 source
+                  location or write data to the S3 destination.
+                maxLength: 1024
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - s3Config
+            type: object
+          status:
+            description: DataSyncLocationS3Status is the observed state of AWS::DataSync::LocationS3.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon S3 bucket location.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the S3 location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynclocationsmbs.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncLocationSMB
+    listKind: DataSyncLocationSMBList
+    plural: datasynclocationsmbs
+    singular: datasynclocationsmb
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncLocationSMB manages AWS::DataSync::LocationSMB through the AWS Cloud Control API. Resource Type
+          definition for AWS::DataSync::LocationSMB.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncLocationSMBSpec is the desired state of AWS::DataSync::LocationSMB.
+            properties:
+              agentArns:
+                description: The Amazon Resource Names (ARNs) of agents to use for
+                  a Simple Message Block (SMB) location.
+                items:
+                  type: string
+                type: array
+              authenticationType:
+                description: The authentication mode used to determine identity of
+                  user.
+                enum:
+                - NTLM
+                - KERBEROS
+                type: string
+              cmkSecretConfig:
+                description: DataSyncLocationSMBCmkSecretConfig is a nested property
+                  type of AWS::DataSync::LocationSMB.
+                properties:
+                  kmsKeyArn:
+                    description: |-
+                      Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn.
+                      DataSync provides this key to AWS Secrets Manager.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret,
+                      managed by DataSync.
+                    maxLength: 2048
+                    type: string
+                type: object
+              customSecretConfig:
+                description: DataSyncLocationSMBCustomSecretConfig is a nested property
+                  type of AWS::DataSync::LocationSMB.
+                properties:
+                  secretAccessRoleArn:
+                    description: |-
+                      Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret
+                      specified for SecretArn.
+                    maxLength: 2048
+                    type: string
+                  secretArn:
+                    description: Specifies the ARN for a customer created AWS Secrets
+                      Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretAccessRoleArn
+                - secretArn
+                type: object
+              dnsIpAddresses:
+                description: |-
+                  Specifies the IPv4 addresses for the DNS servers that your SMB file server belongs to. This parameter applies
+                  only if AuthenticationType is set to KERBEROS. If you have multiple domains in your environment, configuring
+                  this parameter makes sure that DataSync connects to the right SMB file server.
+                items:
+                  type: string
+                type: array
+              domain:
+                description: The name of the Windows domain that the SMB server belongs
+                  to.
+                maxLength: 253
+                type: string
+              kerberosKeytab:
+                description: |-
+                  The Base64 string representation of the Keytab file. Specifies your Kerberos key table (keytab) file, which
+                  includes mappings between your service principal name (SPN) and encryption keys. To avoid task execution
+                  errors, make sure that the SPN in the keytab file matches exactly what you specify for KerberosPrincipal and
+                  in your krb5.conf file.
+                maxLength: 87384
+                type: string
+              kerberosKrb5Conf:
+                description: |-
+                  The string representation of the Krb5Conf file, or the presigned URL to access the Krb5.conf file within an S3
+                  bucket. Specifies a Kerberos configuration file (krb5.conf) that defines your Kerberos realm configuration. To
+                  avoid task execution errors, make sure that the service principal name (SPN) in the krb5.conf file matches
+                  exactly what you specify for KerberosPrincipal and in your keytab file.
+                maxLength: 174764
+                type: string
+              kerberosPrincipal:
+                description: |-
+                  Specifies a service principal name (SPN), which is an identity in your Kerberos realm that has permission to
+                  access the files, folders, and file metadata in your SMB file server. SPNs are case sensitive and must include
+                  a prepended cifs/. For example, an SPN might look like cifs/kerberosuser@EXAMPLE.COM. Your task execution will
+                  fail if the SPN that you provide for this parameter doesn't match ...
+                maxLength: 256
+                type: string
+              mountOptions:
+                description: DataSyncLocationSMBMountOptions is a nested property
+                  type of AWS::DataSync::LocationSMB.
+                properties:
+                  version:
+                    description: The specific SMB version that you want DataSync to
+                      use to mount your SMB share.
+                    enum:
+                    - AUTOMATIC
+                    - SMB1
+                    - SMB2_0
+                    - SMB2
+                    - SMB3
+                    type: string
+                type: object
+              password:
+                description: |-
+                  The password of the user who can mount the share and has the permissions to access files and folders in the
+                  SMB share.
+                maxLength: 104
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serverHostname:
+                description: The name of the SMB server. This value is the IP address
+                  or Domain Name Service (DNS) name of the SMB server.
+                maxLength: 255
+                type: string
+              subdirectory:
+                description: |-
+                  The subdirectory in the SMB file system that is used to read data from the SMB source location or write data
+                  to the SMB destination
+                maxLength: 4096
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              user:
+                description: The user who can mount the share, has the permissions
+                  to access files and folders in the SMB share.
+                maxLength: 104
+                type: string
+            required:
+            - agentArns
+            type: object
+          status:
+            description: DataSyncLocationSMBStatus is the observed state of AWS::DataSync::LocationSMB.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              locationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the SMB location that is created.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              locationUri:
+                description: |-
+                  The URL of the SMB location that was described.
+                  Read-only: reported by AWS after creation.
+                maxLength: 4356
+                type: string
+              managedSecretConfig:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  secretArn:
+                    description: Specifies the ARN for an AWS Secrets Manager secret.
+                    maxLength: 2048
+                    type: string
+                required:
+                - secretArn
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: datasynctasks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: DataSyncTask
+    listKind: DataSyncTaskList
+    plural: datasynctasks
+    singular: datasynctask
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          DataSyncTask manages AWS::DataSync::Task through the AWS Cloud Control API. Resource schema for
+          AWS::DataSync::Task.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DataSyncTaskSpec is the desired state of AWS::DataSync::Task.
+            properties:
+              cloudWatchLogGroupArn:
+                description: The ARN of the Amazon CloudWatch log group that is used
+                  to monitor and log events in the task.
+                maxLength: 562
+                type: string
+              destinationLocationArn:
+                description: |-
+                  The ARN of an AWS storage resource's location.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+                x-kubernetes-validations:
+                - message: destinationLocationArn is immutable
+                  rule: self == oldSelf
+              excludes:
+                items:
+                  description: DataSyncTaskFilterRule is a nested property type of
+                    AWS::DataSync::Task.
+                  properties:
+                    filterType:
+                      description: The type of filter rule to apply. AWS DataSync
+                        only supports the SIMPLE_PATTERN rule type.
+                      enum:
+                      - SIMPLE_PATTERN
+                      maxLength: 128
+                      type: string
+                    value:
+                      description: A single filter string that consists of the patterns
+                        to include or exclude. The patterns are delimited by "|".
+                      maxLength: 409600
+                      type: string
+                  type: object
+                type: array
+              includes:
+                items:
+                  description: DataSyncTaskFilterRule is a nested property type of
+                    AWS::DataSync::Task.
+                  properties:
+                    filterType:
+                      description: The type of filter rule to apply. AWS DataSync
+                        only supports the SIMPLE_PATTERN rule type.
+                      enum:
+                      - SIMPLE_PATTERN
+                      maxLength: 128
+                      type: string
+                    value:
+                      description: A single filter string that consists of the patterns
+                        to include or exclude. The patterns are delimited by "|".
+                      maxLength: 409600
+                      type: string
+                  type: object
+                type: array
+              manifestConfig:
+                description: DataSyncTaskManifestConfig is a nested property type
+                  of AWS::DataSync::Task.
+                properties:
+                  action:
+                    description: Specifies what DataSync uses the manifest for.
+                    enum:
+                    - TRANSFER
+                    type: string
+                  format:
+                    description: Specifies the file format of your manifest.
+                    enum:
+                    - CSV
+                    type: string
+                  source:
+                    description: Specifies the manifest that you want DataSync to
+                      use and where it's hosted.
+                    properties:
+                      s3:
+                        description: DataSyncTaskManifestConfigSourceS3 is a nested
+                          property type of AWS::DataSync::Task.
+                        properties:
+                          bucketAccessRoleArn:
+                            description: Specifies the AWS Identity and Access Management
+                              (IAM) role that allows DataSync to access your manifest.
+                            maxLength: 2048
+                            type: string
+                          manifestObjectPath:
+                            description: Specifies the Amazon S3 object key of your
+                              manifest.
+                            maxLength: 1024
+                            type: string
+                          manifestObjectVersionId:
+                            description: Specifies the object version ID of the manifest
+                              that you want DataSync to use.
+                            maxLength: 100
+                            type: string
+                          s3BucketArn:
+                            description: Specifies the Amazon Resource Name (ARN)
+                              of the S3 bucket where you're hosting your manifest.
+                            maxLength: 156
+                            type: string
+                        type: object
+                    type: object
+                required:
+                - source
+                type: object
+              name:
+                description: The name of a task. This value is a text reference that
+                  is used to identify the task in the console.
+                maxLength: 256
+                type: string
+              options:
+                description: DataSyncTaskOptions is a nested property type of AWS::DataSync::Task.
+                properties:
+                  atime:
+                    description: |-
+                      A file metadata value that shows the last time a file was accessed (that is, when the file was read or written
+                      to).
+                    enum:
+                    - NONE
+                    - BEST_EFFORT
+                    type: string
+                  bytesPerSecond:
+                    description: A value that limits the bandwidth used by AWS DataSync.
+                    format: int64
+                    minimum: -1
+                    type: integer
+                  gid:
+                    description: The group ID (GID) of the file's owners.
+                    enum:
+                    - NONE
+                    - INT_VALUE
+                    - NAME
+                    - BOTH
+                    type: string
+                  logLevel:
+                    description: |-
+                      A value that determines the types of logs that DataSync publishes to a log stream in the Amazon CloudWatch log
+                      group that you provide.
+                    enum:
+                    - "OFF"
+                    - BASIC
+                    - TRANSFER
+                    type: string
+                  mtime:
+                    description: |-
+                      A value that indicates the last time that a file was modified (that is, a file was written to) before the
+                      PREPARING phase.
+                    enum:
+                    - NONE
+                    - PRESERVE
+                    type: string
+                  objectTags:
+                    description: |-
+                      A value that determines whether object tags should be read from the source object store and written to the
+                      destination object store.
+                    enum:
+                    - PRESERVE
+                    - NONE
+                    type: string
+                  overwriteMode:
+                    description: |-
+                      A value that determines whether files at the destination should be overwritten or preserved when copying
+                      files.
+                    enum:
+                    - ALWAYS
+                    - NEVER
+                    type: string
+                  posixPermissions:
+                    description: |-
+                      A value that determines which users or groups can access a file for a specific purpose such as reading,
+                      writing, or execution of the file.
+                    enum:
+                    - NONE
+                    - PRESERVE
+                    type: string
+                  preserveDeletedFiles:
+                    description: |-
+                      A value that specifies whether files in the destination that don't exist in the source file system should be
+                      preserved.
+                    enum:
+                    - PRESERVE
+                    - REMOVE
+                    type: string
+                  preserveDevices:
+                    description: |-
+                      A value that determines whether AWS DataSync should preserve the metadata of block and character devices in
+                      the source file system, and recreate the files with that device name and metadata on the destination.
+                    enum:
+                    - NONE
+                    - PRESERVE
+                    type: string
+                  securityDescriptorCopyFlags:
+                    description: A value that determines which components of the SMB
+                      security descriptor are copied during transfer.
+                    enum:
+                    - NONE
+                    - OWNER_DACL
+                    - OWNER_DACL_SACL
+                    type: string
+                  taskQueueing:
+                    description: A value that determines whether tasks should be queued
+                      before executing the tasks.
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                  transferMode:
+                    description: |-
+                      A value that determines whether DataSync transfers only the data and metadata that differ between the source
+                      and the destination location, or whether DataSync transfers all the content from the source, without comparing
+                      to the destination location.
+                    enum:
+                    - CHANGED
+                    - ALL
+                    type: string
+                  uid:
+                    description: The user ID (UID) of the file's owner.
+                    enum:
+                    - NONE
+                    - INT_VALUE
+                    - NAME
+                    - BOTH
+                    type: string
+                  verifyMode:
+                    description: |-
+                      A value that determines whether a data integrity verification should be performed at the end of a task
+                      execution after all data and metadata have been transferred.
+                    enum:
+                    - POINT_IN_TIME_CONSISTENT
+                    - ONLY_FILES_TRANSFERRED
+                    - NONE
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              schedule:
+                description: DataSyncTaskTaskSchedule is a nested property type of
+                  AWS::DataSync::Task.
+                properties:
+                  scheduleExpression:
+                    description: |-
+                      A cron expression that specifies when AWS DataSync initiates a scheduled transfer from a source to a
+                      destination location
+                    maxLength: 256
+                    type: string
+                  status:
+                    description: Specifies status of a schedule.
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                type: object
+              sourceLocationArn:
+                description: |-
+                  The ARN of the source location for the task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                type: string
+                x-kubernetes-validations:
+                - message: sourceLocationArn is immutable
+                  rule: self == oldSelf
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              taskMode:
+                description: |-
+                  Specifies the task mode for the task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - BASIC
+                - ENHANCED
+                type: string
+              taskReportConfig:
+                description: DataSyncTaskTaskReportConfig is a nested property type
+                  of AWS::DataSync::Task.
+                properties:
+                  destination:
+                    description: Specifies where DataSync uploads your task report.
+                    properties:
+                      s3:
+                        description: DataSyncTaskTaskReportConfigDestinationS3 is
+                          a nested property type of AWS::DataSync::Task.
+                        properties:
+                          bucketAccessRoleArn:
+                            description: |-
+                              Specifies the Amazon Resource Name (ARN) of the IAM policy that allows Datasync to upload a task report to
+                              your S3 bucket.
+                            maxLength: 2048
+                            type: string
+                          s3BucketArn:
+                            description: Specifies the ARN of the S3 bucket where
+                              Datasync uploads your report.
+                            maxLength: 156
+                            type: string
+                          subdirectory:
+                            description: Specifies a bucket prefix for your report.
+                            maxLength: 4096
+                            type: string
+                        type: object
+                    type: object
+                  objectVersionIds:
+                    description: |-
+                      Specifies whether your task report includes the new version of each object transferred into an S3 bucket, this
+                      only applies if you enable versioning on your bucket.
+                    enum:
+                    - INCLUDE
+                    - NONE
+                    type: string
+                  outputType:
+                    description: Specifies the type of task report that you want.
+                    enum:
+                    - SUMMARY_ONLY
+                    - STANDARD
+                    type: string
+                  overrides:
+                    description: |-
+                      Customizes the reporting level for aspects of your task report. For example, your report might generally only
+                      include errors, but you could specify that you want a list of successes and errors just for the files that
+                      Datasync attempted to delete in your destination location.
+                    properties:
+                      deleted:
+                        description: |-
+                          Specifies the level of reporting for the files, objects, and directories that Datasync attempted to delete in
+                          your destination location. This only applies if you configure your task to delete data in the destination that
+                          isn't in the source.
+                        properties:
+                          reportLevel:
+                            description: |-
+                              Specifies whether you want your task report to include only what went wrong with your transfer or a list of
+                              what succeeded and didn't.
+                            enum:
+                            - ERRORS_ONLY
+                            - SUCCESSES_AND_ERRORS
+                            type: string
+                        type: object
+                      skipped:
+                        description: |-
+                          Specifies the level of reporting for the files, objects, and directories that Datasync attempted to skip
+                          during your transfer.
+                        properties:
+                          reportLevel:
+                            description: |-
+                              Specifies whether you want your task report to include only what went wrong with your transfer or a list of
+                              what succeeded and didn't.
+                            enum:
+                            - ERRORS_ONLY
+                            - SUCCESSES_AND_ERRORS
+                            type: string
+                        type: object
+                      transferred:
+                        description: Specifies the level of reporting for the files,
+                          objects, and directories that Datasync attempted to transfer.
+                        properties:
+                          reportLevel:
+                            description: |-
+                              Specifies whether you want your task report to include only what went wrong with your transfer or a list of
+                              what succeeded and didn't.
+                            enum:
+                            - ERRORS_ONLY
+                            - SUCCESSES_AND_ERRORS
+                            type: string
+                        type: object
+                      verified:
+                        description: |-
+                          Specifies the level of reporting for the files, objects, and directories that Datasync attempted to verify at
+                          the end of your transfer. This only applies if you configure your task to verify data during and after the
+                          transfer (which Datasync does by default)
+                        properties:
+                          reportLevel:
+                            description: |-
+                              Specifies whether you want your task report to include only what went wrong with your transfer or a list of
+                              what succeeded and didn't.
+                            enum:
+                            - ERRORS_ONLY
+                            - SUCCESSES_AND_ERRORS
+                            type: string
+                        type: object
+                    type: object
+                  reportLevel:
+                    description: |-
+                      Specifies whether you want your task report to include only what went wrong with your transfer or a list of
+                      what succeeded and didn't.
+                    enum:
+                    - ERRORS_ONLY
+                    - SUCCESSES_AND_ERRORS
+                    type: string
+                required:
+                - destination
+                - outputType
+                type: object
+            required:
+            - destinationLocationArn
+            - sourceLocationArn
+            type: object
+          status:
+            description: DataSyncTaskStatus is the observed state of AWS::DataSync::Task.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              destinationNetworkInterfaceArns:
+                description: 'Read-only: reported by AWS after creation.'
+                items:
+                  type: string
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              sourceNetworkInterfaceArns:
+                description: 'Read-only: reported by AWS after creation.'
+                items:
+                  type: string
+                type: array
+              status:
+                description: |-
+                  The status of the task that was described.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - AVAILABLE
+                - CREATING
+                - QUEUED
+                - RUNNING
+                - UNAVAILABLE
+                type: string
+              taskArn:
+                description: |-
+                  The ARN of the task.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

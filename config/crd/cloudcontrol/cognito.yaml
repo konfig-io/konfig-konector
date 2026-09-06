@@ -1,0 +1,3906 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitoidentitypoolprincipaltags.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoIdentityPoolPrincipalTag
+    listKind: CognitoIdentityPoolPrincipalTagList
+    plural: cognitoidentitypoolprincipaltags
+    singular: cognitoidentitypoolprincipaltag
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoIdentityPoolPrincipalTag manages AWS::Cognito::IdentityPoolPrincipalTag through the AWS Cloud Control
+          API. Resource Type definition for AWS::Cognito::IdentityPoolPrincipalTag
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoIdentityPoolPrincipalTagSpec is the desired state
+              of AWS::Cognito::IdentityPoolPrincipalTag.
+            properties:
+              identityPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: identityPoolId is immutable
+                  rule: self == oldSelf
+              identityProviderName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: identityProviderName is immutable
+                  rule: self == oldSelf
+              principalTags:
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              useDefaults:
+                type: boolean
+            required:
+            - identityPoolId
+            - identityProviderName
+            type: object
+          status:
+            description: CognitoIdentityPoolPrincipalTagStatus is the observed state
+              of AWS::Cognito::IdentityPoolPrincipalTag.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitoidentitypoolroleattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoIdentityPoolRoleAttachment
+    listKind: CognitoIdentityPoolRoleAttachmentList
+    plural: cognitoidentitypoolroleattachments
+    singular: cognitoidentitypoolroleattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoIdentityPoolRoleAttachment manages AWS::Cognito::IdentityPoolRoleAttachment through the AWS Cloud
+          Control API. Resource Type definition for AWS::Cognito::IdentityPoolRoleAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoIdentityPoolRoleAttachmentSpec is the desired state
+              of AWS::Cognito::IdentityPoolRoleAttachment.
+            properties:
+              identityPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: identityPoolId is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roleMappings:
+                x-kubernetes-preserve-unknown-fields: true
+              roles:
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - identityPoolId
+            type: object
+          status:
+            description: CognitoIdentityPoolRoleAttachmentStatus is the observed state
+              of AWS::Cognito::IdentityPoolRoleAttachment.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitoidentitypools.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoIdentityPool
+    listKind: CognitoIdentityPoolList
+    plural: cognitoidentitypools
+    singular: cognitoidentitypool
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoIdentityPool manages AWS::Cognito::IdentityPool through the AWS Cloud Control API. Resource Type
+          definition for AWS::Cognito::IdentityPool
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoIdentityPoolSpec is the desired state of AWS::Cognito::IdentityPool.
+            properties:
+              allowClassicFlow:
+                type: boolean
+              allowUnauthenticatedIdentities:
+                type: boolean
+              cognitoEvents:
+                x-kubernetes-preserve-unknown-fields: true
+              cognitoIdentityProviders:
+                items:
+                  description: CognitoIdentityPoolCognitoIdentityProvider is a nested
+                    property type of AWS::Cognito::IdentityPool.
+                  properties:
+                    clientId:
+                      type: string
+                    providerName:
+                      type: string
+                    serverSideTokenCheck:
+                      type: boolean
+                  required:
+                  - clientId
+                  - providerName
+                  type: object
+                type: array
+              cognitoStreams:
+                description: CognitoIdentityPoolCognitoStreams is a nested property
+                  type of AWS::Cognito::IdentityPool.
+                properties:
+                  roleArn:
+                    type: string
+                  streamName:
+                    type: string
+                  streamingStatus:
+                    type: string
+                type: object
+              developerProviderName:
+                type: string
+              identityPoolName:
+                type: string
+              identityPoolTags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              openIdConnectProviderARNs:
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              pushSync:
+                description: CognitoIdentityPoolPushSync is a nested property type
+                  of AWS::Cognito::IdentityPool.
+                properties:
+                  applicationArns:
+                    items:
+                      type: string
+                    type: array
+                  roleArn:
+                    type: string
+                type: object
+              samlProviderARNs:
+                items:
+                  type: string
+                type: array
+              supportedLoginProviders:
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - allowUnauthenticatedIdentities
+            type: object
+          status:
+            description: CognitoIdentityPoolStatus is the observed state of AWS::Cognito::IdentityPool.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              name:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitologdeliveryconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoLogDeliveryConfiguration
+    listKind: CognitoLogDeliveryConfigurationList
+    plural: cognitologdeliveryconfigurations
+    singular: cognitologdeliveryconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoLogDeliveryConfiguration manages AWS::Cognito::LogDeliveryConfiguration through the AWS Cloud Control
+          API. Resource Type definition for AWS::Cognito::LogDeliveryConfiguration
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoLogDeliveryConfigurationSpec is the desired state
+              of AWS::Cognito::LogDeliveryConfiguration.
+            properties:
+              logConfigurations:
+                items:
+                  description: CognitoLogDeliveryConfigurationLogConfiguration is
+                    a nested property type of AWS::Cognito::LogDeliveryConfiguration.
+                  properties:
+                    cloudWatchLogsConfiguration:
+                      description: CognitoLogDeliveryConfigurationCloudWatchLogsConfiguration
+                        is a nested property type of AWS::Cognito::LogDeliveryConfiguration.
+                      properties:
+                        logGroupArn:
+                          type: string
+                      type: object
+                    eventSource:
+                      type: string
+                    firehoseConfiguration:
+                      description: CognitoLogDeliveryConfigurationFirehoseConfiguration
+                        is a nested property type of AWS::Cognito::LogDeliveryConfiguration.
+                      properties:
+                        streamArn:
+                          type: string
+                      type: object
+                    logLevel:
+                      type: string
+                    s3Configuration:
+                      description: CognitoLogDeliveryConfigurationS3Configuration
+                        is a nested property type of AWS::Cognito::LogDeliveryConfiguration.
+                      properties:
+                        bucketArn:
+                          type: string
+                      type: object
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - userPoolId
+            type: object
+          status:
+            description: CognitoLogDeliveryConfigurationStatus is the observed state
+              of AWS::Cognito::LogDeliveryConfiguration.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitomanagedloginbrandings.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoManagedLoginBranding
+    listKind: CognitoManagedLoginBrandingList
+    plural: cognitomanagedloginbrandings
+    singular: cognitomanagedloginbranding
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoManagedLoginBranding manages AWS::Cognito::ManagedLoginBranding through the AWS Cloud Control API.
+          Resource Type definition for AWS::Cognito::ManagedLoginBranding
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoManagedLoginBrandingSpec is the desired state of AWS::Cognito::ManagedLoginBranding.
+            properties:
+              assets:
+                items:
+                  description: CognitoManagedLoginBrandingAssetType is a nested property
+                    type of AWS::Cognito::ManagedLoginBranding.
+                  properties:
+                    bytes:
+                      maxLength: 1000000
+                      type: string
+                    category:
+                      enum:
+                      - FAVICON_ICO
+                      - FAVICON_SVG
+                      - EMAIL_GRAPHIC
+                      - SMS_GRAPHIC
+                      - AUTH_APP_GRAPHIC
+                      - PASSWORD_GRAPHIC
+                      - PASSKEY_GRAPHIC
+                      - PAGE_HEADER_LOGO
+                      - PAGE_HEADER_BACKGROUND
+                      - PAGE_FOOTER_LOGO
+                      - PAGE_FOOTER_BACKGROUND
+                      - PAGE_BACKGROUND
+                      - FORM_BACKGROUND
+                      - FORM_LOGO
+                      - IDP_BUTTON_ICON
+                      type: string
+                    colorMode:
+                      enum:
+                      - LIGHT
+                      - DARK
+                      - DYNAMIC
+                      type: string
+                    extension:
+                      enum:
+                      - ICO
+                      - JPEG
+                      - PNG
+                      - SVG
+                      - WEBP
+                      type: string
+                    resourceId:
+                      maxLength: 40
+                      type: string
+                  required:
+                  - category
+                  - colorMode
+                  - extension
+                  type: object
+                type: array
+              clientId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              returnMergedResources:
+                type: boolean
+              settings:
+                x-kubernetes-preserve-unknown-fields: true
+              useCognitoProvidedValues:
+                type: boolean
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - userPoolId
+            type: object
+          status:
+            description: CognitoManagedLoginBrandingStatus is the observed state of
+              AWS::Cognito::ManagedLoginBranding.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              managedLoginBrandingId:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitoterms.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoTerms
+    listKind: CognitoTermsList
+    plural: cognitoterms
+    singular: cognitoterms
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoTerms manages AWS::Cognito::Terms through the AWS Cloud Control API. Resource Type definition for
+          AWS::Cognito::Terms
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoTermsSpec is the desired state of AWS::Cognito::Terms.
+            properties:
+              clientId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              enforcement:
+                enum:
+                - NONE
+                type: string
+              links:
+                additionalProperties:
+                  type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              termsName:
+                type: string
+              termsSource:
+                enum:
+                - LINK
+                type: string
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - enforcement
+            - links
+            - termsName
+            - termsSource
+            - userPoolId
+            type: object
+          status:
+            description: CognitoTermsStatus is the observed state of AWS::Cognito::Terms.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              termsId:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpooldomains.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolDomain
+    listKind: CognitoUserPoolDomainList
+    plural: cognitouserpooldomains
+    singular: cognitouserpooldomain
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolDomain manages AWS::Cognito::UserPoolDomain through the AWS Cloud Control API. Resource Type
+          definition for AWS::Cognito::UserPoolDomain
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolDomainSpec is the desired state of AWS::Cognito::UserPoolDomain.
+            properties:
+              customDomainConfig:
+                description: CognitoUserPoolDomainCustomDomainConfigType is a nested
+                  property type of AWS::Cognito::UserPoolDomain.
+                properties:
+                  certificateArn:
+                    type: string
+                  securityPolicy:
+                    type: string
+                type: object
+              domain:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: domain is immutable
+                  rule: self == oldSelf
+              managedLoginVersion:
+                format: int64
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              routing:
+                description: CognitoUserPoolDomainRoutingType is a nested property
+                  type of AWS::Cognito::UserPoolDomain.
+                properties:
+                  failover:
+                    description: CognitoUserPoolDomainFailoverType is a nested property
+                      type of AWS::Cognito::UserPoolDomain.
+                    properties:
+                      primaryRoute53HealthCheckId:
+                        type: string
+                      secondaryRegion:
+                        type: string
+                    required:
+                    - primaryRoute53HealthCheckId
+                    - secondaryRegion
+                    type: object
+                type: object
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - domain
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolDomainStatus is the observed state of AWS::Cognito::UserPoolDomain.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              cloudFrontDistribution:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolGroup
+    listKind: CognitoUserPoolGroupList
+    plural: cognitouserpoolgroups
+    singular: cognitouserpoolgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolGroup manages AWS::Cognito::UserPoolGroup through the AWS Cloud Control API. Resource Type
+          definition for AWS::Cognito::UserPoolGroup
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolGroupSpec is the desired state of AWS::Cognito::UserPoolGroup.
+            properties:
+              description:
+                maxLength: 2048
+                type: string
+              groupName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              precedence:
+                format: int64
+                minimum: 0
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roleArn:
+                type: string
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolGroupStatus is the observed state of AWS::Cognito::UserPoolGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolidentityproviders.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolIdentityProvider
+    listKind: CognitoUserPoolIdentityProviderList
+    plural: cognitouserpoolidentityproviders
+    singular: cognitouserpoolidentityprovider
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolIdentityProvider manages AWS::Cognito::UserPoolIdentityProvider through the AWS Cloud Control
+          API. Resource Type definition for AWS::Cognito::UserPoolIdentityProvider
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolIdentityProviderSpec is the desired state
+              of AWS::Cognito::UserPoolIdentityProvider.
+            properties:
+              attributeMapping:
+                additionalProperties:
+                  type: string
+                type: object
+              idpIdentifiers:
+                items:
+                  type: string
+                type: array
+              providerDetails:
+                additionalProperties:
+                  type: string
+                type: object
+              providerName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: providerName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              providerType:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: providerType is immutable
+                  rule: self == oldSelf
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - providerDetails
+            - providerName
+            - providerType
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolIdentityProviderStatus is the observed state
+              of AWS::Cognito::UserPoolIdentityProvider.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolregionalconfigurationattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolRegionalConfigurationAttachment
+    listKind: CognitoUserPoolRegionalConfigurationAttachmentList
+    plural: cognitouserpoolregionalconfigurationattachments
+    singular: cognitouserpoolregionalconfigurationattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolRegionalConfigurationAttachment manages AWS::Cognito::UserPoolRegionalConfigurationAttachment
+          through the AWS Cloud Control API. Resource Type definition for
+          AWS::Cognito::UserPoolRegionalConfigurationAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolRegionalConfigurationAttachmentSpec is the
+              desired state of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+            properties:
+              emailConfiguration:
+                description: CognitoUserPoolRegionalConfigurationAttachmentEmailConfiguration
+                  is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                properties:
+                  configurationSet:
+                    type: string
+                  emailSendingAccount:
+                    type: string
+                  from:
+                    type: string
+                  replyToEmailAddress:
+                    type: string
+                  sourceArn:
+                    type: string
+                type: object
+              lambdaConfig:
+                description: CognitoUserPoolRegionalConfigurationAttachmentLambdaConfig
+                  is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                properties:
+                  createAuthChallenge:
+                    type: string
+                  customEmailSender:
+                    description: CognitoUserPoolRegionalConfigurationAttachmentCustomEmailSender
+                      is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                    properties:
+                      lambdaArn:
+                        type: string
+                      lambdaVersion:
+                        type: string
+                    type: object
+                  customMessage:
+                    type: string
+                  customSMSSender:
+                    description: CognitoUserPoolRegionalConfigurationAttachmentCustomSMSSender
+                      is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                    properties:
+                      lambdaArn:
+                        type: string
+                      lambdaVersion:
+                        type: string
+                    type: object
+                  defineAuthChallenge:
+                    type: string
+                  inboundFederation:
+                    description: CognitoUserPoolRegionalConfigurationAttachmentInboundFederation
+                      is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                    properties:
+                      lambdaArn:
+                        type: string
+                      lambdaVersion:
+                        type: string
+                    type: object
+                  kmsKeyID:
+                    type: string
+                  postAuthentication:
+                    type: string
+                  postConfirmation:
+                    type: string
+                  preAuthentication:
+                    type: string
+                  preSignUp:
+                    type: string
+                  preTokenGeneration:
+                    type: string
+                  preTokenGenerationConfig:
+                    description: CognitoUserPoolRegionalConfigurationAttachmentPreTokenGenerationConfig
+                      is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                    properties:
+                      lambdaArn:
+                        type: string
+                      lambdaVersion:
+                        type: string
+                    type: object
+                  userMigration:
+                    type: string
+                  verifyAuthChallengeResponse:
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              smsConfiguration:
+                description: CognitoUserPoolRegionalConfigurationAttachmentSmsConfiguration
+                  is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                properties:
+                  eumsSms:
+                    description: CognitoUserPoolRegionalConfigurationAttachmentEumsSmsConfiguration
+                      is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+                    properties:
+                      callerArn:
+                        type: string
+                      configurationSetName:
+                        type: string
+                      externalId:
+                        type: string
+                      inEntityId:
+                        type: string
+                      inTemplateId:
+                        type: string
+                      originationIdentity:
+                        type: string
+                      region:
+                        type: string
+                    required:
+                    - callerArn
+                    type: object
+                  externalId:
+                    type: string
+                  snsCallerArn:
+                    type: string
+                  snsRegion:
+                    type: string
+                type: object
+              status:
+                description: The status of the replica. Set to ACTIVE or INACTIVE.
+                type: string
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+              userPoolTags:
+                additionalProperties:
+                  type: string
+                type: object
+            required:
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolRegionalConfigurationAttachmentStatus is the
+              observed state of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolreplicas.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolReplica
+    listKind: CognitoUserPoolReplicaList
+    plural: cognitouserpoolreplicas
+    singular: cognitouserpoolreplica
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolReplica manages AWS::Cognito::UserPoolReplica through the AWS Cloud Control API. Resource Type
+          definition for AWS::Cognito::UserPoolReplica
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolReplicaSpec is the desired state of AWS::Cognito::UserPoolReplica.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              regionName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 32
+                minLength: 5
+                type: string
+                x-kubernetes-validations:
+                - message: regionName is immutable
+                  rule: self == oldSelf
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+              userPoolTagsAtCreate:
+                additionalProperties:
+                  type: string
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: object
+            required:
+            - regionName
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolReplicaStatus is the observed state of AWS::Cognito::UserPoolReplica.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolresourceservers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolResourceServer
+    listKind: CognitoUserPoolResourceServerList
+    plural: cognitouserpoolresourceservers
+    singular: cognitouserpoolresourceserver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolResourceServer manages AWS::Cognito::UserPoolResourceServer through the AWS Cloud Control API.
+          Resource Type definition for AWS::Cognito::UserPoolResourceServer
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolResourceServerSpec is the desired state of
+              AWS::Cognito::UserPoolResourceServer.
+            properties:
+              identifier:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: identifier is immutable
+                  rule: self == oldSelf
+              name:
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              scopes:
+                items:
+                  description: CognitoUserPoolResourceServerResourceServerScopeType
+                    is a nested property type of AWS::Cognito::UserPoolResourceServer.
+                  properties:
+                    scopeDescription:
+                      type: string
+                    scopeName:
+                      type: string
+                  required:
+                  - scopeDescription
+                  - scopeName
+                  type: object
+                type: array
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - identifier
+            - name
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolResourceServerStatus is the observed state
+              of AWS::Cognito::UserPoolResourceServer.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolriskconfigurationattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolRiskConfigurationAttachment
+    listKind: CognitoUserPoolRiskConfigurationAttachmentList
+    plural: cognitouserpoolriskconfigurationattachments
+    singular: cognitouserpoolriskconfigurationattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolRiskConfigurationAttachment manages AWS::Cognito::UserPoolRiskConfigurationAttachment through
+          the AWS Cloud Control API. Resource Type definition for AWS::Cognito::UserPoolRiskConfigurationAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolRiskConfigurationAttachmentSpec is the desired
+              state of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+            properties:
+              accountTakeoverRiskConfiguration:
+                description: CognitoUserPoolRiskConfigurationAttachmentAccountTakeoverRiskConfigurationType
+                  is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                properties:
+                  actions:
+                    description: CognitoUserPoolRiskConfigurationAttachmentAccountTakeoverActionsType
+                      is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                    properties:
+                      highAction:
+                        description: CognitoUserPoolRiskConfigurationAttachmentAccountTakeoverActionType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          eventAction:
+                            type: string
+                          notify:
+                            type: boolean
+                        required:
+                        - eventAction
+                        - notify
+                        type: object
+                      lowAction:
+                        description: CognitoUserPoolRiskConfigurationAttachmentAccountTakeoverActionType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          eventAction:
+                            type: string
+                          notify:
+                            type: boolean
+                        required:
+                        - eventAction
+                        - notify
+                        type: object
+                      mediumAction:
+                        description: CognitoUserPoolRiskConfigurationAttachmentAccountTakeoverActionType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          eventAction:
+                            type: string
+                          notify:
+                            type: boolean
+                        required:
+                        - eventAction
+                        - notify
+                        type: object
+                    type: object
+                  notifyConfiguration:
+                    description: CognitoUserPoolRiskConfigurationAttachmentNotifyConfigurationType
+                      is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                    properties:
+                      blockEmail:
+                        description: CognitoUserPoolRiskConfigurationAttachmentNotifyEmailType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          htmlBody:
+                            type: string
+                          subject:
+                            type: string
+                          textBody:
+                            type: string
+                        required:
+                        - subject
+                        type: object
+                      from:
+                        type: string
+                      mfaEmail:
+                        description: CognitoUserPoolRiskConfigurationAttachmentNotifyEmailType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          htmlBody:
+                            type: string
+                          subject:
+                            type: string
+                          textBody:
+                            type: string
+                        required:
+                        - subject
+                        type: object
+                      noActionEmail:
+                        description: CognitoUserPoolRiskConfigurationAttachmentNotifyEmailType
+                          is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                        properties:
+                          htmlBody:
+                            type: string
+                          subject:
+                            type: string
+                          textBody:
+                            type: string
+                        required:
+                        - subject
+                        type: object
+                      replyTo:
+                        type: string
+                      sourceArn:
+                        type: string
+                    required:
+                    - sourceArn
+                    type: object
+                required:
+                - actions
+                type: object
+              clientId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: clientId is immutable
+                  rule: self == oldSelf
+              compromisedCredentialsRiskConfiguration:
+                description: CognitoUserPoolRiskConfigurationAttachmentCompromisedCredentialsRiskConfigurationType
+                  is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                properties:
+                  actions:
+                    description: CognitoUserPoolRiskConfigurationAttachmentCompromisedCredentialsActionsType
+                      is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                    properties:
+                      eventAction:
+                        type: string
+                    required:
+                    - eventAction
+                    type: object
+                  eventFilter:
+                    items:
+                      type: string
+                    type: array
+                required:
+                - actions
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              riskExceptionConfiguration:
+                description: CognitoUserPoolRiskConfigurationAttachmentRiskExceptionConfigurationType
+                  is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+                properties:
+                  blockedIPRangeList:
+                    items:
+                      type: string
+                    type: array
+                  skippedIPRangeList:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - clientId
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolRiskConfigurationAttachmentStatus is the observed
+              state of AWS::Cognito::UserPoolRiskConfigurationAttachment.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpooluicustomizationattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolUICustomizationAttachment
+    listKind: CognitoUserPoolUICustomizationAttachmentList
+    plural: cognitouserpooluicustomizationattachments
+    singular: cognitouserpooluicustomizationattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolUICustomizationAttachment manages AWS::Cognito::UserPoolUICustomizationAttachment through the
+          AWS Cloud Control API. Resource Type definition for AWS::Cognito::UserPoolUICustomizationAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolUICustomizationAttachmentSpec is the desired
+              state of AWS::Cognito::UserPoolUICustomizationAttachment.
+            properties:
+              clientId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: clientId is immutable
+                  rule: self == oldSelf
+              css:
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+            required:
+            - clientId
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolUICustomizationAttachmentStatus is the observed
+              state of AWS::Cognito::UserPoolUICustomizationAttachment.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolusers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolUser
+    listKind: CognitoUserPoolUserList
+    plural: cognitouserpoolusers
+    singular: cognitouserpooluser
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolUser manages AWS::Cognito::UserPoolUser through the AWS Cloud Control API. Resource Type
+          definition for AWS::Cognito::UserPoolUser
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolUserSpec is the desired state of AWS::Cognito::UserPoolUser.
+            properties:
+              clientMetadata:
+                additionalProperties:
+                  type: string
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: object
+              desiredDeliveryMediums:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  type: string
+                type: array
+              forceAliasCreation:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: boolean
+              messageAction:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              userAttributes:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CognitoUserPoolUserAttributeType is a nested property
+                    type of AWS::Cognito::UserPoolUser.
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+              username:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              validationData:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CognitoUserPoolUserAttributeType is a nested property
+                    type of AWS::Cognito::UserPoolUser.
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
+            required:
+            - userPoolId
+            type: object
+          status:
+            description: CognitoUserPoolUserStatus is the observed state of AWS::Cognito::UserPoolUser.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cognitouserpoolusertogroupattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CognitoUserPoolUserToGroupAttachment
+    listKind: CognitoUserPoolUserToGroupAttachmentList
+    plural: cognitouserpoolusertogroupattachments
+    singular: cognitouserpoolusertogroupattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CognitoUserPoolUserToGroupAttachment manages AWS::Cognito::UserPoolUserToGroupAttachment through the AWS Cloud
+          Control API. Resource Type definition for AWS::Cognito::UserPoolUserToGroupAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CognitoUserPoolUserToGroupAttachmentSpec is the desired state
+              of AWS::Cognito::UserPoolUserToGroupAttachment.
+            properties:
+              groupName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: groupName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              userPoolId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: userPoolId is immutable
+                  rule: self == oldSelf
+              username:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: username is immutable
+                  rule: self == oldSelf
+            required:
+            - groupName
+            - userPoolId
+            - username
+            type: object
+          status:
+            description: CognitoUserPoolUserToGroupAttachmentStatus is the observed
+              state of AWS::Cognito::UserPoolUserToGroupAttachment.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

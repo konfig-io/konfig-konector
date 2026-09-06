@@ -1,0 +1,281 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: codedeploydeploymentconfigs.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CodeDeployDeploymentConfig
+    listKind: CodeDeployDeploymentConfigList
+    plural: codedeploydeploymentconfigs
+    singular: codedeploydeploymentconfig
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CodeDeployDeploymentConfig manages AWS::CodeDeploy::DeploymentConfig through the AWS Cloud Control API.
+          Resource Type definition for AWS::CodeDeploy::DeploymentConfig
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CodeDeployDeploymentConfigSpec is the desired state of AWS::CodeDeploy::DeploymentConfig.
+            properties:
+              computePlatform:
+                description: |-
+                  The destination platform type for the deployment (Lambda, Server, or ECS).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              deploymentConfigName:
+                description: |-
+                  A name for the deployment configuration. If you don't specify a name, AWS CloudFormation generates a unique
+                  physical ID and uses that ID for the deployment configuration name. For more information, see Name Type.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              minimumHealthyHosts:
+                description: |-
+                  The minimum number of healthy instances that should be available at any time during the deployment. There are
+                  two parameters expected in the input: type and value.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  type:
+                    type: string
+                  value:
+                    format: int64
+                    type: integer
+                required:
+                - type
+                - value
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              trafficRoutingConfig:
+                description: |-
+                  The configuration that specifies how the deployment traffic is routed.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  timeBasedCanary:
+                    description: CodeDeployDeploymentConfigTimeBasedCanary is a nested
+                      property type of AWS::CodeDeploy::DeploymentConfig.
+                    properties:
+                      canaryInterval:
+                        format: int64
+                        type: integer
+                      canaryPercentage:
+                        format: int64
+                        type: integer
+                    required:
+                    - canaryInterval
+                    - canaryPercentage
+                    type: object
+                  timeBasedLinear:
+                    description: CodeDeployDeploymentConfigTimeBasedLinear is a nested
+                      property type of AWS::CodeDeploy::DeploymentConfig.
+                    properties:
+                      linearInterval:
+                        format: int64
+                        type: integer
+                      linearPercentage:
+                        format: int64
+                        type: integer
+                    required:
+                    - linearInterval
+                    - linearPercentage
+                    type: object
+                  type:
+                    type: string
+                required:
+                - type
+                type: object
+              zonalConfig:
+                description: |-
+                  The zonal deployment config that specifies how the zonal deployment behaves
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  firstZoneMonitorDurationInSeconds:
+                    format: int64
+                    type: integer
+                  minimumHealthyHostsPerZone:
+                    description: CodeDeployDeploymentConfigMinimumHealthyHostsPerZone
+                      is a nested property type of AWS::CodeDeploy::DeploymentConfig.
+                    properties:
+                      type:
+                        type: string
+                      value:
+                        format: int64
+                        type: integer
+                    required:
+                    - type
+                    - value
+                    type: object
+                  monitorDurationInSeconds:
+                    format: int64
+                    type: integer
+                type: object
+            type: object
+          status:
+            description: CodeDeployDeploymentConfigStatus is the observed state of
+              AWS::CodeDeploy::DeploymentConfig.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

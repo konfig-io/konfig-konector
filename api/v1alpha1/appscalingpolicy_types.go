@@ -95,6 +95,12 @@ type AppScalingStepScaling struct {
 // AppScalingPolicySpec defines the desired state of an Application Auto
 // Scaling scaling policy.
 type AppScalingPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PolicyName is the name of the scaling policy. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
@@ -134,6 +140,9 @@ type AppScalingPolicySpec struct {
 
 // AppScalingPolicyStatus defines the observed state of AppScalingPolicy.
 type AppScalingPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyARN is the ARN of the scaling policy.
 	// +optional
 	PolicyARN string `json:"policyArn,omitempty"`

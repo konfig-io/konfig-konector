@@ -22,6 +22,12 @@ import (
 
 // SCPortfolioSpec defines the desired state of an AWS Service Catalog portfolio.
 type SCPortfolioSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DisplayName is the portfolio name shown to users.
 	// +kubebuilder:validation:MinLength=1
 	DisplayName string `json:"displayName"`
@@ -41,6 +47,9 @@ type SCPortfolioSpec struct {
 
 // SCPortfolioStatus defines the observed state of SCPortfolio.
 type SCPortfolioStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PortfolioID is the Service Catalog portfolio identifier (port-...).
 	// +optional
 	PortfolioID string `json:"portfolioId,omitempty"`

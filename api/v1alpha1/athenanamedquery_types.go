@@ -25,6 +25,12 @@ import (
 // every field is effectively create-only; changes after creation are
 // surfaced as UpdateNotSupported.
 type AthenaNamedQuerySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the query name.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -49,6 +55,9 @@ type AthenaNamedQuerySpec struct {
 
 // AthenaNamedQueryStatus defines the observed state of AthenaNamedQuery.
 type AthenaNamedQueryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NamedQueryID is the unique ID of the query in AWS.
 	// +optional
 	NamedQueryID string `json:"namedQueryId,omitempty"`

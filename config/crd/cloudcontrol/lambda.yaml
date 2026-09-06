@@ -1,0 +1,1563 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdacapacityproviders.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaCapacityProvider
+    listKind: LambdaCapacityProviderList
+    plural: lambdacapacityproviders
+    singular: lambdacapacityprovider
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LambdaCapacityProvider manages AWS::Lambda::CapacityProvider through the AWS Cloud Control API. Creates a
+          capacity provider that manages compute resources for Lambda functions
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaCapacityProviderSpec is the desired state of AWS::Lambda::CapacityProvider.
+            properties:
+              capacityProviderName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 140
+                type: string
+              capacityProviderScalingConfig:
+                description: The scaling configuration for the capacity provider.
+                properties:
+                  maxVCpuCount:
+                    description: The maximum number of vCPUs that the capacity provider
+                      can provision across all compute instances.
+                    format: int64
+                    maximum: 15000
+                    minimum: 2
+                    type: integer
+                  scalingMode:
+                    description: The scaling mode that determines how the capacity
+                      provider responds to changes in demand.
+                    enum:
+                    - Auto
+                    - Manual
+                    type: string
+                  scalingPolicies:
+                    description: A list of target tracking scaling policies for the
+                      capacity provider.
+                    items:
+                      description: LambdaCapacityProviderTargetTrackingScalingPolicy
+                        is a nested property type of AWS::Lambda::CapacityProvider.
+                      properties:
+                        predefinedMetricType:
+                          description: The predefined metric type to track for scaling
+                            decisions.
+                          enum:
+                          - LambdaCapacityProviderAverageCPUUtilization
+                          - LambdaCapacityProviderAverageGPUUtilization
+                          type: string
+                        targetValue:
+                          description: The target value for the metric that the scaling
+                            policy attempts to maintain through scaling actions.
+                          type: number
+                      required:
+                      - predefinedMetricType
+                      - targetValue
+                      type: object
+                    type: array
+                type: object
+              instanceRequirements:
+                description: |-
+                  The instance requirements for compute resources managed by the capacity provider.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  allowedInstanceTypes:
+                    description: |-
+                      A list of EC2 instance types that the capacity provider is allowed to use. If not specified, all compatible
+                      instance types are allowed.
+                    items:
+                      type: string
+                    type: array
+                  architectures:
+                    description: A list of supported CPU architectures for compute
+                      instances. Valid values include ``x86_64`` and ``arm64``.
+                    items:
+                      type: string
+                    type: array
+                  excludedInstanceTypes:
+                    description: A list of EC2 instance types that the capacity provider
+                      should not use, even if they meet other requirements.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              kmsKeyArn:
+                description: |-
+                  The ARN of the KMS key used to encrypt the capacity provider's resources.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 10000
+                type: string
+              permissionsConfig:
+                description: |-
+                  The permissions configuration for the capacity provider.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  capacityProviderOperatorRoleArn:
+                    description: The ARN of the IAM role that the capacity provider
+                      uses to manage compute instances and other AWS resources.
+                    maxLength: 10000
+                    type: string
+                required:
+                - capacityProviderOperatorRoleArn
+                type: object
+              propagateTags:
+                description: Configuration for tag propagation to managed resources
+                  launched by the capacity provider.
+                properties:
+                  explicitTags:
+                    description: A list of tags to explicitly propagate to managed
+                      resources. Maximum of 40 tags.
+                    items:
+                      description: CFNTag is the CloudFormation Tag shape shared by
+                        generated kinds.
+                      properties:
+                        key:
+                          minLength: 1
+                          type: string
+                        value:
+                          type: string
+                      required:
+                      - key
+                      - value
+                      type: object
+                    type: array
+                  mode:
+                    description: The mode for tag propagation. Use ``Explicit`` to
+                      propagate specific tags, or ``None`` to disable propagation.
+                    enum:
+                    - None
+                    - Explicit
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: A key-value pair that provides metadata for the capacity
+                  provider.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              telemetryConfig:
+                description: The telemetry configuration for the capacity provider,
+                  including logging settings.
+                properties:
+                  loggingConfig:
+                    description: The capacity provider's Amazon CloudWatch Logs configuration
+                      settings.
+                    properties:
+                      logGroup:
+                        description: |-
+                          The name of the Amazon CloudWatch log group the capacity provider sends logs to. By default, Lambda capacity
+                          providers send logs to a default log group named ``/aws/lambda/capacity-provider/<capacity provider name>``.
+                          To use a different log group, enter an existing log group or enter a new log group name.
+                        maxLength: 512
+                        type: string
+                      systemLogLevel:
+                        description: |-
+                          Set this property to filter the system logs for your capacity provider that Lambda sends to CloudWatch. Lambda
+                          only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and
+                          ``WARN`` is the lowest.
+                        enum:
+                        - DEBUG
+                        - INFO
+                        - WARN
+                        type: string
+                    type: object
+                type: object
+              vpcConfig:
+                description: |-
+                  The VPC configuration for the capacity provider.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  securityGroupIds:
+                    description: |-
+                      A list of security group IDs that control network access for compute instances managed by the capacity
+                      provider.
+                    items:
+                      type: string
+                    type: array
+                  subnetIds:
+                    description: A list of subnet IDs where the capacity provider
+                      launches compute instances.
+                    items:
+                      type: string
+                    type: array
+                required:
+                - securityGroupIds
+                - subnetIds
+                type: object
+            required:
+            - permissionsConfig
+            - vpcConfig
+            type: object
+          status:
+            description: LambdaCapacityProviderStatus is the observed state of AWS::Lambda::CapacityProvider.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 140
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              state:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - Pending
+                - Active
+                - Failed
+                - Deleting
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdalayerversionpermissions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaLayerVersionPermission
+    listKind: LambdaLayerVersionPermissionList
+    plural: lambdalayerversionpermissions
+    singular: lambdalayerversionpermission
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LambdaLayerVersionPermission manages AWS::Lambda::LayerVersionPermission through the AWS Cloud Control API.
+          Schema for Lambda LayerVersionPermission
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaLayerVersionPermissionSpec is the desired state of
+              AWS::Lambda::LayerVersionPermission.
+            properties:
+              action:
+                description: |-
+                  The API action that grants access to the layer.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: action is immutable
+                  rule: self == oldSelf
+              layerVersionArn:
+                description: |-
+                  The name or Amazon Resource Name (ARN) of the layer.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: layerVersionArn is immutable
+                  rule: self == oldSelf
+              organizationId:
+                description: |-
+                  With the principal set to *, grant permission to all accounts in the specified organization.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              principal:
+                description: |-
+                  An account ID, or * to grant layer usage permission to all accounts in an organization, or all AWS accounts
+                  (if organizationId is not specified).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: principal is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - action
+            - layerVersionArn
+            - principal
+            type: object
+          status:
+            description: LambdaLayerVersionPermissionStatus is the observed state
+              of AWS::Lambda::LayerVersionPermission.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  ID generated by service
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdamicrovmimages.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaMicrovmImage
+    listKind: LambdaMicrovmImageList
+    plural: lambdamicrovmimages
+    singular: lambdamicrovmimage
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LambdaMicrovmImage manages AWS::Lambda::MicrovmImage through the AWS Cloud Control API. Resource Type
+          definition for AWS::Lambda::MicrovmImage
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaMicrovmImageSpec is the desired state of AWS::Lambda::MicrovmImage.
+            properties:
+              additionalOsCapabilities:
+                items:
+                  type: string
+                type: array
+              baseImageArn:
+                description: ARN of the base MicroVM image.
+                maxLength: 2048
+                minLength: 1
+                type: string
+              baseImageVersion:
+                description: Specific version of the base MicroVM image to use.
+                maxLength: 2048
+                minLength: 1
+                type: string
+              buildRoleArn:
+                description: ARN of the IAM build role.
+                type: string
+              codeArtifact:
+                description: Code artifact for the active MicroVM image.
+                properties:
+                  uri:
+                    maxLength: 2048
+                    minLength: 1
+                    type: string
+                required:
+                - uri
+                type: object
+              cpuConfigurations:
+                items:
+                  description: LambdaMicrovmImageCpuConfiguration is a nested property
+                    type of AWS::Lambda::MicrovmImage.
+                  properties:
+                    architecture:
+                      enum:
+                      - ARM_64
+                      type: string
+                  required:
+                  - architecture
+                  type: object
+                type: array
+              description:
+                description: Human-readable description of the MicroVM image and its
+                  purpose.
+                type: string
+              egressNetworkConnectors:
+                items:
+                  type: string
+                type: array
+              environmentVariables:
+                description: Environment variables to set in the container during
+                  the snapshot build.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              hooks:
+                description: LambdaMicrovmImageHooks is a nested property type of
+                  AWS::Lambda::MicrovmImage.
+                properties:
+                  microvmHooks:
+                    description: LambdaMicrovmImageMicrovmHooks is a nested property
+                      type of AWS::Lambda::MicrovmImage.
+                    properties:
+                      resume:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      resumeTimeoutInSeconds:
+                        format: int64
+                        maximum: 60
+                        minimum: 1
+                        type: integer
+                      run:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      runTimeoutInSeconds:
+                        format: int64
+                        maximum: 60
+                        minimum: 1
+                        type: integer
+                      suspend:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      suspendTimeoutInSeconds:
+                        format: int64
+                        maximum: 60
+                        minimum: 1
+                        type: integer
+                      terminate:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      terminateTimeoutInSeconds:
+                        format: int64
+                        maximum: 60
+                        minimum: 1
+                        type: integer
+                    type: object
+                  microvmImageHooks:
+                    description: LambdaMicrovmImageMicrovmImageHooks is a nested property
+                      type of AWS::Lambda::MicrovmImage.
+                    properties:
+                      ready:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      readyTimeoutInSeconds:
+                        format: int64
+                        maximum: 3600
+                        minimum: 1
+                        type: integer
+                      validate:
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      validateTimeoutInSeconds:
+                        format: int64
+                        maximum: 3600
+                        minimum: 1
+                        type: integer
+                    type: object
+                  port:
+                    format: int64
+                    maximum: 65535
+                    minimum: 1
+                    type: integer
+                type: object
+              logging:
+                description: Configuration for MicroVM image logging.
+                properties:
+                  cloudWatch:
+                    description: LambdaMicrovmImageCloudWatchLogging is a nested property
+                      type of AWS::Lambda::MicrovmImage.
+                    properties:
+                      logGroup:
+                        maxLength: 512
+                        type: string
+                      logStream:
+                        maxLength: 512
+                        type: string
+                    type: object
+                  disabled:
+                    type: boolean
+                type: object
+              name:
+                description: |-
+                  Unique name for the MicroVM image within the account.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resources:
+                items:
+                  description: LambdaMicrovmImageResources is a nested property type
+                    of AWS::Lambda::MicrovmImage.
+                  properties:
+                    minimumMemoryInMiB:
+                      format: int64
+                      type: integer
+                  required:
+                  - minimumMemoryInMiB
+                  type: object
+                type: array
+              tags:
+                description: Key-value pairs to associate with the MicroVM image for
+                  organization and management.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - additionalOsCapabilities
+            - baseImageArn
+            - baseImageVersion
+            - buildRoleArn
+            - codeArtifact
+            - cpuConfigurations
+            - description
+            - egressNetworkConnectors
+            - environmentVariables
+            - hooks
+            - logging
+            - name
+            - resources
+            type: object
+          status:
+            description: LambdaMicrovmImageStatus is the observed state of AWS::Lambda::MicrovmImage.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  Timestamp when the MicroVM image was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              imageArn:
+                description: |-
+                  ARN of the MicroVM image.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              latestActiveImageVersion:
+                description: |-
+                  The latest active version of the MicroVM image.
+                  Read-only: reported by AWS after creation.
+                type: string
+              latestFailedImageVersion:
+                description: |-
+                  The latest failed version of the MicroVM image.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              state:
+                description: |-
+                  Current state of the MicroVM image.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - CREATING
+                - CREATED
+                - CREATE_FAILED
+                - UPDATING
+                - UPDATED
+                - UPDATE_FAILED
+                - DELETING
+                - DELETE_FAILED
+                - DELETED
+                type: string
+              updatedAt:
+                description: |-
+                  Timestamp when the MicroVM image was updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdanetworkconnectors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaNetworkConnector
+    listKind: LambdaNetworkConnectorList
+    plural: lambdanetworkconnectors
+    singular: lambdanetworkconnector
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LambdaNetworkConnector manages AWS::Lambda::NetworkConnector through the AWS Cloud Control API. Resource Type
+          definition for AWS::Lambda::NetworkConnector
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaNetworkConnectorSpec is the desired state of AWS::Lambda::NetworkConnector.
+            properties:
+              configuration:
+                description: LambdaNetworkConnectorConfig is a nested property type
+                  of AWS::Lambda::NetworkConnector.
+                properties:
+                  vpcEgressConfiguration:
+                    description: LambdaNetworkConnectorVpcEgressConfiguration is a
+                      nested property type of AWS::Lambda::NetworkConnector.
+                    properties:
+                      associatedComputeResourceTypes:
+                        description: The types of Lambda compute resources that can
+                          use this connector. Currently, only MicroVm is supported.
+                        items:
+                          type: string
+                        type: array
+                      networkProtocol:
+                        description: |-
+                          The network protocol for the connector. Specify IPv4 for IPv4-only networking, or DualStack for both IPv4 and
+                          IPv6.
+                        enum:
+                        - IPv4
+                        - DualStack
+                        type: string
+                      securityGroupIds:
+                        description: |-
+                          The IDs of the VPC security groups to attach to the ENIs. Specify 0 to 5 security groups. All security groups
+                          must be in the same VPC as the subnets.
+                        items:
+                          type: string
+                        type: array
+                      subnetIds:
+                        description: |-
+                          The IDs of the VPC subnets where Lambda provisions elastic network interfaces (ENIs). Specify 1 to 16 subnets.
+                          All subnets must be in the same VPC.
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - associatedComputeResourceTypes
+                    - subnetIds
+                    type: object
+                required:
+                - vpcEgressConfiguration
+                type: object
+              name:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 140
+                type: string
+              operatorRole:
+                maxLength: 10000
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: |-
+                  A list of tags to apply to the network connector. Use tags to categorize network connectors for cost
+                  allocation, access control, or operational management.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - configuration
+            type: object
+          status:
+            description: LambdaNetworkConnectorStatus is the observed state of AWS::Lambda::NetworkConnector.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 140
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              state:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - PENDING
+                - ACTIVE
+                - INACTIVE
+                - FAILED
+                - DELETING
+                - DELETE_FAILED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lambdaresourcepolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LambdaResourcePolicy
+    listKind: LambdaResourcePolicyList
+    plural: lambdaresourcepolicies
+    singular: lambdaresourcepolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LambdaResourcePolicy manages AWS::Lambda::ResourcePolicy through the AWS Cloud Control API. Use the
+          “AWS::Lambda::ResourcePolicy“ resource to attach a resource-based policy to a LAM resource. A resource-based
+          policy applies to a single LAM resource, for example, a function, function version, or function alias. To
+          learn more about using resource-based policies with LAM, see [Working with resou...
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LambdaResourcePolicySpec is the desired state of AWS::Lambda::ResourcePolicy.
+            properties:
+              policyDocument:
+                description: |-
+                  The policy document you want to add to your LAM resource. This is formatted as a JSON string. For more
+                  information, see [Working with resource-based policies
+                  in](https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html) in the *Developer Guide*.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the LAM resource you want to add the policy to. For a function, you can use
+                  a qualified or an unqualified ARN. The value must be a complete ARN, and the operation does not accept
+                  wildcard characters.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                minLength: 12
+                type: string
+                x-kubernetes-validations:
+                - message: resourceArn is immutable
+                  rule: self == oldSelf
+            required:
+            - policyDocument
+            - resourceArn
+            type: object
+          status:
+            description: LambdaResourcePolicyStatus is the observed state of AWS::Lambda::ResourcePolicy.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

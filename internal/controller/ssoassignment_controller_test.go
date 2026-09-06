@@ -73,7 +73,7 @@ func (f *fakeSSOAssignment) ListAccountAssignments(_ context.Context, _ *awssso.
 
 func ssoAssignmentCR(mutate ...func(*awsv1alpha1.SSOAssignment)) *awsv1alpha1.SSOAssignment {
 	sa := &awsv1alpha1.SSOAssignment{
-		ObjectMeta: metav1.ObjectMeta{Name: "admin-sandbox", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "admin-sandbox", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.SSOAssignmentSpec{
 			InstanceArn:      testSSOInstanceARN,
 			PermissionSetRef: awsv1alpha1.PermissionSetRef{ARN: testPermissionSetARN},

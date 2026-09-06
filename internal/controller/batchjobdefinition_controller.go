@@ -62,6 +62,10 @@ func (r *BatchJobDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if err := r.Get(ctx, req.NamespacedName, jd); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, jd); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !jd.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(jd, awsv1alpha1.FinalizerName) {
@@ -89,6 +93,10 @@ func (r *BatchJobDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		if err := r.Update(ctx, jd); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileJobDefinition(ctx, jd); err != nil {

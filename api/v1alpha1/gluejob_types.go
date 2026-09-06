@@ -38,6 +38,12 @@ type GlueJobCommand struct {
 
 // GlueJobSpec defines the desired state of a Glue job.
 type GlueJobSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the job. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -90,6 +96,9 @@ type GlueJobSpec struct {
 
 // GlueJobStatus defines the observed state of GlueJob.
 type GlueJobStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// JobName is the name of the job in AWS.
 	// +optional
 	JobName string `json:"jobName,omitempty"`

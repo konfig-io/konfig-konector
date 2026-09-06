@@ -1,0 +1,3161 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncapis.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncApi
+    listKind: AppSyncApiList
+    plural: appsyncapis
+    singular: appsyncapi
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AppSyncApi manages AWS::AppSync::Api through the AWS Cloud Control
+          API. Resource schema for AppSync Api
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncApiSpec is the desired state of AWS::AppSync::Api.
+            properties:
+              eventConfig:
+                description: AppSyncApiEventConfig is a nested property type of AWS::AppSync::Api.
+                properties:
+                  authProviders:
+                    items:
+                      description: AppSyncApiAuthProvider is a nested property type
+                        of AWS::AppSync::Api.
+                      properties:
+                        authType:
+                          enum:
+                          - AMAZON_COGNITO_USER_POOLS
+                          - AWS_IAM
+                          - API_KEY
+                          - OPENID_CONNECT
+                          - AWS_LAMBDA
+                          type: string
+                        cognitoConfig:
+                          description: AppSyncApiCognitoConfig is a nested property
+                            type of AWS::AppSync::Api.
+                          properties:
+                            appIdClientRegex:
+                              type: string
+                            awsRegion:
+                              type: string
+                            userPoolId:
+                              type: string
+                          required:
+                          - awsRegion
+                          - userPoolId
+                          type: object
+                        lambdaAuthorizerConfig:
+                          description: AppSyncApiLambdaAuthorizerConfig is a nested
+                            property type of AWS::AppSync::Api.
+                          properties:
+                            authorizerResultTtlInSeconds:
+                              format: int64
+                              maximum: 3600
+                              minimum: 0
+                              type: integer
+                            authorizerUri:
+                              type: string
+                            identityValidationExpression:
+                              type: string
+                          required:
+                          - authorizerUri
+                          type: object
+                        openIDConnectConfig:
+                          description: AppSyncApiOpenIDConnectConfig is a nested property
+                            type of AWS::AppSync::Api.
+                          properties:
+                            authTTL:
+                              type: number
+                            clientId:
+                              type: string
+                            iatTTL:
+                              type: number
+                            issuer:
+                              type: string
+                          required:
+                          - issuer
+                          type: object
+                      required:
+                      - authType
+                      type: object
+                    type: array
+                  connectionAuthModes:
+                    items:
+                      description: AppSyncApiAuthMode is a nested property type of
+                        AWS::AppSync::Api.
+                      properties:
+                        authType:
+                          enum:
+                          - AMAZON_COGNITO_USER_POOLS
+                          - AWS_IAM
+                          - API_KEY
+                          - OPENID_CONNECT
+                          - AWS_LAMBDA
+                          type: string
+                      type: object
+                    type: array
+                  defaultPublishAuthModes:
+                    items:
+                      description: AppSyncApiAuthMode is a nested property type of
+                        AWS::AppSync::Api.
+                      properties:
+                        authType:
+                          enum:
+                          - AMAZON_COGNITO_USER_POOLS
+                          - AWS_IAM
+                          - API_KEY
+                          - OPENID_CONNECT
+                          - AWS_LAMBDA
+                          type: string
+                      type: object
+                    type: array
+                  defaultSubscribeAuthModes:
+                    items:
+                      description: AppSyncApiAuthMode is a nested property type of
+                        AWS::AppSync::Api.
+                      properties:
+                        authType:
+                          enum:
+                          - AMAZON_COGNITO_USER_POOLS
+                          - AWS_IAM
+                          - API_KEY
+                          - OPENID_CONNECT
+                          - AWS_LAMBDA
+                          type: string
+                      type: object
+                    type: array
+                  logConfig:
+                    description: AppSyncApiEventLogConfig is a nested property type
+                      of AWS::AppSync::Api.
+                    properties:
+                      cloudWatchLogsRoleArn:
+                        type: string
+                      logLevel:
+                        enum:
+                        - NONE
+                        - ERROR
+                        - ALL
+                        - INFO
+                        - DEBUG
+                        type: string
+                    required:
+                    - cloudWatchLogsRoleArn
+                    - logLevel
+                    type: object
+                required:
+                - authProviders
+                - connectionAuthModes
+                - defaultPublishAuthModes
+                - defaultSubscribeAuthModes
+                type: object
+              name:
+                maxLength: 50
+                minLength: 1
+                type: string
+              ownerContact:
+                maxLength: 250
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: AppSyncApiStatus is the observed state of AWS::AppSync::Api.
+            properties:
+              apiArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the AppSync Api
+                  Read-only: reported by AWS after creation.
+                type: string
+              apiId:
+                description: |-
+                  The unique identifier for the AppSync Api generated by the service
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dns:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  http:
+                    type: string
+                  realtime:
+                    type: string
+                type: object
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncchannelnamespaces.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncChannelNamespace
+    listKind: AppSyncChannelNamespaceList
+    plural: appsyncchannelnamespaces
+    singular: appsyncchannelnamespace
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncChannelNamespace manages AWS::AppSync::ChannelNamespace through the AWS Cloud Control API. Resource
+          schema for AppSync ChannelNamespace
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncChannelNamespaceSpec is the desired state of AWS::AppSync::ChannelNamespace.
+            properties:
+              apiId:
+                description: |-
+                  AppSync Api Id that this Channel Namespace belongs to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: apiId is immutable
+                  rule: self == oldSelf
+              codeHandlers:
+                maxLength: 32768
+                type: string
+              codeS3Location:
+                description: The Amazon S3 endpoint where the code is located.
+                type: string
+              handlerConfigs:
+                description: AppSyncChannelNamespaceHandlerConfigs is a nested property
+                  type of AWS::AppSync::ChannelNamespace.
+                properties:
+                  onPublish:
+                    description: AppSyncChannelNamespaceHandlerConfig is a nested
+                      property type of AWS::AppSync::ChannelNamespace.
+                    properties:
+                      behavior:
+                        enum:
+                        - CODE
+                        - DIRECT
+                        type: string
+                      integration:
+                        description: AppSyncChannelNamespaceIntegration is a nested
+                          property type of AWS::AppSync::ChannelNamespace.
+                        properties:
+                          dataSourceName:
+                            description: Data source to invoke for this integration.
+                            maxLength: 512
+                            minLength: 1
+                            type: string
+                          lambdaConfig:
+                            description: AppSyncChannelNamespaceLambdaConfig is a
+                              nested property type of AWS::AppSync::ChannelNamespace.
+                            properties:
+                              invokeType:
+                                enum:
+                                - REQUEST_RESPONSE
+                                - EVENT
+                                type: string
+                            required:
+                            - invokeType
+                            type: object
+                        required:
+                        - dataSourceName
+                        type: object
+                    required:
+                    - behavior
+                    - integration
+                    type: object
+                  onSubscribe:
+                    description: AppSyncChannelNamespaceHandlerConfig is a nested
+                      property type of AWS::AppSync::ChannelNamespace.
+                    properties:
+                      behavior:
+                        enum:
+                        - CODE
+                        - DIRECT
+                        type: string
+                      integration:
+                        description: AppSyncChannelNamespaceIntegration is a nested
+                          property type of AWS::AppSync::ChannelNamespace.
+                        properties:
+                          dataSourceName:
+                            description: Data source to invoke for this integration.
+                            maxLength: 512
+                            minLength: 1
+                            type: string
+                          lambdaConfig:
+                            description: AppSyncChannelNamespaceLambdaConfig is a
+                              nested property type of AWS::AppSync::ChannelNamespace.
+                            properties:
+                              invokeType:
+                                enum:
+                                - REQUEST_RESPONSE
+                                - EVENT
+                                type: string
+                            required:
+                            - invokeType
+                            type: object
+                        required:
+                        - dataSourceName
+                        type: object
+                    required:
+                    - behavior
+                    - integration
+                    type: object
+                type: object
+              name:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 50
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publishAuthModes:
+                description: List of AuthModes supported for Publish operations.
+                items:
+                  description: AppSyncChannelNamespaceAuthMode is a nested property
+                    type of AWS::AppSync::ChannelNamespace.
+                  properties:
+                    authType:
+                      enum:
+                      - AMAZON_COGNITO_USER_POOLS
+                      - AWS_IAM
+                      - API_KEY
+                      - OPENID_CONNECT
+                      - AWS_LAMBDA
+                      type: string
+                  type: object
+                type: array
+              subscribeAuthModes:
+                description: List of AuthModes supported for Subscribe operations.
+                items:
+                  description: AppSyncChannelNamespaceAuthMode is a nested property
+                    type of AWS::AppSync::ChannelNamespace.
+                  properties:
+                    authType:
+                      enum:
+                      - AMAZON_COGNITO_USER_POOLS
+                      - AWS_IAM
+                      - API_KEY
+                      - OPENID_CONNECT
+                      - AWS_LAMBDA
+                      type: string
+                  type: object
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - apiId
+            - name
+            type: object
+          status:
+            description: AppSyncChannelNamespaceStatus is the observed state of AWS::AppSync::ChannelNamespace.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              channelNamespaceArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncdatasources.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncDataSource
+    listKind: AppSyncDataSourceList
+    plural: appsyncdatasources
+    singular: appsyncdatasource
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncDataSource manages AWS::AppSync::DataSource through the AWS Cloud Control API. Resource Type definition
+          for AWS::AppSync::DataSource
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncDataSourceSpec is the desired state of AWS::AppSync::DataSource.
+            properties:
+              apiId:
+                description: |-
+                  Unique AWS AppSync GraphQL API identifier where this data source will be created.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: apiId is immutable
+                  rule: self == oldSelf
+              description:
+                description: The description of the data source.
+                type: string
+              dynamoDBConfig:
+                description: AWS Region and TableName for an Amazon DynamoDB table
+                  in your account.
+                properties:
+                  awsRegion:
+                    description: The AWS Region.
+                    type: string
+                  deltaSyncConfig:
+                    description: The DeltaSyncConfig for a versioned datasource.
+                    properties:
+                      baseTableTTL:
+                        description: The number of minutes that an Item is stored
+                          in the data source.
+                        type: string
+                      deltaSyncTableName:
+                        description: The Delta Sync table name.
+                        type: string
+                      deltaSyncTableTTL:
+                        description: The number of minutes that a Delta Sync log entry
+                          is stored in the Delta Sync table.
+                        type: string
+                    required:
+                    - baseTableTTL
+                    - deltaSyncTableName
+                    - deltaSyncTableTTL
+                    type: object
+                  tableName:
+                    description: The table name.
+                    type: string
+                  useCallerCredentials:
+                    description: Set to TRUE to use AWS Identity and Access Management
+                      with this data source.
+                    type: boolean
+                  versioned:
+                    description: Set to TRUE to use Conflict Detection and Resolution
+                      with this data source.
+                    type: boolean
+                required:
+                - awsRegion
+                - tableName
+                type: object
+              elasticsearchConfig:
+                description: |-
+                  AWS Region and Endpoints for an Amazon OpenSearch Service domain in your account. As of September 2021, Amazon
+                  Elasticsearch Service is Amazon OpenSearch Service. This property is deprecated. For new data sources, use
+                  OpenSearchServiceConfig to specify an OpenSearch Service data source.
+                properties:
+                  awsRegion:
+                    description: The AWS Region.
+                    type: string
+                  endpoint:
+                    description: The endpoint.
+                    type: string
+                required:
+                - awsRegion
+                - endpoint
+                type: object
+              eventBridgeConfig:
+                description: ARN for the EventBridge bus.
+                properties:
+                  eventBusArn:
+                    description: ARN for the EventBridge bus.
+                    type: string
+                required:
+                - eventBusArn
+                type: object
+              httpConfig:
+                description: Endpoints for an HTTP data source.
+                properties:
+                  authorizationConfig:
+                    description: The authorization configuration.
+                    properties:
+                      authorizationType:
+                        description: The authorization type that the HTTP endpoint
+                          requires.
+                        type: string
+                      awsIamConfig:
+                        description: The AWS Identity and Access Management settings.
+                        properties:
+                          signingRegion:
+                            description: The signing Region for AWS Identity and Access
+                              Management authorization.
+                            type: string
+                          signingServiceName:
+                            description: The signing service name for AWS Identity
+                              and Access Management authorization.
+                            type: string
+                        type: object
+                    required:
+                    - authorizationType
+                    type: object
+                  endpoint:
+                    description: The endpoint.
+                    type: string
+                required:
+                - endpoint
+                type: object
+              lambdaConfig:
+                description: |-
+                  An ARN of a Lambda function in valid ARN format. This can be the ARN of a Lambda function that exists in the
+                  current account or in another account.
+                properties:
+                  lambdaFunctionArn:
+                    description: The ARN for the Lambda function.
+                    type: string
+                required:
+                - lambdaFunctionArn
+                type: object
+              metricsConfig:
+                enum:
+                - DISABLED
+                - ENABLED
+                type: string
+              name:
+                description: |-
+                  Friendly name for you to identify your AppSync data source after creation.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              openSearchServiceConfig:
+                description: AWS Region and Endpoints for an Amazon OpenSearch Service
+                  domain in your account.
+                properties:
+                  awsRegion:
+                    description: The AWS Region.
+                    type: string
+                  endpoint:
+                    description: The endpoint.
+                    type: string
+                required:
+                - awsRegion
+                - endpoint
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              relationalDatabaseConfig:
+                description: Relational Database configuration of the relational database
+                  data source.
+                properties:
+                  rdsHttpEndpointConfig:
+                    description: Information about the Amazon RDS resource.
+                    properties:
+                      awsRegion:
+                        description: AWS Region for RDS HTTP endpoint.
+                        type: string
+                      awsSecretStoreArn:
+                        description: The ARN for database credentials stored in AWS
+                          Secrets Manager.
+                        type: string
+                      databaseName:
+                        description: Logical database name.
+                        type: string
+                      dbClusterIdentifier:
+                        description: Amazon RDS cluster Amazon Resource Name (ARN).
+                        type: string
+                      schema:
+                        description: Logical schema name.
+                        type: string
+                    required:
+                    - awsRegion
+                    - awsSecretStoreArn
+                    - dbClusterIdentifier
+                    type: object
+                  relationalDatabaseSourceType:
+                    description: The type of relational data source.
+                    type: string
+                required:
+                - relationalDatabaseSourceType
+                type: object
+              serviceRoleArn:
+                description: |-
+                  The AWS Identity and Access Management service role ARN for the data source. The system assumes this role when
+                  accessing the data source.
+                type: string
+              type:
+                description: The type of the data source.
+                type: string
+            required:
+            - apiId
+            - name
+            - type
+            type: object
+          status:
+            description: AppSyncDataSourceStatus is the observed state of AWS::AppSync::DataSource.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dataSourceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the API key, such as
+                  arn:aws:appsync:us-east-1:123456789012:apis/graphqlapiid/datasources/datasourcename.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncdomainnameapiassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncDomainNameApiAssociation
+    listKind: AppSyncDomainNameApiAssociationList
+    plural: appsyncdomainnameapiassociations
+    singular: appsyncdomainnameapiassociation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncDomainNameApiAssociation manages AWS::AppSync::DomainNameApiAssociation through the AWS Cloud Control
+          API. Resource Type definition for AWS::AppSync::DomainNameApiAssociation
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncDomainNameApiAssociationSpec is the desired state
+              of AWS::AppSync::DomainNameApiAssociation.
+            properties:
+              apiId:
+                type: string
+              domainName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 253
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: domainName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - apiId
+            - domainName
+            type: object
+          status:
+            description: AppSyncDomainNameApiAssociationStatus is the observed state
+              of AWS::AppSync::DomainNameApiAssociation.
+            properties:
+              apiAssociationIdentifier:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncdomainnames.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncDomainName
+    listKind: AppSyncDomainNameList
+    plural: appsyncdomainnames
+    singular: appsyncdomainname
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncDomainName manages AWS::AppSync::DomainName through the AWS Cloud Control API. Resource Type definition
+          for AWS::AppSync::DomainName
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncDomainNameSpec is the desired state of AWS::AppSync::DomainName.
+            properties:
+              certificateArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: certificateArn is immutable
+                  rule: self == oldSelf
+              description:
+                maxLength: 255
+                type: string
+              domainName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 253
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: domainName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - certificateArn
+            - domainName
+            type: object
+          status:
+            description: AppSyncDomainNameStatus is the observed state of AWS::AppSync::DomainName.
+            properties:
+              appSyncDomainName:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              domainNameArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the Domain Name.
+                  Read-only: reported by AWS after creation.
+                type: string
+              hostedZoneId:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncfunctionconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncFunctionConfiguration
+    listKind: AppSyncFunctionConfigurationList
+    plural: appsyncfunctionconfigurations
+    singular: appsyncfunctionconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncFunctionConfiguration manages AWS::AppSync::FunctionConfiguration through the AWS Cloud Control API. An
+          example resource schema demonstrating some basic constructs and validation rules.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncFunctionConfigurationSpec is the desired state of
+              AWS::AppSync::FunctionConfiguration.
+            properties:
+              apiId:
+                description: |-
+                  The AWS AppSync GraphQL API that you want to attach using this function.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: apiId is immutable
+                  rule: self == oldSelf
+              code:
+                description: |-
+                  The resolver code that contains the request and response functions. When code is used, the runtime is
+                  required. The runtime value must be APPSYNC_JS.
+                type: string
+              codeS3Location:
+                description: The Amazon S3 endpoint (where the code is located??).
+                type: string
+              dataSourceName:
+                description: The name of data source this function will attach.
+                type: string
+              description:
+                description: The function description.
+                type: string
+              functionVersion:
+                description: |-
+                  The version of the request mapping template. Currently, only the 2018-05-29 version of the template is
+                  supported.
+                type: string
+              maxBatchSize:
+                description: |-
+                  The maximum number of resolver request inputs that will be sent to a single AWS Lambda function in a
+                  BatchInvoke operation.
+                format: int64
+                type: integer
+              name:
+                description: The name of the function.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              requestMappingTemplate:
+                description: |-
+                  The Function request mapping template. Functions support only the 2018-05-29 version of the request mapping
+                  template.
+                type: string
+              requestMappingTemplateS3Location:
+                description: |-
+                  Describes a Sync configuration for a resolver. Contains information on which Conflict Detection, as well as
+                  Resolution strategy, should be performed when the resolver is invoked.
+                type: string
+              responseMappingTemplate:
+                description: The Function response mapping template.
+                type: string
+              responseMappingTemplateS3Location:
+                description: |-
+                  The location of a response mapping template in an Amazon S3 bucket. Use this if you want to provision with a
+                  template file in Amazon S3 rather than embedding it in your CloudFormation template.
+                type: string
+              runtime:
+                description: |-
+                  Describes a runtime used by an AWS AppSync pipeline resolver or AWS AppSync function. Specifies the name and
+                  version of the runtime to use. Note that if a runtime is specified, code must also be specified.
+                properties:
+                  name:
+                    description: The name of the runtime to use. Currently, the only
+                      allowed value is APPSYNC_JS.
+                    type: string
+                  runtimeVersion:
+                    description: The version of the runtime to use. Currently, the
+                      only allowed version is 1.0.0.
+                    type: string
+                required:
+                - name
+                - runtimeVersion
+                type: object
+              syncConfig:
+                description: |-
+                  Describes a Sync configuration for a resolver. Specifies which Conflict Detection strategy and Resolution
+                  strategy to use when the resolver is invoked.
+                properties:
+                  conflictDetection:
+                    description: The Conflict Detection strategy to use.
+                    type: string
+                  conflictHandler:
+                    description: The Conflict Resolution strategy to perform in the
+                      event of a conflict.
+                    type: string
+                  lambdaConflictHandlerConfig:
+                    description: AppSyncFunctionConfigurationLambdaConflictHandlerConfig
+                      is a nested property type of AWS::AppSync::FunctionConfiguration.
+                    properties:
+                      lambdaConflictHandlerArn:
+                        description: The Amazon Resource Name (ARN) for the Lambda
+                          function to use as the Conflict Handler.
+                        type: string
+                    type: object
+                required:
+                - conflictDetection
+                type: object
+            required:
+            - apiId
+            - dataSourceName
+            - name
+            type: object
+          status:
+            description: AppSyncFunctionConfigurationStatus is the observed state
+              of AWS::AppSync::FunctionConfiguration.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              functionArn:
+                description: |-
+                  The ARN for the function generated by the service
+                  Read-only: reported by AWS after creation.
+                type: string
+              functionId:
+                description: |-
+                  The unique identifier for the function generated by the service
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncgraphqlapis.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncGraphQLApi
+    listKind: AppSyncGraphQLApiList
+    plural: appsyncgraphqlapis
+    singular: appsyncgraphqlapi
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncGraphQLApi manages AWS::AppSync::GraphQLApi through the AWS Cloud Control API. Resource Type definition
+          for AWS::AppSync::GraphQLApi
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncGraphQLApiSpec is the desired state of AWS::AppSync::GraphQLApi.
+            properties:
+              additionalAuthenticationProviders:
+                description: A list of additional authentication providers for the
+                  GraphqlApi API.
+                items:
+                  description: AppSyncGraphQLApiAdditionalAuthenticationProvider is
+                    a nested property type of AWS::AppSync::GraphQLApi.
+                  properties:
+                    authenticationType:
+                      description: |-
+                        The authentication type for API key, AWS Identity and Access Management, OIDC, Amazon Cognito user pools, or
+                        AWS Lambda.
+                      type: string
+                    lambdaAuthorizerConfig:
+                      description: AppSyncGraphQLApiLambdaAuthorizerConfig is a nested
+                        property type of AWS::AppSync::GraphQLApi.
+                      properties:
+                        authorizerResultTtlInSeconds:
+                          description: The number of seconds a response should be
+                            cached for.
+                          format: int64
+                          type: integer
+                        authorizerUri:
+                          description: The ARN of the Lambda function to be called
+                            for authorization.
+                          type: string
+                        identityValidationExpression:
+                          description: A regular expression for validation of tokens
+                            before the Lambda function is called.
+                          type: string
+                      type: object
+                    openIDConnectConfig:
+                      description: AppSyncGraphQLApiOpenIDConnectConfig is a nested
+                        property type of AWS::AppSync::GraphQLApi.
+                      properties:
+                        authTTL:
+                          description: The number of milliseconds that a token is
+                            valid after being authenticated.
+                          type: number
+                        clientId:
+                          description: The client identifier of the Relying party
+                            at the OpenID identity provider.
+                          type: string
+                        iatTTL:
+                          description: The number of milliseconds that a token is
+                            valid after it's issued to a user.
+                          type: number
+                        issuer:
+                          description: The issuer for the OIDC configuration.
+                          type: string
+                      type: object
+                    userPoolConfig:
+                      description: AppSyncGraphQLApiCognitoUserPoolConfig is a nested
+                        property type of AWS::AppSync::GraphQLApi.
+                      properties:
+                        appIdClientRegex:
+                          description: A regular expression for validating the incoming
+                            Amazon Cognito user pool app client ID.
+                          type: string
+                        awsRegion:
+                          description: The AWS Region in which the user pool was created.
+                          type: string
+                        userPoolId:
+                          description: The user pool ID
+                          type: string
+                      type: object
+                  required:
+                  - authenticationType
+                  type: object
+                type: array
+              apiType:
+                description: The value that indicates whether the GraphQL API is a
+                  standard API (GRAPHQL) or merged API (MERGED).
+                type: string
+              authenticationType:
+                description: Security configuration for your GraphQL API
+                type: string
+              enhancedMetricsConfig:
+                description: |-
+                  Enables and controls the enhanced metrics feature. Enhanced metrics emit granular data on API usage and
+                  performance such as AppSync request and error counts, latency, and cache hits/misses. All enhanced metric data
+                  is sent to your CloudWatch account, and you can configure the types of data that will be sent.
+                properties:
+                  dataSourceLevelMetricsBehavior:
+                    description: 'Controls how data source metrics will be emitted
+                      to CloudWatch. Data source metrics include:'
+                    type: string
+                  operationLevelMetricsConfig:
+                    description: 'Controls how operation metrics will be emitted to
+                      CloudWatch. Operation metrics include:'
+                    type: string
+                  resolverLevelMetricsBehavior:
+                    description: 'Controls how resolver metrics will be emitted to
+                      CloudWatch. Resolver metrics include:'
+                    type: string
+                required:
+                - dataSourceLevelMetricsBehavior
+                - operationLevelMetricsConfig
+                - resolverLevelMetricsBehavior
+                type: object
+              environmentVariables:
+                additionalProperties:
+                  type: string
+                description: A map containing the list of resources with their properties
+                  and environment variables.
+                type: object
+              introspectionConfig:
+                description: |-
+                  Sets the value of the GraphQL API to enable (ENABLED) or disable (DISABLED) introspection. If no value is
+                  provided, the introspection configuration will be set to ENABLED by default. This field will produce an error
+                  if the operation attempts to use the introspection feature while this field is disabled.
+                type: string
+              lambdaAuthorizerConfig:
+                description: |-
+                  A LambdaAuthorizerConfig holds configuration on how to authorize AWS AppSync API access when using the
+                  AWS_LAMBDA authorizer mode. Be aware that an AWS AppSync API may have only one Lambda authorizer configured at
+                  a time.
+                properties:
+                  authorizerResultTtlInSeconds:
+                    description: The number of seconds a response should be cached
+                      for.
+                    format: int64
+                    type: integer
+                  authorizerUri:
+                    description: The ARN of the Lambda function to be called for authorization.
+                    type: string
+                  identityValidationExpression:
+                    description: A regular expression for validation of tokens before
+                      the Lambda function is called.
+                    type: string
+                type: object
+              logConfig:
+                description: The Amazon CloudWatch Logs configuration.
+                properties:
+                  cloudWatchLogsRoleArn:
+                    description: The service role that AWS AppSync will assume to
+                      publish to Amazon CloudWatch Logs in your account.
+                    type: string
+                  excludeVerboseContent:
+                    description: |-
+                      Set to TRUE to exclude sections that contain information such as headers, context, and evaluated mapping
+                      templates, regardless of logging level.
+                    type: boolean
+                  fieldLogLevel:
+                    description: The field logging level. Values can be NONE, ERROR,
+                      INFO, DEBUG, or ALL.
+                    type: string
+                required:
+                - cloudWatchLogsRoleArn
+                - fieldLogLevel
+                type: object
+              mergedApiExecutionRoleArn:
+                description: The AWS Identity and Access Management service role ARN
+                  for a merged API.
+                type: string
+              name:
+                description: The API name
+                type: string
+              openIDConnectConfig:
+                description: The OpenID Connect configuration.
+                properties:
+                  authTTL:
+                    description: The number of milliseconds that a token is valid
+                      after being authenticated.
+                    type: number
+                  clientId:
+                    description: The client identifier of the Relying party at the
+                      OpenID identity provider.
+                    type: string
+                  iatTTL:
+                    description: The number of milliseconds that a token is valid
+                      after it's issued to a user.
+                    type: number
+                  issuer:
+                    description: The issuer for the OIDC configuration.
+                    type: string
+                type: object
+              ownerContact:
+                description: The owner contact information for an API resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              queryDepthLimit:
+                description: |-
+                  The maximum depth a query can have in a single request. Depth refers to the amount of nested levels allowed in
+                  the body of query.
+                format: int64
+                type: integer
+              resolverCountLimit:
+                description: The maximum number of resolvers that can be invoked in
+                  a single request.
+                format: int64
+                type: integer
+              tags:
+                description: An arbitrary set of tags (key-value pairs) for this GraphQL
+                  API.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              userPoolConfig:
+                description: Optional authorization configuration for using Amazon
+                  Cognito user pools with your GraphQL endpoint.
+                properties:
+                  appIdClientRegex:
+                    description: A regular expression for validating the incoming
+                      Amazon Cognito user pool app client ID.
+                    type: string
+                  awsRegion:
+                    description: The AWS Region in which the user pool was created.
+                    type: string
+                  defaultAction:
+                    description: |-
+                      The action that you want your GraphQL API to take when a request that uses Amazon Cognito user pool
+                      authentication doesn't match the Amazon Cognito user pool configuration.
+                    type: string
+                  userPoolId:
+                    description: The user pool ID.
+                    type: string
+                type: object
+              visibility:
+                description: |-
+                  Sets the scope of the GraphQL API to public (GLOBAL) or private (PRIVATE). By default, the scope is set to
+                  Global if no value is provided.
+                type: string
+              xrayEnabled:
+                description: A flag indicating whether to use AWS X-Ray tracing for
+                  this GraphqlApi.
+                type: boolean
+            required:
+            - authenticationType
+            - name
+            type: object
+          status:
+            description: AppSyncGraphQLApiStatus is the observed state of AWS::AppSync::GraphQLApi.
+            properties:
+              apiId:
+                description: |-
+                  Unique AWS AppSync GraphQL API identifier.
+                  Read-only: reported by AWS after creation.
+                type: string
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the API key
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              graphQLDns:
+                description: |-
+                  The fully qualified domain name (FQDN) of the endpoint URL of your GraphQL API.
+                  Read-only: reported by AWS after creation.
+                type: string
+              graphQLEndpointArn:
+                description: |-
+                  The GraphQL endpoint ARN.
+                  Read-only: reported by AWS after creation.
+                type: string
+              graphQLUrl:
+                description: |-
+                  The Endpoint URL of your GraphQL API.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              realtimeDns:
+                description: |-
+                  The fully qualified domain name (FQDN) of the real-time endpoint URL of your GraphQL API.
+                  Read-only: reported by AWS after creation.
+                type: string
+              realtimeUrl:
+                description: |-
+                  The GraphQL API real-time endpoint URL.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncresolvers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncResolver
+    listKind: AppSyncResolverList
+    plural: appsyncresolvers
+    singular: appsyncresolver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncResolver manages AWS::AppSync::Resolver through the AWS Cloud Control API. The
+          “AWS::AppSync::Resolver“ resource defines the logical GraphQL resolver that you attach to fields in a
+          schema. Request and response templates for resolvers are written in Apache Velocity Template Language (VTL)
+          format. For more information about resolvers, see [Resolver Mapping Template Reference](https://doc...
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncResolverSpec is the desired state of AWS::AppSync::Resolver.
+            properties:
+              apiId:
+                description: |-
+                  The APSYlong GraphQL API to which you want to attach this resolver.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: apiId is immutable
+                  rule: self == oldSelf
+              cachingConfig:
+                description: The caching configuration for the resolver.
+                properties:
+                  cachingKeys:
+                    description: |-
+                      The caching keys for a resolver that has caching activated. Valid values are entries from the
+                      ``$context.arguments``, ``$context.source``, and ``$context.identity`` maps.
+                    items:
+                      type: string
+                    type: array
+                  ttl:
+                    description: The TTL in seconds for a resolver that has caching
+                      activated. Valid values are 1–3,600 seconds.
+                    type: number
+                required:
+                - ttl
+                type: object
+              code:
+                description: |-
+                  The ``resolver`` code that contains the request and response functions. When code is used, the ``runtime`` is
+                  required. The runtime value must be ``APPSYNC_JS``.
+                type: string
+              codeS3Location:
+                description: The Amazon S3 endpoint.
+                type: string
+              dataSourceName:
+                description: The resolver data source name.
+                type: string
+              fieldName:
+                description: |-
+                  The GraphQL field on a type that invokes the resolver.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: fieldName is immutable
+                  rule: self == oldSelf
+              kind:
+                description: |-
+                  The resolver type. + *UNIT*: A UNIT resolver type. A UNIT resolver is the default resolver type. You can use a
+                  UNIT resolver to run a GraphQL query against a single data source. + *PIPELINE*: A PIPELINE resolver type. You
+                  can use a PIPELINE resolver to invoke a series of ``Function`` objects in a serial manner. You can use a
+                  pipeline resolver to run a GraphQL query against multiple data sources.
+                type: string
+              maxBatchSize:
+                description: |-
+                  The maximum number of resolver request inputs that will be sent to a single LAMlong function in a
+                  ``BatchInvoke`` operation.
+                format: int64
+                type: integer
+              metricsConfig:
+                description: |-
+                  Enables or disables enhanced resolver metrics for specified resolvers. Note that ``MetricsConfig`` won't be
+                  used unless the ``resolverLevelMetricsBehavior`` value is set to ``PER_RESOLVER_METRICS``. If the
+                  ``resolverLevelMetricsBehavior`` is set to ``FULL_REQUEST_RESOLVER_METRICS`` instead, ``MetricsConfig`` will
+                  be ignored. However, you can still set its value.
+                enum:
+                - ENABLED
+                - DISABLED
+                type: string
+              pipelineConfig:
+                description: Functions linked with the pipeline resolver.
+                properties:
+                  functions:
+                    description: A list of ``Function`` objects.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              requestMappingTemplate:
+                description: |-
+                  The request mapping template. Request mapping templates are optional when using a Lambda data source. For all
+                  other data sources, a request mapping template is required.
+                type: string
+              requestMappingTemplateS3Location:
+                description: |-
+                  The location of a request mapping template in an S3 bucket. Use this if you want to provision with a template
+                  file in S3 rather than embedding it in your CFNshort template.
+                type: string
+              responseMappingTemplate:
+                description: The response mapping template.
+                type: string
+              responseMappingTemplateS3Location:
+                description: |-
+                  The location of a response mapping template in an S3 bucket. Use this if you want to provision with a template
+                  file in S3 rather than embedding it in your CFNshort template.
+                type: string
+              runtime:
+                description: |-
+                  Describes a runtime used by an APSYlong resolver or APSYlong function. Specifies the name and version of the
+                  runtime to use. Note that if a runtime is specified, code must also be specified.
+                properties:
+                  name:
+                    description: The ``name`` of the runtime to use. Currently, the
+                      only allowed value is ``APPSYNC_JS``.
+                    type: string
+                  runtimeVersion:
+                    description: The ``version`` of the runtime to use. Currently,
+                      the only allowed version is ``1.0.0``.
+                    type: string
+                required:
+                - name
+                - runtimeVersion
+                type: object
+              syncConfig:
+                description: The ``SyncConfig`` for a resolver attached to a versioned
+                  data source.
+                properties:
+                  conflictDetection:
+                    description: |-
+                      The Conflict Detection strategy to use. + *VERSION*: Detect conflicts based on object versions for this
+                      resolver. + *NONE*: Do not detect conflicts when invoking this resolver.
+                    type: string
+                  conflictHandler:
+                    description: |-
+                      The Conflict Resolution strategy to perform in the event of a conflict. + *OPTIMISTIC_CONCURRENCY*: Resolve
+                      conflicts by rejecting mutations when versions don't match the latest version at the server. + *AUTOMERGE*:
+                      Resolve conflicts with the Automerge conflict resolution strategy. + *LAMBDA*: Resolve conflicts with an
+                      LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
+                    type: string
+                  lambdaConflictHandlerConfig:
+                    description: The ``LambdaConflictHandlerConfig`` when configuring
+                      ``LAMBDA`` as the Conflict Handler.
+                    properties:
+                      lambdaConflictHandlerArn:
+                        description: The Amazon Resource Name (ARN) for the Lambda
+                          function to use as the Conflict Handler.
+                        type: string
+                    type: object
+                required:
+                - conflictDetection
+                type: object
+              typeName:
+                description: |-
+                  The GraphQL type that invokes this resolver.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: typeName is immutable
+                  rule: self == oldSelf
+            required:
+            - apiId
+            - fieldName
+            - typeName
+            type: object
+          status:
+            description: AppSyncResolverStatus is the observed state of AWS::AppSync::Resolver.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resolverArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsyncsourceapiassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncSourceApiAssociation
+    listKind: AppSyncSourceApiAssociationList
+    plural: appsyncsourceapiassociations
+    singular: appsyncsourceapiassociation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncSourceApiAssociation manages AWS::AppSync::SourceApiAssociation through the AWS Cloud Control API.
+          Resource Type definition for AWS::AppSync::SourceApiAssociation
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncSourceApiAssociationSpec is the desired state of AWS::AppSync::SourceApiAssociation.
+            properties:
+              description:
+                description: Description of the SourceApiAssociation.
+                type: string
+              mergedApiIdentifier:
+                description: |-
+                  Identifier of the Merged GraphQLApi to associate. It could be either GraphQLApi ApiId or ARN
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceApiAssociationConfig:
+                description: Customized configuration for SourceApiAssociation.
+                x-kubernetes-preserve-unknown-fields: true
+              sourceApiIdentifier:
+                description: |-
+                  Identifier of the Source GraphQLApi to associate. It could be either GraphQLApi ApiId or ARN
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            type: object
+          status:
+            description: AppSyncSourceApiAssociationStatus is the observed state of
+              AWS::AppSync::SourceApiAssociation.
+            properties:
+              associationArn:
+                description: |-
+                  ARN of the SourceApiAssociation.
+                  Read-only: reported by AWS after creation.
+                type: string
+              associationId:
+                description: |-
+                  Id of the SourceApiAssociation.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSuccessfulMergeDate:
+                description: |-
+                  Date of last schema successful merge.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              mergedApiArn:
+                description: |-
+                  ARN of the Merged API in the association.
+                  Read-only: reported by AWS after creation.
+                type: string
+              mergedApiId:
+                description: |-
+                  GraphQLApiId of the Merged API in the association.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              sourceApiArn:
+                description: |-
+                  ARN of the source API in the association.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sourceApiAssociationStatus:
+                description: |-
+                  Current status of SourceApiAssociation.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - MERGE_SCHEDULED
+                - MERGE_FAILED
+                - MERGE_SUCCESS
+                - MERGE_IN_PROGRESS
+                - AUTO_MERGE_SCHEDULE_FAILED
+                - DELETION_SCHEDULED
+                - DELETION_IN_PROGRESS
+                - DELETION_FAILED
+                type: string
+              sourceApiAssociationStatusDetail:
+                description: |-
+                  Current SourceApiAssociation status details.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sourceApiId:
+                description: |-
+                  GraphQLApiId of the source API in the association.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appsynctypes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppSyncType
+    listKind: AppSyncTypeList
+    plural: appsynctypes
+    singular: appsynctype
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppSyncType manages AWS::AppSync::Type through the AWS Cloud Control API. Represents a GraphQL type in an AWS
+          AppSync GraphQL API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppSyncTypeSpec is the desired state of AWS::AppSync::Type.
+            properties:
+              apiId:
+                description: |-
+                  The API ID.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: apiId is immutable
+                  rule: self == oldSelf
+              definition:
+                description: The type definition, in GraphQL Schema Definition Language
+                  (SDL) format.
+                type: string
+              format:
+                description: 'The type format: SDL or JSON.'
+                enum:
+                - SDL
+                - JSON
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - apiId
+            - definition
+            - format
+            type: object
+          status:
+            description: AppSyncTypeStatus is the observed state of AWS::AppSync::Type.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the type.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              name:
+                description: |-
+                  The type name.
+                  Read-only: reported by AWS after creation.
+                maxLength: 65536
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

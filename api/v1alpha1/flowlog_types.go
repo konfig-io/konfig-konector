@@ -22,6 +22,12 @@ import (
 
 // FlowLogSpec defines the desired state of a VPC Flow Log.
 type FlowLogSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ResourceID is the ID of the VPC, subnet, or network interface to capture traffic for.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="resourceId is immutable"
@@ -69,6 +75,9 @@ type FlowLogSpec struct {
 
 // FlowLogStatus defines the observed state of FlowLog.
 type FlowLogStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FlowLogID is the ID of the flow log.
 	// +optional
 	FlowLogID string `json:"flowLogId,omitempty"`

@@ -83,8 +83,9 @@ const testParamARN = "arn:aws:ssm:us-east-1:123456789012:parameter/myapp/db/pass
 func ssmParamCR(mutate ...func(*awsv1alpha1.SSMParameter)) *awsv1alpha1.SSMParameter {
 	p := &awsv1alpha1.SSMParameter{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-param",
-			Namespace: "default",
+			Name:       "my-param",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.SSMParameterSpec{
 			ParameterName: "/myapp/db/password",
@@ -104,8 +105,9 @@ func ssmParamCR(mutate ...func(*awsv1alpha1.SSMParameter)) *awsv1alpha1.SSMParam
 func ssmSourceSecret(value string) *corev1.Secret {
 	return &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "param-source",
-			Namespace: "default",
+			Name:       "param-source",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Data: map[string][]byte{"value": []byte(value)},
 	}

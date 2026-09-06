@@ -32,13 +32,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // KeyPairReconciler reconciles KeyPair objects.
 type KeyPairReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=keypairs,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *KeyPairReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	kp := &awsv1alpha1.KeyPair{}
 	if err := r.Get(ctx, req.NamespacedName, kp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, kp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !kp.DeletionTimestamp.IsZero() {
@@ -75,6 +80,10 @@ func (r *KeyPairReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		if err := r.Update(ctx, kp); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileKeyPair(ctx, kp); err != nil {

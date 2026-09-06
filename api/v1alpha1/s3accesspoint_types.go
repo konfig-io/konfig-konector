@@ -48,6 +48,12 @@ type S3AccessPointVPCConfiguration struct {
 
 // S3AccessPointSpec defines the desired state of an S3 access point.
 type S3AccessPointSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the access point. Immutable after creation.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=50
@@ -76,6 +82,9 @@ type S3AccessPointSpec struct {
 
 // S3AccessPointStatus defines the observed state of S3AccessPoint.
 type S3AccessPointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the access point.
 	// +optional
 	ARN string `json:"arn,omitempty"`

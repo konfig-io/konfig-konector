@@ -39,6 +39,12 @@ type ConfigRuleScope struct {
 
 // ConfigRuleSpec defines the desired state of an AWS Config rule.
 type ConfigRuleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RuleName is the name of the Config rule. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -76,6 +82,9 @@ type ConfigRuleSpec struct {
 
 // ConfigRuleStatus defines the observed state of ConfigRule.
 type ConfigRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RuleARN is the ARN of the Config rule.
 	// +optional
 	RuleARN string `json:"ruleArn,omitempty"`

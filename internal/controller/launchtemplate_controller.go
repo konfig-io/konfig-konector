@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LaunchTemplateReconciler reconciles LaunchTemplate objects.
 type LaunchTemplateReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=launchtemplates,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *LaunchTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	lt := &awsv1alpha1.LaunchTemplate{}
 	if err := r.Get(ctx, req.NamespacedName, lt); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, lt); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !lt.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *LaunchTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		if err := r.Update(ctx, lt); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileLaunchTemplate(ctx, lt); err != nil {

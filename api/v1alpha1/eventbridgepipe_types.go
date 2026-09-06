@@ -22,6 +22,12 @@ import (
 
 // EventBridgePipeSpec defines the desired state of an EventBridge Pipe.
 type EventBridgePipeSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the pipe.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -56,6 +62,9 @@ type EventBridgePipeSpec struct {
 
 // EventBridgePipeStatus defines the observed state of EventBridgePipe.
 type EventBridgePipeStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PipeARN is the ARN of the pipe.
 	// +optional
 	PipeARN string `json:"pipeArn,omitempty"`

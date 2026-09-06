@@ -22,6 +22,12 @@ import (
 
 // SSMDocumentSpec defines the desired state of an SSM Document.
 type SSMDocumentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the SSM document.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -50,6 +56,9 @@ type SSMDocumentSpec struct {
 
 // SSMDocumentStatus defines the observed state of SSMDocument.
 type SSMDocumentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DocumentVersion is the current version of the document.
 	// +optional
 	DocumentVersion string `json:"documentVersion,omitempty"`

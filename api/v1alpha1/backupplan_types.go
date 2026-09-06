@@ -73,6 +73,12 @@ type BackupPlanRule struct {
 
 // BackupPlanSpec defines the desired state of an AWS Backup plan.
 type BackupPlanSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PlanName is the display name of the backup plan.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=50
@@ -89,6 +95,9 @@ type BackupPlanSpec struct {
 
 // BackupPlanStatus defines the observed state of BackupPlan.
 type BackupPlanStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PlanID uniquely identifies the backup plan.
 	// +optional
 	PlanID string `json:"planId,omitempty"`

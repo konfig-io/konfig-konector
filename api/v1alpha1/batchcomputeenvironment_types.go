@@ -59,6 +59,12 @@ type BatchComputeResources struct {
 
 // BatchComputeEnvironmentSpec defines the desired state of a Batch compute environment.
 type BatchComputeEnvironmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the compute environment. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -87,6 +93,9 @@ type BatchComputeEnvironmentSpec struct {
 
 // BatchComputeEnvironmentStatus defines the observed state of BatchComputeEnvironment.
 type BatchComputeEnvironmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ComputeEnvironmentARN is the ARN of the compute environment.
 	// +optional
 	ComputeEnvironmentARN string `json:"computeEnvironmentArn,omitempty"`

@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cfhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudfront"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CloudFrontOriginAccessControlReconciler reconciles CloudFrontOriginAccessControl objects.
 type CloudFrontOriginAccessControlReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CloudFrontClient *awscf.Client
+	CloudFrontClient *multi.CloudFront
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=cloudfrontoriginaccesscontrols,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CloudFrontOriginAccessControlReconciler) Reconcile(ctx context.Context,
 	obj := &awsv1alpha1.CloudFrontOriginAccessControl{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *CloudFrontOriginAccessControlReconciler) Reconcile(ctx context.Context,
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileOAC(ctx, obj); err != nil {
@@ -110,13 +119,15 @@ func (r *CloudFrontOriginAccessControlReconciler) reconcileOAC(ctx context.Conte
 		}
 		if err == nil && getOut.OriginAccessControl != nil {
 			obj.Status.ETag = aws.ToString(getOut.ETag)
-			_, err := r.CloudFrontClient.UpdateOriginAccessControl(ctx, &awscf.UpdateOriginAccessControlInput{
-				Id:                        aws.String(obj.Status.ID),
-				IfMatch:                   aws.String(obj.Status.ETag),
-				OriginAccessControlConfig: buildOACConfig(obj),
-			})
-			if err != nil {
-				return fmt.Errorf("update cloudfront oac: %w", err)
+			// CloudFront control-plane APIs are rate limited; only update on spec change.
+			if obj.Status.ObservedGeneration != obj.Generation {
+				if _, err := r.CloudFrontClient.UpdateOriginAccessControl(ctx, &awscf.UpdateOriginAccessControlInput{
+					Id:                        aws.String(obj.Status.ID),
+					IfMatch:                   aws.String(obj.Status.ETag),
+					OriginAccessControlConfig: buildOACConfig(obj),
+				}); err != nil {
+					return fmt.Errorf("update cloudfront oac: %w", err)
+				}
 			}
 			obj.Status.ObservedGeneration = obj.Generation
 			now := metav1.Now()
@@ -187,8 +198,9 @@ func (r *CloudFrontOriginAccessControlReconciler) deleteOAC(ctx context.Context,
 		}
 		obj.Status.ID = id
 	}
-	etag := obj.Status.ETag
-	if etag == "" {
+	// Always fetch the current ETag (see CloudFrontFunction).
+	var etag string
+	{
 		getOut, err := r.CloudFrontClient.GetOriginAccessControl(ctx, &awscf.GetOriginAccessControlInput{
 			Id: aws.String(obj.Status.ID),
 		})

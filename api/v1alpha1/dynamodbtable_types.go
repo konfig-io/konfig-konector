@@ -50,6 +50,12 @@ type DynamoDBProvisionedThroughput struct {
 
 // DynamoDBTableSpec defines the desired state of a DynamoDB Table.
 type DynamoDBTableSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TableName is the name of the table. Immutable.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=255
@@ -92,6 +98,9 @@ type DynamoDBTableSpec struct {
 
 // DynamoDBTableStatus defines the observed state of DynamoDBTable.
 type DynamoDBTableStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the DynamoDB table.
 	// +optional
 	ARN string `json:"arn,omitempty"`

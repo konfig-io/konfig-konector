@@ -36,6 +36,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // requeueNATPolling is the requeue interval while waiting for a NAT gateway to become available.
@@ -45,7 +46,7 @@ var requeueNATPolling = ctrl.Result{RequeueAfter: 15 * time.Second}
 type NatGatewayReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=natgateways,verbs=get;list;watch;create;update;patch;delete
@@ -58,6 +59,10 @@ func (r *NatGatewayReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	ng := &awsv1alpha1.NatGateway{}
 	if err := r.Get(ctx, req.NamespacedName, ng); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, ng); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !ng.DeletionTimestamp.IsZero() {
@@ -118,6 +123,10 @@ func (r *NatGatewayReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		if err := r.Update(ctx, ng); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	result, err := r.reconcileNATGateway(ctx, ng)

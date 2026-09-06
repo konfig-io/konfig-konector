@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ebhelper "github.com/konfig-io/konfig-konector/internal/aws/eventbridge"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EventBusReconciler reconciles EventBus objects.
 type EventBusReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	EventBridgeClient *awseb.Client
+	EventBridgeClient *multi.EventBridge
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eventbuses,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	eb := &awsv1alpha1.EventBus{}
 	if err := r.Get(ctx, req.NamespacedName, eb); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, eb); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !eb.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, eb); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileEventBus(ctx, eb); err != nil {
@@ -93,7 +102,9 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 }
 
 func (r *EventBusReconciler) reconcileEventBus(ctx context.Context, eb *awsv1alpha1.EventBus) error {
-	if eb.Status.ARN != "" {
+	// Always look the bus up by name first so an existing one is adopted
+	// instead of failing with ResourceAlreadyExistsException.
+	{
 		out, err := r.EventBridgeClient.DescribeEventBus(ctx, &awseb.DescribeEventBusInput{
 			Name: aws.String(eb.Spec.EventBusName),
 		})

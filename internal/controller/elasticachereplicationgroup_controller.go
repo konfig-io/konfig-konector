@@ -35,6 +35,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	echelper "github.com/konfig-io/konfig-konector/internal/aws/elasticache"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 var requeueElastiCachePolling = ctrl.Result{RequeueAfter: 30 * time.Second}
@@ -43,7 +44,7 @@ var requeueElastiCachePolling = ctrl.Result{RequeueAfter: 30 * time.Second}
 type ElastiCacheReplicationGroupReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	ElastiCacheClient *awselasticache.Client
+	ElastiCacheClient *multi.ElastiCache
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=elasticachereplicationgroups,verbs=get;list;watch;create;update;patch;delete
@@ -56,6 +57,10 @@ func (r *ElastiCacheReplicationGroupReconciler) Reconcile(ctx context.Context, r
 	rg := &awsv1alpha1.ElastiCacheReplicationGroup{}
 	if err := r.Get(ctx, req.NamespacedName, rg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !rg.DeletionTimestamp.IsZero() {
@@ -80,6 +85,10 @@ func (r *ElastiCacheReplicationGroupReconciler) Reconcile(ctx context.Context, r
 		if err := r.Update(ctx, rg); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	result, err := r.reconcileReplicationGroup(ctx, rg)

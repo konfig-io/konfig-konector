@@ -49,6 +49,12 @@ type APIGatewayV2CorsConfiguration struct {
 
 // APIGatewayV2APISpec defines the desired state of an API Gateway v2 API.
 type APIGatewayV2APISpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the API.
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`
@@ -87,6 +93,9 @@ type APIGatewayV2APISpec struct {
 
 // APIGatewayV2APIStatus defines the observed state of APIGatewayV2API.
 type APIGatewayV2APIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// APIID is the API identifier.
 	// +optional
 	APIID string `json:"apiId,omitempty"`

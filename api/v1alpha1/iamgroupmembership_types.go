@@ -22,6 +22,12 @@ import (
 
 // IAMGroupMembershipSpec defines the desired state of IAMGroupMembership.
 type IAMGroupMembershipSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupRef references the IAMGroup CR or a direct AWS group name.
 	GroupRef GroupRef `json:"groupRef"`
 
@@ -31,6 +37,9 @@ type IAMGroupMembershipSpec struct {
 
 // IAMGroupMembershipStatus defines the observed state of IAMGroupMembership.
 type IAMGroupMembershipStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Member indicates whether the user is currently a member of the group.
 	// +optional
 	Member bool `json:"member,omitempty"`

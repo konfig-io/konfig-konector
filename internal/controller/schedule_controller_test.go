@@ -123,8 +123,9 @@ const (
 func scheduleCR(mutate ...func(*awsv1alpha1.Schedule)) *awsv1alpha1.Schedule {
 	s := &awsv1alpha1.Schedule{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-schedule",
-			Namespace: "default",
+			Name:       "my-schedule",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.ScheduleSpec{
 			Name:               "my-schedule",
@@ -249,7 +250,7 @@ func TestScheduleReconcile(t *testing.T) {
 					s.Spec.GroupRef = &awsv1alpha1.ScheduleGroupRef{Name: "my-group"}
 				}),
 				&awsv1alpha1.ScheduleGroup{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.ScheduleGroupSpec{Name: "my-group"},
 				},
 			},
@@ -270,7 +271,7 @@ func TestScheduleReconcile(t *testing.T) {
 					s.Spec.GroupRef = &awsv1alpha1.ScheduleGroupRef{Name: "my-group"}
 				}),
 				&awsv1alpha1.ScheduleGroup{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-group", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.ScheduleGroupSpec{Name: "my-aws-group"},
 					Status: awsv1alpha1.ScheduleGroupStatus{
 						ARN: "arn:aws:scheduler:us-east-1:123456789012:schedule-group/my-aws-group",
@@ -471,7 +472,7 @@ func TestScheduleReconcile(t *testing.T) {
 					s.Spec.Target.RoleRef = awsv1alpha1.RoleRef{Name: "my-role"}
 				}),
 				&awsv1alpha1.IAMRole{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-role", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-role", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.IAMRoleSpec{RoleName: "my-role"},
 				},
 			},

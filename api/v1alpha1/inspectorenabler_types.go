@@ -28,6 +28,12 @@ type InspectorResourceType string
 // activation in this account/region. Inspector activation is a singleton:
 // create at most one InspectorEnabler CR per region.
 type InspectorEnablerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ResourceTypes are the scan types to enable.
 	// +kubebuilder:validation:MinItems=1
 	ResourceTypes []InspectorResourceType `json:"resourceTypes"`
@@ -51,6 +57,9 @@ type InspectorResourceStatus struct {
 
 // InspectorEnablerStatus defines the observed state of InspectorEnabler.
 type InspectorEnablerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccountID is the AWS account whose Inspector status is managed.
 	// +optional
 	AccountID string `json:"accountId,omitempty"`

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Managed Prometheus — konfig-konector Docs</title>
-  <meta name="description" content="API reference for PrometheusAlertManagerDefinition, PrometheusRuleGroupsNamespace, PrometheusWorkspace." />
+  <meta name="description" content="API reference for PrometheusAlertManagerDefinition, PrometheusAnomalyDetector, PrometheusResourcePolicy, PrometheusRuleGroupsNamespace, PrometheusScraper, PrometheusWorkspace." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">Managed Prometheus</h1>
-    <p class="docs-page-subtitle">3 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">6 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -65,6 +65,9 @@ metadata:
   namespace: default
 spec:
   definition: example
+  providerRef:
+    name: example-prometheusalertmanagerdefinition
+    region: us-east-1
   workspaceRef:
     name: example-prometheusalertmanagerdefinition
 </code></pre></div>
@@ -73,6 +76,9 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>definition</code></td><td>string</td><td><span class="req">yes</span></td><td>Definition is the alert manager definition, as a YAML string.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>workspaceRef</code></td><td>object</td><td><span class="req">yes</span></td><td>WorkspaceRef references the Prometheus workspace holding the definition.</td></tr>
 <tr><td><code>workspaceRef.name</code></td><td>string</td><td>—</td><td>Name of a PrometheusWorkspace CR in the same namespace.</td></tr>
 <tr><td><code>workspaceRef.workspaceId</code></td><td>string</td><td>—</td><td>WorkspaceID is a direct AWS workspace ID (ws-...), bypassing CR lookup.</td></tr>
@@ -81,6 +87,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -91,6 +101,164 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>workspaceId</code></td><td>string</td><td>—</td><td>WorkspaceID is the resolved AWS workspace ID the definition was created in.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="prometheusanomalydetector" class="resource-section">
+      <h2>PrometheusAnomalyDetector <a href="#prometheusanomalydetector" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::APS::AnomalyDetector</span></h2>
+      <p class="resource-desc">PrometheusAnomalyDetector manages AWS::APS::AnomalyDetector through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get prometheusanomalydetectors</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/amp/prometheusanomalydetector.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># PrometheusAnomalyDetector — Managed Prometheus
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/amp.html#prometheusanomalydetector
+apiVersion: aws.konfig.io/v1alpha1
+kind: PrometheusAnomalyDetector
+metadata:
+  name: example-prometheusanomalydetector
+  namespace: default
+spec:
+  alias: example
+  configuration:
+    randomCutForest:
+      ignoreNearExpectedFromAbove:
+        amount: 1
+        ratio: 1
+      ignoreNearExpectedFromBelow:
+        amount: 1
+        ratio: 1
+      query: example
+      sampleSize: 256
+      shingleSize: 2
+  evaluationIntervalInSeconds: 300
+  labels:
+  - key: example
+    value: example
+  missingDataAction:
+    markAsAnomaly: false
+    skip: false
+  providerRef:
+    name: example-prometheusanomalydetector
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+  workspace: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>alias</code></td><td>string</td><td><span class="req">yes</span></td><td>The AnomalyDetector alias.</td></tr>
+<tr><td><code>configuration</code></td><td>object</td><td><span class="req">yes</span></td><td>Determines the anomaly detector's algorithm and its configuration.</td></tr>
+<tr><td><code>configuration.randomCutForest</code></td><td>object</td><td><span class="req">yes</span></td><td>PrometheusAnomalyDetectorRandomCutForestConfiguration is a nested property type of AWS::APS::AnomalyDetector.</td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromAbove</code></td><td>object</td><td>—</td><td>PrometheusAnomalyDetectorRandomCutForestConfigurationIgnoreNearExpectedFromAbove is a nested property type of AWS::APS::AnomalyDetector.</td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromAbove.amount</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromAbove.ratio</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromBelow</code></td><td>object</td><td>—</td><td>PrometheusAnomalyDetectorRandomCutForestConfigurationIgnoreNearExpectedFromBelow is a nested property type of AWS::APS::AnomalyDetector.</td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromBelow.amount</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.ignoreNearExpectedFromBelow.ratio</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.query</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.sampleSize</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>configuration.randomCutForest.shingleSize</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>evaluationIntervalInSeconds</code></td><td>integer</td><td>—</td><td>The AnomalyDetector period of detection and metric generation.</td></tr>
+<tr><td><code>labels</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to provide meta-data.</td></tr>
+<tr><td><code>labels[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>labels[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>missingDataAction</code></td><td>object</td><td>—</td><td>The action to perform when running the expression returns no data.</td></tr>
+<tr><td><code>missingDataAction.markAsAnomaly</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>missingDataAction.skip</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>workspace</code></td><td>string</td><td><span class="req">yes</span></td><td>Required to identify a specific APS Workspace associated with this Anomaly Detector.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The AnomalyDetector ARN.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="prometheusresourcepolicy" class="resource-section">
+      <h2>PrometheusResourcePolicy <a href="#prometheusresourcepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::APS::ResourcePolicy</span></h2>
+      <p class="resource-desc">PrometheusResourcePolicy manages AWS::APS::ResourcePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get prometheusresourcepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/amp/prometheusresourcepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># PrometheusResourcePolicy — Managed Prometheus
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/amp.html#prometheusresourcepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: PrometheusResourcePolicy
+metadata:
+  name: example-prometheusresourcepolicy
+  namespace: default
+spec:
+  policyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
+    &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-prometheusresourcepolicy
+    region: us-east-1
+  workspaceArn: arn:aws:iam::123456789012:role/example-role
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>The JSON to use as the Resource-based Policy.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>workspaceArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The Arn of an APS Workspace that the PolicyDocument will be attached to.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -112,6 +280,9 @@ metadata:
 spec:
   data: example
   name: example-prometheusrulegroupsnamespace
+  providerRef:
+    name: example-prometheusrulegroupsnamespace
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -124,6 +295,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>data</code></td><td>string</td><td><span class="req">yes</span></td><td>Data is the rule groups file for the namespace, as a YAML string.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the rule groups namespace.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply at creation time.</td></tr>
 <tr><td><code>workspaceRef</code></td><td>object</td><td><span class="req">yes</span></td><td>WorkspaceRef references the Prometheus workspace containing the namespace.</td></tr>
 <tr><td><code>workspaceRef.name</code></td><td>string</td><td>—</td><td>Name of a PrometheusWorkspace CR in the same namespace.</td></tr>
@@ -134,6 +308,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the rule groups namespace.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -144,6 +322,124 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>workspaceId</code></td><td>string</td><td>—</td><td>WorkspaceID is the resolved AWS workspace ID the namespace was created in.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="prometheusscraper" class="resource-section">
+      <h2>PrometheusScraper <a href="#prometheusscraper" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::APS::Scraper</span></h2>
+      <p class="resource-desc">PrometheusScraper manages AWS::APS::Scraper through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get prometheusscrapers</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/amp/prometheusscraper.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># PrometheusScraper — Managed Prometheus
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/amp.html#prometheusscraper
+apiVersion: aws.konfig.io/v1alpha1
+kind: PrometheusScraper
+metadata:
+  name: example-prometheusscraper
+  namespace: default
+spec:
+  alias: example
+  destination:
+    ampConfiguration:
+      workspaceArn: arn:aws:iam::123456789012:role/example-role
+    cloudWatchConfiguration:
+      datasetArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-prometheusscraper
+    region: us-east-1
+  roleConfiguration:
+    sourceRoleArn: arn:aws:iam::123456789012:role/example-role
+    targetRoleArn: arn:aws:iam::123456789012:role/example-role
+  scrapeConfiguration:
+    configurationBlob: example
+  scraperLoggingConfiguration:
+    loggingDestination:
+      cloudWatchLogs:
+        logGroupArn: arn:aws:iam::123456789012:role/example-role
+    scraperComponents:
+    - type: SERVICE_DISCOVERY
+  source:
+    eksConfiguration:
+      clusterArn: arn:aws:iam::123456789012:role/example-role
+      securityGroupIds:
+      - example
+      subnetIds:
+      - example
+    vpcConfiguration:
+      securityGroupIds:
+      - example
+      subnetIds:
+      - example
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>alias</code></td><td>string</td><td>—</td><td>Scraper alias.</td></tr>
+<tr><td><code>destination</code></td><td>object</td><td><span class="req">yes</span></td><td>PrometheusScraperDestination is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>destination.ampConfiguration</code></td><td>object</td><td>—</td><td>Configuration for Amazon Managed Prometheus metrics destination</td></tr>
+<tr><td><code>destination.ampConfiguration.workspaceArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ARN of an Amazon Managed Prometheus workspace</td></tr>
+<tr><td><code>destination.cloudWatchConfiguration</code></td><td>object</td><td>—</td><td>Configuration for CloudWatch metrics destination</td></tr>
+<tr><td><code>destination.cloudWatchConfiguration.datasetArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ARN of a CloudWatch dataset</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>roleConfiguration</code></td><td>object</td><td>—</td><td>PrometheusScraperRoleConfiguration is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>roleConfiguration.sourceRoleArn</code></td><td>string</td><td>—</td><td>IAM Role in source account</td></tr>
+<tr><td><code>roleConfiguration.targetRoleArn</code></td><td>string</td><td>—</td><td>IAM Role in the target account</td></tr>
+<tr><td><code>scrapeConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>PrometheusScraperScrapeConfiguration is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>scrapeConfiguration.configurationBlob</code></td><td>string</td><td>—</td><td>Prometheus compatible scrape configuration in base64 encoded blob format</td></tr>
+<tr><td><code>scraperLoggingConfiguration</code></td><td>object</td><td>—</td><td>PrometheusScraperScraperLoggingConfiguration is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>scraperLoggingConfiguration.loggingDestination</code></td><td>object</td><td><span class="req">yes</span></td><td>PrometheusScraperScraperLoggingDestination is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>scraperLoggingConfiguration.loggingDestination.cloudWatchLogs</code></td><td>object</td><td>—</td><td>PrometheusScraperCloudWatchLogDestination is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>scraperLoggingConfiguration.loggingDestination.cloudWatchLogs.logGroupArn</code></td><td>string</td><td>—</td><td>ARN of the CloudWatch log group</td></tr>
+<tr><td><code>scraperLoggingConfiguration.scraperComponents</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>scraperLoggingConfiguration.scraperComponents[].config</code></td><td>object</td><td>—</td><td>PrometheusScraperComponentConfig is a nested property type of AWS::APS::Scraper.</td></tr>
+<tr><td><code>scraperLoggingConfiguration.scraperComponents[].config.options</code></td><td>map&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>scraperLoggingConfiguration.scraperComponents[].type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>SERVICE_DISCOVERY, COLLECTOR, EXPORTER</code></td></tr>
+<tr><td><code>source</code></td><td>object</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>source.eksConfiguration</code></td><td>object</td><td>—</td><td>Configuration for EKS metrics source</td></tr>
+<tr><td><code>source.eksConfiguration.clusterArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ARN of an EKS cluster</td></tr>
+<tr><td><code>source.eksConfiguration.securityGroupIds</code></td><td>array&lt;string&gt;</td><td>—</td><td>List of security group IDs</td></tr>
+<tr><td><code>source.eksConfiguration.subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>List of subnet IDs</td></tr>
+<tr><td><code>source.vpcConfiguration</code></td><td>object</td><td>—</td><td>Configuration for VPC metrics source</td></tr>
+<tr><td><code>source.vpcConfiguration.securityGroupIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>List of security group IDs</td></tr>
+<tr><td><code>source.vpcConfiguration.subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>List of subnet IDs</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Scraper ARN.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>roleArn</code></td><td>string</td><td>—</td><td>IAM role ARN for the scraper.</td></tr>
+<tr><td><code>scraperId</code></td><td>string</td><td>—</td><td>Required to identify a specific scraper.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -165,6 +461,9 @@ metadata:
 spec:
   alias: example
   kmsKeyArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-prometheusworkspace
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -175,6 +474,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>alias</code></td><td>string</td><td>—</td><td>Alias is a friendly name assigned to the workspace.</td></tr>
 <tr><td><code>kmsKeyArn</code></td><td>string</td><td>—</td><td>KMSKeyARN is the ARN of a customer managed KMS key used to encrypt data in the workspace.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply at creation time.</td></tr>
 </tbody></table></div>
 
@@ -182,6 +484,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the workspace.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>

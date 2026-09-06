@@ -30,6 +30,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	iamhelper "github.com/konfig-io/konfig-konector/internal/aws/iam"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
@@ -38,7 +39,7 @@ import (
 type IAMGroupReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	IAMClient *awsiam.Client
+	IAMClient *multi.IAM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=iamgroups,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *IAMGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	grp := &awsv1alpha1.IAMGroup{}
 	if err := r.Get(ctx, req.NamespacedName, grp); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, grp); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !grp.DeletionTimestamp.IsZero() {
@@ -75,6 +80,10 @@ func (r *IAMGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, grp); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileGroup(ctx, grp); err != nil {

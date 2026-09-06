@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cfhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudfront"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CloudFrontFunctionReconciler reconciles CloudFrontFunction objects.
 type CloudFrontFunctionReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CloudFrontClient *awscf.Client
+	CloudFrontClient *multi.CloudFront
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=cloudfrontfunctions,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CloudFrontFunctionReconciler) Reconcile(ctx context.Context, req ctrl.R
 	obj := &awsv1alpha1.CloudFrontFunction{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *CloudFrontFunctionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileCFFunction(ctx, obj); err != nil {
@@ -113,18 +122,22 @@ func (r *CloudFrontFunctionReconciler) reconcileCFFunction(ctx context.Context, 
 			obj.Status.FunctionStatus = string(descOut.FunctionSummary.FunctionMetadata.Stage)
 		}
 
-		_, err := r.CloudFrontClient.UpdateFunction(ctx, &awscf.UpdateFunctionInput{
-			Name:         aws.String(obj.Spec.Name),
-			IfMatch:      aws.String(obj.Status.ETag),
-			FunctionCode: []byte(obj.Spec.FunctionCode),
-			FunctionConfig: &cftypes.FunctionConfig{
-				Comment: aws.String(comment),
-				Runtime: cfFunctionRuntime(obj),
-			},
-		})
-		if err != nil {
-			return fmt.Errorf("update cloudfront function: %w", err)
+		// CloudFront control-plane APIs are rate limited; only update on spec change.
+		if obj.Status.ObservedGeneration != obj.Generation {
+			_, err := r.CloudFrontClient.UpdateFunction(ctx, &awscf.UpdateFunctionInput{
+				Name:         aws.String(obj.Spec.Name),
+				IfMatch:      aws.String(obj.Status.ETag),
+				FunctionCode: []byte(obj.Spec.FunctionCode),
+				FunctionConfig: &cftypes.FunctionConfig{
+					Comment: aws.String(comment),
+					Runtime: cfFunctionRuntime(obj),
+				},
+			})
+			if err != nil {
+				return fmt.Errorf("update cloudfront function: %w", err)
+			}
 		}
+
 		obj.Status.ObservedGeneration = obj.Generation
 		now := metav1.Now()
 		obj.Status.LastSyncTime = &now
@@ -155,8 +168,10 @@ func (r *CloudFrontFunctionReconciler) reconcileCFFunction(ctx context.Context, 
 }
 
 func (r *CloudFrontFunctionReconciler) deleteCFFunction(ctx context.Context, obj *awsv1alpha1.CloudFrontFunction) error {
-	etag := obj.Status.ETag
-	if etag == "" {
+	// Always fetch the current ETag: the one in status goes stale after any
+	// update and CloudFront answers 412 PreconditionFailed.
+	var etag string
+	{
 		descOut, err := r.CloudFrontClient.DescribeFunction(ctx, &awscf.DescribeFunctionInput{
 			Name: aws.String(obj.Spec.Name),
 		})

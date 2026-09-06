@@ -37,11 +37,20 @@ import (
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
 )
 
+// VPCPeeringConnectionAWSAPI is the subset of the EC2 API used by this controller.
+type VPCPeeringConnectionAWSAPI interface {
+	AcceptVpcPeeringConnection(ctx context.Context, params *awsec2.AcceptVpcPeeringConnectionInput, optFns ...func(*awsec2.Options)) (*awsec2.AcceptVpcPeeringConnectionOutput, error)
+	CreateTags(ctx context.Context, params *awsec2.CreateTagsInput, optFns ...func(*awsec2.Options)) (*awsec2.CreateTagsOutput, error)
+	CreateVpcPeeringConnection(ctx context.Context, params *awsec2.CreateVpcPeeringConnectionInput, optFns ...func(*awsec2.Options)) (*awsec2.CreateVpcPeeringConnectionOutput, error)
+	DeleteVpcPeeringConnection(ctx context.Context, params *awsec2.DeleteVpcPeeringConnectionInput, optFns ...func(*awsec2.Options)) (*awsec2.DeleteVpcPeeringConnectionOutput, error)
+	DescribeVpcPeeringConnections(ctx context.Context, params *awsec2.DescribeVpcPeeringConnectionsInput, optFns ...func(*awsec2.Options)) (*awsec2.DescribeVpcPeeringConnectionsOutput, error)
+}
+
 // VPCPeeringConnectionReconciler reconciles VPCPeeringConnection objects.
 type VPCPeeringConnectionReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client VPCPeeringConnectionAWSAPI
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=vpcpeeringconnections,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +63,10 @@ func (r *VPCPeeringConnectionReconciler) Reconcile(ctx context.Context, req ctrl
 	vpc := &awsv1alpha1.VPCPeeringConnection{}
 	if err := r.Get(ctx, req.NamespacedName, vpc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, vpc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !vpc.DeletionTimestamp.IsZero() {
@@ -78,6 +91,10 @@ func (r *VPCPeeringConnectionReconciler) Reconcile(ctx context.Context, req ctrl
 		if err := r.Update(ctx, vpc); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileVPCPeeringConnection(ctx, vpc); err != nil {
@@ -85,6 +102,9 @@ func (r *VPCPeeringConnectionReconciler) Reconcile(ctx context.Context, req ctrl
 		if errors.As(err, &notReady) {
 			logger.Info("waiting for dependency", "reason", err.Error())
 			return requeueDependency, nil
+		}
+		if errors.Is(err, errPendingAcceptance) {
+			return requeuePending, nil
 		}
 		logger.Error(err, "reconcile error")
 		_ = r.setConditionVPC(ctx, vpc, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonError, err.Error())
@@ -99,6 +119,7 @@ func (r *VPCPeeringConnectionReconciler) reconcileVPCPeeringConnection(ctx conte
 		return err
 	}
 
+	var pcx *ec2types.VpcPeeringConnection
 	// If we have an existing peering ID, verify it still exists.
 	if obj.Status.PeeringID != "" {
 		out, err := r.EC2Client.DescribeVpcPeeringConnections(ctx, &awsec2.DescribeVpcPeeringConnectionsInput{
@@ -107,68 +128,95 @@ func (r *VPCPeeringConnectionReconciler) reconcileVPCPeeringConnection(ctx conte
 		if err != nil && !ec2helper.IsNotFound(err) {
 			return fmt.Errorf("describe vpc peering connection: %w", err)
 		}
-		if err == nil && len(out.VpcPeeringConnections) > 0 {
-			state := string(out.VpcPeeringConnections[0].Status.Code)
-			obj.Status.Status = state
-			// Tag sync
-			if len(obj.Spec.Tags) > 0 {
-				_, _ = r.EC2Client.CreateTags(ctx, &awsec2.CreateTagsInput{
-					Resources: []string{obj.Status.PeeringID},
-					Tags:      ec2helper.TagsFromMap(obj.Spec.Tags),
-				})
-			}
-			obj.Status.ObservedGeneration = obj.Generation
-			now := metav1.Now()
-			obj.Status.LastSyncTime = &now
-			return r.setConditionVPC(ctx, obj, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "VPCPeeringConnection reconciled")
+		if err == nil && len(out.VpcPeeringConnections) > 0 &&
+			out.VpcPeeringConnections[0].Status.Code != ec2types.VpcPeeringConnectionStateReasonCodeDeleted &&
+			out.VpcPeeringConnections[0].Status.Code != ec2types.VpcPeeringConnectionStateReasonCodeDeleting {
+			pcx = &out.VpcPeeringConnections[0]
+		} else {
+			obj.Status.PeeringID = ""
 		}
-		obj.Status.PeeringID = ""
 	}
 
-	input := &awsec2.CreateVpcPeeringConnectionInput{
-		VpcId:     aws.String(vpcID),
-		PeerVpcId: aws.String(obj.Spec.PeerVPCID),
-		TagSpecifications: []ec2types.TagSpecification{
-			{
-				ResourceType: ec2types.ResourceTypeVpcPeeringConnection,
-				Tags:         ec2helper.TagsFromMap(obj.Spec.Tags),
+	if pcx == nil {
+		input := &awsec2.CreateVpcPeeringConnectionInput{
+			VpcId:     aws.String(vpcID),
+			PeerVpcId: aws.String(obj.Spec.PeerVPCID),
+			TagSpecifications: []ec2types.TagSpecification{
+				{
+					ResourceType: ec2types.ResourceTypeVpcPeeringConnection,
+					Tags:         ec2helper.TagsFromMap(obj.Spec.Tags),
+				},
 			},
-		},
-	}
-	if obj.Spec.PeerOwnerID != "" {
-		input.PeerOwnerId = aws.String(obj.Spec.PeerOwnerID)
-	}
-	if obj.Spec.PeerRegion != "" {
-		input.PeerRegion = aws.String(obj.Spec.PeerRegion)
-	}
-
-	out, err := r.EC2Client.CreateVpcPeeringConnection(ctx, input)
-	if err != nil {
-		return fmt.Errorf("create vpc peering connection: %w", err)
-	}
-
-	peeringID := aws.ToString(out.VpcPeeringConnection.VpcPeeringConnectionId)
-	obj.Status.PeeringID = peeringID
-	obj.Status.Status = string(out.VpcPeeringConnection.Status.Code)
-	if err := persistStatus(ctx, r.Client, obj); err != nil {
-		return fmt.Errorf("persist peering connection ID after create: %w", err)
-	}
-
-	// Auto-accept for same-account peering.
-	if obj.Spec.AutoAccept {
-		_, err = r.EC2Client.AcceptVpcPeeringConnection(ctx, &awsec2.AcceptVpcPeeringConnectionInput{
-			VpcPeeringConnectionId: aws.String(peeringID),
-		})
+		}
+		if obj.Spec.PeerOwnerID != "" {
+			input.PeerOwnerId = aws.String(obj.Spec.PeerOwnerID)
+		}
+		if obj.Spec.PeerRegion != "" {
+			input.PeerRegion = aws.String(obj.Spec.PeerRegion)
+		}
+		out, err := r.EC2Client.CreateVpcPeeringConnection(ctx, input)
 		if err != nil {
+			return fmt.Errorf("create vpc peering connection: %w", err)
+		}
+		pcx = out.VpcPeeringConnection
+		obj.Status.PeeringID = aws.ToString(pcx.VpcPeeringConnectionId)
+		obj.Status.Status = string(pcx.Status.Code)
+		if err := persistStatus(ctx, r.Client, obj); err != nil {
+			return fmt.Errorf("persist peering connection ID after create: %w", err)
+		}
+	} else if len(obj.Spec.Tags) > 0 {
+		_, _ = r.EC2Client.CreateTags(ctx, &awsec2.CreateTagsInput{
+			Resources: []string{obj.Status.PeeringID},
+			Tags:      ec2helper.TagsFromMap(obj.Spec.Tags),
+		})
+	}
+
+	// Accept on the peer side when asked to. Cross-account acceptance runs
+	// under the accepter provider; same-account cross-region under our own
+	// credentials in the peer region.
+	if pcx.Status.Code == ec2types.VpcPeeringConnectionStateReasonCodePendingAcceptance &&
+		(obj.Spec.AutoAccept || obj.Spec.AccepterProviderRef != nil) {
+		actx, err := crossAccountContext(ctx, obj.Namespace, obj.Spec.AccepterProviderRef, obj.Spec.PeerRegion)
+		if err != nil {
+			return err
+		}
+		if _, err := r.EC2Client.AcceptVpcPeeringConnection(actx, &awsec2.AcceptVpcPeeringConnectionInput{
+			VpcPeeringConnectionId: aws.String(obj.Status.PeeringID),
+		}); err != nil {
 			return fmt.Errorf("accept vpc peering connection: %w", err)
 		}
-		obj.Status.Status = "active"
+		out, err := r.EC2Client.DescribeVpcPeeringConnections(ctx, &awsec2.DescribeVpcPeeringConnectionsInput{
+			VpcPeeringConnectionIds: []string{obj.Status.PeeringID},
+		})
+		if err == nil && len(out.VpcPeeringConnections) > 0 {
+			pcx = &out.VpcPeeringConnections[0]
+		}
 	}
 
-	obj.Status.ObservedGeneration = obj.Generation
+	obj.Status.Status = string(pcx.Status.Code)
+	if pcx.RequesterVpcInfo != nil {
+		obj.Status.RequesterVPCID = aws.ToString(pcx.RequesterVpcInfo.VpcId)
+	}
+	if pcx.AccepterVpcInfo != nil {
+		obj.Status.AccepterVPCID = aws.ToString(pcx.AccepterVpcInfo.VpcId)
+		obj.Status.AccepterAccountID = aws.ToString(pcx.AccepterVpcInfo.OwnerId)
+	}
 	now := metav1.Now()
 	obj.Status.LastSyncTime = &now
-	return r.setConditionVPC(ctx, obj, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonCreated, "VPCPeeringConnection created")
+
+	switch pcx.Status.Code {
+	case ec2types.VpcPeeringConnectionStateReasonCodeActive:
+		obj.Status.ObservedGeneration = obj.Generation
+		return r.setConditionVPC(ctx, obj, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "VPCPeeringConnection active on both sides")
+	case ec2types.VpcPeeringConnectionStateReasonCodePendingAcceptance, ec2types.VpcPeeringConnectionStateReasonCodeInitiatingRequest, ec2types.VpcPeeringConnectionStateReasonCodeProvisioning:
+		if err := r.setConditionVPC(ctx, obj, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonPendingAcceptance,
+			fmt.Sprintf("peering connection is %s; set autoAccept/accepterProviderRef or accept in account %s", pcx.Status.Code, obj.Status.AccepterAccountID)); err != nil {
+			return err
+		}
+		return errPendingAcceptance
+	default:
+		return fmt.Errorf("peering connection in state %s: %s", pcx.Status.Code, aws.ToString(pcx.Status.Message))
+	}
 }
 
 func (r *VPCPeeringConnectionReconciler) resolveVPCIDForPeering(ctx context.Context, namespace string, ref *awsv1alpha1.VPCResourceRef) (string, error) {

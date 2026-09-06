@@ -22,6 +22,12 @@ import (
 
 // ECSClusterSpec defines the desired state of an ECS Cluster.
 type ECSClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the ECS cluster. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
@@ -43,6 +49,9 @@ type ECSClusterSpec struct {
 
 // ECSClusterStatus defines the observed state of ECSCluster.
 type ECSClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterARN is the ARN of the ECS cluster.
 	// +optional
 	ClusterARN string `json:"clusterArn,omitempty"`

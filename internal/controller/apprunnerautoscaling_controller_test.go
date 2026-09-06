@@ -61,7 +61,7 @@ func (f *fakeAppRunnerASCAPI) DeleteAutoScalingConfiguration(_ context.Context, 
 
 func appRunnerASCCR(mutate ...func(*awsv1alpha1.AppRunnerAutoScaling)) *awsv1alpha1.AppRunnerAutoScaling {
 	asc := &awsv1alpha1.AppRunnerAutoScaling{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-asc", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-asc", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.AppRunnerAutoScalingSpec{
 			Name:           "my-asc",
 			MaxConcurrency: 50,

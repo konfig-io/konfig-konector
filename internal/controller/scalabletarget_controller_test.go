@@ -134,8 +134,9 @@ const testScalableTargetARN = "arn:aws:application-autoscaling:us-east-1:1234567
 func scalableTargetCR(mutate ...func(*awsv1alpha1.ScalableTarget)) *awsv1alpha1.ScalableTarget {
 	st := &awsv1alpha1.ScalableTarget{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-target",
-			Namespace: "default",
+			Name:       "my-target",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.ScalableTargetSpec{
 			ServiceNamespace:  "ecs",

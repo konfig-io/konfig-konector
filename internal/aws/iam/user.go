@@ -19,13 +19,15 @@ package iam
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 )
 
 // GetUser fetches the IAM user by name. Returns nil, nil if not found.
-func GetUser(ctx context.Context, client *iam.Client, userName string) (*types.User, error) {
+func GetUser(ctx context.Context, client *multi.IAM, userName string) (*types.User, error) {
 	out, err := client.GetUser(ctx, &iam.GetUserInput{
 		UserName: aws.String(userName),
 	})
@@ -39,7 +41,7 @@ func GetUser(ctx context.Context, client *iam.Client, userName string) (*types.U
 }
 
 // CreateUser creates a new IAM user.
-func CreateUser(ctx context.Context, client *iam.Client, input *iam.CreateUserInput) (*types.User, error) {
+func CreateUser(ctx context.Context, client *multi.IAM, input *iam.CreateUserInput) (*types.User, error) {
 	out, err := client.CreateUser(ctx, input)
 	if err != nil {
 		return nil, err
@@ -48,7 +50,7 @@ func CreateUser(ctx context.Context, client *iam.Client, input *iam.CreateUserIn
 }
 
 // UpdateUser updates the path and/or permissions boundary of a user.
-func UpdateUser(ctx context.Context, client *iam.Client, userName, newPath string) error {
+func UpdateUser(ctx context.Context, client *multi.IAM, userName, newPath string) error {
 	_, err := client.UpdateUser(ctx, &iam.UpdateUserInput{
 		UserName:    aws.String(userName),
 		NewPath:     aws.String(newPath),
@@ -58,7 +60,7 @@ func UpdateUser(ctx context.Context, client *iam.Client, userName, newPath strin
 }
 
 // DeleteUser deletes an IAM user. Returns nil if the user does not exist.
-func DeleteUser(ctx context.Context, client *iam.Client, userName string) error {
+func DeleteUser(ctx context.Context, client *multi.IAM, userName string) error {
 	_, err := client.DeleteUser(ctx, &iam.DeleteUserInput{
 		UserName: aws.String(userName),
 	})
@@ -69,7 +71,7 @@ func DeleteUser(ctx context.Context, client *iam.Client, userName string) error 
 }
 
 // SyncUserTags reconciles AWS tags on a user to match the desired set.
-func SyncUserTags(ctx context.Context, client *iam.Client, userName string, desired map[string]string) error {
+func SyncUserTags(ctx context.Context, client *multi.IAM, userName string, desired map[string]string) error {
 	out, err := client.ListUserTags(ctx, &iam.ListUserTagsInput{UserName: aws.String(userName)})
 	if err != nil {
 		return err

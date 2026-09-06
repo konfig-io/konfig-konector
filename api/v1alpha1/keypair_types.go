@@ -22,6 +22,12 @@ import (
 
 // KeyPairSpec defines the desired state of an EC2 Key Pair.
 type KeyPairSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// KeyName is the name of the key pair. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -40,6 +46,9 @@ type KeyPairSpec struct {
 
 // KeyPairStatus defines the observed state of KeyPair.
 type KeyPairStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// KeyPairID is the AWS Key Pair identifier.
 	// +optional
 	KeyPairID string `json:"keyPairId,omitempty"`

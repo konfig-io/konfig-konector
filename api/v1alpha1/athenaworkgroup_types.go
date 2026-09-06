@@ -45,6 +45,12 @@ type AthenaResultConfiguration struct {
 
 // AthenaWorkGroupSpec defines the desired state of an Athena workgroup.
 type AthenaWorkGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the workgroup name. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -80,6 +86,9 @@ type AthenaWorkGroupSpec struct {
 
 // AthenaWorkGroupStatus defines the observed state of AthenaWorkGroup.
 type AthenaWorkGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WorkGroupName is the name of the workgroup in AWS.
 	// +optional
 	WorkGroupName string `json:"workGroupName,omitempty"`

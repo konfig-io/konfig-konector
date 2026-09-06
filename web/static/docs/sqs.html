@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SQS — konfig-konector Docs</title>
-  <meta name="description" content="API reference for SQSQueue." />
+  <meta name="description" content="API reference for SQSQueue, SQSQueueInlinePolicy." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">SQS</h1>
-    <p class="docs-page-subtitle">1 resource kind. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">2 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -70,6 +70,9 @@ spec:
   messageRetentionPeriod: 60
   policy: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;], &quot;Resource&quot;:
     &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-sqsqueue
+    region: us-east-1
   queueName: example-sqsqueue
   receiveMessageWaitTime: 1
   redrivePolicy:
@@ -89,6 +92,9 @@ spec:
 <tr><td><code>kmsKeyId</code></td><td>string</td><td>—</td><td>KMSKeyID is the KMS key ARN or alias for SSE-KMS encryption.</td></tr>
 <tr><td><code>messageRetentionPeriod</code></td><td>integer</td><td>—</td><td>MessageRetentionPeriod is how long (seconds) messages are retained.</td></tr>
 <tr><td><code>policy</code></td><td>string</td><td>—</td><td>Policy is a JSON resource policy to attach to the queue.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>queueName</code></td><td>string</td><td><span class="req">yes</span></td><td>QueueName is the name of the queue.</td></tr>
 <tr><td><code>receiveMessageWaitTime</code></td><td>integer</td><td>—</td><td>ReceiveMessageWaitTime enables long polling when > 0 (seconds).</td></tr>
 <tr><td><code>redrivePolicy</code></td><td>object</td><td>—</td><td>RedrivePolicy configures a dead-letter queue.</td></tr>
@@ -101,6 +107,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -112,6 +122,62 @@ spec:
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>queueArn</code></td><td>string</td><td>—</td><td>QueueARN is the ARN of the SQS queue.</td></tr>
 <tr><td><code>queueUrl</code></td><td>string</td><td>—</td><td>QueueURL is the URL of the SQS queue.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="sqsqueueinlinepolicy" class="resource-section">
+      <h2>SQSQueueInlinePolicy <a href="#sqsqueueinlinepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::SQS::QueueInlinePolicy</span></h2>
+      <p class="resource-desc">SQSQueueInlinePolicy manages AWS::SQS::QueueInlinePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get sqsqueueinlinepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/sqs/sqsqueueinlinepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># SQSQueueInlinePolicy — SQS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/sqs.html#sqsqueueinlinepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: SQSQueueInlinePolicy
+metadata:
+  name: example-sqsqueueinlinepolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-sqsqueueinlinepolicy
+    region: us-east-1
+  queue: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyDocument</code></td><td>object</td><td><span class="req">yes</span></td><td>A policy document that contains permissions to add to the specified SQS queue</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>queue</code></td><td>string</td><td><span class="req">yes</span></td><td>The URL of the SQS queue.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OpenSearch Serverless — konfig-konector Docs</title>
-  <meta name="description" content="API reference for OpenSearchAccessPolicy, OpenSearchServerlessCollection." />
+  <meta name="description" content="API reference for OpenSearchAccessPolicy, OpenSearchServerlessAccessPolicy, OpenSearchServerlessCollection, OpenSearchServerlessCollectionGroup, OpenSearchServerlessCollectionIndex, OpenSearchServerlessIndex, OpenSearchServerlessLifecyclePolicy, OpenSearchServerlessSecurityConfig, OpenSearchServerlessSecurityPolicy, OpenSearchServerlessVpcEndpoint." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">OpenSearch Serverless</h1>
-    <p class="docs-page-subtitle">2 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">10 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -68,6 +68,9 @@ spec:
   name: example-opensearchaccesspolicy
   policyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
     &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-opensearchaccesspolicy
+    region: us-east-1
   type: data
 </code></pre></div>
 
@@ -77,12 +80,19 @@ spec:
 <tr><td><code>description</code></td><td>string</td><td>—</td><td>Description is a description of the policy.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the access policy.</td></tr>
 <tr><td><code>policyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>PolicyDocument is the JSON policy document.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type is the access policy type (data). Allowed: <code>data</code></td></tr>
 </tbody></table></div>
 
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -93,6 +103,68 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>policyVersion</code></td><td>string</td><td>—</td><td>PolicyVersion is the current version of the policy.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlessaccesspolicy" class="resource-section">
+      <h2>OpenSearchServerlessAccessPolicy <a href="#opensearchserverlessaccesspolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::AccessPolicy</span></h2>
+      <p class="resource-desc">OpenSearchServerlessAccessPolicy manages AWS::OpenSearchServerless::AccessPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlessaccesspolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlessaccesspolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessAccessPolicy — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlessaccesspolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessAccessPolicy
+metadata:
+  name: example-opensearchserverlessaccesspolicy
+  namespace: default
+spec:
+  description: Managed by konfig-konector
+  name: example-opensearchserverlessacce
+  policy: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;], &quot;Resource&quot;:
+    &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-opensearchserverlessaccesspolicy
+    region: us-east-1
+  type: data
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>The description of the policy</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>policy</code></td><td>string</td><td><span class="req">yes</span></td><td>The JSON policy document that is the content for the policy</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>data</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -114,6 +186,9 @@ metadata:
 spec:
   description: Managed by konfig-konector
   name: example-opensearchserverlesscollection
+  providerRef:
+    name: example-opensearchserverlesscollection
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -125,6 +200,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>description</code></td><td>string</td><td>—</td><td>Description is the description of the collection.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name is the name of the collection.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are metadata tags for the collection.</td></tr>
 <tr><td><code>type</code></td><td>enum</td><td>—</td><td>Type is the collection type (SEARCH, TIMESERIES, or VECTORSEARCH). Allowed: <code>SEARCH, TIMESERIES, VECTORSEARCH</code></td></tr>
 </tbody></table></div>
@@ -132,6 +210,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>collectionARN</code></td><td>string</td><td>—</td><td>CollectionARN is the ARN of the collection.</td></tr>
 <tr><td><code>collectionEndpoint</code></td><td>string</td><td>—</td><td>CollectionEndpoint is the endpoint URL for the collection.</td></tr>
 <tr><td><code>collectionID</code></td><td>string</td><td>—</td><td>CollectionID is the unique identifier of the collection.</td></tr>
@@ -145,6 +227,499 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the current status of the collection.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlesscollectiongroup" class="resource-section">
+      <h2>OpenSearchServerlessCollectionGroup <a href="#opensearchserverlesscollectiongroup" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::CollectionGroup</span></h2>
+      <p class="resource-desc">OpenSearchServerlessCollectionGroup manages AWS::OpenSearchServerless::CollectionGroup through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlesscollectiongroups</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlesscollectiongroup.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessCollectionGroup — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlesscollectiongroup
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessCollectionGroup
+metadata:
+  name: example-opensearchserverlesscollectiongroup
+  namespace: default
+spec:
+  capacityLimits:
+    maxIndexingCapacityInOcu: 2
+    maxSearchCapacityInOcu: 2
+    minIndexingCapacityInOcu: 2
+    minSearchCapacityInOcu: 2
+  description: Managed by konfig-konector
+  generation: CLASSIC
+  name: example-opensearchserverlesscoll
+  providerRef:
+    name: example-opensearchserverlesscollectiongroup
+    region: us-east-1
+  standbyReplicas: ENABLED
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>capacityLimits</code></td><td>object</td><td>—</td><td>OpenSearchServerlessCollectionGroupCapacityLimits is a nested property type of AWS::OpenSearchServerless::CollectionGroup.</td></tr>
+<tr><td><code>capacityLimits.maxIndexingCapacityInOcu</code></td><td>number</td><td>—</td><td>The maximum indexing capacity for collections in the group.</td></tr>
+<tr><td><code>capacityLimits.maxSearchCapacityInOcu</code></td><td>number</td><td>—</td><td>The maximum search capacity for collections in the group.</td></tr>
+<tr><td><code>capacityLimits.minIndexingCapacityInOcu</code></td><td>number</td><td>—</td><td>The minimum indexing capacity for collections in the group.</td></tr>
+<tr><td><code>capacityLimits.minSearchCapacityInOcu</code></td><td>number</td><td>—</td><td>The minimum search capacity for collections in the group.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>The description of the collection group.</td></tr>
+<tr><td><code>generation</code></td><td>enum</td><td>—</td><td>The generation of Amazon OpenSearch Serverless for the collection group. Allowed: <code>CLASSIC, NEXTGEN</code></td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the collection group.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>standbyReplicas</code></td><td>enum</td><td><span class="req">yes</span></td><td>Indicates whether standby replicas are used for the collection group. Allowed: <code>ENABLED, DISABLED</code></td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the collection group.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>The unique identifier of the collection group.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlesscollectionindex" class="resource-section">
+      <h2>OpenSearchServerlessCollectionIndex <a href="#opensearchserverlesscollectionindex" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::CollectionIndex</span></h2>
+      <p class="resource-desc">OpenSearchServerlessCollectionIndex manages AWS::OpenSearchServerless::CollectionIndex through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlesscollectionindices</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlesscollectionindex.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessCollectionIndex — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlesscollectionindex
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessCollectionIndex
+metadata:
+  name: example-opensearchserverlesscollectionindex
+  namespace: default
+spec:
+  id: example-id
+  indexName: example-opensearchserverlesscollectionindex
+  indexSchema: example
+  providerRef:
+    name: example-opensearchserverlesscollectionindex
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td>string</td><td><span class="req">yes</span></td><td>The identifier of the collection Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>indexName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the collection index Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>indexSchema</code></td><td>string</td><td>—</td><td>The Mappings for the collection index</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlessindex" class="resource-section">
+      <h2>OpenSearchServerlessIndex <a href="#opensearchserverlessindex" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::Index</span></h2>
+      <p class="resource-desc">OpenSearchServerlessIndex manages AWS::OpenSearchServerless::Index through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlessindices</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlessindex.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessIndex — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlessindex
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessIndex
+metadata:
+  name: example-opensearchserverlessindex
+  namespace: default
+spec:
+  collectionEndpoint: example
+  indexName: example-opensearchserverlessindex
+  mappings:
+    properties: {}
+  providerRef:
+    name: example-opensearchserverlessindex
+    region: us-east-1
+  settings:
+    analysis:
+      analyzer: {}
+    index:
+      knn: false
+      knnAlgoParamEfSearch: 1
+      refreshInterval: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>collectionEndpoint</code></td><td>string</td><td><span class="req">yes</span></td><td>The endpoint for the collection.</td></tr>
+<tr><td><code>indexName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the OpenSearch Serverless index.</td></tr>
+<tr><td><code>mappings</code></td><td>object</td><td>—</td><td>Index Mappings</td></tr>
+<tr><td><code>mappings.properties</code></td><td>map&lt;string&gt;</td><td>—</td><td>Defines the fields within the mapping, including their types and configurations</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>settings</code></td><td>object</td><td>—</td><td>Index settings</td></tr>
+<tr><td><code>settings.analysis</code></td><td>object</td><td>—</td><td>Custom analysis configuration including analyzers, tokenizers, and filters</td></tr>
+<tr><td><code>settings.analysis.analyzer</code></td><td>map&lt;string&gt;</td><td>—</td><td>Custom analyzer definitions</td></tr>
+<tr><td><code>settings.index</code></td><td>object</td><td>—</td><td>OpenSearchServerlessIndexIndexSettingsIndex is a nested property type of AWS::OpenSearchServerless::Index.</td></tr>
+<tr><td><code>settings.index.knn</code></td><td>boolean</td><td>—</td><td>Enable/disable k-nearest neighbor search capability</td></tr>
+<tr><td><code>settings.index.knnAlgoParamEfSearch</code></td><td>integer</td><td>—</td><td>Size of the dynamic list for the nearest neighbors</td></tr>
+<tr><td><code>settings.index.refreshInterval</code></td><td>string</td><td>—</td><td>How often to perform refresh operation (e.g.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>uuid</code></td><td>string</td><td>—</td><td>The unique identifier for the index.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlesslifecyclepolicy" class="resource-section">
+      <h2>OpenSearchServerlessLifecyclePolicy <a href="#opensearchserverlesslifecyclepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::LifecyclePolicy</span></h2>
+      <p class="resource-desc">OpenSearchServerlessLifecyclePolicy manages AWS::OpenSearchServerless::LifecyclePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlesslifecyclepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlesslifecyclepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessLifecyclePolicy — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlesslifecyclepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessLifecyclePolicy
+metadata:
+  name: example-opensearchserverlesslifecyclepolicy
+  namespace: default
+spec:
+  description: Managed by konfig-konector
+  name: example-opensearchserverlesslife
+  policy: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;], &quot;Resource&quot;:
+    &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-opensearchserverlesslifecyclepolicy
+    region: us-east-1
+  type: retention
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>The description of the policy</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>policy</code></td><td>string</td><td><span class="req">yes</span></td><td>The JSON policy document that is the content for the policy</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>retention</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlesssecurityconfig" class="resource-section">
+      <h2>OpenSearchServerlessSecurityConfig <a href="#opensearchserverlesssecurityconfig" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::SecurityConfig</span></h2>
+      <p class="resource-desc">OpenSearchServerlessSecurityConfig manages AWS::OpenSearchServerless::SecurityConfig through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlesssecurityconfigs</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlesssecurityconfig.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessSecurityConfig — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlesssecurityconfig
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessSecurityConfig
+metadata:
+  name: example-opensearchserverlesssecurityconfig
+  namespace: default
+spec:
+  description: Managed by konfig-konector
+  iamFederationOptions:
+    groupAttribute: example
+    userAttribute: example
+  iamIdentityCenterOptions:
+    applicationArn: arn:aws:iam::123456789012:role/example-role
+    applicationDescription: Managed by konfig-konector
+    applicationName: example-opensearchserverlesssecurityconfig
+    groupAttribute: example
+    instanceArn: arn:aws:iam::123456789012:role/example-role
+    userAttribute: example
+  name: example-opensearchserverlesssecu
+  providerRef:
+    name: example-opensearchserverlesssecurityconfig
+    region: us-east-1
+  samlOptions:
+    groupAttribute: example
+    metadata: example
+    sessionTimeout: 300
+    userAttribute: example
+  type: saml
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>Security config description</td></tr>
+<tr><td><code>iamFederationOptions</code></td><td>object</td><td>—</td><td>OpenSearchServerlessSecurityConfigIamFederationConfigOptions is a nested property type of AWS::OpenSearchServerless::SecurityConfig.</td></tr>
+<tr><td><code>iamFederationOptions.groupAttribute</code></td><td>string</td><td>—</td><td>Group attribute for this IAM federation integration</td></tr>
+<tr><td><code>iamFederationOptions.userAttribute</code></td><td>string</td><td>—</td><td>User attribute for this IAM federation integration</td></tr>
+<tr><td><code>iamIdentityCenterOptions</code></td><td>object</td><td>—</td><td>OpenSearchServerlessSecurityConfigIamIdentityCenterConfigOptions is a nested property type of AWS::OpenSearchServerless::SecurityConfig.</td></tr>
+<tr><td><code>iamIdentityCenterOptions.applicationArn</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>iamIdentityCenterOptions.applicationDescription</code></td><td>string</td><td>—</td><td>The description of the IAM Identity Center application used to integrate with OpenSearch Serverless</td></tr>
+<tr><td><code>iamIdentityCenterOptions.applicationName</code></td><td>string</td><td>—</td><td>The name of the IAM Identity Center application used to integrate with OpenSearch Serverless</td></tr>
+<tr><td><code>iamIdentityCenterOptions.groupAttribute</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>iamIdentityCenterOptions.instanceArn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>iamIdentityCenterOptions.userAttribute</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>name</code></td><td>string</td><td>—</td><td>The friendly name of the security config Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>samlOptions</code></td><td>object</td><td>—</td><td>OpenSearchServerlessSecurityConfigSamlConfigOptions is a nested property type of AWS::OpenSearchServerless::SecurityConfig.</td></tr>
+<tr><td><code>samlOptions.groupAttribute</code></td><td>string</td><td>—</td><td>Group attribute for this saml integration</td></tr>
+<tr><td><code>samlOptions.metadata</code></td><td>string</td><td><span class="req">yes</span></td><td>The XML saml provider metadata document that you want to use</td></tr>
+<tr><td><code>samlOptions.openSearchServerlessEntityId</code></td><td>string</td><td>—</td><td>Custom entity id attribute to override default entity id for this saml integration</td></tr>
+<tr><td><code>samlOptions.sessionTimeout</code></td><td>integer</td><td>—</td><td>Defines the session timeout in minutes</td></tr>
+<tr><td><code>samlOptions.userAttribute</code></td><td>string</td><td>—</td><td>Custom attribute for this saml integration</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>saml, iamidentitycenter, iamfederation</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>The identifier of the security config Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlesssecuritypolicy" class="resource-section">
+      <h2>OpenSearchServerlessSecurityPolicy <a href="#opensearchserverlesssecuritypolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::SecurityPolicy</span></h2>
+      <p class="resource-desc">OpenSearchServerlessSecurityPolicy manages AWS::OpenSearchServerless::SecurityPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlesssecuritypolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlesssecuritypolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessSecurityPolicy — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlesssecuritypolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessSecurityPolicy
+metadata:
+  name: example-opensearchserverlesssecuritypolicy
+  namespace: default
+spec:
+  description: Managed by konfig-konector
+  name: example-opensearchserverlesssecu
+  policy: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;], &quot;Resource&quot;:
+    &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-opensearchserverlesssecuritypolicy
+    region: us-east-1
+  type: encryption
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td>The description of the policy</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>policy</code></td><td>string</td><td><span class="req">yes</span></td><td>The JSON policy document that is the content for the policy</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>encryption, network</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="opensearchserverlessvpcendpoint" class="resource-section">
+      <h2>OpenSearchServerlessVpcEndpoint <a href="#opensearchserverlessvpcendpoint" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::OpenSearchServerless::VpcEndpoint</span></h2>
+      <p class="resource-desc">OpenSearchServerlessVpcEndpoint manages AWS::OpenSearchServerless::VpcEndpoint through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get opensearchserverlessvpcendpoints</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/opensearchserverless/opensearchserverlessvpcendpoint.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># OpenSearchServerlessVpcEndpoint — OpenSearch Serverless
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/opensearchserverless.html#opensearchserverlessvpcendpoint
+apiVersion: aws.konfig.io/v1alpha1
+kind: OpenSearchServerlessVpcEndpoint
+metadata:
+  name: example-opensearchserverlessvpcendpoint
+  namespace: default
+spec:
+  name: example-opensearchserverlessvpce
+  providerRef:
+    name: example-opensearchserverlessvpcendpoint
+    region: us-east-1
+  securityGroupIds:
+  - example
+  subnetIds:
+  - example
+  vpcId: vpc-0abc12def3456789
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the VPC Endpoint Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>securityGroupIds</code></td><td>array&lt;string&gt;</td><td>—</td><td>The ID of one or more security groups to associate with the endpoint network interface</td></tr>
+<tr><td><code>subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>The ID of one or more subnets in which to create an endpoint network interface</td></tr>
+<tr><td><code>vpcId</code></td><td>string</td><td><span class="req">yes</span></td><td>The ID of the VPC in which the endpoint will be used.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>The identifier of the VPC Endpoint Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

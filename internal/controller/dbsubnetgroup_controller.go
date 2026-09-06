@@ -34,6 +34,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	rdshelper "github.com/konfig-io/konfig-konector/internal/aws/rds"
 )
 
@@ -41,7 +42,7 @@ import (
 type DBSubnetGroupReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	RDSClient *awsrds.Client
+	RDSClient *multi.RDS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dbsubnetgroups,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *DBSubnetGroupReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	sg := &awsv1alpha1.DBSubnetGroup{}
 	if err := r.Get(ctx, req.NamespacedName, sg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sg.DeletionTimestamp.IsZero() {
@@ -80,6 +85,10 @@ func (r *DBSubnetGroupReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err := r.Update(ctx, sg); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileDBSubnetGroup(ctx, sg); err != nil {

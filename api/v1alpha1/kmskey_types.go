@@ -22,6 +22,12 @@ import (
 
 // KMSKeySpec defines the desired state of a KMS Key.
 type KMSKeySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Description is a human-readable description for the key.
 	// +optional
 	Description string `json:"description,omitempty"`
@@ -57,6 +63,9 @@ type KMSKeySpec struct {
 
 // KMSKeyStatus defines the observed state of KMSKey.
 type KMSKeyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// KeyID is the AWS KMS key ID.
 	// +optional
 	KeyID string `json:"keyId,omitempty"`

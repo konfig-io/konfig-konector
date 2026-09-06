@@ -33,6 +33,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ebhelper "github.com/konfig-io/konfig-konector/internal/aws/eventbridge"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 const ecsScheduledTaskTargetID = "ecs-scheduled-task"
@@ -41,7 +42,7 @@ const ecsScheduledTaskTargetID = "ecs-scheduled-task"
 type ECSScheduledTaskReconciler struct {
 	client.Client
 	Scheme            *runtime.Scheme
-	EventBridgeClient *awsevents.Client
+	EventBridgeClient *multi.EventBridge
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=ecsscheduledtasks,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *ECSScheduledTaskReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	obj := &awsv1alpha1.ECSScheduledTask{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -78,6 +83,10 @@ func (r *ECSScheduledTaskReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileScheduledTask(ctx, obj); err != nil {

@@ -62,7 +62,7 @@ func (f *fakeBatchJDAPI) DeregisterJobDefinition(_ context.Context, params *awsb
 
 func batchJDCR(mutate ...func(*awsv1alpha1.BatchJobDefinition)) *awsv1alpha1.BatchJobDefinition {
 	jd := &awsv1alpha1.BatchJobDefinition{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-job", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-job", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.BatchJobDefinitionSpec{
 			Name: "my-job",
 			Type: "container",

@@ -37,11 +37,20 @@ import (
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
 )
 
+// TransitGatewayVpcAttachmentAWSAPI is the subset of the EC2 API used by this controller.
+type TransitGatewayVpcAttachmentAWSAPI interface {
+	AcceptTransitGatewayVpcAttachment(ctx context.Context, params *awsec2.AcceptTransitGatewayVpcAttachmentInput, optFns ...func(*awsec2.Options)) (*awsec2.AcceptTransitGatewayVpcAttachmentOutput, error)
+	CreateTags(ctx context.Context, params *awsec2.CreateTagsInput, optFns ...func(*awsec2.Options)) (*awsec2.CreateTagsOutput, error)
+	CreateTransitGatewayVpcAttachment(ctx context.Context, params *awsec2.CreateTransitGatewayVpcAttachmentInput, optFns ...func(*awsec2.Options)) (*awsec2.CreateTransitGatewayVpcAttachmentOutput, error)
+	DeleteTransitGatewayVpcAttachment(ctx context.Context, params *awsec2.DeleteTransitGatewayVpcAttachmentInput, optFns ...func(*awsec2.Options)) (*awsec2.DeleteTransitGatewayVpcAttachmentOutput, error)
+	DescribeTransitGatewayVpcAttachments(ctx context.Context, params *awsec2.DescribeTransitGatewayVpcAttachmentsInput, optFns ...func(*awsec2.Options)) (*awsec2.DescribeTransitGatewayVpcAttachmentsOutput, error)
+}
+
 // TransitGatewayVpcAttachmentReconciler reconciles TransitGatewayVpcAttachment objects.
 type TransitGatewayVpcAttachmentReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client TransitGatewayVpcAttachmentAWSAPI
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=transitgatewayvpcattachments,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +63,10 @@ func (r *TransitGatewayVpcAttachmentReconciler) Reconcile(ctx context.Context, r
 	att := &awsv1alpha1.TransitGatewayVpcAttachment{}
 	if err := r.Get(ctx, req.NamespacedName, att); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, att); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !att.DeletionTimestamp.IsZero() {
@@ -78,6 +91,10 @@ func (r *TransitGatewayVpcAttachmentReconciler) Reconcile(ctx context.Context, r
 		if err := r.Update(ctx, att); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileAttachment(ctx, att); err != nil {
@@ -85,6 +102,9 @@ func (r *TransitGatewayVpcAttachmentReconciler) Reconcile(ctx context.Context, r
 		if errors.As(err, &notReady) {
 			logger.Info("waiting for dependency", "reason", err.Error())
 			return requeueDependency, nil
+		}
+		if errors.Is(err, errPendingAcceptance) {
+			return requeuePending, nil
 		}
 		logger.Error(err, "reconcile error")
 		_ = r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonError, err.Error())
@@ -114,8 +134,23 @@ func (r *TransitGatewayVpcAttachmentReconciler) reconcileAttachment(ctx context.
 		if err != nil && !ec2helper.IsNotFound(err) {
 			return fmt.Errorf("describe TGW attachment: %w", err)
 		}
-		if err == nil && len(out.TransitGatewayVpcAttachments) > 0 {
-			att.Status.State = string(out.TransitGatewayVpcAttachments[0].State)
+		if err == nil && len(out.TransitGatewayVpcAttachments) > 0 &&
+			out.TransitGatewayVpcAttachments[0].State != ec2types.TransitGatewayAttachmentStateDeleted &&
+			out.TransitGatewayVpcAttachments[0].State != ec2types.TransitGatewayAttachmentStateDeleting {
+			cur := out.TransitGatewayVpcAttachments[0]
+			if cur.State == ec2types.TransitGatewayAttachmentStatePendingAcceptance && att.Spec.AccepterProviderRef != nil {
+				actx, err := crossAccountContext(ctx, att.Namespace, att.Spec.AccepterProviderRef, "")
+				if err != nil {
+					return err
+				}
+				if _, err := r.EC2Client.AcceptTransitGatewayVpcAttachment(actx, &awsec2.AcceptTransitGatewayVpcAttachmentInput{
+					TransitGatewayAttachmentId: aws.String(att.Status.AttachmentID),
+				}); err != nil {
+					return fmt.Errorf("accept TGW attachment: %w", err)
+				}
+				cur.State = ec2types.TransitGatewayAttachmentStatePending
+			}
+			att.Status.State = string(cur.State)
 			if len(att.Spec.Tags) > 0 {
 				if _, tagErr := r.EC2Client.CreateTags(ctx, &awsec2.CreateTagsInput{
 					Resources: []string{att.Status.AttachmentID},
@@ -124,10 +159,24 @@ func (r *TransitGatewayVpcAttachmentReconciler) reconcileAttachment(ctx context.
 					return fmt.Errorf("tag TGW attachment: %w", tagErr)
 				}
 			}
-			att.Status.ObservedGeneration = att.Generation
 			now := metav1.Now()
 			att.Status.LastSyncTime = &now
-			return r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "TransitGatewayVpcAttachment reconciled")
+			switch cur.State {
+			case ec2types.TransitGatewayAttachmentStateAvailable:
+				att.Status.ObservedGeneration = att.Generation
+				return r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "TransitGatewayVpcAttachment available")
+			case ec2types.TransitGatewayAttachmentStatePendingAcceptance:
+				if err := r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonPendingAcceptance,
+					"attachment awaits acceptance by the Transit Gateway owner; set accepterProviderRef to accept automatically"); err != nil {
+					return err
+				}
+				return errPendingAcceptance
+			case ec2types.TransitGatewayAttachmentStatePending, ec2types.TransitGatewayAttachmentStateInitiating, ec2types.TransitGatewayAttachmentStateInitiatingRequest, ec2types.TransitGatewayAttachmentStateModifying:
+				_ = r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonCreated, "attachment is "+string(cur.State))
+				return errPendingAcceptance
+			default:
+				return fmt.Errorf("TGW attachment in state %s", cur.State)
+			}
 		}
 		att.Status.AttachmentID = ""
 	}
@@ -164,10 +213,12 @@ func (r *TransitGatewayVpcAttachmentReconciler) reconcileAttachment(ctx context.
 	if err := persistStatus(ctx, r.Client, att); err != nil {
 		return fmt.Errorf("persist TGW attachment ID after create: %w", err)
 	}
-	att.Status.ObservedGeneration = att.Generation
 	now := metav1.Now()
 	att.Status.LastSyncTime = &now
-	return r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonCreated, "TransitGatewayVpcAttachment created")
+	// Creation is asynchronous; the next reconcile polls state (and accepts
+	// cross-account attachments) before reporting Ready.
+	_ = r.setConditionTGWAtt(ctx, att, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonCreated, "TransitGatewayVpcAttachment created; waiting for available")
+	return errPendingAcceptance
 }
 
 func (r *TransitGatewayVpcAttachmentReconciler) resolveTGWID(ctx context.Context, att *awsv1alpha1.TransitGatewayVpcAttachment) (string, error) {

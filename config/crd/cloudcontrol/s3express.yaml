@@ -1,0 +1,953 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3expressaccesspoints.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3ExpressAccessPoint
+    listKind: S3ExpressAccessPointList
+    plural: s3expressaccesspoints
+    singular: s3expressaccesspoint
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3ExpressAccessPoint manages AWS::S3Express::AccessPoint through the AWS Cloud Control API. The
+          AWS::S3Express::AccessPoint resource is an Amazon S3 resource type that you can use to access buckets.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3ExpressAccessPointSpec is the desired state of AWS::S3Express::AccessPoint.
+            properties:
+              bucket:
+                description: |-
+                  The name of the bucket that you want to associate this Access Point with.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: bucket is immutable
+                  rule: self == oldSelf
+              bucketAccountId:
+                description: |-
+                  The AWS account ID associated with the S3 bucket associated with this access point.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              name:
+                description: |-
+                  The name you want to assign to this Access Point. If you don't specify a name, AWS CloudFormation generates a
+                  unique ID and uses that ID for the access point name. For directory buckets, the access point name must
+                  consist of a base name that you provide and suﬃx that includes the ZoneID (AWS Availability Zone or Local
+                  Zone) of your bucket location, followed by --xa-s3.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 50
+                type: string
+              policy:
+                description: The Access Point Policy you want to apply to this access
+                  point.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publicAccessBlockConfiguration:
+                description: The PublicAccessBlock configuration that you want to
+                  apply to this Access Point.
+                properties:
+                  blockPublicAcls:
+                    description: |-
+                      Specifies whether Amazon S3 should block public access control lists (ACLs) for buckets in this account.
+                      Setting this element to TRUE causes the following behavior: - PUT Bucket acl and PUT Object acl calls fail if
+                      the specified ACL is public. - PUT Object calls fail if the request includes a public ACL. . - PUT Bucket
+                      calls fail if the request includes a public ACL. Enabling this setting doesn...
+                    type: boolean
+                  blockPublicPolicy:
+                    description: |-
+                      Specifies whether Amazon S3 should block public bucket policies for buckets in this account. Setting this
+                      element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows
+                      public access. Enabling this setting doesn't affect existing bucket policies.
+                    type: boolean
+                  ignorePublicAcls:
+                    description: |-
+                      Specifies whether Amazon S3 should ignore public ACLs for buckets in this account. Setting this element to
+                      TRUE causes Amazon S3 to ignore all public ACLs on buckets in this account and any objects that they contain.
+                      Enabling this setting doesn't affect the persistence of any existing ACLs and doesn't prevent new public ACLs
+                      from being set.
+                    type: boolean
+                  restrictPublicBuckets:
+                    description: |-
+                      Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to
+                      TRUE restricts access to this bucket to only AWS services and authorized users within this account if the
+                      bucket has a public policy. Enabling this setting doesn't affect previously stored bucket policies, except
+                      that public and cross-account access within any public bucket policy, includ...
+                    type: boolean
+                type: object
+              scope:
+                description: |-
+                  For directory buckets, you can ﬁlter access control to speciﬁc preﬁxes, API operations, or a combination of
+                  both.
+                properties:
+                  permissions:
+                    description: You can include one or more API operations as permissions
+                    items:
+                      type: string
+                    type: array
+                  prefixes:
+                    description: |-
+                      You can specify any amount of preﬁxes, but the total length of characters of all preﬁxes must be less than 256
+                      bytes in size.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              vpcConfiguration:
+                description: |-
+                  If you include this field, Amazon S3 restricts access to this Access Point to requests from the specified
+                  Virtual Private Cloud (VPC).
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  vpcId:
+                    description: If this field is specified, this access point will
+                      only allow connections from the specified VPC ID.
+                    maxLength: 1024
+                    type: string
+                type: object
+            required:
+            - bucket
+            type: object
+          status:
+            description: S3ExpressAccessPointStatus is the observed state of AWS::S3Express::AccessPoint.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the specified accesspoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              networkOrigin:
+                description: |-
+                  Indicates whether this Access Point allows access from the public Internet. If VpcConfiguration is specified
+                  for this Access Point, then NetworkOrigin is VPC, and the Access Point doesn't allow access from the public
+                  Internet. Otherwise, NetworkOrigin is Internet, and the Access Point allows access from the public Internet,
+                  subject to the Access Point and bucket access policies.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - Internet
+                - VPC
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3expressbucketpolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3ExpressBucketPolicy
+    listKind: S3ExpressBucketPolicyList
+    plural: s3expressbucketpolicies
+    singular: s3expressbucketpolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3ExpressBucketPolicy manages AWS::S3Express::BucketPolicy through the AWS Cloud Control API. Resource Type
+          definition for AWS::S3Express::BucketPolicy.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3ExpressBucketPolicySpec is the desired state of AWS::S3Express::BucketPolicy.
+            properties:
+              bucket:
+                description: |-
+                  The name of the S3 directory bucket to which the policy applies.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: bucket is immutable
+                  rule: self == oldSelf
+              policyDocument:
+                description: |-
+                  A policy document containing permissions to add to the specified bucket. In IAM, you must provide policy
+                  documents in JSON format. However, in CloudFormation you can provide the policy in JSON or YAML format because
+                  CloudFormation converts YAML to JSON before submitting it to IAM.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - bucket
+            - policyDocument
+            type: object
+          status:
+            description: S3ExpressBucketPolicyStatus is the observed state of AWS::S3Express::BucketPolicy.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3expressdirectorybuckets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3ExpressDirectoryBucket
+    listKind: S3ExpressDirectoryBucketList
+    plural: s3expressdirectorybuckets
+    singular: s3expressdirectorybucket
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3ExpressDirectoryBucket manages AWS::S3Express::DirectoryBucket through the AWS Cloud Control API. Resource
+          Type definition for AWS::S3Express::DirectoryBucket.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3ExpressDirectoryBucketSpec is the desired state of AWS::S3Express::DirectoryBucket.
+            properties:
+              bucketEncryption:
+                description: S3ExpressDirectoryBucketBucketEncryption is a nested
+                  property type of AWS::S3Express::DirectoryBucket.
+                properties:
+                  serverSideEncryptionConfiguration:
+                    description: Specifies the default server-side-encryption configuration.
+                    items:
+                      description: S3ExpressDirectoryBucketServerSideEncryptionRule
+                        is a nested property type of AWS::S3Express::DirectoryBucket.
+                      properties:
+                        bucketKeyEnabled:
+                          description: |-
+                            Specifies whether Amazon S3 should use an S3 Bucket Key with server-side encryption using KMS (SSE-KMS) for
+                            new objects in the bucket. Existing objects are not affected. Amazon S3 Express One Zone uses an S3 Bucket Key
+                            with SSE-KMS and S3 Bucket Key cannot be disabled. It's only allowed to set the BucketKeyEnabled element to
+                            true.
+                          type: boolean
+                        serverSideEncryptionByDefault:
+                          description: S3ExpressDirectoryBucketServerSideEncryptionByDefault
+                            is a nested property type of AWS::S3Express::DirectoryBucket.
+                          properties:
+                            kmsMasterKeyID:
+                              description: |-
+                                AWS Key Management Service (KMS) customer managed key ID to use for the default encryption. This parameter is
+                                allowed only if SSEAlgorithm is set to aws:kms. You can specify this parameter with the key ID or the Amazon
+                                Resource Name (ARN) of the KMS key
+                              x-kubernetes-preserve-unknown-fields: true
+                            sseAlgorithm:
+                              type: string
+                          required:
+                          - sseAlgorithm
+                          type: object
+                      type: object
+                    type: array
+                required:
+                - serverSideEncryptionConfiguration
+                type: object
+              bucketName:
+                description: |-
+                  Specifies a name for the bucket. The bucket name must contain only lowercase letters, numbers, and hyphens
+                  (-). A directory bucket name must be unique in the chosen Availability Zone or Local Zone. The bucket name
+                  must also follow the format 'bucket_base_name--zone_id--x-s3'. The zone_id can be the ID of an Availability
+                  Zone or a Local Zone. If you don't specify a name, AWS CloudFormation gener...
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                type: string
+              dataRedundancy:
+                description: |-
+                  Specifies the number of Availability Zone or Local Zone that's used for redundancy for the bucket.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - SingleAvailabilityZone
+                - SingleLocalZone
+                type: string
+                x-kubernetes-validations:
+                - message: dataRedundancy is immutable
+                  rule: self == oldSelf
+              inventoryConfigurations:
+                description: The inventory configuration for an Amazon S3 Express
+                  bucket.
+                items:
+                  description: S3ExpressDirectoryBucketInventoryConfiguration is a
+                    nested property type of AWS::S3Express::DirectoryBucket.
+                  properties:
+                    destination:
+                      description: S3ExpressDirectoryBucketDestination is a nested
+                        property type of AWS::S3Express::DirectoryBucket.
+                      properties:
+                        bucketAccountId:
+                          description: The account ID that owns the destination S3
+                            bucket.
+                          type: string
+                        bucketArn:
+                          description: The Amazon Resource Name (ARN) of the destination
+                            Amazon S3 bucket to which data is exported.
+                          type: string
+                        format:
+                          description: Specifies the file format used when exporting
+                            data to Amazon S3.
+                          enum:
+                          - CSV
+                          - ORC
+                          - Parquet
+                          type: string
+                        prefix:
+                          description: The prefix to use when exporting data. The
+                            prefix is prepended to all results.
+                          type: string
+                      required:
+                      - bucketArn
+                      - format
+                      type: object
+                    enabled:
+                      description: Specifies whether the inventory is enabled or disabled.
+                      type: boolean
+                    id:
+                      description: The ID used to identify the inventory configuration.
+                      type: string
+                    includedObjectVersions:
+                      description: Object versions to include in the inventory list.
+                      enum:
+                      - All
+                      - Current
+                      type: string
+                    optionalFields:
+                      description: Contains the optional fields that are included
+                        in the inventory results.
+                      items:
+                        type: string
+                      type: array
+                    prefix:
+                      description: The prefix that is prepended to all inventory results.
+                      type: string
+                    scheduleFrequency:
+                      description: Specifies the schedule for generating inventory
+                        results.
+                      enum:
+                      - Daily
+                      - Weekly
+                      type: string
+                  required:
+                  - destination
+                  - enabled
+                  - id
+                  - includedObjectVersions
+                  - scheduleFrequency
+                  type: object
+                type: array
+              lifecycleConfiguration:
+                description: Lifecycle rules that define how Amazon S3 Express manages
+                  objects during their lifetime.
+                properties:
+                  rules:
+                    description: A lifecycle rule for individual objects in an Amazon
+                      S3 Express bucket.
+                    items:
+                      description: S3ExpressDirectoryBucketRule is a nested property
+                        type of AWS::S3Express::DirectoryBucket.
+                      properties:
+                        abortIncompleteMultipartUpload:
+                          description: S3ExpressDirectoryBucketAbortIncompleteMultipartUpload
+                            is a nested property type of AWS::S3Express::DirectoryBucket.
+                          properties:
+                            daysAfterInitiation:
+                              description: Specifies the number of days after which
+                                Amazon S3 aborts an incomplete multipart upload.
+                              format: int64
+                              minimum: 0
+                              type: integer
+                          required:
+                          - daysAfterInitiation
+                          type: object
+                        expirationInDays:
+                          format: int64
+                          type: integer
+                        id:
+                          maxLength: 255
+                          type: string
+                        objectSizeGreaterThan:
+                          maxLength: 20
+                          type: string
+                        objectSizeLessThan:
+                          maxLength: 20
+                          type: string
+                        prefix:
+                          type: string
+                        status:
+                          enum:
+                          - Enabled
+                          - Disabled
+                          type: string
+                      required:
+                      - status
+                      type: object
+                    type: array
+                required:
+                - rules
+                type: object
+              locationName:
+                description: |-
+                  Specifies the Zone ID of the Availability Zone or Local Zone where the directory bucket will be created. An
+                  example Availability Zone ID value is 'use1-az5'.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: locationName is immutable
+                  rule: self == oldSelf
+              metricsConfigurations:
+                description: Specifies the metrics configurations for the Amazon S3
+                  Express bucket.
+                items:
+                  description: S3ExpressDirectoryBucketMetricsConfiguration is a nested
+                    property type of AWS::S3Express::DirectoryBucket.
+                  properties:
+                    accessPointArn:
+                      description: The access point ARN used when evaluating a metrics
+                        filter.
+                      type: string
+                    id:
+                      description: The ID used to identify the metrics configuration.
+                      type: string
+                    prefix:
+                      description: The prefix used when evaluating a metrics filter.
+                      type: string
+                  required:
+                  - id
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dataRedundancy
+            - locationName
+            type: object
+          status:
+            description: S3ExpressDirectoryBucketStatus is the observed state of AWS::S3Express::DirectoryBucket.
+            properties:
+              arn:
+                description: |-
+                  Returns the Amazon Resource Name (ARN) of the specified bucket.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              availabilityZoneName:
+                description: |-
+                  Returns the code for the Availability Zone or Local Zone where the directory bucket was created. An example
+                  for the code of an Availability Zone is 'us-east-1f'.
+                  Read-only: reported by AWS after creation.
+                type: string
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

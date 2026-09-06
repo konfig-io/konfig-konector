@@ -49,6 +49,12 @@ type AMIBlockDeviceMapping struct {
 
 // AMISpec defines the desired state of an AMI registration.
 type AMISpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the AMI name. Must be unique within the account/region.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
@@ -99,6 +105,9 @@ type AMISpec struct {
 
 // AMIStatus defines the observed state of AMI.
 type AMIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ImageID is the AMI ID.
 	// +optional
 	ImageID string `json:"imageId,omitempty"`

@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	firehosehelper "github.com/konfig-io/konfig-konector/internal/aws/firehose"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // FirehoseDeliveryStreamReconciler reconciles FirehoseDeliveryStream objects.
 type FirehoseDeliveryStreamReconciler struct {
 	client.Client
 	Scheme         *runtime.Scheme
-	FirehoseClient *awsfirehose.Client
+	FirehoseClient *multi.Firehose
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=firehosedeliverystreams,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *FirehoseDeliveryStreamReconciler) Reconcile(ctx context.Context, req ct
 	obj := &awsv1alpha1.FirehoseDeliveryStream{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *FirehoseDeliveryStreamReconciler) Reconcile(ctx context.Context, req ct
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileDeliveryStream(ctx, obj); err != nil {

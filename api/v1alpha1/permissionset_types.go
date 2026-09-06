@@ -25,6 +25,12 @@ import (
 // account where the Identity Center instance lives (management or delegated
 // administrator account).
 type PermissionSetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// InstanceArn is the ARN of the IAM Identity Center instance under which
 	// the permission set is created. Immutable after creation.
 	// +kubebuilder:validation:MinLength=10
@@ -68,6 +74,9 @@ type PermissionSetSpec struct {
 
 // PermissionSetStatus defines the observed state of PermissionSet.
 type PermissionSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PermissionSetArn is the ARN of the permission set.
 	// +optional
 	PermissionSetArn string `json:"permissionSetArn,omitempty"`

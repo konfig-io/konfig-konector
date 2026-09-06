@@ -428,7 +428,7 @@ func exportWAFRuleGroups(ctx context.Context, clients *awsclient.Clients, opts *
 					Spec: awsv1alpha1.WAFRuleGroupSpec{
 						Name:        name,
 						Scope:       string(scope),
-						Capacity:    got.RuleGroup.Capacity,
+						Capacity:    aws.ToInt64(got.RuleGroup.Capacity),
 						Description: aws.ToString(s.Description),
 						Tags:        wafTags(ctx, clients, s.ARN),
 					},

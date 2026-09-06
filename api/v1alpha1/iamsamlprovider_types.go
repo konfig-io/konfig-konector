@@ -22,6 +22,12 @@ import (
 
 // IAMSAMLProviderSpec defines the desired state of an AWS IAM SAML Provider.
 type IAMSAMLProviderSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the SAML provider. Immutable after creation — forms part of the ARN.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -39,6 +45,9 @@ type IAMSAMLProviderSpec struct {
 
 // IAMSAMLProviderStatus defines the observed state of IAMSAMLProvider.
 type IAMSAMLProviderStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the SAML provider.
 	// +optional
 	ARN string `json:"arn,omitempty"`

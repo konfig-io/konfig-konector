@@ -22,6 +22,12 @@ import (
 
 // SESConfigurationSetSpec defines the desired state of an SES Configuration Set.
 type SESConfigurationSetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ConfigurationSetName is the name of the configuration set.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="configurationSetName is immutable"
 	ConfigurationSetName string `json:"configurationSetName"`
@@ -41,6 +47,9 @@ type SESConfigurationSetSpec struct {
 
 // SESConfigurationSetStatus defines the observed state of SESConfigurationSet.
 type SESConfigurationSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

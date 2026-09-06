@@ -61,6 +61,10 @@ func (r *ScalableTargetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err := r.Get(ctx, req.NamespacedName, st); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, st); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !st.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(st, awsv1alpha1.FinalizerName) {
@@ -84,6 +88,10 @@ func (r *ScalableTargetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		if err := r.Update(ctx, st); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileTarget(ctx, st); err != nil {

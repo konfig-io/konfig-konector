@@ -34,6 +34,12 @@ type PrometheusWorkspaceRef struct {
 // PrometheusRuleGroupsNamespaceSpec defines the desired state of a rule
 // groups namespace in an Amazon Managed Prometheus workspace.
 type PrometheusRuleGroupsNamespaceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// WorkspaceRef references the Prometheus workspace containing the namespace.
 	WorkspaceRef PrometheusWorkspaceRef `json:"workspaceRef"`
 
@@ -54,6 +60,9 @@ type PrometheusRuleGroupsNamespaceSpec struct {
 // PrometheusRuleGroupsNamespaceStatus defines the observed state of
 // PrometheusRuleGroupsNamespace.
 type PrometheusRuleGroupsNamespaceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the rule groups namespace.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -1,0 +1,1225 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: amplifyapps.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AmplifyApp
+    listKind: AmplifyAppList
+    plural: amplifyapps
+    singular: amplifyapp
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AmplifyApp manages AWS::Amplify::App through the AWS Cloud Control API. The AWS::Amplify::App resource creates
+          Apps in the Amplify Console. An App is a collection of branches.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AmplifyAppSpec is the desired state of AWS::Amplify::App.
+            properties:
+              accessToken:
+                maxLength: 4096
+                type: string
+              autoBranchCreationConfig:
+                description: AmplifyAppAutoBranchCreationConfig is a nested property
+                  type of AWS::Amplify::App.
+                properties:
+                  autoBranchCreationPatterns:
+                    items:
+                      type: string
+                    type: array
+                  basicAuthConfig:
+                    description: AmplifyAppBasicAuthConfig is a nested property type
+                      of AWS::Amplify::App.
+                    properties:
+                      enableBasicAuth:
+                        type: boolean
+                      password:
+                        maxLength: 255
+                        type: string
+                      username:
+                        maxLength: 255
+                        type: string
+                    type: object
+                  buildSpec:
+                    maxLength: 25000
+                    type: string
+                  enableAutoBranchCreation:
+                    type: boolean
+                  enableAutoBuild:
+                    type: boolean
+                  enablePerformanceMode:
+                    type: boolean
+                  enablePullRequestPreview:
+                    type: boolean
+                  environmentVariables:
+                    items:
+                      description: AmplifyAppEnvironmentVariable is a nested property
+                        type of AWS::Amplify::App.
+                      properties:
+                        name:
+                          maxLength: 255
+                          type: string
+                        value:
+                          maxLength: 5500
+                          type: string
+                      required:
+                      - name
+                      - value
+                      type: object
+                    type: array
+                  framework:
+                    maxLength: 255
+                    type: string
+                  pullRequestEnvironmentName:
+                    maxLength: 20
+                    type: string
+                  stage:
+                    enum:
+                    - EXPERIMENTAL
+                    - BETA
+                    - PULL_REQUEST
+                    - PRODUCTION
+                    - DEVELOPMENT
+                    type: string
+                type: object
+              basicAuthConfig:
+                description: AmplifyAppBasicAuthConfig is a nested property type of
+                  AWS::Amplify::App.
+                properties:
+                  enableBasicAuth:
+                    type: boolean
+                  password:
+                    maxLength: 255
+                    type: string
+                  username:
+                    maxLength: 255
+                    type: string
+                type: object
+              buildSpec:
+                maxLength: 25000
+                type: string
+              cacheConfig:
+                description: AmplifyAppCacheConfig is a nested property type of AWS::Amplify::App.
+                properties:
+                  type:
+                    enum:
+                    - AMPLIFY_MANAGED
+                    - AMPLIFY_MANAGED_NO_COOKIES
+                    type: string
+                type: object
+              computeRoleArn:
+                maxLength: 1000
+                type: string
+              customHeaders:
+                maxLength: 25000
+                type: string
+              customRules:
+                items:
+                  description: AmplifyAppCustomRule is a nested property type of AWS::Amplify::App.
+                  properties:
+                    condition:
+                      maxLength: 2048
+                      type: string
+                    source:
+                      maxLength: 2048
+                      minLength: 1
+                      type: string
+                    status:
+                      maxLength: 7
+                      type: string
+                    target:
+                      maxLength: 2048
+                      minLength: 1
+                      type: string
+                  required:
+                  - source
+                  - target
+                  type: object
+                type: array
+              description:
+                maxLength: 1000
+                type: string
+              enableBranchAutoDeletion:
+                type: boolean
+              environmentVariables:
+                items:
+                  description: AmplifyAppEnvironmentVariable is a nested property
+                    type of AWS::Amplify::App.
+                  properties:
+                    name:
+                      maxLength: 255
+                      type: string
+                    value:
+                      maxLength: 5500
+                      type: string
+                  required:
+                  - name
+                  - value
+                  type: object
+                type: array
+              iamServiceRole:
+                maxLength: 1000
+                type: string
+              jobConfig:
+                description: AmplifyAppJobConfig is a nested property type of AWS::Amplify::App.
+                properties:
+                  buildComputeType:
+                    enum:
+                    - STANDARD_8GB
+                    - LARGE_16GB
+                    - XLARGE_72GB
+                    type: string
+                required:
+                - buildComputeType
+                type: object
+              name:
+                maxLength: 255
+                minLength: 1
+                type: string
+              oauthToken:
+                maxLength: 4096
+                type: string
+              platform:
+                enum:
+                - WEB
+                - WEB_DYNAMIC
+                - WEB_COMPUTE
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              repository:
+                type: string
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: AmplifyAppStatus is the observed state of AWS::Amplify::App.
+            properties:
+              appId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 20
+                type: string
+              appName:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 255
+                type: string
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              defaultDomain:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: amplifybranches.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AmplifyBranch
+    listKind: AmplifyBranchList
+    plural: amplifybranches
+    singular: amplifybranch
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AmplifyBranch manages AWS::Amplify::Branch through the AWS Cloud Control API. The AWS::Amplify::Branch
+          resource creates a new branch within an app.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AmplifyBranchSpec is the desired state of AWS::Amplify::Branch.
+            properties:
+              appId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 20
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: appId is immutable
+                  rule: self == oldSelf
+              backend:
+                description: AmplifyBranchBackend is a nested property type of AWS::Amplify::Branch.
+                properties:
+                  stackArn:
+                    maxLength: 2048
+                    type: string
+                type: object
+              basicAuthConfig:
+                description: AmplifyBranchBasicAuthConfig is a nested property type
+                  of AWS::Amplify::Branch.
+                properties:
+                  enableBasicAuth:
+                    type: boolean
+                  password:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                  username:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                required:
+                - password
+                - username
+                type: object
+              branchName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: branchName is immutable
+                  rule: self == oldSelf
+              buildSpec:
+                maxLength: 25000
+                type: string
+              computeRoleArn:
+                maxLength: 1000
+                type: string
+              description:
+                maxLength: 1000
+                type: string
+              enableAutoBuild:
+                type: boolean
+              enablePerformanceMode:
+                type: boolean
+              enablePullRequestPreview:
+                type: boolean
+              enableSkewProtection:
+                type: boolean
+              environmentVariables:
+                items:
+                  description: AmplifyBranchEnvironmentVariable is a nested property
+                    type of AWS::Amplify::Branch.
+                  properties:
+                    name:
+                      maxLength: 255
+                      type: string
+                    value:
+                      maxLength: 5500
+                      type: string
+                  required:
+                  - name
+                  - value
+                  type: object
+                type: array
+              framework:
+                maxLength: 255
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              pullRequestEnvironmentName:
+                maxLength: 20
+                type: string
+              stage:
+                enum:
+                - EXPERIMENTAL
+                - BETA
+                - PULL_REQUEST
+                - PRODUCTION
+                - DEVELOPMENT
+                type: string
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - appId
+            - branchName
+            type: object
+          status:
+            description: AmplifyBranchStatus is the observed state of AWS::Amplify::Branch.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: amplifydomains.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AmplifyDomain
+    listKind: AmplifyDomainList
+    plural: amplifydomains
+    singular: amplifydomain
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AmplifyDomain manages AWS::Amplify::Domain through the AWS Cloud Control API. The AWS::Amplify::Domain
+          resource allows you to connect a custom domain to your app.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AmplifyDomainSpec is the desired state of AWS::Amplify::Domain.
+            properties:
+              appId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 20
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: appId is immutable
+                  rule: self == oldSelf
+              autoSubDomainCreationPatterns:
+                items:
+                  type: string
+                type: array
+              autoSubDomainIAMRole:
+                maxLength: 1000
+                type: string
+              certificateSettings:
+                description: AmplifyDomainCertificateSettings is a nested property
+                  type of AWS::Amplify::Domain.
+                properties:
+                  certificateType:
+                    enum:
+                    - AMPLIFY_MANAGED
+                    - CUSTOM
+                    type: string
+                  customCertificateArn:
+                    type: string
+                type: object
+              domainName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 255
+                type: string
+                x-kubernetes-validations:
+                - message: domainName is immutable
+                  rule: self == oldSelf
+              enableAutoSubDomain:
+                type: boolean
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              subDomainSettings:
+                items:
+                  description: AmplifyDomainSubDomainSetting is a nested property
+                    type of AWS::Amplify::Domain.
+                  properties:
+                    branchName:
+                      maxLength: 255
+                      minLength: 1
+                      type: string
+                    prefix:
+                      maxLength: 255
+                      type: string
+                  required:
+                  - branchName
+                  - prefix
+                  type: object
+                type: array
+            required:
+            - appId
+            - domainName
+            - subDomainSettings
+            type: object
+          status:
+            description: AmplifyDomainStatus is the observed state of AWS::Amplify::Domain.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              certificate:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  certificateArn:
+                    type: string
+                  certificateType:
+                    enum:
+                    - AMPLIFY_MANAGED
+                    - CUSTOM
+                    type: string
+                  certificateVerificationDNSRecord:
+                    maxLength: 1000
+                    type: string
+                type: object
+              certificateRecord:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              domainStatus:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              statusReason:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1000
+                type: string
+              updateStatus:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: amplifywebhooks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AmplifyWebhook
+    listKind: AmplifyWebhookList
+    plural: amplifywebhooks
+    singular: amplifywebhook
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AmplifyWebhook manages AWS::Amplify::Webhook through the AWS Cloud Control API. Resource Type definition for
+          AWS::Amplify::Webhook. Creates a webhook on an Amplify app.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AmplifyWebhookSpec is the desired state of AWS::Amplify::Webhook.
+            properties:
+              appId:
+                description: |-
+                  The unique ID for an Amplify app.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 20
+                type: string
+              branchName:
+                description: The name for a branch that is part of an Amplify app.
+                maxLength: 255
+                minLength: 1
+                type: string
+              description:
+                description: The description for a webhook.
+                maxLength: 1000
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: Tags for the webhook.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - branchName
+            type: object
+          status:
+            description: AmplifyWebhookStatus is the observed state of AWS::Amplify::Webhook.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the webhook.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1000
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              webhookId:
+                description: |-
+                  The unique ID for a webhook.
+                  Read-only: reported by AWS after creation.
+                maxLength: 255
+                type: string
+              webhookUrl:
+                description: |-
+                  The URL of the webhook.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1000
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

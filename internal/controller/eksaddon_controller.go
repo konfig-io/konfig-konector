@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awseks "github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -34,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ekshelper "github.com/konfig-io/konfig-konector/internal/aws/eks"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // EKSAddonReconciler reconciles EKSAddon objects.
 type EKSAddonReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EKSClient *awseks.Client
+	EKSClient *multi.EKS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=eksaddons,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +53,10 @@ func (r *EKSAddonReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	addon := &awsv1alpha1.EKSAddon{}
 	if err := r.Get(ctx, req.NamespacedName, addon); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, addon); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !addon.DeletionTimestamp.IsZero() {
@@ -83,6 +87,10 @@ func (r *EKSAddonReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, addon); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	result, err := r.reconcileAddon(ctx, addon)

@@ -1,0 +1,1135 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmcontactscontactchannels.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMContactsContactChannel
+    listKind: SSMContactsContactChannelList
+    plural: ssmcontactscontactchannels
+    singular: ssmcontactscontactchannel
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMContactsContactChannel manages AWS::SSMContacts::ContactChannel through the AWS Cloud Control API. Resource
+          Type definition for AWS::SSMContacts::ContactChannel
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMContactsContactChannelSpec is the desired state of AWS::SSMContacts::ContactChannel.
+            properties:
+              channelAddress:
+                description: The details that SSM Incident Manager uses when trying
+                  to engage the contact channel.
+                type: string
+              channelName:
+                description: The device name. String of 6 to 50 alphabetical, numeric,
+                  dash, and underscore characters.
+                maxLength: 255
+                type: string
+              channelType:
+                description: |-
+                  Device type, which specify notification channel. Currently supported values: “SMS”, “VOICE”, “EMAIL”,
+                  “CHATBOT.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - SMS
+                - VOICE
+                - EMAIL
+                type: string
+              contactId:
+                description: |-
+                  ARN of the contact resource
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              deferActivation:
+                description: |-
+                  If you want to activate the channel at a later time, you can choose to defer activation. SSM Incident Manager
+                  can't engage your contact channel until it has been activated.
+                type: boolean
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            type: object
+          status:
+            description: SSMContactsContactChannelStatus is the observed state of
+              AWS::SSMContacts::ContactChannel.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the engagement to a contact channel.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmcontactscontacts.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMContactsContact
+    listKind: SSMContactsContactList
+    plural: ssmcontactscontacts
+    singular: ssmcontactscontact
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMContactsContact manages AWS::SSMContacts::Contact through the AWS Cloud Control API. Resource Type
+          definition for AWS::SSMContacts::Contact
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMContactsContactSpec is the desired state of AWS::SSMContacts::Contact.
+            properties:
+              alias:
+                description: |-
+                  Alias of the contact. String value with 20 to 256 characters. Only alphabetical, numeric characters, dash, or
+                  underscore allowed.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: alias is immutable
+                  rule: self == oldSelf
+              displayName:
+                description: |-
+                  Name of the contact. String value with 3 to 256 characters. Only alphabetical, space, numeric characters,
+                  dash, or underscore allowed.
+                maxLength: 255
+                minLength: 1
+                type: string
+              plan:
+                description: The stages that an escalation plan or engagement plan
+                  engages contacts and contact methods in.
+                items:
+                  description: SSMContactsContactStage is a nested property type of
+                    AWS::SSMContacts::Contact.
+                  properties:
+                    durationInMinutes:
+                      description: The time to wait until beginning the next stage.
+                      format: int64
+                      type: integer
+                    rotationIds:
+                      description: List of Rotation Ids to associate with Contact
+                      items:
+                        type: string
+                      type: array
+                    targets:
+                      description: The contacts or contact methods that the escalation
+                        plan or engagement plan is engaging.
+                      items:
+                        description: SSMContactsContactTargets is a nested property
+                          type of AWS::SSMContacts::Contact.
+                        properties:
+                          channelTargetInfo:
+                            description: SSMContactsContactChannelTargetInfo is a
+                              nested property type of AWS::SSMContacts::Contact.
+                            properties:
+                              channelId:
+                                description: The Amazon Resource Name (ARN) of the
+                                  contact channel.
+                                type: string
+                              retryIntervalInMinutes:
+                                description: The number of minutes to wait to retry
+                                  sending engagement in the case the engagement initially
+                                  fails.
+                                format: int64
+                                type: integer
+                            required:
+                            - channelId
+                            - retryIntervalInMinutes
+                            type: object
+                          contactTargetInfo:
+                            description: SSMContactsContactContactTargetInfo is a
+                              nested property type of AWS::SSMContacts::Contact.
+                            properties:
+                              contactId:
+                                description: The Amazon Resource Name (ARN) of the
+                                  contact.
+                                type: string
+                              isEssential:
+                                description: A Boolean value determining if the contact's
+                                  acknowledgement stops the progress of stages in
+                                  the plan.
+                                type: boolean
+                            required:
+                            - contactId
+                            - isEssential
+                            type: object
+                        type: object
+                      type: array
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              type:
+                description: |-
+                  Contact type, which specify type of contact. Currently supported values: “PERSONAL”, “SHARED”, “OTHER“.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - PERSONAL
+                - ESCALATION
+                - ONCALL_SCHEDULE
+                type: string
+                x-kubernetes-validations:
+                - message: type is immutable
+                  rule: self == oldSelf
+            required:
+            - alias
+            - displayName
+            - type
+            type: object
+          status:
+            description: SSMContactsContactStatus is the observed state of AWS::SSMContacts::Contact.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the contact.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmcontactsplans.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMContactsPlan
+    listKind: SSMContactsPlanList
+    plural: ssmcontactsplans
+    singular: ssmcontactsplan
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMContactsPlan manages AWS::SSMContacts::Plan through the AWS Cloud Control API. Engagement Plan for a SSM
+          Incident Manager Contact.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMContactsPlanSpec is the desired state of AWS::SSMContacts::Plan.
+            properties:
+              contactId:
+                description: |-
+                  Contact ID for the AWS SSM Incident Manager Contact to associate the plan.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              rotationIds:
+                description: Rotation Ids to associate with Oncall Contact for engagement.
+                items:
+                  type: string
+                type: array
+              stages:
+                description: The stages that an escalation plan or engagement plan
+                  engages contacts and contact methods in.
+                items:
+                  description: SSMContactsPlanStage is a nested property type of AWS::SSMContacts::Plan.
+                  properties:
+                    durationInMinutes:
+                      description: The time to wait until beginning the next stage.
+                      format: int64
+                      type: integer
+                    targets:
+                      description: The contacts or contact methods that the escalation
+                        plan or engagement plan is engaging.
+                      items:
+                        description: SSMContactsPlanTargets is a nested property type
+                          of AWS::SSMContacts::Plan.
+                        properties:
+                          channelTargetInfo:
+                            description: SSMContactsPlanChannelTargetInfo is a nested
+                              property type of AWS::SSMContacts::Plan.
+                            properties:
+                              channelId:
+                                description: The Amazon Resource Name (ARN) of the
+                                  contact channel.
+                                type: string
+                              retryIntervalInMinutes:
+                                description: The number of minutes to wait to retry
+                                  sending engagement in the case the engagement initially
+                                  fails.
+                                format: int64
+                                type: integer
+                            required:
+                            - channelId
+                            - retryIntervalInMinutes
+                            type: object
+                          contactTargetInfo:
+                            description: SSMContactsPlanContactTargetInfo is a nested
+                              property type of AWS::SSMContacts::Plan.
+                            properties:
+                              contactId:
+                                description: The Amazon Resource Name (ARN) of the
+                                  contact.
+                                type: string
+                              isEssential:
+                                description: A Boolean value determining if the contact's
+                                  acknowledgement stops the progress of stages in
+                                  the plan.
+                                type: boolean
+                            required:
+                            - contactId
+                            - isEssential
+                            type: object
+                        type: object
+                      type: array
+                  required:
+                  - durationInMinutes
+                  type: object
+                type: array
+            type: object
+          status:
+            description: SSMContactsPlanStatus is the observed state of AWS::SSMContacts::Plan.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the contact.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmcontactsrotations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMContactsRotation
+    listKind: SSMContactsRotationList
+    plural: ssmcontactsrotations
+    singular: ssmcontactsrotation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMContactsRotation manages AWS::SSMContacts::Rotation through the AWS Cloud Control API. Resource Type
+          definition for AWS::SSMContacts::Rotation.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMContactsRotationSpec is the desired state of AWS::SSMContacts::Rotation.
+            properties:
+              contactIds:
+                description: Members of the rotation
+                items:
+                  type: string
+                type: array
+              name:
+                description: Name of the Rotation
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              recurrence:
+                description: SSMContactsRotationRecurrenceSettings is a nested property
+                  type of AWS::SSMContacts::Rotation.
+                properties:
+                  dailySettings:
+                    description: Information about on-call rotations that recur daily.
+                    items:
+                      type: string
+                    type: array
+                  monthlySettings:
+                    description: Information about on-call rotations that recur monthly.
+                    items:
+                      description: SSMContactsRotationMonthlySetting is a nested property
+                        type of AWS::SSMContacts::Rotation.
+                      properties:
+                        dayOfMonth:
+                          description: The day of the month when monthly recurring
+                            on-call rotations begin.
+                          format: int64
+                          maximum: 31
+                          minimum: 1
+                          type: integer
+                        handOffTime:
+                          type: string
+                      required:
+                      - dayOfMonth
+                      - handOffTime
+                      type: object
+                    type: array
+                  numberOfOnCalls:
+                    description: Number of Oncalls per shift.
+                    format: int64
+                    minimum: 1
+                    type: integer
+                  recurrenceMultiplier:
+                    description: The number of days, weeks, or months a single rotation
+                      lasts.
+                    format: int64
+                    maximum: 100
+                    minimum: 1
+                    type: integer
+                  shiftCoverages:
+                    description: Information about the days of the week included in
+                      on-call rotation coverage.
+                    items:
+                      description: SSMContactsRotationShiftCoverage is a nested property
+                        type of AWS::SSMContacts::Rotation.
+                      properties:
+                        coverageTimes:
+                          description: Information about when an on-call shift begins
+                            and ends.
+                          items:
+                            description: SSMContactsRotationCoverageTime is a nested
+                              property type of AWS::SSMContacts::Rotation.
+                            properties:
+                              endTime:
+                                type: string
+                              startTime:
+                                type: string
+                            required:
+                            - endTime
+                            - startTime
+                            type: object
+                          type: array
+                        dayOfWeek:
+                          enum:
+                          - MON
+                          - TUE
+                          - WED
+                          - THU
+                          - FRI
+                          - SAT
+                          - SUN
+                          type: string
+                      required:
+                      - coverageTimes
+                      - dayOfWeek
+                      type: object
+                    type: array
+                  weeklySettings:
+                    description: Information about on-call rotations that recur weekly.
+                    items:
+                      description: SSMContactsRotationWeeklySetting is a nested property
+                        type of AWS::SSMContacts::Rotation.
+                      properties:
+                        dayOfWeek:
+                          enum:
+                          - MON
+                          - TUE
+                          - WED
+                          - THU
+                          - FRI
+                          - SAT
+                          - SUN
+                          type: string
+                        handOffTime:
+                          type: string
+                      required:
+                      - dayOfWeek
+                      - handOffTime
+                      type: object
+                    type: array
+                type: object
+              startTime:
+                description: Start time of the first shift of Oncall Schedule
+                type: string
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              timeZoneId:
+                description: TimeZone Identifier for the Oncall Schedule
+                type: string
+            required:
+            - contactIds
+            - name
+            - recurrence
+            - startTime
+            - timeZoneId
+            type: object
+          status:
+            description: SSMContactsRotationStatus is the observed state of AWS::SSMContacts::Rotation.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the rotation.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

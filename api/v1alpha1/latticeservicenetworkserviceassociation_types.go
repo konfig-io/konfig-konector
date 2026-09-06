@@ -34,6 +34,12 @@ type LatticeServiceRef struct {
 // LatticeServiceNetworkServiceAssociationSpec defines the desired state of a
 // VPC Lattice service network to service association.
 type LatticeServiceNetworkServiceAssociationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ServiceNetworkRef references the service network to associate.
 	ServiceNetworkRef LatticeServiceNetworkRef `json:"serviceNetworkRef"`
 
@@ -48,6 +54,9 @@ type LatticeServiceNetworkServiceAssociationSpec struct {
 // LatticeServiceNetworkServiceAssociationStatus defines the observed state of
 // LatticeServiceNetworkServiceAssociation.
 type LatticeServiceNetworkServiceAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the association.
 	// +optional
 	ARN string `json:"arn,omitempty"`

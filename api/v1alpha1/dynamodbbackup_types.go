@@ -22,6 +22,12 @@ import (
 
 // DynamoDBBackupSpec defines the desired state of a DynamoDB on-demand backup.
 type DynamoDBBackupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TableName is the name of the DynamoDB table to back up.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tableName is immutable"
 	TableName string `json:"tableName"`
@@ -33,6 +39,9 @@ type DynamoDBBackupSpec struct {
 
 // DynamoDBBackupStatus defines the observed state of DynamoDBBackup.
 type DynamoDBBackupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// BackupARN is the ARN of the backup.
 	// +optional
 	BackupARN string `json:"backupArn,omitempty"`

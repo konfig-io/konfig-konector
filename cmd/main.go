@@ -35,9 +35,15 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+
 	awsclient "github.com/konfig-io/konfig-konector/internal/aws"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	"github.com/konfig-io/konfig-konector/internal/controller"
+	konfigwebhook "github.com/konfig-io/konfig-konector/internal/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -59,6 +65,7 @@ func main() {
 	var probeAddr string
 	var secureMetrics bool
 	var enableHTTP2 bool
+	var enableWebhook bool
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -66,6 +73,8 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.BoolVar(&secureMetrics, "metrics-secure", false,
 		"If set the metrics endpoint is served securely")
+	flag.BoolVar(&enableWebhook, "enable-webhook", false,
+		"Serve the providerRef validating admission webhook on the manager webhook port (requires TLS certs in the webhook cert dir).")
 	flag.BoolVar(&enableHTTP2, "enable-http2", false,
 		"If set, HTTP/2 will be enabled for the metrics and webhook servers")
 	opts := zap.Options{
@@ -133,6 +142,27 @@ func main() {
 		os.Exit(1)
 	}
 
+	baseAccountID := ""
+	if ident, err := awsClients.STS.GetCallerIdentity(context.Background(), &sts.GetCallerIdentityInput{}); err == nil {
+		baseAccountID = aws.ToString(ident.Account)
+		setupLog.Info("operator identity", "account", baseAccountID, "arn", aws.ToString(ident.Arn))
+	} else {
+		setupLog.Error(err, "sts:GetCallerIdentity failed; account-dependent lookups (IAMPolicy by name) are degraded")
+	}
+
+	// Multi-account: every reconcile resolves its AWSProvider (spec.providerRef,
+	// namespace annotation, or operator default) and the SDK wrappers apply
+	// the resulting credentials/region per call.
+	controller.SetProviderResolver(&provider.Resolver{
+		Client: mgr.GetClient(),
+		// Role assumption must use the unscoped base STS client: the scoped
+		// wrapper would try to sign AssumeRole with the credentials it is
+		// producing and deadlock inside the credentials cache.
+		STS:             awsClients.STS.Base(),
+		BaseCredentials: awsClients.Config.Credentials,
+		BaseRegion:      awsClients.Config.Region,
+	})
+
 	// Use the operator pod name (or a fixed string) as the caller reference prefix
 	// for Route53 idempotency tokens.
 	callerRef := os.Getenv("POD_NAME")
@@ -151,6 +181,7 @@ func main() {
 	if err = (&controller.IAMPolicyReconciler{
 		Client:    mgr.GetClient(),
 		Scheme:    mgr.GetScheme(),
+		AccountID: baseAccountID,
 		IAMClient: awsClients.IAM,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "IAMPolicy")
@@ -1331,6 +1362,18 @@ func main() {
 	// Controller families added after the round-2 expansion register
 	// themselves via controller.RegisterSetup (see internal/controller/setup.go)
 	// instead of an inline block here.
+	if started, skipped, err := controller.SetupCloudControlKinds(mgr, awsClients.CloudControl); err != nil {
+		setupLog.Error(err, "unable to set up Cloud Control kinds")
+		os.Exit(1)
+	} else {
+		setupLog.Info("Cloud Control typed kinds", "started", started, "skipped (CRD not installed)", skipped)
+	}
+
+	if enableWebhook {
+		mgr.GetWebhookServer().Register(konfigwebhook.Path, &admission.Webhook{Handler: &konfigwebhook.ProviderRefValidator{Client: mgr.GetClient()}})
+		setupLog.Info("providerRef admission webhook registered", "path", konfigwebhook.Path)
+	}
+
 	if err := controller.SetupRegistered(mgr, awsClients); err != nil {
 		setupLog.Error(err, "unable to create registered controllers")
 		os.Exit(1)

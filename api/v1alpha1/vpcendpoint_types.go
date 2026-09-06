@@ -22,6 +22,12 @@ import (
 
 // VPCEndpointSpec defines the desired state of an AWS VPC Endpoint.
 type VPCEndpointSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC for this endpoint.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 
@@ -54,6 +60,9 @@ type VPCEndpointSpec struct {
 
 // VPCEndpointStatus defines the observed state of VPCEndpoint.
 type VPCEndpointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// EndpointID is the AWS VPC Endpoint identifier.
 	// +optional
 	EndpointID string `json:"endpointId,omitempty"`

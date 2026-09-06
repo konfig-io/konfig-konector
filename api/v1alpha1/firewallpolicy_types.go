@@ -48,6 +48,12 @@ type StatefulRuleGroupRef struct {
 
 // FirewallPolicySpec defines the desired state of an AWS Network Firewall policy.
 type FirewallPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the descriptive name of the firewall policy. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -83,6 +89,9 @@ type FirewallPolicySpec struct {
 
 // FirewallPolicyStatus defines the observed state of FirewallPolicy.
 type FirewallPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the firewall policy.
 	// +optional
 	ARN string `json:"arn,omitempty"`

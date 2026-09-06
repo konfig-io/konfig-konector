@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	s3helper "github.com/konfig-io/konfig-konector/internal/aws/s3"
 )
 
@@ -76,6 +77,10 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err := r.Get(ctx, req.NamespacedName, b); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, b); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !b.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(b, awsv1alpha1.FinalizerName) {
@@ -99,6 +104,10 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, b); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileBucket(ctx, b); err != nil {
@@ -112,7 +121,13 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1.S3Bucket) error {
 	region := b.Spec.Region
 	if region == "" {
-		region = os.Getenv("AWS_REGION")
+		// Prefer the AWSProvider scope's region (multi-account/region), then
+		// the operator's own.
+		if sc := provider.ScopeFrom(ctx); sc != nil && sc.Region != "" {
+			region = sc.Region
+		} else {
+			region = os.Getenv("AWS_REGION")
+		}
 	}
 
 	// Check if bucket exists. HeadBucket returns HTTP 404 for missing buckets.
@@ -214,7 +229,7 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		for _, lr := range b.Spec.LifecycleRules {
 			rule := s3types.LifecycleRule{
 				Status: s3types.ExpirationStatus(lr.Status),
-				Filter: &s3types.LifecycleRuleFilterMemberPrefix{Value: lr.Prefix},
+				Filter: &s3types.LifecycleRuleFilter{Prefix: aws.String(lr.Prefix)},
 			}
 			if lr.ID != "" {
 				rule.ID = aws.String(lr.ID)

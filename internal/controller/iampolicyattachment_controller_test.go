@@ -66,8 +66,9 @@ func (f *fakeIAMPolicyAttachmentAPI) DetachRolePolicy(ctx context.Context, param
 func newTestIAMPolicyAttachment(mutators ...func(*awsv1alpha1.IAMPolicyAttachment)) *awsv1alpha1.IAMPolicyAttachment {
 	att := &awsv1alpha1.IAMPolicyAttachment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-attachment",
-			Namespace: "default",
+			Name:       "test-attachment",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.IAMPolicyAttachmentSpec{
 			RoleRef:   awsv1alpha1.RoleRef{Name: "test-role"},

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CloudWatch Logs — konfig-konector Docs</title>
-  <meta name="description" content="API reference for LogGroup, MetricFilter, SubscriptionFilter." />
+  <meta name="description" content="API reference for LogGroup, LogsAccountPolicy, LogsDelivery, LogsDeliveryDestination, LogsDeliverySource, LogsDestination, LogsIntegration, LogsLogAnomalyDetector, LogsLogStream, LogsQueryDefinition, LogsResourcePolicy, LogsScheduledQuery, LogsStorageTierPolicy, LogsTransformer, MetricFilter, SubscriptionFilter." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">CloudWatch Logs</h1>
-    <p class="docs-page-subtitle">3 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">16 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -66,6 +66,9 @@ metadata:
 spec:
   kmsKeyArn: arn:aws:iam::123456789012:role/example-role
   logGroupName: example-loggroup
+  providerRef:
+    name: example-loggroup
+    region: us-east-1
   retentionInDays: 7
   tags:
     environment: dev
@@ -77,6 +80,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>kmsKeyArn</code></td><td>string</td><td>—</td><td>KMSKeyARN is the KMS key ARN for encrypting log data.</td></tr>
 <tr><td><code>logGroupName</code></td><td>string</td><td><span class="req">yes</span></td><td>LogGroupName is the name of the log group.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>retentionInDays</code></td><td>enum</td><td>—</td><td>RetentionInDays sets the log retention period. Allowed: <code>0, 1, 3, 5, 7, 14, 30, 60…</code></td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 </tbody></table></div>
@@ -85,6 +91,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the log group.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -94,6 +104,1086 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsaccountpolicy" class="resource-section">
+      <h2>LogsAccountPolicy <a href="#logsaccountpolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::AccountPolicy</span> <span class="resource-badge" style="background:rgba(248,113,113,.18);color:#f87171" title="account-wide CloudWatch Logs policy applied to every log group">⚠ DESTRUCTIVE SCOPE</span></h2>
+      <p class="resource-desc">Caution, destructive scope: account-wide CloudWatch Logs policy applied to every log group. Provided for completeness; do not use from application namespaces. Restrict with AWSProvider.allowedNamespaces and RBAC. LogsAccountPolicy manages AWS::Logs::AccountPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsaccountpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsaccountpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsAccountPolicy — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsaccountpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsAccountPolicy
+metadata:
+  name: example-logsaccountpolicy
+  namespace: default
+spec:
+  policyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
+    &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  policyName: example-logsaccountpolicy
+  policyType: DATA_PROTECTION_POLICY
+  providerRef:
+    name: example-logsaccountpolicy
+    region: us-east-1
+  scope: ALL
+  selectionCriteria: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>The body of the policy document you want to use for this topic.</td></tr>
+<tr><td><code>policyName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the account policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>policyType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type of the policy. Allowed: <code>DATA_PROTECTION_POLICY, SUBSCRIPTION_FILTER_POLICY, FIELD_INDEX_POLICY, TRANSFORMER_POLICY, METRIC_EXTRACTION_POLICY</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>scope</code></td><td>enum</td><td>—</td><td>Scope for policy application Allowed: <code>ALL</code></td></tr>
+<tr><td><code>selectionCriteria</code></td><td>string</td><td>—</td><td>Log group selection criteria to apply policy only to a subset of log groups.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accountId</code></td><td>string</td><td>—</td><td>User account id Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsdelivery" class="resource-section">
+      <h2>LogsDelivery <a href="#logsdelivery" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::Delivery</span></h2>
+      <p class="resource-desc">LogsDelivery manages AWS::Logs::Delivery through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsdeliveries</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsdelivery.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsDelivery — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsdelivery
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsDelivery
+metadata:
+  name: example-logsdelivery
+  namespace: default
+spec:
+  deliveryDestinationArn: arn:aws:iam::123456789012:role/example-role
+  deliverySourceName: example-logsdelivery
+  fieldDelimiter: examp
+  providerRef:
+    name: example-logsdelivery
+    region: us-east-1
+  recordFields:
+  - example
+  s3EnableHiveCompatiblePath: true
+  s3SuffixPath: example
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deliveryDestinationArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the delivery destination that is associated with this delivery.</td></tr>
+<tr><td><code>deliverySourceName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the delivery source that is associated with this delivery.</td></tr>
+<tr><td><code>fieldDelimiter</code></td><td>string</td><td>—</td><td>The field delimiter to use between record fields when the final output format of a delivery is in Plain , W3C , or Raw format.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>recordFields</code></td><td>array&lt;string&gt;</td><td>—</td><td>The list of record fields to be delivered to the destination, in order.</td></tr>
+<tr><td><code>s3EnableHiveCompatiblePath</code></td><td>boolean</td><td>—</td><td>This parameter causes the S3 objects that contain delivered logs to use a prefix structure that allows for integration with Apache Hive.</td></tr>
+<tr><td><code>s3SuffixPath</code></td><td>string</td><td>—</td><td>This string allows re-configuring the S3 object prefix to contain either static or variable sections.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>The tags that have been assigned to this delivery.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) that uniquely identifies this delivery.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>deliveryDestinationType</code></td><td>string</td><td>—</td><td>Displays whether the delivery destination associated with this delivery is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.</td></tr>
+<tr><td><code>deliveryId</code></td><td>string</td><td>—</td><td>The unique ID that identifies this delivery in your account.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsdeliverydestination" class="resource-section">
+      <h2>LogsDeliveryDestination <a href="#logsdeliverydestination" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::DeliveryDestination</span></h2>
+      <p class="resource-desc">LogsDeliveryDestination manages AWS::Logs::DeliveryDestination through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsdeliverydestinations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsdeliverydestination.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsDeliveryDestination — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsdeliverydestination
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsDeliveryDestination
+metadata:
+  name: example-logsdeliverydestination
+  namespace: default
+spec:
+  deliveryDestinationPolicy:
+    deliveryDestinationName: example-logsdeliverydestination
+  deliveryDestinationType: example
+  destinationResourceArn: arn:aws:iam::123456789012:role/example-role
+  name: example-logsdeliverydestination
+  outputFormat: example
+  providerRef:
+    name: example-logsdeliverydestination
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deliveryDestinationPolicy</code></td><td>object</td><td>—</td><td>IAM policy that grants permissions to CloudWatch Logs to deliver logs cross-account to a specified destination in this account.</td></tr>
+<tr><td><code>deliveryDestinationPolicy.deliveryDestinationName</code></td><td>string</td><td>—</td><td>The name of the delivery destination to assign this policy to</td></tr>
+<tr><td><code>deliveryDestinationPolicy.deliveryDestinationPolicy</code></td><td>object</td><td>—</td><td>The contents of the policy attached to the delivery destination</td></tr>
+<tr><td><code>deliveryDestinationType</code></td><td>string</td><td>—</td><td>Displays whether this delivery destination is CloudWatch Logs, Amazon S3, Kinesis Data Firehose, or XRay.</td></tr>
+<tr><td><code>destinationResourceArn</code></td><td>string</td><td>—</td><td>The ARN of the Amazon Web Services destination that this delivery destination represents.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of this delivery destination.</td></tr>
+<tr><td><code>outputFormat</code></td><td>string</td><td>—</td><td>The format of the logs that are sent to this delivery destination.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>The tags that have been assigned to this delivery destination.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) that uniquely identifies this delivery destination.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsdeliverysource" class="resource-section">
+      <h2>LogsDeliverySource <a href="#logsdeliverysource" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::DeliverySource</span></h2>
+      <p class="resource-desc">LogsDeliverySource manages AWS::Logs::DeliverySource through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsdeliverysources</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsdeliverysource.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsDeliverySource — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsdeliverysource
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsDeliverySource
+metadata:
+  name: example-logsdeliverysource
+  namespace: default
+spec:
+  deliverySourceConfiguration:
+    key: value
+  logType: example
+  name: example-logsdeliverysource
+  providerRef:
+    name: example-logsdeliverysource
+    region: us-east-1
+  resourceArn: arn:aws:iam::123456789012:role/example-role
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deliverySourceConfiguration</code></td><td>map&lt;string&gt;</td><td>—</td><td>A map of key-value pairs to configure the delivery source.</td></tr>
+<tr><td><code>logType</code></td><td>string</td><td>—</td><td>The type of logs being delivered.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>The unique name of the Log source.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceArn</code></td><td>string</td><td>—</td><td>The ARN of the resource that will be sending the logs.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>The tags that have been assigned to this delivery source.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) that uniquely identifies this delivery source.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>resourceArns</code></td><td>array&lt;string&gt;</td><td>—</td><td>This array contains the ARN of the AWS resource that sends logs and is represented by this delivery source.</td></tr>
+<tr><td><code>service</code></td><td>string</td><td>—</td><td>The AWS service that is sending logs.</td></tr>
+<tr><td><code>status</code></td><td>enum</td><td>—</td><td>The status of this delivery source. Allowed: <code>ACTIVE, INACTIVE</code></td></tr>
+<tr><td><code>statusReason</code></td><td>enum</td><td>—</td><td>The reason for the status of this delivery source, such as RESOURCE_DELETED. Allowed: <code>RESOURCE_DELETED</code></td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsdestination" class="resource-section">
+      <h2>LogsDestination <a href="#logsdestination" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::Destination</span></h2>
+      <p class="resource-desc">LogsDestination manages AWS::Logs::Destination through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsdestinations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsdestination.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsDestination — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsdestination
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsDestination
+metadata:
+  name: example-logsdestination
+  namespace: default
+spec:
+  destinationName: example-logsdestination
+  destinationPolicy: example
+  providerRef:
+    name: example-logsdestination
+    region: us-east-1
+  roleArn: arn:aws:iam::123456789012:role/example-role
+  tags:
+  - key: example
+    value: example
+  targetArn: arn:aws:iam::123456789012:role/example-role
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>destinationName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the destination resource Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>destinationPolicy</code></td><td>string</td><td>—</td><td>An IAM policy document that governs which AWS accounts can create subscription filters against this destination.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>roleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of an IAM role that permits CloudWatch Logs to send data to the specified AWS resource</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>targetArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the physical target where the log events are delivered (for example, a Kinesis stream)</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsintegration" class="resource-section">
+      <h2>LogsIntegration <a href="#logsintegration" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::Integration</span></h2>
+      <p class="resource-desc">LogsIntegration manages AWS::Logs::Integration through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsintegrations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsintegration.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsIntegration — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsintegration
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsIntegration
+metadata:
+  name: example-logsintegration
+  namespace: default
+spec:
+  integrationName: example-logsintegration
+  integrationType: OPENSEARCH
+  providerRef:
+    name: example-logsintegration
+    region: us-east-1
+  resourceConfig:
+    openSearchResourceConfig:
+      applicationARN: arn:aws:iam::123456789012:role/example-role
+      dashboardViewerPrincipals:
+      - example
+      dataSourceRoleArn: arn:aws:iam::123456789012:role/example-role
+      kmsKeyArn: arn:aws:iam::123456789012:role/example-role
+      retentionDays: 1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>integrationName</code></td><td>string</td><td><span class="req">yes</span></td><td>User provided identifier for integration, unique to the user account.</td></tr>
+<tr><td><code>integrationType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The type of the Integration. Allowed: <code>OPENSEARCH</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>OpenSearchResourceConfig for the given Integration Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig</code></td><td>object</td><td>—</td><td>LogsIntegrationOpenSearchResourceConfig is a nested property type of AWS::Logs::Integration.</td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig.applicationARN</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig.dashboardViewerPrincipals</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig.dataSourceRoleArn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig.kmsKeyArn</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>resourceConfig.openSearchResourceConfig.retentionDays</code></td><td>integer</td><td>—</td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>integrationStatus</code></td><td>enum</td><td>—</td><td>Status of creation for the Integration and its resources Read-only: reported by AWS after creation. Allowed: <code>PROVISIONING, ACTIVE, FAILED</code></td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsloganomalydetector" class="resource-section">
+      <h2>LogsLogAnomalyDetector <a href="#logsloganomalydetector" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::LogAnomalyDetector</span></h2>
+      <p class="resource-desc">LogsLogAnomalyDetector manages AWS::Logs::LogAnomalyDetector through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsloganomalydetectors</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsloganomalydetector.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsLogAnomalyDetector — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsloganomalydetector
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsLogAnomalyDetector
+metadata:
+  name: example-logsloganomalydetector
+  namespace: default
+spec:
+  accountId: &#x27;123456789012&#x27;
+  anomalyVisibilityTime: 1
+  detectorName: example-logsloganomalydetector
+  evaluationFrequency: FIVE_MIN
+  filterPattern: example
+  kmsKeyId: arn:aws:kms:us-east-1:123456789012:key/1234abcd-12ab-34cd-56ef-1234567890ab
+  logGroupArnList:
+  - example
+  providerRef:
+    name: example-logsloganomalydetector
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accountId</code></td><td>string</td><td>—</td><td>Account ID for owner of detector</td></tr>
+<tr><td><code>anomalyVisibilityTime</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>detectorName</code></td><td>string</td><td>—</td><td>Name of detector</td></tr>
+<tr><td><code>evaluationFrequency</code></td><td>enum</td><td>—</td><td>How often log group is evaluated Allowed: <code>FIVE_MIN, TEN_MIN, FIFTEEN_MIN, THIRTY_MIN, ONE_HOUR</code></td></tr>
+<tr><td><code>filterPattern</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>kmsKeyId</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the CMK to use when encrypting log data.</td></tr>
+<tr><td><code>logGroupArnList</code></td><td>array&lt;string&gt;</td><td>—</td><td>List of Arns for the given log group</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>anomalyDetectorArn</code></td><td>string</td><td>—</td><td>ARN of LogAnomalyDetector Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>anomalyDetectorStatus</code></td><td>string</td><td>—</td><td>Current status of detector.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>creationTimeStamp</code></td><td>number</td><td>—</td><td>When detector was created.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastModifiedTimeStamp</code></td><td>number</td><td>—</td><td>When detector was lsat modified.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logslogstream" class="resource-section">
+      <h2>LogsLogStream <a href="#logslogstream" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::LogStream</span></h2>
+      <p class="resource-desc">LogsLogStream manages AWS::Logs::LogStream through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logslogstreams</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logslogstream.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsLogStream — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logslogstream
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsLogStream
+metadata:
+  name: example-logslogstream
+  namespace: default
+spec:
+  logGroupName: example-logslogstream
+  logStreamName: example-logslogstream
+  providerRef:
+    name: example-logslogstream
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>logGroupName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the log group where the log stream is created.</td></tr>
+<tr><td><code>logStreamName</code></td><td>string</td><td>—</td><td>The name of the log stream.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsquerydefinition" class="resource-section">
+      <h2>LogsQueryDefinition <a href="#logsquerydefinition" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::QueryDefinition</span></h2>
+      <p class="resource-desc">LogsQueryDefinition manages AWS::Logs::QueryDefinition through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsquerydefinitions</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsquerydefinition.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsQueryDefinition — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsquerydefinition
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsQueryDefinition
+metadata:
+  name: example-logsquerydefinition
+  namespace: default
+spec:
+  logGroupNames:
+  - example
+  name: example-logsquerydefinition
+  parameters:
+  - defaultValue: example
+    description: Managed by konfig-konector
+    name: example-logsquerydefinition
+  providerRef:
+    name: example-logsquerydefinition
+    region: us-east-1
+  queryLanguage: CWLI
+  queryString: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>logGroupNames</code></td><td>array&lt;string&gt;</td><td>—</td><td>Optionally define specific log groups as part of your query definition</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>A name for the saved query definition</td></tr>
+<tr><td><code>parameters</code></td><td>array&lt;object&gt;</td><td>—</td><td>Use this parameter to include specific query parameters as part of your query definition.</td></tr>
+<tr><td><code>parameters[].defaultValue</code></td><td>string</td><td>—</td><td>The default value to use for this query parameter if no value is supplied at execution time.</td></tr>
+<tr><td><code>parameters[].description</code></td><td>string</td><td>—</td><td>A description of the query parameter that explains its purpose or expected values.</td></tr>
+<tr><td><code>parameters[].name</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the query parameter.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>queryLanguage</code></td><td>enum</td><td>—</td><td>Query language of the query string. Allowed: <code>CWLI, SQL, PPL</code></td></tr>
+<tr><td><code>queryString</code></td><td>string</td><td><span class="req">yes</span></td><td>The query string to use for this definition</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>queryDefinitionId</code></td><td>string</td><td>—</td><td>Unique identifier of a query definition Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsresourcepolicy" class="resource-section">
+      <h2>LogsResourcePolicy <a href="#logsresourcepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::ResourcePolicy</span></h2>
+      <p class="resource-desc">LogsResourcePolicy manages AWS::Logs::ResourcePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsresourcepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsresourcepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsResourcePolicy — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsresourcepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsResourcePolicy
+metadata:
+  name: example-logsresourcepolicy
+  namespace: default
+spec:
+  policyName: example-logsresourcepolicy
+  providerRef:
+    name: example-logsresourcepolicy
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyDocument</code></td><td>object</td><td><span class="req">yes</span></td><td>The policy document</td></tr>
+<tr><td><code>policyName</code></td><td>string</td><td><span class="req">yes</span></td><td>A name for resource policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsscheduledquery" class="resource-section">
+      <h2>LogsScheduledQuery <a href="#logsscheduledquery" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::ScheduledQuery</span></h2>
+      <p class="resource-desc">LogsScheduledQuery manages AWS::Logs::ScheduledQuery through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsscheduledqueries</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsscheduledquery.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsScheduledQuery — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsscheduledquery
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsScheduledQuery
+metadata:
+  name: example-logsscheduledquery
+  namespace: default
+spec:
+  description: Managed by konfig-konector
+  destinationConfiguration:
+    s3Configuration:
+      destinationIdentifier: example
+      roleArn: arn:aws:iam::123456789012:role/example-role
+  executionRoleArn: arn:aws:iam::123456789012:role/example-role
+  logGroupIdentifiers:
+  - example
+  name: example-logsscheduledquery
+  providerRef:
+    name: example-logsscheduledquery
+    region: us-east-1
+  queryLanguage: example
+  queryString: example
+  scheduleEndTime: 1
+  scheduleExpression: example
+  scheduleStartTime: 1
+  startTimeOffset: 1
+  state: ENABLED
+  tags:
+  - key: example
+    value: example
+  timezone: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>description</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>destinationConfiguration</code></td><td>object</td><td>—</td><td>LogsScheduledQueryDestinationConfiguration is a nested property type of AWS::Logs::ScheduledQuery.</td></tr>
+<tr><td><code>destinationConfiguration.s3Configuration</code></td><td>object</td><td>—</td><td>LogsScheduledQueryS3Configuration is a nested property type of AWS::Logs::ScheduledQuery.</td></tr>
+<tr><td><code>destinationConfiguration.s3Configuration.destinationIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>destinationConfiguration.s3Configuration.roleArn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>executionRoleArn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>logGroupIdentifiers</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>queryLanguage</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>queryString</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>scheduleEndTime</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>scheduleExpression</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>scheduleStartTime</code></td><td>number</td><td>—</td><td></td></tr>
+<tr><td><code>startTimeOffset</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>Allowed: <code>ENABLED, DISABLED</code></td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>timezone</code></td><td>string</td><td>—</td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>creationTime</code></td><td>number</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastExecutionStatus</code></td><td>enum</td><td>—</td><td>Read-only: reported by AWS after creation. Allowed: <code>Pending, InvalidQuery, Complete, Failed, Timeout</code></td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>lastTriggeredTime</code></td><td>number</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>lastUpdatedTime</code></td><td>number</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>scheduledQueryArn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logsstoragetierpolicy" class="resource-section">
+      <h2>LogsStorageTierPolicy <a href="#logsstoragetierpolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::StorageTierPolicy</span></h2>
+      <p class="resource-desc">LogsStorageTierPolicy manages AWS::Logs::StorageTierPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logsstoragetierpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logsstoragetierpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsStorageTierPolicy — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logsstoragetierpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsStorageTierPolicy
+metadata:
+  name: example-logsstoragetierpolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-logsstoragetierpolicy
+    region: us-east-1
+  storageTier: INTELLIGENT_TIERING
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>storageTier</code></td><td>enum</td><td><span class="req">yes</span></td><td>The storage tier to apply. Allowed: <code>INTELLIGENT_TIERING</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accountId</code></td><td>string</td><td>—</td><td>The AWS account ID that owns this storage tier policy.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>lastUpdatedTime</code></td><td>number</td><td>—</td><td>Timestamp (milliseconds after Jan 1, 1970 00:00:00 UTC) when the storage tier policy was last updated.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="logstransformer" class="resource-section">
+      <h2>LogsTransformer <a href="#logstransformer" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Logs::Transformer</span></h2>
+      <p class="resource-desc">LogsTransformer manages AWS::Logs::Transformer through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get logstransformers</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/cloudwatchlogs/logstransformer.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LogsTransformer — CloudWatch Logs
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/cloudwatchlogs.html#logstransformer
+apiVersion: aws.konfig.io/v1alpha1
+kind: LogsTransformer
+metadata:
+  name: example-logstransformer
+  namespace: default
+spec:
+  logGroupIdentifier: example
+  providerRef:
+    name: example-logstransformer
+    region: us-east-1
+  transformerConfig:
+  - addKeys:
+      entries:
+      - key: example
+        overwriteIfExists: false
+        value: example
+    copyValue:
+      entries:
+      - overwriteIfExists: false
+        source: example
+        target: example
+    csv:
+      columns:
+      - example
+      delimiter: ex
+      quoteCharacter: e
+      source: example
+    dateTimeConverter:
+      locale: example
+      matchPatterns:
+      - example
+      source: example
+      sourceTimezone: example
+      target: example
+      targetFormat: example
+      targetTimezone: example
+    deleteKeys:
+      withKeys:
+      - example
+    grok:
+      match: example
+      source: example
+    listToMap:
+      flatten: false
+      flattenedElement: first
+      key: example
+      source: example
+      target: example
+      valueKey: example
+    lowerCaseString:
+      withKeys:
+      - example
+    moveKeys:
+      entries:
+      - overwriteIfExists: false
+        source: example
+        target: example
+    parseCloudfront:
+      source: example
+    parseJSON:
+      destination: example
+      source: example
+    parseKeyValue:
+      destination: example
+      fieldDelimiter: example
+      keyPrefix: example
+      keyValueDelimiter: example
+      nonMatchValue: example
+      overwriteIfExists: false
+      source: example
+    parsePostgres:
+      source: example
+    parseRoute53:
+      source: example
+    parseToOCSF:
+      eventSource: CloudTrail
+      mappingVersion: &#x27;1.0&#x27;
+      ocsfVersion: V1.1
+      source: example
+    parseVPC:
+      source: example
+    parseWAF:
+      source: example
+    renameKeys:
+      entries:
+      - key: example
+        overwriteIfExists: false
+        renameTo: example
+    splitString:
+      entries:
+      - delimiter: example
+        source: example
+    substituteString:
+      entries:
+      - from: example
+        source: example
+        to: example
+    trimString:
+      withKeys:
+      - example
+    typeConverter:
+      entries:
+      - key: example
+        type: boolean
+    upperCaseString:
+      withKeys:
+      - example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>logGroupIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td>Existing log group that you want to associate with this transformer.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>transformerConfig</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>List of processors in a transformer</td></tr>
+<tr><td><code>transformerConfig[].addKeys</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorAddKeys is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].addKeys.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].addKeys.entries[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].addKeys.entries[].overwriteIfExists</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].addKeys.entries[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].copyValue</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorCopyValue is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].copyValue.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].copyValue.entries[].overwriteIfExists</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].copyValue.entries[].source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].copyValue.entries[].target</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].csv</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorCsv is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].csv.columns</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].csv.delimiter</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].csv.quoteCharacter</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].csv.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorDateTimeConverter is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.locale</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.matchPatterns</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.sourceTimezone</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.target</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.targetFormat</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].dateTimeConverter.targetTimezone</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].deleteKeys</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorDeleteKeys is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].deleteKeys.withKeys</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].grok</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorGrok is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].grok.match</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].grok.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].listToMap</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorListToMap is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].listToMap.flatten</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].listToMap.flattenedElement</code></td><td>enum</td><td>—</td><td>Allowed: <code>first, last</code></td></tr>
+<tr><td><code>transformerConfig[].listToMap.key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].listToMap.source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].listToMap.target</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].listToMap.valueKey</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].lowerCaseString</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorLowerCaseString is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].lowerCaseString.withKeys</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].moveKeys</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorMoveKeys is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].moveKeys.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].moveKeys.entries[].overwriteIfExists</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].moveKeys.entries[].source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].moveKeys.entries[].target</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].parseCloudfront</code></td><td>object</td><td>—</td><td>LogsTransformerParseCloudfront is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseCloudfront.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseJSON</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorParseJSON is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseJSON.destination</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseJSON.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorParseKeyValue is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.destination</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.fieldDelimiter</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.keyPrefix</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.keyValueDelimiter</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.nonMatchValue</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.overwriteIfExists</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseKeyValue.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parsePostgres</code></td><td>object</td><td>—</td><td>LogsTransformerParsePostgres is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parsePostgres.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseRoute53</code></td><td>object</td><td>—</td><td>LogsTransformerParseRoute53 is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseRoute53.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseToOCSF</code></td><td>object</td><td>—</td><td>LogsTransformerParseToOCSF is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseToOCSF.eventSource</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>CloudTrail, Route53Resolver, VPCFlow, EKSAudit, AWSWAF</code></td></tr>
+<tr><td><code>transformerConfig[].parseToOCSF.mappingVersion</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseToOCSF.ocsfVersion</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>V1.1, V1.5</code></td></tr>
+<tr><td><code>transformerConfig[].parseToOCSF.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseVPC</code></td><td>object</td><td>—</td><td>LogsTransformerParseVPC is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseVPC.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].parseWAF</code></td><td>object</td><td>—</td><td>LogsTransformerParseWAF is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].parseWAF.source</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].renameKeys</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorRenameKeys is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].renameKeys.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].renameKeys.entries[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].renameKeys.entries[].overwriteIfExists</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>transformerConfig[].renameKeys.entries[].renameTo</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].splitString</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorSplitString is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].splitString.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].splitString.entries[].delimiter</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].splitString.entries[].source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].substituteString</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorSubstituteString is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].substituteString.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].substituteString.entries[].from</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].substituteString.entries[].source</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].substituteString.entries[].to</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].trimString</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorTrimString is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].trimString.withKeys</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].typeConverter</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorTypeConverter is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].typeConverter.entries</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].typeConverter.entries[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>transformerConfig[].typeConverter.entries[].type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>boolean, integer, double, string</code></td></tr>
+<tr><td><code>transformerConfig[].upperCaseString</code></td><td>object</td><td>—</td><td>LogsTransformerProcessorUpperCaseString is a nested property type of AWS::Logs::Transformer.</td></tr>
+<tr><td><code>transformerConfig[].upperCaseString.withKeys</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -123,6 +1213,9 @@ spec:
     metricName: example-metricfilter
     metricNamespace: example
     metricValue: example
+  providerRef:
+    name: example-metricfilter
+    region: us-east-1
 </code></pre></div>
 
       <h3>Spec</h3>
@@ -138,11 +1231,18 @@ spec:
 <tr><td><code>metricTransformations[].metricName</code></td><td>string</td><td><span class="req">yes</span></td><td>MetricName is the name of the CloudWatch metric.</td></tr>
 <tr><td><code>metricTransformations[].metricNamespace</code></td><td>string</td><td><span class="req">yes</span></td><td>MetricNamespace is the namespace for the metric.</td></tr>
 <tr><td><code>metricTransformations[].metricValue</code></td><td>string</td><td><span class="req">yes</span></td><td>MetricValue is the value to publish when the filter pattern matches.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 </tbody></table></div>
 
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -177,6 +1277,9 @@ spec:
   logGroupRef:
     logGroupName: example-subscriptionfilter
     name: example-subscriptionfilter
+  providerRef:
+    name: example-subscriptionfilter
+    region: us-east-1
   roleArn: arn:aws:iam::123456789012:role/example-role
 </code></pre></div>
 
@@ -189,12 +1292,19 @@ spec:
 <tr><td><code>logGroupRef</code></td><td>object</td><td><span class="req">yes</span></td><td>LogGroupRef references the log group.</td></tr>
 <tr><td><code>logGroupRef.logGroupName</code></td><td>string</td><td>—</td><td>LogGroupName is a direct AWS log group name.</td></tr>
 <tr><td><code>logGroupRef.name</code></td><td>string</td><td>—</td><td>Name of a LogGroup CR in the same namespace.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>roleArn</code></td><td>string</td><td>—</td><td>RoleARN is the IAM role ARN for delivering logs to the destination (Kinesis only).</td></tr>
 </tbody></table></div>
 
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>

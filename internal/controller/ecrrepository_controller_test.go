@@ -80,8 +80,9 @@ const (
 func ecrRepoCR(mutate ...func(*awsv1alpha1.ECRRepository)) *awsv1alpha1.ECRRepository {
 	repo := &awsv1alpha1.ECRRepository{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-repo",
-			Namespace: "default",
+			Name:       "my-repo",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.ECRRepositorySpec{
 			RepositoryName:     "my-repo",
@@ -119,6 +120,9 @@ func TestECRRepositoryReconcile(t *testing.T) {
 			name: "create happy path persists ARN, URI and Ready",
 			objs: []client.Object{ecrRepoCR()},
 			fake: &fakeECR{
+				describeRepositories: func(_ context.Context, _ *awsecr.DescribeRepositoriesInput) (*awsecr.DescribeRepositoriesOutput, error) {
+					return &awsecr.DescribeRepositoriesOutput{}, nil
+				},
 				createRepository: func(_ context.Context, params *awsecr.CreateRepositoryInput) (*awsecr.CreateRepositoryOutput, error) {
 					if aws.ToString(params.RepositoryName) != "my-repo" {
 						return nil, fmt.Errorf("unexpected repository name")

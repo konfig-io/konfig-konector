@@ -29,6 +29,12 @@ type LambdaFilterCriteria struct {
 
 // LambdaEventSourceMappingSpec defines the desired state of a Lambda Event Source Mapping.
 type LambdaEventSourceMappingSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FunctionRef references the Lambda function to invoke.
 	// Either functionRef or functionArn must be set.
 	// +optional
@@ -67,6 +73,9 @@ type LambdaEventSourceMappingSpec struct {
 
 // LambdaEventSourceMappingStatus defines the observed state of LambdaEventSourceMapping.
 type LambdaEventSourceMappingStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// UUID is the identifier of the event source mapping.
 	// +optional
 	UUID string `json:"uuid,omitempty"`

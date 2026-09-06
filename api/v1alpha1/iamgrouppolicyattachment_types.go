@@ -22,6 +22,12 @@ import (
 
 // IAMGroupPolicyAttachmentSpec defines the desired state of IAMGroupPolicyAttachment.
 type IAMGroupPolicyAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupRef references the IAMGroup CR or a direct AWS group name.
 	GroupRef GroupRef `json:"groupRef"`
 
@@ -31,6 +37,9 @@ type IAMGroupPolicyAttachmentSpec struct {
 
 // IAMGroupPolicyAttachmentStatus defines the observed state of IAMGroupPolicyAttachment.
 type IAMGroupPolicyAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Attached indicates whether the policy is currently attached to the group.
 	// +optional
 	Attached bool `json:"attached,omitempty"`

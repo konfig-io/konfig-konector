@@ -1,0 +1,1054 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: kafkaconnectconnectors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: KafkaConnectConnector
+    listKind: KafkaConnectConnectorList
+    plural: kafkaconnectconnectors
+    singular: kafkaconnectconnector
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KafkaConnectConnector manages AWS::KafkaConnect::Connector through the AWS Cloud Control API. Resource Type
+          definition for AWS::KafkaConnect::Connector
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KafkaConnectConnectorSpec is the desired state of AWS::KafkaConnect::Connector.
+            properties:
+              capacity:
+                description: KafkaConnectConnectorCapacity is a nested property type
+                  of AWS::KafkaConnect::Connector.
+                properties:
+                  autoScaling:
+                    description: KafkaConnectConnectorAutoScaling is a nested property
+                      type of AWS::KafkaConnect::Connector.
+                    properties:
+                      maxAutoscalingTaskCount:
+                        description: The maximum number of tasks allocated to the
+                          connector during autoscaling operations.
+                        format: int64
+                        type: integer
+                      maxWorkerCount:
+                        description: The maximum number of workers for a connector.
+                        format: int64
+                        type: integer
+                      mcuCount:
+                        description: Specifies how many MSK Connect Units (MCU) as
+                          the minimum scaling unit.
+                        format: int64
+                        type: integer
+                      minWorkerCount:
+                        description: The minimum number of workers for a connector.
+                        format: int64
+                        type: integer
+                      scaleInPolicy:
+                        description: KafkaConnectConnectorScaleInPolicy is a nested
+                          property type of AWS::KafkaConnect::Connector.
+                        properties:
+                          cpuUtilizationPercentage:
+                            description: Specifies the CPU utilization percentage
+                              threshold at which connector scale in should trigger.
+                            format: int64
+                            maximum: 100
+                            minimum: 1
+                            type: integer
+                        required:
+                        - cpuUtilizationPercentage
+                        type: object
+                      scaleOutPolicy:
+                        description: KafkaConnectConnectorScaleOutPolicy is a nested
+                          property type of AWS::KafkaConnect::Connector.
+                        properties:
+                          cpuUtilizationPercentage:
+                            description: Specifies the CPU utilization percentage
+                              threshold at which connector scale out should trigger.
+                            format: int64
+                            maximum: 100
+                            minimum: 1
+                            type: integer
+                        required:
+                        - cpuUtilizationPercentage
+                        type: object
+                    required:
+                    - maxWorkerCount
+                    - mcuCount
+                    - minWorkerCount
+                    - scaleInPolicy
+                    - scaleOutPolicy
+                    type: object
+                  provisionedCapacity:
+                    description: KafkaConnectConnectorProvisionedCapacity is a nested
+                      property type of AWS::KafkaConnect::Connector.
+                    properties:
+                      mcuCount:
+                        description: Specifies how many MSK Connect Units (MCU) are
+                          allocated to the connector.
+                        format: int64
+                        type: integer
+                      workerCount:
+                        description: Number of workers for a connector.
+                        format: int64
+                        type: integer
+                    required:
+                    - mcuCount
+                    - workerCount
+                    type: object
+                type: object
+              connectorConfiguration:
+                additionalProperties:
+                  type: string
+                description: The configuration for the connector.
+                type: object
+              connectorDescription:
+                description: |-
+                  A summary description of the connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+              connectorName:
+                description: |-
+                  The name of the connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: connectorName is immutable
+                  rule: self == oldSelf
+              kafkaCluster:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  apacheKafkaCluster:
+                    description: KafkaConnectConnectorApacheKafkaCluster is a nested
+                      property type of AWS::KafkaConnect::Connector.
+                    properties:
+                      bootstrapServers:
+                        description: The bootstrap servers string of the Apache Kafka
+                          cluster.
+                        type: string
+                      vpc:
+                        description: KafkaConnectConnectorVpc is a nested property
+                          type of AWS::KafkaConnect::Connector.
+                        properties:
+                          securityGroups:
+                            description: |-
+                              The AWS security groups to associate with the elastic network interfaces in order to specify what the
+                              connector has access to.
+                            items:
+                              type: string
+                            type: array
+                          subnets:
+                            description: |-
+                              The list of subnets to connect to in the virtual private cloud (VPC). AWS creates elastic network interfaces
+                              inside these subnets.
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - securityGroups
+                        - subnets
+                        type: object
+                    required:
+                    - bootstrapServers
+                    - vpc
+                    type: object
+                required:
+                - apacheKafkaCluster
+                type: object
+              kafkaClusterClientAuthentication:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  authenticationType:
+                    enum:
+                    - NONE
+                    - IAM
+                    type: string
+                required:
+                - authenticationType
+                type: object
+              kafkaClusterEncryptionInTransit:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  encryptionType:
+                    enum:
+                    - PLAINTEXT
+                    - TLS
+                    type: string
+                required:
+                - encryptionType
+                type: object
+              kafkaConnectVersion:
+                description: |-
+                  The version of Kafka Connect. It has to be compatible with both the Kafka cluster's version and the plugins.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: kafkaConnectVersion is immutable
+                  rule: self == oldSelf
+              logDelivery:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  workerLogDelivery:
+                    description: KafkaConnectConnectorWorkerLogDelivery is a nested
+                      property type of AWS::KafkaConnect::Connector.
+                    properties:
+                      cloudWatchLogs:
+                        description: KafkaConnectConnectorCloudWatchLogsLogDelivery
+                          is a nested property type of AWS::KafkaConnect::Connector.
+                        properties:
+                          enabled:
+                            description: Specifies whether the logs get sent to the
+                              specified CloudWatch Logs destination.
+                            type: boolean
+                          logGroup:
+                            description: The CloudWatch log group that is the destination
+                              for log delivery.
+                            type: string
+                        required:
+                        - enabled
+                        type: object
+                      firehose:
+                        description: KafkaConnectConnectorFirehoseLogDelivery is a
+                          nested property type of AWS::KafkaConnect::Connector.
+                        properties:
+                          deliveryStream:
+                            description: The Kinesis Data Firehose delivery stream
+                              that is the destination for log delivery.
+                            type: string
+                          enabled:
+                            description: Specifies whether the logs get sent to the
+                              specified Kinesis Data Firehose delivery stream.
+                            type: boolean
+                        required:
+                        - enabled
+                        type: object
+                      s3:
+                        description: KafkaConnectConnectorS3LogDelivery is a nested
+                          property type of AWS::KafkaConnect::Connector.
+                        properties:
+                          bucket:
+                            description: The name of the S3 bucket that is the destination
+                              for log delivery.
+                            type: string
+                          enabled:
+                            description: Specifies whether the logs get sent to the
+                              specified Amazon S3 destination.
+                            type: boolean
+                          prefix:
+                            description: The S3 prefix that is the destination for
+                              log delivery.
+                            type: string
+                        required:
+                        - enabled
+                        type: object
+                    type: object
+                required:
+                - workerLogDelivery
+                type: object
+              networkType:
+                description: |-
+                  The network type of the Connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - IPV4
+                - DUAL
+                type: string
+              plugins:
+                description: |-
+                  List of plugins to use with the connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: KafkaConnectConnectorPlugin is a nested property type
+                    of AWS::KafkaConnect::Connector.
+                  properties:
+                    customPlugin:
+                      description: KafkaConnectConnectorCustomPlugin is a nested property
+                        type of AWS::KafkaConnect::Connector.
+                      properties:
+                        customPluginArn:
+                          description: The Amazon Resource Name (ARN) of the custom
+                            plugin to use.
+                          type: string
+                        revision:
+                          description: The revision of the custom plugin to use.
+                          format: int64
+                          minimum: 1
+                          type: integer
+                      required:
+                      - customPluginArn
+                      - revision
+                      type: object
+                  required:
+                  - customPlugin
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serviceExecutionRoleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the IAM role used by the connector to access Amazon S3 objects and other
+                  external resources.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: serviceExecutionRoleArn is immutable
+                  rule: self == oldSelf
+              tags:
+                description: A collection of tags associated with a resource
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              workerConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  revision:
+                    description: The revision of the worker configuration to use.
+                    format: int64
+                    minimum: 1
+                    type: integer
+                  workerConfigurationArn:
+                    description: The Amazon Resource Name (ARN) of the worker configuration
+                      to use.
+                    type: string
+                required:
+                - revision
+                - workerConfigurationArn
+                type: object
+            required:
+            - capacity
+            - connectorConfiguration
+            - connectorName
+            - kafkaCluster
+            - kafkaClusterClientAuthentication
+            - kafkaClusterEncryptionInTransit
+            - kafkaConnectVersion
+            - plugins
+            - serviceExecutionRoleArn
+            type: object
+          status:
+            description: KafkaConnectConnectorStatus is the observed state of AWS::KafkaConnect::Connector.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              connectorArn:
+                description: |-
+                  Amazon Resource Name for the created Connector.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: kafkaconnectcustomplugins.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: KafkaConnectCustomPlugin
+    listKind: KafkaConnectCustomPluginList
+    plural: kafkaconnectcustomplugins
+    singular: kafkaconnectcustomplugin
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KafkaConnectCustomPlugin manages AWS::KafkaConnect::CustomPlugin through the AWS Cloud Control API. An example
+          resource schema demonstrating some basic constructs and validation rules.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KafkaConnectCustomPluginSpec is the desired state of AWS::KafkaConnect::CustomPlugin.
+            properties:
+              contentType:
+                description: |-
+                  The type of the plugin file.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - JAR
+                - ZIP
+                type: string
+                x-kubernetes-validations:
+                - message: contentType is immutable
+                  rule: self == oldSelf
+              description:
+                description: |-
+                  A summary description of the custom plugin.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+              location:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  s3Location:
+                    description: KafkaConnectCustomPluginS3Location is a nested property
+                      type of AWS::KafkaConnect::CustomPlugin.
+                    properties:
+                      bucketArn:
+                        description: The Amazon Resource Name (ARN) of an S3 bucket.
+                        type: string
+                      fileKey:
+                        description: The file key for an object in an S3 bucket.
+                        type: string
+                      objectVersion:
+                        description: The version of an object in an S3 bucket.
+                        type: string
+                    required:
+                    - bucketArn
+                    - fileKey
+                    type: object
+                required:
+                - s3Location
+                type: object
+              name:
+                description: |-
+                  The name of the custom plugin.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - contentType
+            - location
+            - name
+            type: object
+          status:
+            description: KafkaConnectCustomPluginStatus is the observed state of AWS::KafkaConnect::CustomPlugin.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              customPluginArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the custom plugin to use.
+                  Read-only: reported by AWS after creation.
+                type: string
+              fileDescription:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  fileMd5:
+                    description: The hex-encoded MD5 checksum of the custom plugin
+                      file. You can use it to validate the file.
+                    type: string
+                  fileSize:
+                    description: The size in bytes of the custom plugin file. You
+                      can use it to validate the file.
+                    format: int64
+                    type: integer
+                type: object
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              revision:
+                description: |-
+                  The revision of the custom plugin.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: kafkaconnectworkerconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: KafkaConnectWorkerConfiguration
+    listKind: KafkaConnectWorkerConfigurationList
+    plural: kafkaconnectworkerconfigurations
+    singular: kafkaconnectworkerconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KafkaConnectWorkerConfiguration manages AWS::KafkaConnect::WorkerConfiguration through the AWS Cloud Control
+          API. The configuration of the workers, which are the processes that run the connector logic.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KafkaConnectWorkerConfigurationSpec is the desired state
+              of AWS::KafkaConnect::WorkerConfiguration.
+            properties:
+              description:
+                description: |-
+                  A summary description of the worker configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+              name:
+                description: |-
+                  The name of the worker configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              propertiesFileContent:
+                description: |-
+                  Base64 encoded contents of connect-distributed.properties file.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: propertiesFileContent is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: A collection of tags associated with a resource
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            - propertiesFileContent
+            type: object
+          status:
+            description: KafkaConnectWorkerConfigurationStatus is the observed state
+              of AWS::KafkaConnect::WorkerConfiguration.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              revision:
+                description: |-
+                  The description of a revision of the worker configuration.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              workerConfigurationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the custom configuration.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

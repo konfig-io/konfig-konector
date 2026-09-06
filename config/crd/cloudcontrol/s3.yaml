@@ -1,0 +1,2172 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3accessgrants.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3AccessGrant
+    listKind: S3AccessGrantList
+    plural: s3accessgrants
+    singular: s3accessgrant
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3AccessGrant manages AWS::S3::AccessGrant through the AWS Cloud Control API. The AWS::S3::AccessGrant
+          resource is an Amazon S3 resource type representing permissions to a specific S3 bucket or prefix hosted in an
+          S3 Access Grants instance.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3AccessGrantSpec is the desired state of AWS::S3::AccessGrant.
+            properties:
+              accessGrantsLocationConfiguration:
+                description: |-
+                  The configuration options of the grant location, which is the S3 path to the data to which you are granting
+                  access.
+                properties:
+                  s3SubPrefix:
+                    description: The S3 sub prefix of a registered location in your
+                      S3 Access Grants instance
+                    type: string
+                required:
+                - s3SubPrefix
+                type: object
+              accessGrantsLocationId:
+                description: The custom S3 location to be accessed by the grantee
+                type: string
+              applicationArn:
+                description: The ARN of the application grantees will use to access
+                  the location
+                type: string
+              grantee:
+                description: The principal who will be granted permission to access
+                  S3.
+                properties:
+                  granteeIdentifier:
+                    description: The unique identifier of the Grantee
+                    type: string
+                  granteeType:
+                    description: Configures the transfer acceleration state for an
+                      Amazon S3 bucket.
+                    enum:
+                    - IAM
+                    - DIRECTORY_USER
+                    - DIRECTORY_GROUP
+                    type: string
+                required:
+                - granteeIdentifier
+                - granteeType
+                type: object
+              permission:
+                description: The level of access to be afforded to the grantee
+                enum:
+                - READ
+                - WRITE
+                - READWRITE
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3PrefixType:
+                description: |-
+                  The type of S3SubPrefix.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - Object
+                type: string
+              tags:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - accessGrantsLocationId
+            - grantee
+            - permission
+            type: object
+          status:
+            description: S3AccessGrantStatus is the observed state of AWS::S3::AccessGrant.
+            properties:
+              accessGrantArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the specified access grant.
+                  Read-only: reported by AWS after creation.
+                type: string
+              accessGrantId:
+                description: |-
+                  The ID assigned to this access grant.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              grantScope:
+                description: |-
+                  The S3 path of the data to which you are granting access. It is a combination of the S3 path of the registered
+                  location and the subprefix.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3accessgrantsinstances.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3AccessGrantsInstance
+    listKind: S3AccessGrantsInstanceList
+    plural: s3accessgrantsinstances
+    singular: s3accessgrantsinstance
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3AccessGrantsInstance manages AWS::S3::AccessGrantsInstance through the AWS Cloud Control API. The
+          AWS::S3::AccessGrantsInstance resource is an Amazon S3 resource type that hosts Access Grants and their
+          associated locations
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3AccessGrantsInstanceSpec is the desired state of AWS::S3::AccessGrantsInstance.
+            properties:
+              identityCenterArn:
+                description: The Amazon Resource Name (ARN) of the specified AWS Identity
+                  Center.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: S3AccessGrantsInstanceStatus is the observed state of AWS::S3::AccessGrantsInstance.
+            properties:
+              accessGrantsInstanceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the specified Access Grants instance.
+                  Read-only: reported by AWS after creation.
+                type: string
+              accessGrantsInstanceId:
+                description: |-
+                  A unique identifier for the specified access grants instance.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3accessgrantslocations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3AccessGrantsLocation
+    listKind: S3AccessGrantsLocationList
+    plural: s3accessgrantslocations
+    singular: s3accessgrantslocation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3AccessGrantsLocation manages AWS::S3::AccessGrantsLocation through the AWS Cloud Control API. The
+          AWS::S3::AccessGrantsLocation resource is an Amazon S3 resource type hosted in an access grants instance which
+          can be the target of S3 access grants.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3AccessGrantsLocationSpec is the desired state of AWS::S3::AccessGrantsLocation.
+            properties:
+              iamRoleArn:
+                description: The Amazon Resource Name (ARN) of the access grant location's
+                  associated IAM role.
+                type: string
+              locationScope:
+                description: Descriptor for where the location actually points
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - iamRoleArn
+            - locationScope
+            type: object
+          status:
+            description: S3AccessGrantsLocationStatus is the observed state of AWS::S3::AccessGrantsLocation.
+            properties:
+              accessGrantsLocationArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the specified Access Grants location.
+                  Read-only: reported by AWS after creation.
+                type: string
+              accessGrantsLocationId:
+                description: |-
+                  The unique identifier for the specified Access Grants location.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3multiregionaccesspointpolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3MultiRegionAccessPointPolicy
+    listKind: S3MultiRegionAccessPointPolicyList
+    plural: s3multiregionaccesspointpolicies
+    singular: s3multiregionaccesspointpolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3MultiRegionAccessPointPolicy manages AWS::S3::MultiRegionAccessPointPolicy through the AWS Cloud Control
+          API. The policy to be attached to a Multi Region Access Point
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3MultiRegionAccessPointPolicySpec is the desired state of
+              AWS::S3::MultiRegionAccessPointPolicy.
+            properties:
+              mrapName:
+                description: |-
+                  The name of the Multi Region Access Point to apply policy
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 50
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: mrapName is immutable
+                  rule: self == oldSelf
+              policy:
+                description: Policy document to apply to a Multi Region Access Point
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - mrapName
+            - policy
+            type: object
+          status:
+            description: S3MultiRegionAccessPointPolicyStatus is the observed state
+              of AWS::S3::MultiRegionAccessPointPolicy.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              policyStatus:
+                description: |-
+                  The Policy Status associated with this Multi Region Access Point
+                  Read-only: reported by AWS after creation.
+                properties:
+                  isPublic:
+                    description: Specifies whether the policy is public or not.
+                    enum:
+                    - true
+                    - false
+                    type: string
+                required:
+                - isPublic
+                type: object
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3multiregionaccesspoints.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3MultiRegionAccessPoint
+    listKind: S3MultiRegionAccessPointList
+    plural: s3multiregionaccesspoints
+    singular: s3multiregionaccesspoint
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3MultiRegionAccessPoint manages AWS::S3::MultiRegionAccessPoint through the AWS Cloud Control API.
+          AWS::S3::MultiRegionAccessPoint is an Amazon S3 resource type that dynamically routes S3 requests to easily
+          satisfy geographic compliance requirements based on customer-defined routing policies.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3MultiRegionAccessPointSpec is the desired state of AWS::S3::MultiRegionAccessPoint.
+            properties:
+              name:
+                description: |-
+                  The name you want to assign to this Multi Region Access Point.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 50
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publicAccessBlockConfiguration:
+                description: |-
+                  The PublicAccessBlock configuration that you want to apply to this Multi Region Access Point. You can enable
+                  the configuration options in any combination. For more information about when Amazon S3 considers a bucket or
+                  object public, see
+                  https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-block-public-access.html#access-control-block-public-access-policy-status
+                  'The Meaning of Public...
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  blockPublicAcls:
+                    description: |-
+                      Specifies whether Amazon S3 should block public access control lists (ACLs) for buckets in this account.
+                      Setting this element to TRUE causes the following behavior: - PUT Bucket acl and PUT Object acl calls fail if
+                      the specified ACL is public. - PUT Object calls fail if the request includes a public ACL. . - PUT Bucket
+                      calls fail if the request includes a public ACL. Enabling this setting doesn...
+                    type: boolean
+                  blockPublicPolicy:
+                    description: |-
+                      Specifies whether Amazon S3 should block public bucket policies for buckets in this account. Setting this
+                      element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows
+                      public access. Enabling this setting doesn't affect existing bucket policies.
+                    type: boolean
+                  ignorePublicAcls:
+                    description: |-
+                      Specifies whether Amazon S3 should ignore public ACLs for buckets in this account. Setting this element to
+                      TRUE causes Amazon S3 to ignore all public ACLs on buckets in this account and any objects that they contain.
+                      Enabling this setting doesn't affect the persistence of any existing ACLs and doesn't prevent new public ACLs
+                      from being set.
+                    type: boolean
+                  restrictPublicBuckets:
+                    description: |-
+                      Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to
+                      TRUE restricts access to this bucket to only AWS services and authorized users within this account if the
+                      bucket has a public policy. Enabling this setting doesn't affect previously stored bucket policies, except
+                      that public and cross-account access within any public bucket policy, includ...
+                    type: boolean
+                type: object
+              regions:
+                description: |-
+                  The list of buckets that you want to associate this Multi Region Access Point with.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: S3MultiRegionAccessPointRegion is a nested property
+                    type of AWS::S3::MultiRegionAccessPoint.
+                  properties:
+                    bucket:
+                      maxLength: 63
+                      minLength: 3
+                      type: string
+                    bucketAccountId:
+                      maxLength: 12
+                      type: string
+                  required:
+                  - bucket
+                  type: object
+                type: array
+            required:
+            - regions
+            type: object
+          status:
+            description: S3MultiRegionAccessPointStatus is the observed state of AWS::S3::MultiRegionAccessPoint.
+            properties:
+              alias:
+                description: |-
+                  The alias is a unique identifier to, and is part of the public DNS name for this Multi Region Access Point
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp of the when the Multi Region Access Point is created
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3storagelens.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3StorageLens
+    listKind: S3StorageLensList
+    plural: s3storagelens
+    singular: s3storagelens
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3StorageLens manages AWS::S3::StorageLens through the AWS Cloud Control API. The AWS::S3::StorageLens
+          resource is an Amazon S3 resource type that you can use to create Storage Lens configurations.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3StorageLensSpec is the desired state of AWS::S3::StorageLens.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              storageLensConfiguration:
+                description: S3StorageLensStorageLensConfiguration is a nested property
+                  type of AWS::S3::StorageLens.
+                properties:
+                  accountLevel:
+                    description: S3StorageLensAccountLevel is a nested property type
+                      of AWS::S3::StorageLens.
+                    properties:
+                      activityMetrics:
+                        description: S3StorageLensActivityMetrics is a nested property
+                          type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether activity metrics are enabled
+                              or disabled.
+                            type: boolean
+                        type: object
+                      advancedCostOptimizationMetrics:
+                        description: S3StorageLensAdvancedCostOptimizationMetrics
+                          is a nested property type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether advanced cost optimization
+                              metrics are enabled or disabled.
+                            type: boolean
+                        type: object
+                      advancedDataProtectionMetrics:
+                        description: S3StorageLensAdvancedDataProtectionMetrics is
+                          a nested property type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether advanced data protection
+                              metrics are enabled or disabled.
+                            type: boolean
+                        type: object
+                      advancedPerformanceMetrics:
+                        description: S3StorageLensAdvancedPerformanceMetrics is a
+                          nested property type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether the Advanced Performance
+                              Metrics is enabled or disabled.
+                            type: boolean
+                        type: object
+                      bucketLevel:
+                        description: S3StorageLensBucketLevel is a nested property
+                          type of AWS::S3::StorageLens.
+                        properties:
+                          activityMetrics:
+                            description: S3StorageLensActivityMetrics is a nested
+                              property type of AWS::S3::StorageLens.
+                            properties:
+                              isEnabled:
+                                description: Specifies whether activity metrics are
+                                  enabled or disabled.
+                                type: boolean
+                            type: object
+                          advancedCostOptimizationMetrics:
+                            description: S3StorageLensAdvancedCostOptimizationMetrics
+                              is a nested property type of AWS::S3::StorageLens.
+                            properties:
+                              isEnabled:
+                                description: Specifies whether advanced cost optimization
+                                  metrics are enabled or disabled.
+                                type: boolean
+                            type: object
+                          advancedDataProtectionMetrics:
+                            description: S3StorageLensAdvancedDataProtectionMetrics
+                              is a nested property type of AWS::S3::StorageLens.
+                            properties:
+                              isEnabled:
+                                description: Specifies whether advanced data protection
+                                  metrics are enabled or disabled.
+                                type: boolean
+                            type: object
+                          advancedPerformanceMetrics:
+                            description: S3StorageLensAdvancedPerformanceMetrics is
+                              a nested property type of AWS::S3::StorageLens.
+                            properties:
+                              isEnabled:
+                                description: Specifies whether the Advanced Performance
+                                  Metrics is enabled or disabled.
+                                type: boolean
+                            type: object
+                          detailedStatusCodesMetrics:
+                            description: S3StorageLensDetailedStatusCodesMetrics is
+                              a nested property type of AWS::S3::StorageLens.
+                            properties:
+                              isEnabled:
+                                description: Specifies whether detailed status codes
+                                  metrics are enabled or disabled.
+                                type: boolean
+                            type: object
+                          prefixLevel:
+                            description: S3StorageLensPrefixLevel is a nested property
+                              type of AWS::S3::StorageLens.
+                            properties:
+                              storageMetrics:
+                                description: S3StorageLensPrefixLevelStorageMetrics
+                                  is a nested property type of AWS::S3::StorageLens.
+                                properties:
+                                  isEnabled:
+                                    description: Specifies whether prefix-level storage
+                                      metrics are enabled or disabled.
+                                    type: boolean
+                                  selectionCriteria:
+                                    description: S3StorageLensSelectionCriteria is
+                                      a nested property type of AWS::S3::StorageLens.
+                                    properties:
+                                      delimiter:
+                                        description: Delimiter to divide S3 key into
+                                          hierarchy of prefixes.
+                                        type: string
+                                      maxDepth:
+                                        description: Max depth of prefixes of S3 key
+                                          that Amazon S3 Storage Lens will analyze.
+                                        format: int64
+                                        type: integer
+                                      minStorageBytesPercentage:
+                                        description: The minimum storage bytes threshold
+                                          for the prefixes to be included in the analysis.
+                                        type: number
+                                    type: object
+                                type: object
+                            required:
+                            - storageMetrics
+                            type: object
+                        type: object
+                      detailedStatusCodesMetrics:
+                        description: S3StorageLensDetailedStatusCodesMetrics is a
+                          nested property type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether detailed status codes metrics
+                              are enabled or disabled.
+                            type: boolean
+                        type: object
+                      storageLensGroupLevel:
+                        description: S3StorageLensStorageLensGroupLevel is a nested
+                          property type of AWS::S3::StorageLens.
+                        properties:
+                          storageLensGroupSelectionCriteria:
+                            description: S3StorageLensStorageLensGroupSelectionCriteria
+                              is a nested property type of AWS::S3::StorageLens.
+                            properties:
+                              exclude:
+                                items:
+                                  type: string
+                                type: array
+                              include:
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                        type: object
+                    required:
+                    - bucketLevel
+                    type: object
+                  awsOrg:
+                    description: S3StorageLensAwsOrg is a nested property type of
+                      AWS::S3::StorageLens.
+                    properties:
+                      arn:
+                        type: string
+                    required:
+                    - arn
+                    type: object
+                  dataExport:
+                    description: S3StorageLensDataExport is a nested property type
+                      of AWS::S3::StorageLens.
+                    properties:
+                      cloudWatchMetrics:
+                        description: S3StorageLensCloudWatchMetrics is a nested property
+                          type of AWS::S3::StorageLens.
+                        properties:
+                          isEnabled:
+                            description: Specifies whether CloudWatch metrics are
+                              enabled or disabled.
+                            type: boolean
+                        required:
+                        - isEnabled
+                        type: object
+                      s3BucketDestination:
+                        description: S3StorageLensS3BucketDestination is a nested
+                          property type of AWS::S3::StorageLens.
+                        properties:
+                          accountId:
+                            description: The AWS account ID that owns the destination
+                              S3 bucket.
+                            type: string
+                          arn:
+                            description: The ARN of the bucket to which Amazon S3
+                              Storage Lens exports will be placed.
+                            type: string
+                          encryption:
+                            x-kubernetes-preserve-unknown-fields: true
+                          format:
+                            description: Specifies the file format to use when exporting
+                              Amazon S3 Storage Lens metrics export.
+                            enum:
+                            - CSV
+                            - Parquet
+                            type: string
+                          outputSchemaVersion:
+                            description: The version of the output schema to use when
+                              exporting Amazon S3 Storage Lens metrics.
+                            enum:
+                            - V_1
+                            type: string
+                          prefix:
+                            description: The prefix to use for Amazon S3 Storage Lens
+                              export.
+                            type: string
+                        required:
+                        - accountId
+                        - arn
+                        - format
+                        - outputSchemaVersion
+                        type: object
+                      storageLensTableDestination:
+                        description: S3StorageLensStorageLensTableDestination is a
+                          nested property type of AWS::S3::StorageLens.
+                        properties:
+                          encryption:
+                            x-kubernetes-preserve-unknown-fields: true
+                          isEnabled:
+                            description: Specifies whether the export to S3 Tables
+                              is enabled or disabled.
+                            type: boolean
+                        required:
+                        - isEnabled
+                        type: object
+                    type: object
+                  exclude:
+                    description: S3StorageLensBucketsAndRegions is a nested property
+                      type of AWS::S3::StorageLens.
+                    properties:
+                      buckets:
+                        items:
+                          type: string
+                        type: array
+                      regions:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  expandedPrefixesDataExport:
+                    description: S3StorageLensStorageLensExpandedPrefixesDataExport
+                      is a nested property type of AWS::S3::StorageLens.
+                    properties:
+                      s3BucketDestination:
+                        description: S3StorageLensS3BucketDestination is a nested
+                          property type of AWS::S3::StorageLens.
+                        properties:
+                          accountId:
+                            description: The AWS account ID that owns the destination
+                              S3 bucket.
+                            type: string
+                          arn:
+                            description: The ARN of the bucket to which Amazon S3
+                              Storage Lens exports will be placed.
+                            type: string
+                          encryption:
+                            x-kubernetes-preserve-unknown-fields: true
+                          format:
+                            description: Specifies the file format to use when exporting
+                              Amazon S3 Storage Lens metrics export.
+                            enum:
+                            - CSV
+                            - Parquet
+                            type: string
+                          outputSchemaVersion:
+                            description: The version of the output schema to use when
+                              exporting Amazon S3 Storage Lens metrics.
+                            enum:
+                            - V_1
+                            type: string
+                          prefix:
+                            description: The prefix to use for Amazon S3 Storage Lens
+                              export.
+                            type: string
+                        required:
+                        - accountId
+                        - arn
+                        - format
+                        - outputSchemaVersion
+                        type: object
+                      storageLensTableDestination:
+                        description: S3StorageLensStorageLensTableDestination is a
+                          nested property type of AWS::S3::StorageLens.
+                        properties:
+                          encryption:
+                            x-kubernetes-preserve-unknown-fields: true
+                          isEnabled:
+                            description: Specifies whether the export to S3 Tables
+                              is enabled or disabled.
+                            type: boolean
+                        required:
+                        - isEnabled
+                        type: object
+                    type: object
+                  id:
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                  include:
+                    description: S3StorageLensBucketsAndRegions is a nested property
+                      type of AWS::S3::StorageLens.
+                    properties:
+                      buckets:
+                        items:
+                          type: string
+                        type: array
+                      regions:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  isEnabled:
+                    description: Specifies whether the Amazon S3 Storage Lens configuration
+                      is enabled or disabled.
+                    type: boolean
+                  prefixDelimiter:
+                    description: The delimiter to divide S3 key into hierarchy of
+                      prefixes.
+                    type: string
+                  storageLensArn:
+                    description: The ARN for the Amazon S3 Storage Lens configuration.
+                    type: string
+                required:
+                - accountLevel
+                - id
+                - isEnabled
+                type: object
+              tags:
+                description: A set of tags (key-value pairs) for this Amazon S3 Storage
+                  Lens configuration.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - storageLensConfiguration
+            type: object
+          status:
+            description: S3StorageLensStatus is the observed state of AWS::S3::StorageLens.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: s3storagelensgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: S3StorageLensGroup
+    listKind: S3StorageLensGroupList
+    plural: s3storagelensgroups
+    singular: s3storagelensgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          S3StorageLensGroup manages AWS::S3::StorageLensGroup through the AWS Cloud Control API. The
+          AWS::S3::StorageLensGroup resource is an Amazon S3 resource type that you can use to create Storage Lens
+          Group.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: S3StorageLensGroupSpec is the desired state of AWS::S3::StorageLensGroup.
+            properties:
+              filter:
+                description: S3StorageLensGroupFilter is a nested property type of
+                  AWS::S3::StorageLensGroup.
+                properties:
+                  and:
+                    description: S3StorageLensGroupAnd is a nested property type of
+                      AWS::S3::StorageLensGroup.
+                    properties:
+                      matchAnyPrefix:
+                        items:
+                          type: string
+                        type: array
+                      matchAnySuffix:
+                        items:
+                          type: string
+                        type: array
+                      matchAnyTag:
+                        items:
+                          description: CFNTag is the CloudFormation Tag shape shared
+                            by generated kinds.
+                          properties:
+                            key:
+                              minLength: 1
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - key
+                          - value
+                          type: object
+                        type: array
+                      matchObjectAge:
+                        description: S3StorageLensGroupMatchObjectAge is a nested
+                          property type of AWS::S3::StorageLensGroup.
+                        properties:
+                          daysGreaterThan:
+                            description: Minimum object age to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          daysLessThan:
+                            description: Maximum object age to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                        type: object
+                      matchObjectSize:
+                        description: S3StorageLensGroupMatchObjectSize is a nested
+                          property type of AWS::S3::StorageLensGroup.
+                        properties:
+                          bytesGreaterThan:
+                            description: Minimum object size to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          bytesLessThan:
+                            description: Maximum object size to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                        type: object
+                    type: object
+                  matchAnyPrefix:
+                    items:
+                      type: string
+                    type: array
+                  matchAnySuffix:
+                    items:
+                      type: string
+                    type: array
+                  matchAnyTag:
+                    items:
+                      description: CFNTag is the CloudFormation Tag shape shared by
+                        generated kinds.
+                      properties:
+                        key:
+                          minLength: 1
+                          type: string
+                        value:
+                          type: string
+                      required:
+                      - key
+                      - value
+                      type: object
+                    type: array
+                  matchObjectAge:
+                    description: S3StorageLensGroupMatchObjectAge is a nested property
+                      type of AWS::S3::StorageLensGroup.
+                    properties:
+                      daysGreaterThan:
+                        description: Minimum object age to which the rule applies.
+                        format: int64
+                        minimum: 1
+                        type: integer
+                      daysLessThan:
+                        description: Maximum object age to which the rule applies.
+                        format: int64
+                        minimum: 1
+                        type: integer
+                    type: object
+                  matchObjectSize:
+                    description: S3StorageLensGroupMatchObjectSize is a nested property
+                      type of AWS::S3::StorageLensGroup.
+                    properties:
+                      bytesGreaterThan:
+                        description: Minimum object size to which the rule applies.
+                        format: int64
+                        minimum: 1
+                        type: integer
+                      bytesLessThan:
+                        description: Maximum object size to which the rule applies.
+                        format: int64
+                        minimum: 1
+                        type: integer
+                    type: object
+                  or:
+                    description: S3StorageLensGroupOr is a nested property type of
+                      AWS::S3::StorageLensGroup.
+                    properties:
+                      matchAnyPrefix:
+                        items:
+                          type: string
+                        type: array
+                      matchAnySuffix:
+                        items:
+                          type: string
+                        type: array
+                      matchAnyTag:
+                        items:
+                          description: CFNTag is the CloudFormation Tag shape shared
+                            by generated kinds.
+                          properties:
+                            key:
+                              minLength: 1
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - key
+                          - value
+                          type: object
+                        type: array
+                      matchObjectAge:
+                        description: S3StorageLensGroupMatchObjectAge is a nested
+                          property type of AWS::S3::StorageLensGroup.
+                        properties:
+                          daysGreaterThan:
+                            description: Minimum object age to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          daysLessThan:
+                            description: Maximum object age to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                        type: object
+                      matchObjectSize:
+                        description: S3StorageLensGroupMatchObjectSize is a nested
+                          property type of AWS::S3::StorageLensGroup.
+                        properties:
+                          bytesGreaterThan:
+                            description: Minimum object size to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          bytesLessThan:
+                            description: Maximum object size to which the rule applies.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                        type: object
+                    type: object
+                type: object
+              name:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: A set of tags (key-value pairs) for this Amazon S3 Storage
+                  Lens Group.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - filter
+            - name
+            type: object
+          status:
+            description: S3StorageLensGroupStatus is the observed state of AWS::S3::StorageLensGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              storageLensGroupArn:
+                description: |-
+                  The ARN for the Amazon S3 Storage Lens Group.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -35,11 +35,19 @@ import (
 	logshelper "github.com/konfig-io/konfig-konector/internal/aws/cloudwatchlogs"
 )
 
+// LogGroupAWSAPI is the subset of the CloudWatch Logs API used by this controller.
+type LogGroupAWSAPI interface {
+	CreateLogGroup(ctx context.Context, params *awslogs.CreateLogGroupInput, optFns ...func(*awslogs.Options)) (*awslogs.CreateLogGroupOutput, error)
+	DeleteLogGroup(ctx context.Context, params *awslogs.DeleteLogGroupInput, optFns ...func(*awslogs.Options)) (*awslogs.DeleteLogGroupOutput, error)
+	DescribeLogGroups(ctx context.Context, params *awslogs.DescribeLogGroupsInput, optFns ...func(*awslogs.Options)) (*awslogs.DescribeLogGroupsOutput, error)
+	PutRetentionPolicy(ctx context.Context, params *awslogs.PutRetentionPolicyInput, optFns ...func(*awslogs.Options)) (*awslogs.PutRetentionPolicyOutput, error)
+}
+
 // LogGroupReconciler reconciles LogGroup objects.
 type LogGroupReconciler struct {
 	client.Client
 	Scheme     *runtime.Scheme
-	LogsClient *awslogs.Client
+	LogsClient LogGroupAWSAPI
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=loggroups,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +60,10 @@ func (r *LogGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	lg := &awsv1alpha1.LogGroup{}
 	if err := r.Get(ctx, req.NamespacedName, lg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, lg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !lg.DeletionTimestamp.IsZero() {
@@ -76,6 +88,10 @@ func (r *LogGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, lg); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileLogGroup(ctx, lg); err != nil {
@@ -92,7 +108,10 @@ func (r *LogGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 }
 
 func (r *LogGroupReconciler) reconcileLogGroup(ctx context.Context, lg *awsv1alpha1.LogGroup) error {
-	if lg.Status.ARN != "" {
+	// Always look the group up by exact name first: a create whose status
+	// persist failed must adopt the existing group, not fail forever with
+	// ResourceAlreadyExistsException.
+	{
 		out, err := r.LogsClient.DescribeLogGroups(ctx, &awslogs.DescribeLogGroupsInput{
 			LogGroupNamePrefix: aws.String(lg.Spec.LogGroupName),
 		})
@@ -101,6 +120,7 @@ func (r *LogGroupReconciler) reconcileLogGroup(ctx context.Context, lg *awsv1alp
 		}
 		for _, g := range out.LogGroups {
 			if aws.ToString(g.LogGroupName) == lg.Spec.LogGroupName {
+				lg.Status.ARN = aws.ToString(g.Arn)
 				lg.Status.ObservedGeneration = lg.Generation
 				now := metav1.Now()
 				lg.Status.LastSyncTime = &now
@@ -128,7 +148,7 @@ func (r *LogGroupReconciler) reconcileLogGroup(ctx context.Context, lg *awsv1alp
 		input.Tags = lg.Spec.Tags
 	}
 
-	if _, err := r.LogsClient.CreateLogGroup(ctx, input); err != nil {
+	if _, err := r.LogsClient.CreateLogGroup(ctx, input); err != nil && !logshelper.IsAlreadyExists(err) {
 		return fmt.Errorf("create log group: %w", err)
 	}
 

@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // SpotFleetReconciler reconciles SpotFleet objects.
 type SpotFleetReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	EC2Client *awsec2.Client
+	EC2Client *multi.EC2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=spotfleets,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *SpotFleetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	sf := &awsv1alpha1.SpotFleet{}
 	if err := r.Get(ctx, req.NamespacedName, sf); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sf); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sf.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *SpotFleetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if err := r.Update(ctx, sf); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileSpotFleet(ctx, sf); err != nil {

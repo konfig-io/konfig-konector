@@ -35,6 +35,7 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	iamhelper "github.com/konfig-io/konfig-konector/internal/aws/iam"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 )
 
 // IAMPolicyAWSAPI is the subset of the IAM SDK client used by this controller
@@ -49,7 +50,8 @@ type IAMPolicyReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
 	IAMClient IAMPolicyAWSAPI
-	// AccountID is the AWS account ID used to construct policy ARNs.
+	// AccountID is the operator's own AWS account ID, used to construct policy
+	// ARNs when the resource is not scoped to another AWSProvider.
 	AccountID string
 }
 
@@ -63,6 +65,10 @@ func (r *IAMPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	p := &awsv1alpha1.IAMPolicy{}
 	if err := r.Get(ctx, req.NamespacedName, p); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, p); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !p.DeletionTimestamp.IsZero() {
@@ -100,6 +106,10 @@ func (r *IAMPolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		if err := r.Update(ctx, p); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcilePolicy(ctx, p); err != nil {
@@ -136,7 +146,7 @@ func (r *IAMPolicyReconciler) reconcilePolicy(ctx context.Context, p *awsv1alpha
 			// import it by looking it up by name.
 			var already *iamtypes.EntityAlreadyExistsException
 			if errors.As(err, &already) {
-				arn := fmt.Sprintf("arn:aws:iam::%s:policy%s%s", r.AccountID, path, p.Spec.PolicyName)
+				arn := fmt.Sprintf("arn:aws:iam::%s:policy%s%s", r.accountID(ctx), path, p.Spec.PolicyName)
 				pol, lookupErr := iamhelper.GetPolicy(ctx, r.IAMClient, arn)
 				if lookupErr != nil || pol == nil {
 					return fmt.Errorf("create policy: %w", err)
@@ -184,15 +194,24 @@ func (r *IAMPolicyReconciler) reconcilePolicy(ctx context.Context, p *awsv1alpha
 // policy name (mirroring the adopt-by-constructed-ARN pattern on create) and
 // verifies it exists. Returns "" if the account ID is unknown or the policy
 // does not exist.
+// accountID returns the account the current reconcile targets: the
+// AWSProvider scope's account when one is attached to ctx, else the operator's.
+func (r *IAMPolicyReconciler) accountID(ctx context.Context) string {
+	if s := provider.ScopeFrom(ctx); s != nil && s.AccountID != "" {
+		return s.AccountID
+	}
+	return r.AccountID
+}
+
 func (r *IAMPolicyReconciler) lookupPolicyARNFromSpec(ctx context.Context, p *awsv1alpha1.IAMPolicy) (string, error) {
-	if r.AccountID == "" || p.Spec.PolicyName == "" {
+	if r.accountID(ctx) == "" || p.Spec.PolicyName == "" {
 		return "", nil
 	}
 	path := p.Spec.Path
 	if path == "" {
 		path = "/"
 	}
-	arn := fmt.Sprintf("arn:aws:iam::%s:policy%s%s", r.AccountID, path, p.Spec.PolicyName)
+	arn := fmt.Sprintf("arn:aws:iam::%s:policy%s%s", r.accountID(ctx), path, p.Spec.PolicyName)
 	pol, err := iamhelper.GetPolicy(ctx, r.IAMClient, arn)
 	if err != nil {
 		return "", err

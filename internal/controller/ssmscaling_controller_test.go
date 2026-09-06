@@ -126,7 +126,7 @@ func TestSSMMaintenanceWindowReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-window", Namespace: "default"}}
 	mwCR := func(mutate ...func(*awsv1alpha1.SSMMaintenanceWindow)) *awsv1alpha1.SSMMaintenanceWindow {
 		mw := &awsv1alpha1.SSMMaintenanceWindow{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-window", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-window", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.SSMMaintenanceWindowSpec{
 				Name:     "my-window",
 				Schedule: "cron(0 4 ? * SUN *)",
@@ -146,7 +146,7 @@ func TestSSMMaintenanceWindowReconcile(t *testing.T) {
 		c := newScalingFakeClient(scheme, mwCR())
 		f := &fakeSSMScaling{
 			createMW: func(_ context.Context, params *awsssm.CreateMaintenanceWindowInput) (*awsssm.CreateMaintenanceWindowOutput, error) {
-				if params.Duration != 4 || params.Cutoff != 1 {
+				if aws.ToInt32(params.Duration) != 4 || params.Cutoff != 1 {
 					t.Errorf("duration/cutoff = %d/%d", params.Duration, params.Cutoff)
 				}
 				return &awsssm.CreateMaintenanceWindowOutput{WindowId: aws.String("mw-abc123")}, nil
@@ -222,7 +222,7 @@ func TestSSMPatchBaselineReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-baseline", Namespace: "default"}}
 	pbCR := func(mutate ...func(*awsv1alpha1.SSMPatchBaseline)) *awsv1alpha1.SSMPatchBaseline {
 		pb := &awsv1alpha1.SSMPatchBaseline{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-baseline", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-baseline", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.SSMPatchBaselineSpec{
 				Name:            "my-baseline",
 				OperatingSystem: "AMAZON_LINUX_2",
@@ -324,7 +324,7 @@ func TestSSMAssociationReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-assoc", Namespace: "default"}}
 	assocCR := func(mutate ...func(*awsv1alpha1.SSMAssociation)) *awsv1alpha1.SSMAssociation {
 		a := &awsv1alpha1.SSMAssociation{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.SSMAssociationSpec{
 				Name:            "AWS-RunPatchBaseline",
 				AssociationName: "patch-all",

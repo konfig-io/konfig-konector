@@ -25,6 +25,12 @@ import (
 // Policies only reconcile successfully from the organization's management
 // (or delegated administrator) account.
 type OrganizationsPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the friendly name of the policy.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -51,6 +57,9 @@ type OrganizationsPolicySpec struct {
 
 // OrganizationsPolicyStatus defines the observed state of OrganizationsPolicy.
 type OrganizationsPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyID is the unique identifier (p-...) of the policy.
 	// +optional
 	PolicyID string `json:"policyId,omitempty"`

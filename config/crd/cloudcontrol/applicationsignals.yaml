@@ -1,0 +1,1392 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: applicationsignalsdiscoveries.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ApplicationSignalsDiscovery
+    listKind: ApplicationSignalsDiscoveryList
+    plural: applicationsignalsdiscoveries
+    singular: applicationsignalsdiscovery
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ApplicationSignalsDiscovery manages AWS::ApplicationSignals::Discovery through the AWS Cloud Control API.
+          Resource Type definition for AWS::ApplicationSignals::Discovery
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ApplicationSignalsDiscoverySpec is the desired state of AWS::ApplicationSignals::Discovery.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            type: object
+          status:
+            description: ApplicationSignalsDiscoveryStatus is the observed state of
+              AWS::ApplicationSignals::Discovery.
+            properties:
+              accountId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 12
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: applicationsignalsgroupingconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ApplicationSignalsGroupingConfiguration
+    listKind: ApplicationSignalsGroupingConfigurationList
+    plural: applicationsignalsgroupingconfigurations
+    singular: applicationsignalsgroupingconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ApplicationSignalsGroupingConfiguration manages AWS::ApplicationSignals::GroupingConfiguration through the AWS
+          Cloud Control API. Resource Type definition for AWS::ApplicationSignals::GroupingConfiguration
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ApplicationSignalsGroupingConfigurationSpec is the desired
+              state of AWS::ApplicationSignals::GroupingConfiguration.
+            properties:
+              groupingAttributeDefinitions:
+                items:
+                  description: ApplicationSignalsGroupingConfigurationGroupingAttributeDefinition
+                    is a nested property type of AWS::ApplicationSignals::GroupingConfiguration.
+                  properties:
+                    defaultGroupingValue:
+                      maxLength: 128
+                      type: string
+                    groupingName:
+                      maxLength: 128
+                      minLength: 1
+                      type: string
+                    groupingSourceKeys:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - groupingName
+                  - groupingSourceKeys
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - groupingAttributeDefinitions
+            type: object
+          status:
+            description: ApplicationSignalsGroupingConfigurationStatus is the observed
+              state of AWS::ApplicationSignals::GroupingConfiguration.
+            properties:
+              accountId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 12
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              updatedAt:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: applicationsignalsservicelevelobjectives.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ApplicationSignalsServiceLevelObjective
+    listKind: ApplicationSignalsServiceLevelObjectiveList
+    plural: applicationsignalsservicelevelobjectives
+    singular: applicationsignalsservicelevelobjective
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ApplicationSignalsServiceLevelObjective manages AWS::ApplicationSignals::ServiceLevelObjective through the AWS
+          Cloud Control API. Resource Type definition for AWS::ApplicationSignals::ServiceLevelObjective
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ApplicationSignalsServiceLevelObjectiveSpec is the desired
+              state of AWS::ApplicationSignals::ServiceLevelObjective.
+            properties:
+              burnRateConfigurations:
+                items:
+                  description: ApplicationSignalsServiceLevelObjectiveBurnRateConfiguration
+                    is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                  properties:
+                    lookBackWindowMinutes:
+                      description: The number of minutes to use as the look-back window.
+                      format: int64
+                      maximum: 10080
+                      minimum: 1
+                      type: integer
+                  required:
+                  - lookBackWindowMinutes
+                  type: object
+                type: array
+              description:
+                description: An optional description for this SLO. Default is 'No
+                  description'
+                maxLength: 1024
+                type: string
+              exclusionWindows:
+                items:
+                  description: ApplicationSignalsServiceLevelObjectiveExclusionWindow
+                    is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                  properties:
+                    reason:
+                      description: An optional reason for scheduling this time exclusion
+                        window. Default is 'No reason'.
+                      maxLength: 1024
+                      type: string
+                    recurrenceRule:
+                      description: ApplicationSignalsServiceLevelObjectiveRecurrenceRule
+                        is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                      properties:
+                        expression:
+                          description: A cron or rate expression denoting how often
+                            to repeat this exclusion window.
+                          maxLength: 1024
+                          minLength: 1
+                          type: string
+                      required:
+                      - expression
+                      type: object
+                    startTime:
+                      description: |-
+                        The time you want the exclusion window to start at. Note that time exclusion windows can only be scheduled in
+                        the future, not the past.
+                      type: string
+                    window:
+                      description: ApplicationSignalsServiceLevelObjectiveWindow is
+                        a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                      properties:
+                        duration:
+                          format: int64
+                          minimum: 1
+                          type: integer
+                        durationUnit:
+                          enum:
+                          - MINUTE
+                          - HOUR
+                          - DAY
+                          - MONTH
+                          type: string
+                      required:
+                      - duration
+                      - durationUnit
+                      type: object
+                  required:
+                  - window
+                  type: object
+                type: array
+              goal:
+                description: ApplicationSignalsServiceLevelObjectiveGoal is a nested
+                  property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                properties:
+                  attainmentGoal:
+                    description: |-
+                      The threshold that determines if the goal is being met. An attainment goal is the ratio of good periods that
+                      meet the threshold requirements to the total periods within the interval. For example, an attainment goal of
+                      99.9% means that within your interval, you are targeting 99.9% of the periods to be in healthy state. If you
+                      omit this parameter, 99 is used to represent 99% as the attainment goal.
+                    type: number
+                  interval:
+                    description: ApplicationSignalsServiceLevelObjectiveInterval is
+                      a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                    properties:
+                      calendarInterval:
+                        description: ApplicationSignalsServiceLevelObjectiveCalendarInterval
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          duration:
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          durationUnit:
+                            enum:
+                            - MINUTE
+                            - HOUR
+                            - DAY
+                            - MONTH
+                            type: string
+                          startTime:
+                            description: |-
+                              Epoch time in seconds you want the first interval to start. Be sure to choose a time that configures the
+                              intervals the way that you want. For example, if you want weekly intervals starting on Mondays at 6 a.m., be
+                              sure to specify a start time that is a Monday at 6 a.m. As soon as one calendar interval ends, another
+                              automatically begins.
+                            format: int64
+                            minimum: 946684800
+                            type: integer
+                        required:
+                        - duration
+                        - durationUnit
+                        - startTime
+                        type: object
+                      rollingInterval:
+                        description: ApplicationSignalsServiceLevelObjectiveRollingInterval
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          duration:
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          durationUnit:
+                            enum:
+                            - MINUTE
+                            - HOUR
+                            - DAY
+                            - MONTH
+                            type: string
+                        required:
+                        - duration
+                        - durationUnit
+                        type: object
+                    type: object
+                  warningThreshold:
+                    description: |-
+                      The percentage of remaining budget over total budget that you want to get warnings for. If you omit this
+                      parameter, the default of 50.0 is used.
+                    type: number
+                type: object
+              name:
+                description: |-
+                  The name of this SLO.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              requestBasedSli:
+                description: ApplicationSignalsServiceLevelObjectiveRequestBasedSli
+                  is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                properties:
+                  comparisonOperator:
+                    description: The arithmetic operation used when comparing the
+                      specified metric to the threshold.
+                    enum:
+                    - GreaterThanOrEqualTo
+                    - LessThanOrEqualTo
+                    - LessThan
+                    - GreaterThan
+                    type: string
+                  metricThreshold:
+                    description: The value that the SLI metric is compared to.
+                    type: number
+                  requestBasedSliMetric:
+                    description: ApplicationSignalsServiceLevelObjectiveRequestBasedSliMetric
+                      is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                    properties:
+                      compositeSliConfig:
+                        description: ApplicationSignalsServiceLevelObjectiveCompositeSliConfig
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          compositeSliComponents:
+                            items:
+                              description: ApplicationSignalsServiceLevelObjectiveCompositeSliComponent
+                                is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                              properties:
+                                operationName:
+                                  type: string
+                              required:
+                              - operationName
+                              type: object
+                            type: array
+                          selectionConfig:
+                            description: ApplicationSignalsServiceLevelObjectiveSelectionConfig
+                              is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                            properties:
+                              pattern:
+                                type: string
+                              type:
+                                enum:
+                                - EXPLICIT
+                                - PREFIX
+                                - REGEX
+                                type: string
+                            required:
+                            - type
+                            type: object
+                        required:
+                        - selectionConfig
+                        type: object
+                      dependencyConfig:
+                        description: ApplicationSignalsServiceLevelObjectiveDependencyConfig
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          dependencyKeyAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                          dependencyOperationName:
+                            description: |-
+                              When the SLO monitors a specific operation of the dependency, this field specifies the name of that operation
+                              in the dependency.
+                            maxLength: 255
+                            minLength: 1
+                            type: string
+                        required:
+                        - dependencyKeyAttributes
+                        - dependencyOperationName
+                        type: object
+                      keyAttributes:
+                        x-kubernetes-preserve-unknown-fields: true
+                      metricName:
+                        maxLength: 255
+                        type: string
+                      metricSource:
+                        description: ApplicationSignalsServiceLevelObjectiveMetricSource
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          metricSourceAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                          metricSourceKeyAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                        required:
+                        - metricSourceKeyAttributes
+                        type: object
+                      metricType:
+                        description: |-
+                          If the SLO monitors either the LATENCY or AVAILABILITY metric that Application Signals collects, this field
+                          displays which of those metrics is used.
+                        enum:
+                        - LATENCY
+                        - AVAILABILITY
+                        type: string
+                      monitoredRequestCountMetric:
+                        description: ApplicationSignalsServiceLevelObjectiveMonitoredRequestCountMetric
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          badCountMetric:
+                            description: |-
+                              If you want to count "bad requests" to determine the percentage of successful requests for this request-based
+                              SLO, specify the metric to use as "bad requests" in this structure.
+                            items:
+                              description: ApplicationSignalsServiceLevelObjectiveMetricDataQuery
+                                is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                              properties:
+                                accountId:
+                                  description: The ID of the account where the metrics
+                                    are located, if this is a cross-account alarm.
+                                  type: string
+                                expression:
+                                  description: The math expression to be performed
+                                    on the returned data.
+                                  type: string
+                                id:
+                                  description: A short name used to tie this object
+                                    to the results in the response.
+                                  type: string
+                                metricStat:
+                                  description: |-
+                                    A metric to be used directly for the SLO, or to be used in the math expression that will be used for the SLO.
+                                    Within one MetricDataQuery, you must specify either Expression or MetricStat but not both.
+                                  properties:
+                                    metric:
+                                      description: ApplicationSignalsServiceLevelObjectiveMetric
+                                        is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                      properties:
+                                        dimensions:
+                                          description: An array of one or more dimensions
+                                            to use to define the metric that you want
+                                            to use.
+                                          items:
+                                            description: ApplicationSignalsServiceLevelObjectiveDimension
+                                              is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                            properties:
+                                              name:
+                                                description: |-
+                                                  The name of the dimension. Dimension names must contain only ASCII characters, must include at least one
+                                                  non-whitespace character, and cannot start with a colon (:). ASCII control characters are not supported as
+                                                  part of dimension names.
+                                                type: string
+                                              value:
+                                                description: |-
+                                                  The value of the dimension. Dimension values must contain only ASCII characters and must include at least one
+                                                  non-whitespace character. ASCII control characters are not supported as part of dimension values
+                                                type: string
+                                            required:
+                                            - name
+                                            - value
+                                            type: object
+                                          type: array
+                                        metricName:
+                                          description: The name of the metric to use.
+                                          type: string
+                                        namespace:
+                                          description: The namespace of the metric.
+                                          type: string
+                                      type: object
+                                    period:
+                                      description: The granularity, in seconds, to
+                                        be used for the metric.
+                                      format: int64
+                                      type: integer
+                                    stat:
+                                      description: |-
+                                        The statistic to use for comparison to the threshold. It can be any CloudWatch statistic or extended
+                                        statistic.
+                                      type: string
+                                    unit:
+                                      description: |-
+                                        If you omit Unit then all data that was collected with any unit is returned, along with the corresponding
+                                        units that were specified when the data was reported to CloudWatch. If you specify a unit, the operation
+                                        returns only data that was collected with that unit specified. If you specify a unit that does not match the
+                                        data collected, the results of the operation are null. CloudWatch does not pe...
+                                      type: string
+                                  required:
+                                  - metric
+                                  - period
+                                  - stat
+                                  type: object
+                                returnData:
+                                  description: This option indicates whether to return
+                                    the timestamps and raw data values of this metric.
+                                  type: boolean
+                              required:
+                              - id
+                              type: object
+                            type: array
+                          goodCountMetric:
+                            description: |-
+                              If you want to count "good requests" to determine the percentage of successful requests for this request-based
+                              SLO, specify the metric to use as "good requests" in this structure.
+                            items:
+                              description: ApplicationSignalsServiceLevelObjectiveMetricDataQuery
+                                is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                              properties:
+                                accountId:
+                                  description: The ID of the account where the metrics
+                                    are located, if this is a cross-account alarm.
+                                  type: string
+                                expression:
+                                  description: The math expression to be performed
+                                    on the returned data.
+                                  type: string
+                                id:
+                                  description: A short name used to tie this object
+                                    to the results in the response.
+                                  type: string
+                                metricStat:
+                                  description: |-
+                                    A metric to be used directly for the SLO, or to be used in the math expression that will be used for the SLO.
+                                    Within one MetricDataQuery, you must specify either Expression or MetricStat but not both.
+                                  properties:
+                                    metric:
+                                      description: ApplicationSignalsServiceLevelObjectiveMetric
+                                        is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                      properties:
+                                        dimensions:
+                                          description: An array of one or more dimensions
+                                            to use to define the metric that you want
+                                            to use.
+                                          items:
+                                            description: ApplicationSignalsServiceLevelObjectiveDimension
+                                              is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                            properties:
+                                              name:
+                                                description: |-
+                                                  The name of the dimension. Dimension names must contain only ASCII characters, must include at least one
+                                                  non-whitespace character, and cannot start with a colon (:). ASCII control characters are not supported as
+                                                  part of dimension names.
+                                                type: string
+                                              value:
+                                                description: |-
+                                                  The value of the dimension. Dimension values must contain only ASCII characters and must include at least one
+                                                  non-whitespace character. ASCII control characters are not supported as part of dimension values
+                                                type: string
+                                            required:
+                                            - name
+                                            - value
+                                            type: object
+                                          type: array
+                                        metricName:
+                                          description: The name of the metric to use.
+                                          type: string
+                                        namespace:
+                                          description: The namespace of the metric.
+                                          type: string
+                                      type: object
+                                    period:
+                                      description: The granularity, in seconds, to
+                                        be used for the metric.
+                                      format: int64
+                                      type: integer
+                                    stat:
+                                      description: |-
+                                        The statistic to use for comparison to the threshold. It can be any CloudWatch statistic or extended
+                                        statistic.
+                                      type: string
+                                    unit:
+                                      description: |-
+                                        If you omit Unit then all data that was collected with any unit is returned, along with the corresponding
+                                        units that were specified when the data was reported to CloudWatch. If you specify a unit, the operation
+                                        returns only data that was collected with that unit specified. If you specify a unit that does not match the
+                                        data collected, the results of the operation are null. CloudWatch does not pe...
+                                      type: string
+                                  required:
+                                  - metric
+                                  - period
+                                  - stat
+                                  type: object
+                                returnData:
+                                  description: This option indicates whether to return
+                                    the timestamps and raw data values of this metric.
+                                  type: boolean
+                              required:
+                              - id
+                              type: object
+                            type: array
+                        type: object
+                      operationName:
+                        description: If the SLO monitors a specific operation of the
+                          service, this field displays that operation name.
+                        maxLength: 255
+                        type: string
+                      totalRequestCountMetric:
+                        description: |-
+                          This structure defines the metric that is used as the "total requests" number for a request-based SLO. The
+                          number observed for this metric is divided by the number of "good requests" or "bad requests" that is observed
+                          for the metric defined in `MonitoredRequestCountMetric`.
+                        items:
+                          description: ApplicationSignalsServiceLevelObjectiveMetricDataQuery
+                            is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                          properties:
+                            accountId:
+                              description: The ID of the account where the metrics
+                                are located, if this is a cross-account alarm.
+                              type: string
+                            expression:
+                              description: The math expression to be performed on
+                                the returned data.
+                              type: string
+                            id:
+                              description: A short name used to tie this object to
+                                the results in the response.
+                              type: string
+                            metricStat:
+                              description: |-
+                                A metric to be used directly for the SLO, or to be used in the math expression that will be used for the SLO.
+                                Within one MetricDataQuery, you must specify either Expression or MetricStat but not both.
+                              properties:
+                                metric:
+                                  description: ApplicationSignalsServiceLevelObjectiveMetric
+                                    is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                  properties:
+                                    dimensions:
+                                      description: An array of one or more dimensions
+                                        to use to define the metric that you want
+                                        to use.
+                                      items:
+                                        description: ApplicationSignalsServiceLevelObjectiveDimension
+                                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                        properties:
+                                          name:
+                                            description: |-
+                                              The name of the dimension. Dimension names must contain only ASCII characters, must include at least one
+                                              non-whitespace character, and cannot start with a colon (:). ASCII control characters are not supported as
+                                              part of dimension names.
+                                            type: string
+                                          value:
+                                            description: |-
+                                              The value of the dimension. Dimension values must contain only ASCII characters and must include at least one
+                                              non-whitespace character. ASCII control characters are not supported as part of dimension values
+                                            type: string
+                                        required:
+                                        - name
+                                        - value
+                                        type: object
+                                      type: array
+                                    metricName:
+                                      description: The name of the metric to use.
+                                      type: string
+                                    namespace:
+                                      description: The namespace of the metric.
+                                      type: string
+                                  type: object
+                                period:
+                                  description: The granularity, in seconds, to be
+                                    used for the metric.
+                                  format: int64
+                                  type: integer
+                                stat:
+                                  description: |-
+                                    The statistic to use for comparison to the threshold. It can be any CloudWatch statistic or extended
+                                    statistic.
+                                  type: string
+                                unit:
+                                  description: |-
+                                    If you omit Unit then all data that was collected with any unit is returned, along with the corresponding
+                                    units that were specified when the data was reported to CloudWatch. If you specify a unit, the operation
+                                    returns only data that was collected with that unit specified. If you specify a unit that does not match the
+                                    data collected, the results of the operation are null. CloudWatch does not pe...
+                                  type: string
+                              required:
+                              - metric
+                              - period
+                              - stat
+                              type: object
+                            returnData:
+                              description: This option indicates whether to return
+                                the timestamps and raw data values of this metric.
+                              type: boolean
+                          required:
+                          - id
+                          type: object
+                        type: array
+                    type: object
+                required:
+                - requestBasedSliMetric
+                type: object
+              sli:
+                description: ApplicationSignalsServiceLevelObjectiveSli is a nested
+                  property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                properties:
+                  comparisonOperator:
+                    description: The arithmetic operation used when comparing the
+                      specified metric to the threshold.
+                    enum:
+                    - GreaterThanOrEqualTo
+                    - LessThanOrEqualTo
+                    - LessThan
+                    - GreaterThan
+                    type: string
+                  metricThreshold:
+                    description: The value that the SLI metric is compared to.
+                    type: number
+                  sliMetric:
+                    description: ApplicationSignalsServiceLevelObjectiveSliMetric
+                      is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                    properties:
+                      compositeSliConfig:
+                        description: ApplicationSignalsServiceLevelObjectiveCompositeSliConfig
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          compositeSliComponents:
+                            items:
+                              description: ApplicationSignalsServiceLevelObjectiveCompositeSliComponent
+                                is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                              properties:
+                                operationName:
+                                  type: string
+                              required:
+                              - operationName
+                              type: object
+                            type: array
+                          selectionConfig:
+                            description: ApplicationSignalsServiceLevelObjectiveSelectionConfig
+                              is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                            properties:
+                              pattern:
+                                type: string
+                              type:
+                                enum:
+                                - EXPLICIT
+                                - PREFIX
+                                - REGEX
+                                type: string
+                            required:
+                            - type
+                            type: object
+                        required:
+                        - selectionConfig
+                        type: object
+                      dependencyConfig:
+                        description: ApplicationSignalsServiceLevelObjectiveDependencyConfig
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          dependencyKeyAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                          dependencyOperationName:
+                            description: |-
+                              When the SLO monitors a specific operation of the dependency, this field specifies the name of that operation
+                              in the dependency.
+                            maxLength: 255
+                            minLength: 1
+                            type: string
+                        required:
+                        - dependencyKeyAttributes
+                        - dependencyOperationName
+                        type: object
+                      keyAttributes:
+                        x-kubernetes-preserve-unknown-fields: true
+                      metricDataQueries:
+                        items:
+                          description: ApplicationSignalsServiceLevelObjectiveMetricDataQuery
+                            is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                          properties:
+                            accountId:
+                              description: The ID of the account where the metrics
+                                are located, if this is a cross-account alarm.
+                              type: string
+                            expression:
+                              description: The math expression to be performed on
+                                the returned data.
+                              type: string
+                            id:
+                              description: A short name used to tie this object to
+                                the results in the response.
+                              type: string
+                            metricStat:
+                              description: |-
+                                A metric to be used directly for the SLO, or to be used in the math expression that will be used for the SLO.
+                                Within one MetricDataQuery, you must specify either Expression or MetricStat but not both.
+                              properties:
+                                metric:
+                                  description: ApplicationSignalsServiceLevelObjectiveMetric
+                                    is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                  properties:
+                                    dimensions:
+                                      description: An array of one or more dimensions
+                                        to use to define the metric that you want
+                                        to use.
+                                      items:
+                                        description: ApplicationSignalsServiceLevelObjectiveDimension
+                                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                                        properties:
+                                          name:
+                                            description: |-
+                                              The name of the dimension. Dimension names must contain only ASCII characters, must include at least one
+                                              non-whitespace character, and cannot start with a colon (:). ASCII control characters are not supported as
+                                              part of dimension names.
+                                            type: string
+                                          value:
+                                            description: |-
+                                              The value of the dimension. Dimension values must contain only ASCII characters and must include at least one
+                                              non-whitespace character. ASCII control characters are not supported as part of dimension values
+                                            type: string
+                                        required:
+                                        - name
+                                        - value
+                                        type: object
+                                      type: array
+                                    metricName:
+                                      description: The name of the metric to use.
+                                      type: string
+                                    namespace:
+                                      description: The namespace of the metric.
+                                      type: string
+                                  type: object
+                                period:
+                                  description: The granularity, in seconds, to be
+                                    used for the metric.
+                                  format: int64
+                                  type: integer
+                                stat:
+                                  description: |-
+                                    The statistic to use for comparison to the threshold. It can be any CloudWatch statistic or extended
+                                    statistic.
+                                  type: string
+                                unit:
+                                  description: |-
+                                    If you omit Unit then all data that was collected with any unit is returned, along with the corresponding
+                                    units that were specified when the data was reported to CloudWatch. If you specify a unit, the operation
+                                    returns only data that was collected with that unit specified. If you specify a unit that does not match the
+                                    data collected, the results of the operation are null. CloudWatch does not pe...
+                                  type: string
+                              required:
+                              - metric
+                              - period
+                              - stat
+                              type: object
+                            returnData:
+                              description: This option indicates whether to return
+                                the timestamps and raw data values of this metric.
+                              type: boolean
+                          required:
+                          - id
+                          type: object
+                        type: array
+                      metricName:
+                        maxLength: 255
+                        type: string
+                      metricSource:
+                        description: ApplicationSignalsServiceLevelObjectiveMetricSource
+                          is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.
+                        properties:
+                          metricSourceAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                          metricSourceKeyAttributes:
+                            x-kubernetes-preserve-unknown-fields: true
+                        required:
+                        - metricSourceKeyAttributes
+                        type: object
+                      metricType:
+                        description: |-
+                          If the SLO monitors either the LATENCY or AVAILABILITY metric that Application Signals collects, this field
+                          displays which of those metrics is used.
+                        enum:
+                        - LATENCY
+                        - AVAILABILITY
+                        type: string
+                      operationName:
+                        description: If the SLO monitors a specific operation of the
+                          service, this field displays that operation name.
+                        maxLength: 255
+                        type: string
+                      periodSeconds:
+                        description: |-
+                          The number of seconds to use as the period for SLO evaluation. Your application's performance is compared to
+                          the SLI during each period. For each period, the application is determined to have either achieved or not
+                          achieved the necessary performance.
+                        format: int64
+                        maximum: 900
+                        minimum: 60
+                        type: integer
+                      statistic:
+                        description: The statistic to use for comparison to the threshold.
+                          It can be any CloudWatch statistic or extended statistic
+                        maxLength: 20
+                        type: string
+                    type: object
+                required:
+                - comparisonOperator
+                - metricThreshold
+                - sliMetric
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: ApplicationSignalsServiceLevelObjectiveStatus is the observed
+              state of AWS::ApplicationSignals::ServiceLevelObjective.
+            properties:
+              arn:
+                description: |-
+                  The ARN of this SLO.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdTime:
+                description: |-
+                  Epoch time in seconds of the time that this SLO was created
+                  Read-only: reported by AWS after creation.
+                format: int64
+                minimum: 946684800
+                type: integer
+              evaluationType:
+                description: |-
+                  Displays whether this is a period-based SLO or a request-based SLO.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - PeriodBased
+                - RequestBased
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              lastUpdatedTime:
+                description: |-
+                  Epoch time in seconds of the time that this SLO was most recently updated
+                  Read-only: reported by AWS after creation.
+                format: int64
+                minimum: 946684800
+                type: integer
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

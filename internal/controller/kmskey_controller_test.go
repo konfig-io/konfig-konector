@@ -120,8 +120,9 @@ const (
 func newTestKMSKey(mutators ...func(*awsv1alpha1.KMSKey)) *awsv1alpha1.KMSKey {
 	k := &awsv1alpha1.KMSKey{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-key",
-			Namespace: "default",
+			Name:       "test-key",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.KMSKeySpec{
 			Description: "test key",

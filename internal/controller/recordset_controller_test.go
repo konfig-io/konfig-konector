@@ -80,7 +80,7 @@ func rsScheme(t *testing.T) *runtime.Scheme {
 
 func testRecordSet(zoneRef awsv1alpha1.HostedZoneRef) *awsv1alpha1.RecordSet {
 	return &awsv1alpha1.RecordSet{
-		ObjectMeta: metav1.ObjectMeta{Name: "rec1", Namespace: "default", UID: "uid-rs", Generation: 1},
+		ObjectMeta: metav1.ObjectMeta{Name: "rec1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-rs", Generation: 1},
 		Spec: awsv1alpha1.RecordSetSpec{
 			HostedZoneRef: zoneRef,
 			Name:          "www.example.com.",
@@ -249,7 +249,7 @@ func TestRecordSetAbandonAnnotation(t *testing.T) {
 // referenced HostedZone CR when status.hostedZoneId was never persisted.
 func TestRecordSetDeleteReResolvesZoneFromSpec(t *testing.T) {
 	hz := &awsv1alpha1.HostedZone{
-		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", UID: "uid-hz"},
+		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-hz"},
 		Spec:       awsv1alpha1.HostedZoneSpec{Name: "example.com."},
 		Status:     awsv1alpha1.HostedZoneStatus{HostedZoneID: "ZFROMCR"},
 	}
@@ -299,7 +299,7 @@ func TestRecordSetDeleteReResolvesZoneFromSpec(t *testing.T) {
 // yet causes a requeue (requeueDependency) without an error and no AWS calls.
 func TestRecordSetDependencyNotReady(t *testing.T) {
 	hz := &awsv1alpha1.HostedZone{
-		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", UID: "uid-hz"},
+		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-hz"},
 		Spec:       awsv1alpha1.HostedZoneSpec{Name: "example.com."},
 		// Status.HostedZoneID intentionally empty: dependency not ready.
 	}

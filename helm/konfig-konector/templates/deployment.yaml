@@ -30,6 +30,14 @@ spec:
             {{- end }}
             - --metrics-bind-address=:8080
             - --health-probe-bind-address=:8081
+            {{- if .Values.webhook.enabled }}
+            - --enable-webhook
+            {{- end }}
+          {{- if .Values.aws.credentialsSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.aws.credentialsSecret }}
+          {{- end }}
           env:
             - name: AWS_REGION
               value: {{ .Values.aws.region | quote }}
@@ -41,6 +49,11 @@ spec:
             - name: metrics
               containerPort: 8080
               protocol: TCP
+            {{- if .Values.webhook.enabled }}
+            - name: webhook
+              containerPort: 9443
+              protocol: TCP
+            {{- end }}
             - name: health
               containerPort: 8081
               protocol: TCP
@@ -63,3 +76,13 @@ spec:
             capabilities:
               drop: ["ALL"]
             readOnlyRootFilesystem: true
+          {{- if .Values.webhook.enabled }}
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /tmp/k8s-webhook-server/serving-certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: {{ .Values.webhook.secretName }}
+          {{- end }}

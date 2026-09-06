@@ -18,12 +18,14 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strings"
 	"time"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	k8stypes "k8s.io/apimachinery/pkg/types"
@@ -290,3 +292,78 @@ func resolveEKSClusterName(ctx context.Context, c client.Client, namespace strin
 	}
 	return clusterCR.Spec.ClusterName, nil
 }
+
+// providerResolver is set once at startup by SetProviderResolver. When nil
+// (unit tests) every reconcile runs against the operator's own credentials.
+var providerResolver *provider.Resolver
+
+// SetProviderResolver installs the multi-account resolver used by every
+// controller to scope AWS calls to the resource's AWSProvider.
+func SetProviderResolver(r *provider.Resolver) { providerResolver = r }
+
+// withProviderScope attaches the resolved AWS account/region scope for obj to
+// ctx. The generated multi-account SDK wrappers read it on every call.
+func withProviderScope(ctx context.Context, obj provider.ProviderScoped) (context.Context, error) {
+	if providerResolver == nil {
+		return ctx, nil
+	}
+	s, err := providerResolver.ForObject(ctx, obj)
+	if err != nil {
+		return ctx, fmt.Errorf("resolve AWS provider: %w", err)
+	}
+	// Record the target account/region on the object; it is persisted with
+	// the next status write of the reconcile.
+	if setter, ok := obj.(provider.ProviderStatusSetter); ok {
+		setter.SetProviderStatus(providerResolver.StatusFor(s))
+	}
+	if s == nil {
+		return ctx, nil
+	}
+	return provider.WithScope(ctx, s), nil
+}
+
+// crossAccountContext returns a context scoped to the *other* side of a
+// two-sided resource (the accepter of a peering, the owner of a shared TGW,
+// the VPC account of a private hosted zone...). ref names the AWSProvider for
+// that side; region, when non-empty, overrides the region. With a nil ref the
+// current scope is reused with only the region override applied, which covers
+// same-account cross-region cases.
+func crossAccountContext(ctx context.Context, namespace string, ref *awsv1alpha1.ProviderRef, region string) (context.Context, error) {
+	var s *provider.Scope
+	if ref != nil && ref.Name != "" {
+		if providerResolver == nil {
+			return ctx, nil
+		}
+		var err error
+		s, err = providerResolver.ForName(ctx, ref.Name, namespace)
+		if err != nil {
+			return ctx, fmt.Errorf("resolve accepter AWS provider: %w", err)
+		}
+		if ref.Region != "" {
+			s.Region = ref.Region
+		}
+	} else {
+		cur := provider.ScopeFrom(ctx)
+		if cur != nil {
+			c := *cur
+			s = &c
+		} else {
+			s = &provider.Scope{}
+		}
+	}
+	if region != "" {
+		s.Region = region
+	}
+	if s.Region == "" && s.Credentials == nil {
+		return ctx, nil
+	}
+	return provider.WithScope(ctx, s), nil
+}
+
+// requeuePending is the poll interval for two-sided resources awaiting the
+// other party's acceptance or an async state transition.
+var requeuePending = ctrl.Result{RequeueAfter: 30 * time.Second}
+
+// errPendingAcceptance signals a two-sided resource is waiting on the other
+// party; reconcilers translate it into requeuePending without logging an error.
+var errPendingAcceptance = errors.New("pending acceptance")

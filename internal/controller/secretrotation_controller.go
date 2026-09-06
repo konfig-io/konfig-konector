@@ -34,6 +34,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	smhelper "github.com/konfig-io/konfig-konector/internal/aws/secretsmanager"
 )
 
@@ -41,7 +42,7 @@ import (
 type SecretRotationReconciler struct {
 	client.Client
 	Scheme               *runtime.Scheme
-	SecretsManagerClient *awssm.Client
+	SecretsManagerClient *multi.SecretsManager
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=secretrotations,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *SecretRotationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	sr := &awsv1alpha1.SecretRotation{}
 	if err := r.Get(ctx, req.NamespacedName, sr); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, sr); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !sr.DeletionTimestamp.IsZero() {
@@ -78,6 +83,10 @@ func (r *SecretRotationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		if err := r.Update(ctx, sr); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileSecretRotation(ctx, sr); err != nil {

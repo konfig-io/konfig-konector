@@ -58,6 +58,12 @@ type BudgetNotification struct {
 
 // BudgetSpec defines the desired state of an AWS Budgets budget.
 type BudgetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AccountID is the 12-digit AWS account ID that owns the budget. Immutable.
 	// +kubebuilder:validation:Pattern=`^[0-9]{12}$`
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="accountId is immutable"
@@ -98,6 +104,9 @@ type BudgetSpec struct {
 
 // BudgetStatus defines the observed state of Budget.
 type BudgetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// BudgetName is the name of the budget in AWS (its primary identifier
 	// together with the account ID).
 	// +optional

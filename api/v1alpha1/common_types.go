@@ -185,7 +185,10 @@ const (
 	DeletionPolicyAbandon    = "abandon"
 
 	ReasonUpdateNotSupported = "UpdateNotSupported"
-	ReasonAbandoned          = "Abandoned"
+	// ReasonPendingAcceptance marks a two-sided resource (peering, attachment,
+	// share invitation) that the other side has not accepted yet.
+	ReasonPendingAcceptance = "PendingAcceptance"
+	ReasonAbandoned         = "Abandoned"
 )
 
 // APIRef references a managed API Gateway API CR (APIGatewayV2API or RestAPI,

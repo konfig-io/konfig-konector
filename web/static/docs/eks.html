@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EKS — konfig-konector Docs</title>
-  <meta name="description" content="API reference for EKSAccessEntry, EKSAddon, EKSCluster, EKSFargateProfile, EKSIdentityProviderConfig, EKSNodeGroup, PodIdentityAssociation." />
+  <meta name="description" content="API reference for EKSAccessEntry, EKSAddon, EKSCapability, EKSCertificateAuthority, EKSCluster, EKSFargateProfile, EKSIdentityProviderConfig, EKSNodeGroup, PodIdentityAssociation." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">EKS</h1>
-    <p class="docs-page-subtitle">7 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">9 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -79,6 +79,9 @@ spec:
   principalArn: arn:aws:iam::123456789012:role/example-role
   principalRef:
     name: example-principal
+  providerRef:
+    name: example-eksaccessentry
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -104,6 +107,9 @@ spec:
 <tr><td><code>principalRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
 <tr><td><code>principalRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
 <tr><td><code>principalRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags.</td></tr>
 <tr><td><code>type</code></td><td>enum</td><td>—</td><td>Type is the access entry type. Allowed: <code>STANDARD, FARGATE_LINUX, EC2_LINUX, EC2_WINDOWS</code></td></tr>
 <tr><td><code>username</code></td><td>string</td><td>—</td><td>Username is the Kubernetes username for this principal.</td></tr>
@@ -113,6 +119,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>accessEntryArn</code></td><td>string</td><td>—</td><td>AccessEntryArn is the ARN of the access entry.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -148,6 +158,9 @@ spec:
     clusterName: example-eksaddon
     name: example-eksaddon
   configurationValues: example
+  providerRef:
+    name: example-eksaddon
+    region: us-east-1
   resolveConflicts: OVERWRITE
   serviceAccountRoleArn: arn:aws:iam::123456789012:role/example-role
   serviceAccountRoleRef:
@@ -167,6 +180,9 @@ spec:
 <tr><td><code>clusterRef.clusterName</code></td><td>string</td><td>—</td><td>ClusterName is a direct AWS EKS cluster name, bypassing CR lookup.</td></tr>
 <tr><td><code>clusterRef.name</code></td><td>string</td><td>—</td><td>Name of an EKSCluster CR in the same namespace.</td></tr>
 <tr><td><code>configurationValues</code></td><td>string</td><td>—</td><td>ConfigurationValues is a JSON or YAML string of configuration values for the add-on.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>resolveConflicts</code></td><td>enum</td><td>—</td><td>ResolveConflicts controls how conflicts are resolved when updating the add-on. Allowed: <code>OVERWRITE, NONE, PRESERVE</code></td></tr>
 <tr><td><code>serviceAccountRoleArn</code></td><td>string</td><td>—</td><td>ServiceAccountRoleArn is an IAM role ARN for the add-on's service account (IRSA).</td></tr>
 <tr><td><code>serviceAccountRoleRef</code></td><td>object</td><td>—</td><td>ServiceAccountRoleRef references an IAMRole CR in the same namespace.</td></tr>
@@ -181,6 +197,10 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>addonArn</code></td><td>string</td><td>—</td><td>AddonArn is the ARN of the EKS add-on.</td></tr>
 <tr><td><code>addonVersion</code></td><td>string</td><td>—</td><td>AddonVersion is the currently installed add-on version.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -191,6 +211,188 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the add-on status: CREATING, ACTIVE, UPDATING, DEGRADED, DELETING.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ekscapability" class="resource-section">
+      <h2>EKSCapability <a href="#ekscapability" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::EKS::Capability</span></h2>
+      <p class="resource-desc">EKSCapability manages AWS::EKS::Capability through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ekscapabilities</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/ekscapability.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSCapability — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#ekscapability
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSCapability
+metadata:
+  name: example-ekscapability
+  namespace: default
+spec:
+  capabilityName: example-ekscapability
+  clusterName: example-ekscapability
+  configuration:
+    ack:
+      disabledServices:
+      - example
+      enableCrossNamespace: true
+    argoCd:
+      awsIdc:
+        idcInstanceArn: arn:aws:iam::123456789012:role/example-role
+        idcManagedApplicationArn: arn:aws:iam::123456789012:role/example-role
+        idcRegion: example
+      namespace: example
+      networkAccess:
+        vpceIds:
+        - example
+      rbacRoleMappings:
+      - identities:
+        - id: example-id
+          type: SSO_USER
+        role: ADMIN
+      serverUrl: example
+  deletePropagationPolicy: RETAIN
+  providerRef:
+    name: example-ekscapability
+    region: us-east-1
+  roleArn: arn:aws:iam::123456789012:role/example-role
+  tags:
+  - key: example
+    value: example
+  type: ARGOCD
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>capabilityName</code></td><td>string</td><td><span class="req">yes</span></td><td>A unique name for the capability.</td></tr>
+<tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the EKS cluster where you want to create the capability.</td></tr>
+<tr><td><code>configuration</code></td><td>object</td><td>—</td><td>The configuration settings for the capability.</td></tr>
+<tr><td><code>configuration.ack</code></td><td>object</td><td>—</td><td>EKSCapabilityAck is a nested property type of AWS::EKS::Capability.</td></tr>
+<tr><td><code>configuration.ack.disabledServices</code></td><td>array&lt;string&gt;</td><td>—</td><td>A list of ACK service names to disable.</td></tr>
+<tr><td><code>configuration.ack.enableCrossNamespace</code></td><td>boolean</td><td>—</td><td>Whether cross-namespace references are enabled for ACK controllers.</td></tr>
+<tr><td><code>configuration.argoCd</code></td><td>object</td><td>—</td><td>EKSCapabilityArgoCd is a nested property type of AWS::EKS::Capability.</td></tr>
+<tr><td><code>configuration.argoCd.awsIdc</code></td><td>object</td><td><span class="req">yes</span></td><td>EKSCapabilityAwsIdc is a nested property type of AWS::EKS::Capability.</td></tr>
+<tr><td><code>configuration.argoCd.awsIdc.idcInstanceArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the IAM Identity Center instance to use for authentication.</td></tr>
+<tr><td><code>configuration.argoCd.awsIdc.idcManagedApplicationArn</code></td><td>string</td><td>—</td><td>The ARN of the managed application created in IAM Identity Center for this Argo CD capability.</td></tr>
+<tr><td><code>configuration.argoCd.awsIdc.idcRegion</code></td><td>string</td><td>—</td><td>The Region where your IAM Identity Center instance is located.</td></tr>
+<tr><td><code>configuration.argoCd.namespace</code></td><td>string</td><td>—</td><td>The Kubernetes namespace where Argo CD resources will be created.</td></tr>
+<tr><td><code>configuration.argoCd.networkAccess</code></td><td>object</td><td>—</td><td>EKSCapabilityNetworkAccess is a nested property type of AWS::EKS::Capability.</td></tr>
+<tr><td><code>configuration.argoCd.networkAccess.vpceIds</code></td><td>array&lt;string&gt;</td><td>—</td><td>A list of VPC endpoint IDs to associate with the managed Argo CD API server endpoint.</td></tr>
+<tr><td><code>configuration.argoCd.rbacRoleMappings</code></td><td>array&lt;object&gt;</td><td>—</td><td>A list of role mappings that define which IAM Identity Center users or groups have which Argo CD roles.</td></tr>
+<tr><td><code>configuration.argoCd.rbacRoleMappings[].identities</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>A list of IAM Identity Center identities (users or groups) that should be assigned this Argo CD role.</td></tr>
+<tr><td><code>configuration.argoCd.rbacRoleMappings[].identities[].id</code></td><td>string</td><td><span class="req">yes</span></td><td>The unique identifier of the IAM Identity Center user or group.</td></tr>
+<tr><td><code>configuration.argoCd.rbacRoleMappings[].identities[].type</code></td><td>enum</td><td><span class="req">yes</span></td><td>The type of identity. Allowed: <code>SSO_USER, SSO_GROUP</code></td></tr>
+<tr><td><code>configuration.argoCd.rbacRoleMappings[].role</code></td><td>enum</td><td><span class="req">yes</span></td><td>The Argo CD role to assign. Allowed: <code>ADMIN, EDITOR, VIEWER</code></td></tr>
+<tr><td><code>configuration.argoCd.serverUrl</code></td><td>string</td><td>—</td><td>The URL of the Argo CD server.</td></tr>
+<tr><td><code>deletePropagationPolicy</code></td><td>enum</td><td><span class="req">yes</span></td><td>Specifies how Kubernetes resources managed by the capability should be handled when the capability is deleted. Allowed: <code>RETAIN</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>roleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The Amazon Resource Name (ARN) of the IAM role that the capability uses to interact with AWS services.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>An array of key-value pairs to apply to this resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>The type of capability to create. Allowed: <code>ARGOCD, ACK, KRO</code></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the capability.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>createdAt</code></td><td>string</td><td>—</td><td>The Unix epoch timestamp in seconds for when the capability was created.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>modifiedAt</code></td><td>string</td><td>—</td><td>The Unix epoch timestamp in seconds for when the capability was last modified.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>status</code></td><td>string</td><td>—</td><td>The current status of the capability.</td></tr>
+<tr><td><code>version</code></td><td>string</td><td>—</td><td>The version of the capability software that is currently running.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="ekscertificateauthority" class="resource-section">
+      <h2>EKSCertificateAuthority <a href="#ekscertificateauthority" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::EKS::CertificateAuthority</span></h2>
+      <p class="resource-desc">EKSCertificateAuthority manages AWS::EKS::CertificateAuthority through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get ekscertificateauthorities</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/eks/ekscertificateauthority.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># EKSCertificateAuthority — EKS
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/eks.html#ekscertificateauthority
+apiVersion: aws.konfig.io/v1alpha1
+kind: EKSCertificateAuthority
+metadata:
+  name: example-ekscertificateauthority
+  namespace: default
+spec:
+  clusterName: example-ekscertificateauthority
+  providerRef:
+    name: example-ekscertificateauthority
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the EKS cluster that the certificate authority belongs to.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>activatedAt</code></td><td>string</td><td>—</td><td>The timestamp when the certificate authority was activated.</td></tr>
+<tr><td><code>activatedBy</code></td><td>string</td><td>—</td><td>The entity that activated the certificate authority.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>createdAt</code></td><td>string</td><td>—</td><td>The timestamp when the certificate authority was created.</td></tr>
+<tr><td><code>createdBy</code></td><td>string</td><td>—</td><td>The entity that created the certificate authority.</td></tr>
+<tr><td><code>data</code></td><td>string</td><td>—</td><td>The Base64 encoded certificate authority data.</td></tr>
+<tr><td><code>distributionStatus</code></td><td>string</td><td>—</td><td>The distribution status of the certificate authority.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>The unique identifier of the certificate authority.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>rollbackAvailable</code></td><td>boolean</td><td>—</td><td>Whether activation of this certificate authority can still be rolled back.</td></tr>
+<tr><td><code>scheduledEvents</code></td><td>object</td><td>—</td><td>The scheduled auto-activation events for the certificate authority.</td></tr>
+<tr><td><code>scheduledEvents.finalAutoActivation</code></td><td>string</td><td>—</td><td>The deadline by which EKS will auto-activate this certificate authority (notAfter minus 45 days).</td></tr>
+<tr><td><code>scheduledEvents.firstAutoActivation</code></td><td>string</td><td>—</td><td>The earliest date EKS may auto-activate this certificate authority (notAfter minus 6 months).</td></tr>
+<tr><td><code>signingStatus</code></td><td>string</td><td>—</td><td>The signing status of the certificate authority.</td></tr>
+<tr><td><code>validity</code></td><td>object</td><td>—</td><td>The validity period of the certificate authority.</td></tr>
+<tr><td><code>validity.notAfter</code></td><td>string</td><td>—</td><td>The end of the validity period for the certificate authority.</td></tr>
+<tr><td><code>validity.notBefore</code></td><td>string</td><td>—</td><td>The start of the validity period for the certificate authority.</td></tr>
 </tbody></table></div>
     </section>
 
@@ -225,6 +427,9 @@ spec:
   logging:
     enabledTypes:
     - example
+  providerRef:
+    name: example-ekscluster
+    region: us-east-1
   resourcesVpcConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: false
@@ -261,6 +466,9 @@ spec:
 <tr><td><code>kubernetesNetworkConfig.serviceIpv4Cidr</code></td><td>string</td><td>—</td><td>ServiceIPv4CIDR is the CIDR block for Kubernetes service IPs.</td></tr>
 <tr><td><code>logging</code></td><td>object</td><td>—</td><td>Logging configures control plane logging.</td></tr>
 <tr><td><code>logging.enabledTypes</code></td><td>array&lt;string&gt;</td><td>—</td><td>EnabledTypes is the list of log types to enable.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>resourcesVpcConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>ResourcesVpcConfig is the VPC configuration for the cluster control plane.</td></tr>
 <tr><td><code>resourcesVpcConfig.endpointPrivateAccess</code></td><td>boolean</td><td>—</td><td>EndpointPrivateAccess enables the private API server endpoint.</td></tr>
 <tr><td><code>resourcesVpcConfig.endpointPublicAccess</code></td><td>boolean</td><td>—</td><td>EndpointPublicAccess enables the public API server endpoint.</td></tr>
@@ -285,6 +493,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>certificateAuthority</code></td><td>string</td><td>—</td><td>CertificateAuthority is the base64-encoded certificate authority data.</td></tr>
 <tr><td><code>clusterArn</code></td><td>string</td><td>—</td><td>ClusterArn is the ARN of the EKS cluster.</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
@@ -327,6 +539,9 @@ spec:
   podExecutionRoleArn: arn:aws:iam::123456789012:role/example-role
   podExecutionRoleRef:
     name: example-podexecutionrole
+  providerRef:
+    name: example-eksfargateprofile
+    region: us-east-1
   selectors:
   - labels:
       key: value
@@ -351,6 +566,9 @@ spec:
 <tr><td><code>podExecutionRoleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
 <tr><td><code>podExecutionRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
 <tr><td><code>podExecutionRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>selectors</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Selectors define which pods are scheduled on Fargate.</td></tr>
 <tr><td><code>selectors[].labels</code></td><td>map&lt;string&gt;</td><td>—</td><td>Labels are the Kubernetes pod labels to match.</td></tr>
 <tr><td><code>selectors[].namespace</code></td><td>string</td><td><span class="req">yes</span></td><td>Namespace is the Kubernetes namespace to match.</td></tr>
@@ -363,6 +581,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -404,6 +626,9 @@ spec:
       key: value
     usernameClaim: example
     usernamePrefix: example
+  providerRef:
+    name: example-eksidentityproviderconfig
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -422,6 +647,9 @@ spec:
 <tr><td><code>oidc.requiredClaims</code></td><td>map&lt;string&gt;</td><td>—</td><td>RequiredClaims are key-value pairs that must be present in the token.</td></tr>
 <tr><td><code>oidc.usernameClaim</code></td><td>string</td><td>—</td><td>UsernameClaim is the JWT claim to use as the username.</td></tr>
 <tr><td><code>oidc.usernamePrefix</code></td><td>string</td><td>—</td><td>UsernamePrefix is a prefix to prepend to usernames.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 </tbody></table></div>
 
@@ -429,6 +657,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the ARN of the identity provider configuration.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -478,6 +710,9 @@ spec:
   nodeRoleRef:
     name: example-noderole
   nodegroupName: example-eksnodegroup
+  providerRef:
+    name: example-eksnodegroup
+    region: us-east-1
   releaseVersion: &#x27;1.0&#x27;
   remoteAccess:
     ec2SshKey: example
@@ -526,6 +761,9 @@ spec:
 <tr><td><code>nodeRoleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
 <tr><td><code>nodeRoleRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the IAMRole CR.</td></tr>
 <tr><td><code>nodegroupName</code></td><td>string</td><td><span class="req">yes</span></td><td>NodegroupName is the name of the node group.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>releaseVersion</code></td><td>string</td><td>—</td><td>ReleaseVersion is the AMI release version.</td></tr>
 <tr><td><code>remoteAccess</code></td><td>object</td><td>—</td><td>RemoteAccess configures SSH access to nodes.</td></tr>
 <tr><td><code>remoteAccess.ec2SshKey</code></td><td>string</td><td>—</td><td>EC2SshKey is the name of the EC2 key pair for SSH access.</td></tr>
@@ -553,6 +791,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -585,6 +827,9 @@ metadata:
 spec:
   annotateServiceAccount: false
   clusterName: example-podidentityassociation
+  providerRef:
+    name: example-podidentityassociation
+    region: us-east-1
   roleRef:
     name: example-role
   serviceAccountName: example-podidentityassociation
@@ -599,6 +844,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>annotateServiceAccount</code></td><td>boolean</td><td>—</td><td>AnnotateServiceAccount controls whether the operator also writes the eks.amazonaws.com/role-arn annotation on the target ServiceAccount (for IRSA compatibility).</td></tr>
 <tr><td><code>clusterName</code></td><td>string</td><td><span class="req">yes</span></td><td>ClusterName is the name of the EKS cluster.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>roleRef</code></td><td>object</td><td><span class="req">yes</span></td><td>RoleRef references the IAMRole CR or a direct ARN to bind to the ServiceAccount.</td></tr>
 <tr><td><code>roleRef.arn</code></td><td>string</td><td>—</td><td>ARN is a direct AWS IAM role ARN.</td></tr>
 <tr><td><code>roleRef.name</code></td><td>string</td><td>—</td><td>Name of an IAMRole CR in the same namespace.</td></tr>
@@ -613,6 +861,10 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>associationArn</code></td><td>string</td><td>—</td><td>AssociationARN is the ARN of the EKS Pod Identity association.</td></tr>
 <tr><td><code>associationId</code></td><td>string</td><td>—</td><td>AssociationID is the EKS Pod Identity association identifier.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>

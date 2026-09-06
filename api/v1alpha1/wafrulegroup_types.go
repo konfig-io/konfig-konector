@@ -22,6 +22,12 @@ import (
 
 // WAFRuleGroupSpec defines the desired state of a WAFv2 Rule Group.
 type WAFRuleGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the rule group. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -46,6 +52,9 @@ type WAFRuleGroupSpec struct {
 
 // WAFRuleGroupStatus defines the observed state of WAFRuleGroup.
 type WAFRuleGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the identifier of the rule group.
 	// +optional
 	ID string `json:"id,omitempty"`

@@ -32,7 +32,7 @@ import (
 
 func appScalingPolicyCR(mutate ...func(*awsv1alpha1.AppScalingPolicy)) *awsv1alpha1.AppScalingPolicy {
 	sp := &awsv1alpha1.AppScalingPolicy{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.AppScalingPolicySpec{
 			PolicyName:        "my-policy",
 			ServiceNamespace:  "ecs",

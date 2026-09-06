@@ -35,13 +35,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	elbv2helper "github.com/konfig-io/konfig-konector/internal/aws/elbv2"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // TargetGroupReconciler reconciles TargetGroup objects.
 type TargetGroupReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	ELBv2Client *awselbv2.Client
+	ELBv2Client *multi.ELBv2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=targetgroups,verbs=get;list;watch;create;update;patch;delete
@@ -54,6 +55,10 @@ func (r *TargetGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	tg := &awsv1alpha1.TargetGroup{}
 	if err := r.Get(ctx, req.NamespacedName, tg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, tg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !tg.DeletionTimestamp.IsZero() {
@@ -78,6 +83,10 @@ func (r *TargetGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if err := r.Update(ctx, tg); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileTargetGroup(ctx, tg); err != nil {

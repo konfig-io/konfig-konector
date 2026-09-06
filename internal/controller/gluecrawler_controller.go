@@ -64,6 +64,10 @@ func (r *GlueCrawlerReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err := r.Get(ctx, req.NamespacedName, cr); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, cr); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !cr.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(cr, awsv1alpha1.FinalizerName) {
@@ -87,6 +91,10 @@ func (r *GlueCrawlerReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if err := r.Update(ctx, cr); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileCrawler(ctx, cr); err != nil {

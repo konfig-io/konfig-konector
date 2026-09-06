@@ -72,7 +72,7 @@ func (f *fakePrivateCAAPI) DeleteCertificateAuthority(_ context.Context, params 
 
 func privateCACR(mutate ...func(*awsv1alpha1.PrivateCA)) *awsv1alpha1.PrivateCA {
 	ca := &awsv1alpha1.PrivateCA{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-ca", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-ca", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.PrivateCASpec{
 			Type:             "ROOT",
 			KeyAlgorithm:     "RSA_2048",

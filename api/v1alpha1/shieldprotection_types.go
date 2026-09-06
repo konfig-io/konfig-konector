@@ -22,6 +22,12 @@ import (
 
 // ShieldProtectionSpec defines the desired state of a Shield Advanced protection.
 type ShieldProtectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the friendly name of the protection.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -37,6 +43,9 @@ type ShieldProtectionSpec struct {
 
 // ShieldProtectionStatus defines the observed state of ShieldProtection.
 type ShieldProtectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ProtectionID is the unique identifier of the Shield protection.
 	// +optional
 	ProtectionID string `json:"protectionID,omitempty"`

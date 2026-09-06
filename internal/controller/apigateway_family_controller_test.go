@@ -69,7 +69,7 @@ func (f *fakeAPIGWv2Route) DeleteRoute(context.Context, *awsapigwv2.DeleteRouteI
 
 func routeCR(mutate ...func(*awsv1alpha1.APIGatewayV2Route)) *awsv1alpha1.APIGatewayV2Route {
 	r := &awsv1alpha1.APIGatewayV2Route{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-route", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-route", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2RouteSpec{
 			APIRef:         awsv1alpha1.APIRef{Name: "my-api"},
 			RouteKey:       "GET /pets",
@@ -85,7 +85,7 @@ func routeCR(mutate ...func(*awsv1alpha1.APIGatewayV2Route)) *awsv1alpha1.APIGat
 func TestAPIGatewayV2RouteLifecycle(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-route", Namespace: "default"}}
 	readyIntegration := &awsv1alpha1.APIGatewayV2Integration{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-integration", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-integration", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2IntegrationSpec{
 			APIRef:          awsv1alpha1.APIRef{Name: "my-api"},
 			IntegrationType: "AWS_PROXY",
@@ -222,7 +222,7 @@ func (f *fakeAPIGWv2Integration) DeleteIntegration(context.Context, *awsapigwv2.
 
 func integrationCR(mutate ...func(*awsv1alpha1.APIGatewayV2Integration)) *awsv1alpha1.APIGatewayV2Integration {
 	i := &awsv1alpha1.APIGatewayV2Integration{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-integration", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-integration", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2IntegrationSpec{
 			APIRef:               awsv1alpha1.APIRef{Name: "my-api"},
 			IntegrationType:      "AWS_PROXY",
@@ -240,7 +240,7 @@ func TestAPIGatewayV2IntegrationLifecycle(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-integration", Namespace: "default"}}
 	const fnARN = "arn:aws:lambda:us-east-1:123456789012:function:my-fn"
 	readyFn := &awsv1alpha1.LambdaFunction{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-fn", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-fn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Status:     awsv1alpha1.LambdaFunctionStatus{FunctionARN: fnARN},
 	}
 
@@ -369,7 +369,7 @@ func (f *fakeAPIGWv2Authorizer) DeleteAuthorizer(context.Context, *awsapigwv2.De
 
 func authorizerCR(mutate ...func(*awsv1alpha1.APIGatewayV2Authorizer)) *awsv1alpha1.APIGatewayV2Authorizer {
 	a := &awsv1alpha1.APIGatewayV2Authorizer{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-authorizer", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-authorizer", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2AuthorizerSpec{
 			APIRef:         awsv1alpha1.APIRef{Name: "my-api"},
 			Name:           "jwt-auth",
@@ -423,7 +423,7 @@ func TestAPIGatewayV2AuthorizerLifecycle(t *testing.T) {
 		scheme := newAPIGWScheme(t)
 		const fnARN = "arn:aws:lambda:us-east-1:123456789012:function:authz"
 		readyFn := &awsv1alpha1.LambdaFunction{
-			ObjectMeta: metav1.ObjectMeta{Name: "authz-fn", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "authz-fn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Status:     awsv1alpha1.LambdaFunctionStatus{FunctionARN: fnARN},
 		}
 		obj := authorizerCR(func(a *awsv1alpha1.APIGatewayV2Authorizer) {
@@ -527,7 +527,7 @@ func (f *fakeAPIGWv2Domain) DeleteDomainName(_ context.Context, params *awsapigw
 
 func domainCR(mutate ...func(*awsv1alpha1.APIGatewayV2DomainName)) *awsv1alpha1.APIGatewayV2DomainName {
 	d := &awsv1alpha1.APIGatewayV2DomainName{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-domain", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-domain", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2DomainNameSpec{
 			DomainName:     "api.example.com",
 			CertificateARN: "arn:aws:acm:us-east-1:123456789012:certificate/abc",
@@ -647,7 +647,7 @@ func (f *fakeAPIGWv2Mapping) DeleteApiMapping(context.Context, *awsapigwv2.Delet
 
 func mappingCR(mutate ...func(*awsv1alpha1.APIGatewayV2ApiMapping)) *awsv1alpha1.APIGatewayV2ApiMapping {
 	m := &awsv1alpha1.APIGatewayV2ApiMapping{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-mapping", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-mapping", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2ApiMappingSpec{
 			APIRef:        awsv1alpha1.APIRef{Name: "my-api"},
 			DomainNameRef: awsv1alpha1.DomainNameRef{Name: "my-domain"},
@@ -788,7 +788,7 @@ func (f *fakeAPIGWv2VpcLink) DeleteVpcLink(context.Context, *awsapigwv2.DeleteVp
 
 func vpcLinkCR(mutate ...func(*awsv1alpha1.APIGatewayV2VpcLink)) *awsv1alpha1.APIGatewayV2VpcLink {
 	v := &awsv1alpha1.APIGatewayV2VpcLink{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-vpclink", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-vpclink", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.APIGatewayV2VpcLinkSpec{
 			Name:       "my-vpclink",
 			SubnetRefs: []awsv1alpha1.SubnetRef{{ID: "subnet-1"}, {ID: "subnet-2"}},
@@ -956,7 +956,7 @@ func (f *fakeRestAPI) GetResources(context.Context, *awsapigw.GetResourcesInput,
 
 func restAPICR(mutate ...func(*awsv1alpha1.RestAPI)) *awsv1alpha1.RestAPI {
 	a := &awsv1alpha1.RestAPI{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-rest-api", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-rest-api", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.RestAPISpec{
 			Name:          "my-rest-api",
 			EndpointTypes: []string{"REGIONAL"},
@@ -1130,7 +1130,7 @@ func (f *fakeRestDeployment) DeleteDeployment(context.Context, *awsapigw.DeleteD
 
 func restDeploymentCR(mutate ...func(*awsv1alpha1.RestAPIDeployment)) *awsv1alpha1.RestAPIDeployment {
 	d := &awsv1alpha1.RestAPIDeployment{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-deployment", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-deployment", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.RestAPIDeploymentSpec{
 			RestAPIRef: awsv1alpha1.APIRef{Name: "my-rest-api"},
 			StageName:  "prod",
@@ -1286,7 +1286,7 @@ func (f *fakeRestStage) DeleteStage(context.Context, *awsapigw.DeleteStageInput,
 
 func restStageCR(mutate ...func(*awsv1alpha1.RestAPIStage)) *awsv1alpha1.RestAPIStage {
 	s := &awsv1alpha1.RestAPIStage{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-rest-stage", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-rest-stage", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.RestAPIStageSpec{
 			RestAPIRef:    awsv1alpha1.APIRef{Name: "my-rest-api"},
 			StageName:     "prod",

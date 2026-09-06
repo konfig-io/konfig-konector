@@ -98,7 +98,7 @@ func TestIAMInstanceProfileReconcile(t *testing.T) {
 	roleARN := "arn:aws:iam::123456789012:role/my-role"
 	ipCR := func(mutate ...func(*awsv1alpha1.IAMInstanceProfile)) *awsv1alpha1.IAMInstanceProfile {
 		ip := &awsv1alpha1.IAMInstanceProfile{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-profile", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-profile", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.IAMInstanceProfileSpec{
 				InstanceProfileName: "my-profile",
 				RoleRef:             &awsv1alpha1.RoleRef{ARN: roleARN},

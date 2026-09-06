@@ -52,7 +52,7 @@ func (f *fakeOrgPolicyAttachment) DetachPolicy(_ context.Context, params *awsorg
 
 func orgPolicyAttachmentCR(mutate ...func(*awsv1alpha1.OrganizationsPolicyAttachment)) *awsv1alpha1.OrganizationsPolicyAttachment {
 	att := &awsv1alpha1.OrganizationsPolicyAttachment{
-		ObjectMeta: metav1.ObjectMeta{Name: "deny-regions-workloads", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "deny-regions-workloads", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.OrganizationsPolicyAttachmentSpec{
 			PolicyRef: awsv1alpha1.OrganizationsPolicyRef{PolicyID: testOrgPolicyID},
 			TargetID:  "ou-abcd-11111111",

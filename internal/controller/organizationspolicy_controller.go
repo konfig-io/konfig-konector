@@ -63,6 +63,10 @@ func (r *OrganizationsPolicyReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err := r.Get(ctx, req.NamespacedName, pol); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, pol); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !pol.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(pol, awsv1alpha1.FinalizerName) {
@@ -86,6 +90,10 @@ func (r *OrganizationsPolicyReconciler) Reconcile(ctx context.Context, req ctrl.
 		if err := r.Update(ctx, pol); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcilePolicy(ctx, pol); err != nil {

@@ -22,6 +22,12 @@ import (
 
 // MQConfigurationSpec defines the desired state of an Amazon MQ configuration.
 type MQConfigurationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the configuration. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=150
@@ -49,6 +55,9 @@ type MQConfigurationSpec struct {
 
 // MQConfigurationStatus defines the observed state of MQConfiguration.
 type MQConfigurationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConfigurationID is the unique ID Amazon MQ generates for the configuration.
 	// +optional
 	ConfigurationID string `json:"configurationId,omitempty"`

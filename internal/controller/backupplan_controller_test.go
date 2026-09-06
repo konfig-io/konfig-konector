@@ -94,8 +94,9 @@ const (
 func backupPlanCR(mutate ...func(*awsv1alpha1.BackupPlan)) *awsv1alpha1.BackupPlan {
 	plan := &awsv1alpha1.BackupPlan{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-plan",
-			Namespace: "default",
+			Name:       "my-plan",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.BackupPlanSpec{
 			PlanName: "my-plan",
@@ -282,7 +283,7 @@ func TestBackupPlanReconcile(t *testing.T) {
 					p.Spec.Rules[0].TargetBackupVaultRef = "my-vault-cr"
 				}),
 				&awsv1alpha1.BackupVault{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-vault-cr", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-vault-cr", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.BackupVaultSpec{VaultName: "my-vault"},
 				},
 			},
@@ -304,7 +305,7 @@ func TestBackupPlanReconcile(t *testing.T) {
 					p.Spec.Rules[0].TargetBackupVaultRef = "my-vault-cr"
 				}),
 				&awsv1alpha1.BackupVault{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-vault-cr", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-vault-cr", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.BackupVaultSpec{VaultName: "my-aws-vault"},
 					Status: awsv1alpha1.BackupVaultStatus{
 						VaultARN: "arn:aws:backup:us-east-1:123456789012:backup-vault:my-aws-vault",

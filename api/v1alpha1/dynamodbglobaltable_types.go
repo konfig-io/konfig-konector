@@ -28,6 +28,12 @@ type DynamoDBReplicaSpec struct {
 
 // DynamoDBGlobalTableSpec defines the desired state of a DynamoDB Global Table.
 type DynamoDBGlobalTableSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TableName is the name of the global table. Immutable.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=255
@@ -41,6 +47,9 @@ type DynamoDBGlobalTableSpec struct {
 
 // DynamoDBGlobalTableStatus defines the observed state of DynamoDBGlobalTable.
 type DynamoDBGlobalTableStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the global table.
 	// +optional
 	ARN string `json:"arn,omitempty"`

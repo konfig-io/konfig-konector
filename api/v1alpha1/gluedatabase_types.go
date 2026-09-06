@@ -22,6 +22,12 @@ import (
 
 // GlueDatabaseSpec defines the desired state of a Glue Data Catalog database.
 type GlueDatabaseSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the database. For Hive compatibility it is folded
 	// to lowercase when stored. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
@@ -48,6 +54,9 @@ type GlueDatabaseSpec struct {
 
 // GlueDatabaseStatus defines the observed state of GlueDatabase.
 type GlueDatabaseStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DatabaseName is the name of the database in the Glue Data Catalog.
 	// +optional
 	DatabaseName string `json:"databaseName,omitempty"`

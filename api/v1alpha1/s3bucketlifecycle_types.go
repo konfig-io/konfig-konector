@@ -22,6 +22,12 @@ import (
 
 // S3BucketLifecycleSpec defines the desired state of S3BucketLifecycle.
 type S3BucketLifecycleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BucketName is the name of the S3 bucket.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="bucketName is immutable"
@@ -34,6 +40,9 @@ type S3BucketLifecycleSpec struct {
 
 // S3BucketLifecycleStatus defines the observed state of S3BucketLifecycle.
 type S3BucketLifecycleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

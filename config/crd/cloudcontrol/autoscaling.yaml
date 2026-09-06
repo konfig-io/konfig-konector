@@ -1,0 +1,1070 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: autoscalinglaunchconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AutoScalingLaunchConfiguration
+    listKind: AutoScalingLaunchConfigurationList
+    plural: autoscalinglaunchconfigurations
+    singular: autoscalinglaunchconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AutoScalingLaunchConfiguration manages AWS::AutoScaling::LaunchConfiguration through the AWS Cloud Control
+          API. The AWS::AutoScaling::LaunchConfiguration resource specifies the launch configuration that can be used by
+          an Auto Scaling group to configure Amazon EC2 instances.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AutoScalingLaunchConfigurationSpec is the desired state of
+              AWS::AutoScaling::LaunchConfiguration.
+            properties:
+              associatePublicIpAddress:
+                description: |-
+                  For Auto Scaling groups that are running in a virtual private cloud (VPC), specifies whether to assign a
+                  public IP address to the group's instances.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              blockDeviceMappings:
+                description: |-
+                  Specifies how block devices are exposed to the instance. You can specify virtual devices and EBS volumes.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: AutoScalingLaunchConfigurationBlockDeviceMapping is
+                    a nested property type of AWS::AutoScaling::LaunchConfiguration.
+                  properties:
+                    deviceName:
+                      description: The device name exposed to the EC2 instance (for
+                        example, /dev/sdh or xvdh).
+                      type: string
+                    ebs:
+                      description: Parameters used to automatically set up EBS volumes
+                        when an instance is launched.
+                      properties:
+                        deleteOnTermination:
+                          description: Indicates whether the volume is deleted on
+                            instance termination.
+                          type: boolean
+                        encrypted:
+                          description: Specifies whether the volume should be encrypted.
+                          type: boolean
+                        iops:
+                          description: The number of input/output (I/O) operations
+                            per second (IOPS) to provision for the volume.
+                          format: int64
+                          type: integer
+                        snapshotId:
+                          description: The snapshot ID of the volume to use.
+                          type: string
+                        throughput:
+                          description: The throughput (MiBps) to provision for a gp3
+                            volume.
+                          format: int64
+                          type: integer
+                        volumeSize:
+                          description: The volume size, in GiBs.
+                          format: int64
+                          type: integer
+                        volumeType:
+                          description: The volume type.
+                          type: string
+                      type: object
+                    noDevice:
+                      description: Setting this value to true suppresses the specified
+                        device included in the block device mapping of the AMI.
+                      type: boolean
+                    virtualName:
+                      description: The name of the virtual device.
+                      type: string
+                  required:
+                  - deviceName
+                  type: object
+                type: array
+              classicLinkVPCId:
+                description: |-
+                  The ID of a ClassicLink-enabled VPC to link your EC2-Classic instances to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              classicLinkVPCSecurityGroups:
+                description: |-
+                  The IDs of one or more security groups for the VPC that you specified in the ClassicLinkVPCId property.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              ebsOptimized:
+                description: |-
+                  Specifies whether the launch configuration is optimized for EBS I/O (true) or not (false).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              iamInstanceProfile:
+                description: |-
+                  Provides the name or the Amazon Resource Name (ARN) of the instance profile associated with the IAM role for
+                  the instance. The instance profile contains the IAM role.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              imageId:
+                description: |-
+                  Provides the unique ID of the Amazon Machine Image (AMI) that was assigned during registration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: imageId is immutable
+                  rule: self == oldSelf
+              instanceId:
+                description: |-
+                  The ID of the Amazon EC2 instance you want to use to create the launch configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              instanceMonitoring:
+                description: |-
+                  Controls whether instances in this group are launched with detailed (true) or basic (false) monitoring.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              instanceType:
+                description: |-
+                  Specifies the instance type of the EC2 instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: instanceType is immutable
+                  rule: self == oldSelf
+              kernelId:
+                description: |-
+                  Provides the ID of the kernel associated with the EC2 AMI.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              keyName:
+                description: |-
+                  Provides the name of the EC2 key pair.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              launchConfigurationName:
+                description: |-
+                  The name of the launch configuration. This name must be unique per Region per account.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              metadataOptions:
+                description: |-
+                  The metadata options for the instances.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  httpEndpoint:
+                    description: This parameter enables or disables the HTTP metadata
+                      endpoint on your instances.
+                    type: string
+                  httpPutResponseHopLimit:
+                    description: The desired HTTP PUT response hop limit for instance
+                      metadata requests.
+                    format: int64
+                    type: integer
+                  httpTokens:
+                    description: The state of token usage for your instance metadata
+                      requests.
+                    type: string
+                type: object
+              placementTenancy:
+                description: |-
+                  The tenancy of the instance, either default or dedicated.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              ramDiskId:
+                description: |-
+                  The ID of the RAM disk to select.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              securityGroups:
+                description: |-
+                  A list that contains the security groups to assign to the instances in the Auto Scaling group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+              spotPrice:
+                description: |-
+                  The maximum hourly price you are willing to pay for any Spot Instances launched to fulfill the request.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              userData:
+                description: |-
+                  The Base64-encoded user data to make available to the launched EC2 instances.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 21847
+                type: string
+            required:
+            - imageId
+            - instanceType
+            type: object
+          status:
+            description: AutoScalingLaunchConfigurationStatus is the observed state
+              of AWS::AutoScaling::LaunchConfiguration.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: autoscalinglifecyclehooks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AutoScalingLifecycleHook
+    listKind: AutoScalingLifecycleHookList
+    plural: autoscalinglifecyclehooks
+    singular: autoscalinglifecyclehook
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AutoScalingLifecycleHook manages AWS::AutoScaling::LifecycleHook through the AWS Cloud Control API. Resource
+          Type definition for AWS::AutoScaling::LifecycleHook
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AutoScalingLifecycleHookSpec is the desired state of AWS::AutoScaling::LifecycleHook.
+            properties:
+              autoScalingGroupName:
+                description: |-
+                  The name of the Auto Scaling group for the lifecycle hook.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: autoScalingGroupName is immutable
+                  rule: self == oldSelf
+              defaultResult:
+                description: |-
+                  The action the Auto Scaling group takes when the lifecycle hook timeout elapses or if an unexpected failure
+                  occurs. The valid values are CONTINUE and ABANDON (default).
+                type: string
+              heartbeatTimeout:
+                description: |-
+                  The maximum time, in seconds, that can elapse before the lifecycle hook times out. The range is from 30 to
+                  7200 seconds. The default value is 3600 seconds (1 hour). If the lifecycle hook times out, Amazon EC2 Auto
+                  Scaling performs the action that you specified in the DefaultResult property.
+                format: int64
+                type: integer
+              lifecycleHookName:
+                description: |-
+                  The name of the lifecycle hook.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              lifecycleTransition:
+                description: The instance state to which you want to attach the lifecycle
+                  hook.
+                type: string
+              notificationMetadata:
+                description: |-
+                  Additional information that is included any time Amazon EC2 Auto Scaling sends a message to the notification
+                  target.
+                maxLength: 1023
+                type: string
+              notificationTargetARN:
+                description: |-
+                  The Amazon Resource Name (ARN) of the notification target that Amazon EC2 Auto Scaling uses to notify you when
+                  an instance is in the transition state for the lifecycle hook. You can specify an Amazon SQS queue or an
+                  Amazon SNS topic. The notification message includes the following information: lifecycle action token, user
+                  account ID, Auto Scaling group name, lifecycle hook name, instance ID, li...
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roleARN:
+                description: |-
+                  The ARN of the IAM role that allows the Auto Scaling group to publish to the specified notification target,
+                  for example, an Amazon SNS topic or an Amazon SQS queue.
+                type: string
+            required:
+            - autoScalingGroupName
+            - lifecycleTransition
+            type: object
+          status:
+            description: AutoScalingLifecycleHookStatus is the observed state of AWS::AutoScaling::LifecycleHook.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: autoscalingscheduledactions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AutoScalingScheduledAction
+    listKind: AutoScalingScheduledActionList
+    plural: autoscalingscheduledactions
+    singular: autoscalingscheduledaction
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AutoScalingScheduledAction manages AWS::AutoScaling::ScheduledAction through the AWS Cloud Control API. The
+          AWS::AutoScaling::ScheduledAction resource specifies an Amazon EC2 Auto Scaling scheduled action so that the
+          Auto Scaling group can change the number of instances available for your application in response to
+          predictable load changes.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AutoScalingScheduledActionSpec is the desired state of AWS::AutoScaling::ScheduledAction.
+            properties:
+              autoScalingGroupName:
+                description: |-
+                  The name of the Auto Scaling group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: autoScalingGroupName is immutable
+                  rule: self == oldSelf
+              desiredCapacity:
+                description: |-
+                  The desired capacity is the initial capacity of the Auto Scaling group after the scheduled action runs and the
+                  capacity it attempts to maintain.
+                format: int64
+                type: integer
+              endTime:
+                description: The latest scheduled start time to return. If scheduled
+                  action names are provided, this parameter is ignored.
+                type: string
+              maxSize:
+                description: The minimum size of the Auto Scaling group.
+                format: int64
+                type: integer
+              minSize:
+                description: The minimum size of the Auto Scaling group.
+                format: int64
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              recurrence:
+                description: |-
+                  The recurring schedule for the action, in Unix cron syntax format. When StartTime and EndTime are specified
+                  with Recurrence , they form the boundaries of when the recurring action starts and stops.
+                type: string
+              startTime:
+                description: |-
+                  The earliest scheduled start time to return. If scheduled action names are provided, this parameter is
+                  ignored.
+                type: string
+              timeZone:
+                description: The time zone for the cron expression.
+                type: string
+            required:
+            - autoScalingGroupName
+            type: object
+          status:
+            description: AutoScalingScheduledActionStatus is the observed state of
+              AWS::AutoScaling::ScheduledAction.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              scheduledActionName:
+                description: |-
+                  Auto-generated unique identifier
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: autoscalingwarmpools.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AutoScalingWarmPool
+    listKind: AutoScalingWarmPoolList
+    plural: autoscalingwarmpools
+    singular: autoscalingwarmpool
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AutoScalingWarmPool manages AWS::AutoScaling::WarmPool through the AWS Cloud Control API. Resource schema for
+          AWS::AutoScaling::WarmPool.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AutoScalingWarmPoolSpec is the desired state of AWS::AutoScaling::WarmPool.
+            properties:
+              autoScalingGroupName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: autoScalingGroupName is immutable
+                  rule: self == oldSelf
+              instanceReusePolicy:
+                description: AutoScalingWarmPoolInstanceReusePolicy is a nested property
+                  type of AWS::AutoScaling::WarmPool.
+                properties:
+                  reuseOnScaleIn:
+                    type: boolean
+                type: object
+              maxGroupPreparedCapacity:
+                format: int64
+                type: integer
+              minSize:
+                format: int64
+                type: integer
+              poolState:
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - autoScalingGroupName
+            type: object
+          status:
+            description: AutoScalingWarmPoolStatus is the observed state of AWS::AutoScaling::WarmPool.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

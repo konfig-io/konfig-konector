@@ -44,6 +44,12 @@ type EKSAccessPolicyAssociation struct {
 
 // EKSAccessEntrySpec defines the desired state of an EKS Access Entry.
 type EKSAccessEntrySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the EKS cluster name. Either clusterName or clusterRef must be set.
 	// +optional
 	ClusterName string `json:"clusterName,omitempty"`
@@ -85,6 +91,9 @@ type EKSAccessEntrySpec struct {
 
 // EKSAccessEntryStatus defines the observed state of EKSAccessEntry.
 type EKSAccessEntryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccessEntryArn is the ARN of the access entry.
 	// +optional
 	AccessEntryArn string `json:"accessEntryArn,omitempty"`

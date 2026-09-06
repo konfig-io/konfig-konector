@@ -1,0 +1,1108 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: acmpcacertificateauthorityactivations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ACMPCACertificateAuthorityActivation
+    listKind: ACMPCACertificateAuthorityActivationList
+    plural: acmpcacertificateauthorityactivations
+    singular: acmpcacertificateauthorityactivation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ACMPCACertificateAuthorityActivation manages AWS::ACMPCA::CertificateAuthorityActivation through the AWS Cloud
+          Control API. Used to install the certificate authority certificate and update the certificate authority
+          status.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ACMPCACertificateAuthorityActivationSpec is the desired state
+              of AWS::ACMPCA::CertificateAuthorityActivation.
+            properties:
+              certificate:
+                description: Certificate Authority certificate that will be installed
+                  in the Certificate Authority.
+                type: string
+              certificateAuthorityArn:
+                description: |-
+                  Arn of the Certificate Authority.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: certificateAuthorityArn is immutable
+                  rule: self == oldSelf
+              certificateChain:
+                description: Certificate chain for the Certificate Authority certificate.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              status:
+                description: The status of the Certificate Authority.
+                type: string
+            required:
+            - certificate
+            - certificateAuthorityArn
+            type: object
+          status:
+            description: ACMPCACertificateAuthorityActivationStatus is the observed
+              state of AWS::ACMPCA::CertificateAuthorityActivation.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              completeCertificateChain:
+                description: |-
+                  The complete certificate chain, including the Certificate Authority certificate.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: acmpcacertificates.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ACMPCACertificate
+    listKind: ACMPCACertificateList
+    plural: acmpcacertificates
+    singular: acmpcacertificate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ACMPCACertificate manages AWS::ACMPCA::Certificate through the AWS Cloud Control API. The
+          “AWS::ACMPCA::Certificate“ resource is used to issue a certificate using your private certificate authority.
+          For more information, see the
+          [IssueCertificate](https://docs.aws.amazon.com/privateca/latest/APIReference/API_IssueCertificate.html)
+          action.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ACMPCACertificateSpec is the desired state of AWS::ACMPCA::Certificate.
+            properties:
+              apiPassthrough:
+                description: |-
+                  Specifies X.509 certificate information to be included in the issued certificate. An ``APIPassthrough`` or
+                  ``APICSRPassthrough`` template variant must be selected, or else this parameter is ignored.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  extensions:
+                    description: Specifies X.509 extension information for a certificate.
+                    properties:
+                      certificatePolicies:
+                        description: |-
+                          Contains a sequence of one or more policy information terms, each of which consists of an object identifier
+                          (OID) and optional qualifiers. For more information, see NIST's definition of [Object Identifier
+                          (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier). In an end-entity
+                          certificate, these terms indicate the policy under which the certificate was issued ...
+                        items:
+                          description: ACMPCACertificatePolicyInformation is a nested
+                            property type of AWS::ACMPCA::Certificate.
+                          properties:
+                            certPolicyId:
+                              description: |-
+                                Specifies the object identifier (OID) of the certificate policy under which the certificate was issued. For
+                                more information, see NIST's definition of [Object Identifier
+                                (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier).
+                              type: string
+                            policyQualifiers:
+                              description: |-
+                                Modifies the given ``CertPolicyId`` with a qualifier. AWS Private CA supports the certification practice
+                                statement (CPS) qualifier.
+                              items:
+                                description: ACMPCACertificatePolicyQualifierInfo
+                                  is a nested property type of AWS::ACMPCA::Certificate.
+                                properties:
+                                  policyQualifierId:
+                                    description: Identifies the qualifier modifying
+                                      a ``CertPolicyId``.
+                                    type: string
+                                  qualifier:
+                                    description: Defines the qualifier type. AWS Private
+                                      CA supports the use of a URI for a CPS qualifier
+                                      in this field.
+                                    properties:
+                                      cpsUri:
+                                        description: Contains a pointer to a certification
+                                          practice statement (CPS) published by the
+                                          CA.
+                                        type: string
+                                    required:
+                                    - cpsUri
+                                    type: object
+                                required:
+                                - policyQualifierId
+                                - qualifier
+                                type: object
+                              type: array
+                          required:
+                          - certPolicyId
+                          type: object
+                        type: array
+                      customExtensions:
+                        description: |-
+                          Contains a sequence of one or more X.509 extensions, each of which consists of an object identifier (OID), a
+                          base64-encoded value, and the critical flag. For more information, see the [Global OID reference
+                          database.](https://docs.aws.amazon.com/https://oidref.com/2.5.29)
+                        items:
+                          description: ACMPCACertificateCustomExtension is a nested
+                            property type of AWS::ACMPCA::Certificate.
+                          properties:
+                            critical:
+                              description: Specifies the critical flag of the X.509
+                                extension.
+                              type: boolean
+                            objectIdentifier:
+                              description: |-
+                                Specifies the object identifier (OID) of the X.509 extension. For more information, see the [Global OID
+                                reference database.](https://docs.aws.amazon.com/https://oidref.com/2.5.29)
+                              type: string
+                            value:
+                              description: Specifies the base64-encoded value of the
+                                X.509 extension.
+                              type: string
+                          required:
+                          - objectIdentifier
+                          - value
+                          type: object
+                        type: array
+                      extendedKeyUsage:
+                        description: |-
+                          Specifies additional purposes for which the certified public key may be used other than basic purposes
+                          indicated in the ``KeyUsage`` extension.
+                        items:
+                          description: ACMPCACertificateExtendedKeyUsage is a nested
+                            property type of AWS::ACMPCA::Certificate.
+                          properties:
+                            extendedKeyUsageObjectIdentifier:
+                              description: Specifies a custom ``ExtendedKeyUsage``
+                                with an object identifier (OID).
+                              type: string
+                            extendedKeyUsageType:
+                              description: |-
+                                Specifies a standard ``ExtendedKeyUsage`` as defined as in [RFC
+                                5280](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12).
+                              type: string
+                          type: object
+                        type: array
+                      keyUsage:
+                        description: |-
+                          Defines one or more purposes for which the key contained in the certificate can be used. Default value for
+                          each option is false.
+                        properties:
+                          crlSign:
+                            description: Key can be used to sign CRLs.
+                            type: boolean
+                          dataEncipherment:
+                            description: Key can be used to decipher data.
+                            type: boolean
+                          decipherOnly:
+                            description: Key can be used only to decipher data.
+                            type: boolean
+                          digitalSignature:
+                            description: Key can be used for digital signing.
+                            type: boolean
+                          encipherOnly:
+                            description: Key can be used only to encipher data.
+                            type: boolean
+                          keyAgreement:
+                            description: Key can be used in a key-agreement protocol.
+                            type: boolean
+                          keyCertSign:
+                            description: Key can be used to sign certificates.
+                            type: boolean
+                          keyEncipherment:
+                            description: Key can be used to encipher data.
+                            type: boolean
+                          nonRepudiation:
+                            description: Key can be used for non-repudiation.
+                            type: boolean
+                        type: object
+                      subjectAlternativeNames:
+                        description: |-
+                          The subject alternative name extension allows identities to be bound to the subject of the certificate. These
+                          identities may be included in addition to or in place of the identity in the subject field of the certificate.
+                        items:
+                          description: ACMPCACertificateGeneralName is a nested property
+                            type of AWS::ACMPCA::Certificate.
+                          properties:
+                            directoryName:
+                              description: |-
+                                Contains information about the certificate subject. The certificate can be one issued by your private
+                                certificate authority (CA) or it can be your private CA certificate. The Subject field in the certificate
+                                identifies the entity that owns or controls the public key in the certificate. The entity can be a user,
+                                computer, device, or service. The Subject must contain an X.500 distinguished name (...
+                              properties:
+                                commonName:
+                                  description: |-
+                                    For CA and end-entity certificates in a private PKI, the common name (CN) can be any string within the length
+                                    limit. Note: In publicly trusted certificates, the common name must be a fully qualified domain name (FQDN)
+                                    associated with the certificate subject.
+                                  type: string
+                                country:
+                                  description: Two-digit code that specifies the country
+                                    in which the certificate subject located.
+                                  type: string
+                                customAttributes:
+                                  description: |-
+                                    Contains a sequence of one or more X.500 relative distinguished names (RDNs), each of which consists of an
+                                    object identifier (OID) and a value. For more information, see NIST’s definition of [Object Identifier
+                                    (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier). Custom attributes
+                                    cannot be used in combination with standard attributes.
+                                  items:
+                                    description: ACMPCACertificateCustomAttribute
+                                      is a nested property type of AWS::ACMPCA::Certificate.
+                                    properties:
+                                      objectIdentifier:
+                                        description: Specifies the object identifier
+                                          (OID) of the attribute type of the relative
+                                          distinguished name (RDN).
+                                        type: string
+                                      value:
+                                        description: Specifies the attribute value
+                                          of relative distinguished name (RDN).
+                                        type: string
+                                    required:
+                                    - objectIdentifier
+                                    - value
+                                    type: object
+                                  type: array
+                                distinguishedNameQualifier:
+                                  description: Disambiguating information for the
+                                    certificate subject.
+                                  type: string
+                                generationQualifier:
+                                  description: |-
+                                    Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior,
+                                    and III for third.
+                                  type: string
+                                givenName:
+                                  description: First name.
+                                  type: string
+                                initials:
+                                  description: |-
+                                    Concatenation that typically contains the first letter of the *GivenName*, the first letter of the middle name
+                                    if one exists, and the first letter of the *Surname*.
+                                  type: string
+                                locality:
+                                  description: The locality (such as a city or town)
+                                    in which the certificate subject is located.
+                                  type: string
+                                organization:
+                                  description: Legal name of the organization with
+                                    which the certificate subject is affiliated.
+                                  type: string
+                                organizationalUnit:
+                                  description: |-
+                                    A subdivision or unit of the organization (such as sales or finance) with which the certificate subject is
+                                    affiliated.
+                                  type: string
+                                pseudonym:
+                                  description: |-
+                                    Typically a shortened version of a longer *GivenName*. For example, Jonathan is often shortened to John.
+                                    Elizabeth is often shortened to Beth, Liz, or Eliza.
+                                  type: string
+                                serialNumber:
+                                  description: The certificate serial number.
+                                  type: string
+                                state:
+                                  description: State in which the subject of the certificate
+                                    is located.
+                                  type: string
+                                surname:
+                                  description: |-
+                                    Family name. In the US and the UK, for example, the surname of an individual is ordered last. In Asian
+                                    cultures the surname is typically ordered first.
+                                  type: string
+                                title:
+                                  description: A title such as Mr. or Ms., which is
+                                    pre-pended to the name to refer formally to the
+                                    certificate subject.
+                                  type: string
+                              type: object
+                            dnsName:
+                              description: Represents ``GeneralName`` as a DNS name.
+                              type: string
+                            ediPartyName:
+                              description: Represents ``GeneralName`` as an ``EdiPartyName``
+                                object.
+                              properties:
+                                nameAssigner:
+                                  description: Specifies the name assigner.
+                                  type: string
+                                partyName:
+                                  description: Specifies the party name.
+                                  type: string
+                              required:
+                              - nameAssigner
+                              - partyName
+                              type: object
+                            ipAddress:
+                              description: Represents ``GeneralName`` as an IPv4 or
+                                IPv6 address.
+                              type: string
+                            otherName:
+                              description: Represents ``GeneralName`` using an ``OtherName``
+                                object.
+                              properties:
+                                typeId:
+                                  description: Specifies an OID.
+                                  type: string
+                                value:
+                                  description: Specifies an OID value.
+                                  type: string
+                              required:
+                              - typeId
+                              - value
+                              type: object
+                            registeredId:
+                              description: Represents ``GeneralName`` as an object
+                                identifier (OID).
+                              type: string
+                            rfc822Name:
+                              description: |-
+                                Represents ``GeneralName`` as an [RFC
+                                822](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc822) email address.
+                              type: string
+                            uniformResourceIdentifier:
+                              description: Represents ``GeneralName`` as a URI.
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  subject:
+                    description: |-
+                      Contains information about the certificate subject. The Subject field in the certificate identifies the entity
+                      that owns or controls the public key in the certificate. The entity can be a user, computer, device, or
+                      service. The Subject must contain an X.500 distinguished name (DN). A DN is a sequence of relative
+                      distinguished names (RDNs). The RDNs are separated by commas in the certificate.
+                    properties:
+                      commonName:
+                        description: |-
+                          For CA and end-entity certificates in a private PKI, the common name (CN) can be any string within the length
+                          limit. Note: In publicly trusted certificates, the common name must be a fully qualified domain name (FQDN)
+                          associated with the certificate subject.
+                        type: string
+                      country:
+                        description: Two-digit code that specifies the country in
+                          which the certificate subject located.
+                        type: string
+                      customAttributes:
+                        description: |-
+                          Contains a sequence of one or more X.500 relative distinguished names (RDNs), each of which consists of an
+                          object identifier (OID) and a value. For more information, see NIST’s definition of [Object Identifier
+                          (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier). Custom attributes
+                          cannot be used in combination with standard attributes.
+                        items:
+                          description: ACMPCACertificateCustomAttribute is a nested
+                            property type of AWS::ACMPCA::Certificate.
+                          properties:
+                            objectIdentifier:
+                              description: Specifies the object identifier (OID) of
+                                the attribute type of the relative distinguished name
+                                (RDN).
+                              type: string
+                            value:
+                              description: Specifies the attribute value of relative
+                                distinguished name (RDN).
+                              type: string
+                          required:
+                          - objectIdentifier
+                          - value
+                          type: object
+                        type: array
+                      distinguishedNameQualifier:
+                        description: Disambiguating information for the certificate
+                          subject.
+                        type: string
+                      generationQualifier:
+                        description: |-
+                          Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior,
+                          and III for third.
+                        type: string
+                      givenName:
+                        description: First name.
+                        type: string
+                      initials:
+                        description: |-
+                          Concatenation that typically contains the first letter of the *GivenName*, the first letter of the middle name
+                          if one exists, and the first letter of the *Surname*.
+                        type: string
+                      locality:
+                        description: The locality (such as a city or town) in which
+                          the certificate subject is located.
+                        type: string
+                      organization:
+                        description: Legal name of the organization with which the
+                          certificate subject is affiliated.
+                        type: string
+                      organizationalUnit:
+                        description: |-
+                          A subdivision or unit of the organization (such as sales or finance) with which the certificate subject is
+                          affiliated.
+                        type: string
+                      pseudonym:
+                        description: |-
+                          Typically a shortened version of a longer *GivenName*. For example, Jonathan is often shortened to John.
+                          Elizabeth is often shortened to Beth, Liz, or Eliza.
+                        type: string
+                      serialNumber:
+                        description: The certificate serial number.
+                        type: string
+                      state:
+                        description: State in which the subject of the certificate
+                          is located.
+                        type: string
+                      surname:
+                        description: |-
+                          Family name. In the US and the UK, for example, the surname of an individual is ordered last. In Asian
+                          cultures the surname is typically ordered first.
+                        type: string
+                      title:
+                        description: A title such as Mr. or Ms., which is pre-pended
+                          to the name to refer formally to the certificate subject.
+                        type: string
+                    type: object
+                type: object
+              certificateAuthorityArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the private CA issues the certificate.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: certificateAuthorityArn is immutable
+                  rule: self == oldSelf
+              certificateSigningRequest:
+                description: |-
+                  The certificate signing request (CSR) for the certificate.
+                  Create-only in AWS: changing it requires replacing the resource.
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: certificateSigningRequest is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              signingAlgorithm:
+                description: |-
+                  The name of the algorithm that will be used to sign the certificate to be issued. This parameter should not be
+                  confused with the ``SigningAlgorithm`` parameter used to sign a CSR in the ``CreateCertificateAuthority``
+                  action. The specified signing algorithm family (RSA or ECDSA) must match the algorithm family of the CA's
+                  secret key.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: signingAlgorithm is immutable
+                  rule: self == oldSelf
+              templateArn:
+                description: |-
+                  Specifies a custom configuration template to use when issuing a certificate. If this parameter is not
+                  provided, PCAshort defaults to the ``EndEntityCertificate/V1`` template. For more information about PCAshort
+                  templates, see [Using Templates](https://docs.aws.amazon.com/privateca/latest/userguide/UsingTemplates.html).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              validity:
+                description: |-
+                  The period of time during which the certificate will be valid.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  type:
+                    description: Specifies whether the ``Value`` parameter represents
+                      days, months, or years.
+                    type: string
+                  value:
+                    description: A long integer interpreted according to the value
+                      of ``Type``, below.
+                    type: number
+                required:
+                - type
+                - value
+                type: object
+              validityNotBefore:
+                description: |-
+                  Information describing the start of the validity period of the certificate. This parameter sets the “Not
+                  Before" date for the certificate. By default, when issuing a certificate, PCAshort sets the "Not Before" date
+                  to the issuance time minus 60 minutes. This compensates for clock inconsistencies across computer systems. The
+                  ``ValidityNotBefore`` parameter can be used to customize the “Not Befor...
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  type:
+                    description: Specifies whether the ``Value`` parameter represents
+                      days, months, or years.
+                    type: string
+                  value:
+                    description: A long integer interpreted according to the value
+                      of ``Type``, below.
+                    type: number
+                required:
+                - type
+                - value
+                type: object
+            required:
+            - certificateAuthorityArn
+            - certificateSigningRequest
+            - signingAlgorithm
+            - validity
+            type: object
+          status:
+            description: ACMPCACertificateStatus is the observed state of AWS::ACMPCA::Certificate.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              certificate:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: acmpcapermissions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ACMPCAPermission
+    listKind: ACMPCAPermissionList
+    plural: acmpcapermissions
+    singular: acmpcapermission
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ACMPCAPermission manages AWS::ACMPCA::Permission through the AWS Cloud Control API. Permission set on private
+          certificate authority
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ACMPCAPermissionSpec is the desired state of AWS::ACMPCA::Permission.
+            properties:
+              actions:
+                description: |-
+                  The actions that the specified AWS service principal can use. Actions IssueCertificate, GetCertificate and
+                  ListPermissions must be provided.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              certificateAuthorityArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Private Certificate Authority that grants the permission.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: certificateAuthorityArn is immutable
+                  rule: self == oldSelf
+              principal:
+                description: |-
+                  The AWS service or identity that receives the permission. At this time, the only valid principal is
+                  acm.amazonaws.com.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: principal is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceAccount:
+                description: |-
+                  The ID of the calling account.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            required:
+            - actions
+            - certificateAuthorityArn
+            - principal
+            type: object
+          status:
+            description: ACMPCAPermissionStatus is the observed state of AWS::ACMPCA::Permission.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

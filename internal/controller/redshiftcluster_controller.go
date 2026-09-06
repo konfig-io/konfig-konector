@@ -70,6 +70,10 @@ func (r *RedshiftClusterReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, rc); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, rc); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !rc.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(rc, awsv1alpha1.FinalizerName) {
@@ -93,6 +97,10 @@ func (r *RedshiftClusterReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err := r.Update(ctx, rc); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	result, err := r.reconcileCluster(ctx, rc)

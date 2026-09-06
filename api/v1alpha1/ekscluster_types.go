@@ -92,6 +92,12 @@ type EKSUpgradePolicy struct {
 
 // EKSClusterSpec defines the desired state of an EKS Cluster.
 type EKSClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the EKS cluster. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=100
@@ -147,6 +153,9 @@ type EKSClusterSpec struct {
 
 // EKSClusterStatus defines the observed state of EKSCluster.
 type EKSClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterArn is the ARN of the EKS cluster.
 	// +optional
 	ClusterArn string `json:"clusterArn,omitempty"`

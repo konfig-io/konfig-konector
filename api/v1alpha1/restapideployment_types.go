@@ -24,6 +24,12 @@ import (
 // A deployment is an immutable snapshot of the API: spec changes after
 // creation are not applied and surface as an UpdateNotSupported condition.
 type RestAPIDeploymentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RestAPIRef references the RestAPI to deploy.
 	RestAPIRef APIRef `json:"restApiRef"`
 
@@ -38,6 +44,9 @@ type RestAPIDeploymentSpec struct {
 
 // RestAPIDeploymentStatus defines the observed state of RestAPIDeployment.
 type RestAPIDeploymentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DeploymentID is the deployment identifier.
 	// +optional
 	DeploymentID string `json:"deploymentId,omitempty"`

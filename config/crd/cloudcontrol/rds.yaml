@@ -1,0 +1,2053 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsclustersnapshots.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSClusterSnapshot
+    listKind: RDSClusterSnapshotList
+    plural: rdsclustersnapshots
+    singular: rdsclustersnapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSClusterSnapshot manages AWS::RDS::ClusterSnapshot through the AWS Cloud Control API. Creates a snapshot of
+          a DB cluster.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSClusterSnapshotSpec is the desired state of AWS::RDS::ClusterSnapshot.
+            properties:
+              dbClusterIdentifier:
+                description: |-
+                  The identifier of the DB cluster to create a snapshot for.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: dbClusterIdentifier is immutable
+                  rule: self == oldSelf
+              dbClusterSnapshotIdentifier:
+                description: |-
+                  The identifier for the DB cluster snapshot. Must contain from 1 to 63 letters, numbers, or hyphens. First
+                  character must be a letter. Can't end with a hyphen or contain two consecutive hyphens.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: dbClusterSnapshotIdentifier is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: The tags to be assigned to the DB cluster snapshot.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dbClusterIdentifier
+            - dbClusterSnapshotIdentifier
+            type: object
+          status:
+            description: RDSClusterSnapshotStatus is the observed state of AWS::RDS::ClusterSnapshot.
+            properties:
+              allocatedStorage:
+                description: |-
+                  The allocated storage size of the DB cluster snapshot in gibibytes (GiB).
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              availabilityZones:
+                description: |-
+                  The list of Availability Zones where instances in the DB cluster snapshot can be restored.
+                  Read-only: reported by AWS after creation.
+                items:
+                  type: string
+                type: array
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              clusterCreateTime:
+                description: |-
+                  The time when the DB cluster was created, in Universal Coordinated Time (UTC).
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dbClusterResourceId:
+                description: |-
+                  The resource ID of the DB cluster that this DB cluster snapshot was created from.
+                  Read-only: reported by AWS after creation.
+                type: string
+              dbClusterSnapshotArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              engine:
+                description: |-
+                  The name of the database engine for this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              engineMode:
+                description: |-
+                  The engine mode of the database engine for this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              engineVersion:
+                description: |-
+                  The version of the database engine for this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              iamDatabaseAuthenticationEnabled:
+                description: |-
+                  Indicates whether mapping of AWS IAM accounts to database accounts is enabled.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              kmsKeyId:
+                description: |-
+                  If StorageEncrypted is true, the AWS KMS key identifier for the encrypted DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              licenseModel:
+                description: |-
+                  The license model information for this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              masterUsername:
+                description: |-
+                  The master username for this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              port:
+                description: |-
+                  The port that the DB cluster was listening on at the time of the snapshot.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              snapshotCreateTime:
+                description: |-
+                  The time when the snapshot was taken, in Universal Coordinated Time (UTC).
+                  Read-only: reported by AWS after creation.
+                type: string
+              snapshotType:
+                description: |-
+                  The type of the DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              status:
+                description: |-
+                  The status of this DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              storageEncrypted:
+                description: |-
+                  Indicates whether the DB cluster snapshot is encrypted.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              vpcId:
+                description: |-
+                  The VPC ID associated with the DB cluster snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdscustomdbengineversions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSCustomDBEngineVersion
+    listKind: RDSCustomDBEngineVersionList
+    plural: rdscustomdbengineversions
+    singular: rdscustomdbengineversion
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSCustomDBEngineVersion manages AWS::RDS::CustomDBEngineVersion through the AWS Cloud Control API. Creates a
+          custom DB engine version (CEV).
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSCustomDBEngineVersionSpec is the desired state of AWS::RDS::CustomDBEngineVersion.
+            properties:
+              databaseInstallationFiles:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  type: string
+                type: array
+              databaseInstallationFilesS3BucketName:
+                description: |-
+                  The name of an Amazon S3 bucket that contains database installation files for your CEV. For example, a valid
+                  bucket name is ``my-custom-installation-files``.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                type: string
+              databaseInstallationFilesS3Prefix:
+                description: |-
+                  The Amazon S3 directory that contains the database installation files for your CEV. For example, a valid
+                  bucket name is ``123456789012/cev1``. If this setting isn't specified, no prefix is assumed.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              description:
+                description: An optional description of your CEV.
+                maxLength: 1000
+                type: string
+              engine:
+                description: |-
+                  The database engine to use for your custom engine version (CEV). Valid values: + ``custom-oracle-ee`` +
+                  ``custom-oracle-ee-cdb`` + ``sqlserver-dev-ee`` + ``sqlserver-ee`` + ``sqlserver-se``
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 35
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: engine is immutable
+                  rule: self == oldSelf
+              engineVersion:
+                description: |-
+                  The name of your CEV. The name format is ``major version.customized_string``. For example, a valid CEV name is
+                  ``19.my_cev1``. This setting is required for RDS Custom for Oracle, but optional for Amazon RDS. The
+                  combination of ``Engine`` and ``EngineVersion`` is unique per customer per Region. *Constraints:* Minimum
+                  length is 1. Maximum length is 60. *Pattern:*``^[a-z0-9_.-]{1,60$``}
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 60
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: engineVersion is immutable
+                  rule: self == oldSelf
+              imageId:
+                description: |-
+                  A value that indicates the ID of the AMI.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              kmsKeyId:
+                description: |-
+                  The AWS KMS key identifier for an encrypted CEV. A symmetric encryption KMS key is required for RDS Custom,
+                  but optional for Amazon RDS. If you have an existing symmetric encryption KMS key in your account, you can use
+                  it with RDS Custom. No further action is necessary. If you don't already have a symmetric encryption KMS key
+                  in your account, follow the instructions in [Creating a symmetric enc...
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              manifest:
+                description: |-
+                  The CEV manifest, which is a JSON document that describes the installation .zip files stored in Amazon S3.
+                  Specify the name/value pairs in a file or a quoted string. RDS Custom applies the patches in the order in
+                  which they are listed. The following JSON fields are valid: + MediaImportTemplateVersion Version of the CEV
+                  manifest. The date is in the format YYYY-MM-DD. + databaseInstallationFileNa...
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 51000
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceCustomDbEngineVersionIdentifier:
+                description: |-
+                  The ARN of a CEV to use as a source for creating a new CEV. You can specify a different Amazon Machine Imagine
+                  (AMI) by using either ``Source`` or ``UseAwsProvidedLatestImage``. You can't specify a different JSON manifest
+                  when you specify ``SourceCustomDbEngineVersionIdentifier``.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              status:
+                description: A value that indicates the status of a custom engine
+                  version (CEV).
+                enum:
+                - available
+                - inactive
+                - inactive-except-restore
+                - pending-validation
+                type: string
+              tags:
+                description: |-
+                  A list of tags. For more information, see [Tagging Amazon RDS
+                  Resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User
+                  Guide.*
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              useAwsProvidedLatestImage:
+                description: |-
+                  Specifies whether to use the latest service-provided Amazon Machine Image (AMI) for the CEV. If you specify
+                  ``UseAwsProvidedLatestImage``, you can't also specify ``ImageId``.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+            required:
+            - engine
+            - engineVersion
+            type: object
+          status:
+            description: RDSCustomDBEngineVersionStatus is the observed state of AWS::RDS::CustomDBEngineVersion.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dbEngineVersionArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsdbproxyendpoints.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSDBProxyEndpoint
+    listKind: RDSDBProxyEndpointList
+    plural: rdsdbproxyendpoints
+    singular: rdsdbproxyendpoint
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSDBProxyEndpoint manages AWS::RDS::DBProxyEndpoint through the AWS Cloud Control API. Resource schema for
+          AWS::RDS::DBProxyEndpoint.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSDBProxyEndpointSpec is the desired state of AWS::RDS::DBProxyEndpoint.
+            properties:
+              dbProxyEndpointName:
+                description: |-
+                  The identifier for the DB proxy endpoint. This name must be unique for all DB proxy endpoints owned by your
+                  AWS account in the specified AWS Region.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+                x-kubernetes-validations:
+                - message: dbProxyEndpointName is immutable
+                  rule: self == oldSelf
+              dbProxyName:
+                description: |-
+                  The identifier for the proxy. This name must be unique for all proxies owned by your AWS account in the
+                  specified AWS Region.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+                x-kubernetes-validations:
+                - message: dbProxyName is immutable
+                  rule: self == oldSelf
+              endpointNetworkType:
+                description: |-
+                  The network type of the DB proxy endpoint. The network type determines the IP version that the proxy endpoint
+                  supports.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - IPV4
+                - IPV6
+                - DUAL
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An optional set of key-value pairs to associate arbitrary
+                  data of your choosing with the DB proxy endpoint.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              targetRole:
+                description: A value that indicates whether the DB proxy endpoint
+                  can be used for read/write or read-only operations.
+                enum:
+                - READ_WRITE
+                - READ_ONLY
+                type: string
+              vpcSecurityGroupIds:
+                description: VPC security group IDs to associate with the new DB proxy
+                  endpoint.
+                items:
+                  type: string
+                type: array
+              vpcSubnetIds:
+                description: |-
+                  VPC subnet IDs to associate with the new DB proxy endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+            required:
+            - dbProxyEndpointName
+            - dbProxyName
+            - vpcSubnetIds
+            type: object
+          status:
+            description: RDSDBProxyEndpointStatus is the observed state of AWS::RDS::DBProxyEndpoint.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dbProxyEndpointArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the DB proxy endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              endpoint:
+                description: |-
+                  The endpoint that you can use to connect to the DB proxy. You include the endpoint value in the connection
+                  string for a database client application.
+                  Read-only: reported by AWS after creation.
+                maxLength: 256
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              isDefault:
+                description: |-
+                  A value that indicates whether this endpoint is the default endpoint for the associated DB proxy. Default DB
+                  proxy endpoints always have read/write capability. Other endpoints that you associate with the DB proxy can be
+                  either read/write or read-only.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              vpcId:
+                description: |-
+                  VPC ID to associate with the new DB proxy endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsdbproxytargetgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSDBProxyTargetGroup
+    listKind: RDSDBProxyTargetGroupList
+    plural: rdsdbproxytargetgroups
+    singular: rdsdbproxytargetgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSDBProxyTargetGroup manages AWS::RDS::DBProxyTargetGroup through the AWS Cloud Control API. Resource schema
+          for AWS::RDS::DBProxyTargetGroup
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSDBProxyTargetGroupSpec is the desired state of AWS::RDS::DBProxyTargetGroup.
+            properties:
+              connectionPoolConfigurationInfo:
+                description: RDSDBProxyTargetGroupConnectionPoolConfigurationInfoFormat
+                  is a nested property type of AWS::RDS::DBProxyTargetGroup.
+                properties:
+                  connectionBorrowTimeout:
+                    description: The number of seconds for a proxy to wait for a connection
+                      to become available in the connection pool.
+                    format: int64
+                    type: integer
+                  initQuery:
+                    description: One or more SQL statements for the proxy to run when
+                      opening each new database connection.
+                    type: string
+                  maxConnectionsPercent:
+                    description: The maximum size of the connection pool for each
+                      target in a target group.
+                    format: int64
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                  maxIdleConnectionsPercent:
+                    description: Controls how actively the proxy closes idle database
+                      connections in the connection pool.
+                    format: int64
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                  sessionPinningFilters:
+                    description: |-
+                      Each item in the list represents a class of SQL operations that normally cause all later statements in a
+                      session using a proxy to be pinned to the same underlying database connection.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              dbClusterIdentifiers:
+                items:
+                  type: string
+                type: array
+              dbInstanceIdentifiers:
+                items:
+                  type: string
+                type: array
+              dbProxyName:
+                description: |-
+                  The identifier for the proxy.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+                x-kubernetes-validations:
+                - message: dbProxyName is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              targetGroupName:
+                description: |-
+                  The identifier for the DBProxyTargetGroup
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - default
+                type: string
+                x-kubernetes-validations:
+                - message: targetGroupName is immutable
+                  rule: self == oldSelf
+            required:
+            - dbProxyName
+            - targetGroupName
+            type: object
+          status:
+            description: RDSDBProxyTargetGroupStatus is the observed state of AWS::RDS::DBProxyTargetGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              targetGroupArn:
+                description: |-
+                  The Amazon Resource Name (ARN) representing the target group.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsdbshardgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSDBShardGroup
+    listKind: RDSDBShardGroupList
+    plural: rdsdbshardgroups
+    singular: rdsdbshardgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSDBShardGroup manages AWS::RDS::DBShardGroup through the AWS Cloud Control API. Creates a new DB shard group
+          for Aurora Limitless Database. You must enable Aurora Limitless Database to create a DB shard group. Valid
+          for: Aurora DB clusters only
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSDBShardGroupSpec is the desired state of AWS::RDS::DBShardGroup.
+            properties:
+              computeRedundancy:
+                description: |-
+                  Specifies whether to create standby standby DB data access shard for the DB shard group. Valid values are the
+                  following: + 0 - Creates a DB shard group without a standby DB data access shard. This is the default value. +
+                  1 - Creates a DB shard group with a standby DB data access shard in a different Availability Zone (AZ). + 2 -
+                  Creates a DB shard group with two standby DB data access shard in ...
+                format: int64
+                minimum: 0
+                type: integer
+              dbClusterIdentifier:
+                description: |-
+                  The name of the primary DB cluster for the DB shard group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: dbClusterIdentifier is immutable
+                  rule: self == oldSelf
+              dbShardGroupIdentifier:
+                description: |-
+                  The name of the DB shard group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                type: string
+              maxACU:
+                description: The maximum capacity of the DB shard group in Aurora
+                  capacity units (ACUs).
+                type: number
+              minACU:
+                description: The minimum capacity of the DB shard group in Aurora
+                  capacity units (ACUs).
+                type: number
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publiclyAccessible:
+                description: |-
+                  Specifies whether the DB shard group is publicly accessible. When the DB shard group is publicly accessible,
+                  its Domain Name System (DNS) endpoint resolves to the private IP address from within the DB shard group's
+                  virtual private cloud (VPC). It resolves to the public IP address from outside of the DB shard group's VPC.
+                  Access to the DB shard group is ultimately controlled by the security grou...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: An optional set of key-value pairs to associate arbitrary
+                  data of your choosing with the DB shard group.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dbClusterIdentifier
+            - maxACU
+            type: object
+          status:
+            description: RDSDBShardGroupStatus is the observed state of AWS::RDS::DBShardGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dbShardGroupResourceId:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              endpoint:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsdbsnapshots.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSDBSnapshot
+    listKind: RDSDBSnapshotList
+    plural: rdsdbsnapshots
+    singular: rdsdbsnapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSDBSnapshot manages AWS::RDS::DBSnapshot through the AWS Cloud Control API. Creates a snapshot of a DB
+          instance.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSDBSnapshotSpec is the desired state of AWS::RDS::DBSnapshot.
+            properties:
+              dbInstanceIdentifier:
+                description: |-
+                  The identifier of the DB instance that you want to create the snapshot of.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: dbInstanceIdentifier is immutable
+                  rule: self == oldSelf
+              dbSnapshotIdentifier:
+                description: |-
+                  The identifier for the DB snapshot. Must contain from 1 to 255 letters, numbers, or hyphens. First character
+                  must be a letter. Can't end with a hyphen or contain two consecutive hyphens.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: dbSnapshotIdentifier is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: The tags to be assigned to the DB snapshot.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dbInstanceIdentifier
+            - dbSnapshotIdentifier
+            type: object
+          status:
+            description: RDSDBSnapshotStatus is the observed state of AWS::RDS::DBSnapshot.
+            properties:
+              allocatedStorage:
+                description: |-
+                  The allocated storage size in gibibytes (GiB).
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              availabilityZone:
+                description: |-
+                  The name of the Availability Zone the DB instance was located in at the time of the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dbSnapshotArn:
+                description: |-
+                  The Amazon Resource Name (ARN) for the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              dbiResourceId:
+                description: |-
+                  The identifier for the source DB instance, which is unique to an AWS Region.
+                  Read-only: reported by AWS after creation.
+                type: string
+              encrypted:
+                description: |-
+                  Indicates whether the DB snapshot is encrypted.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              engine:
+                description: |-
+                  The name of the database engine.
+                  Read-only: reported by AWS after creation.
+                type: string
+              engineVersion:
+                description: |-
+                  The version of the database engine.
+                  Read-only: reported by AWS after creation.
+                type: string
+              iamDatabaseAuthenticationEnabled:
+                description: |-
+                  Indicates whether mapping of AWS IAM accounts to database accounts is enabled.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              instanceCreateTime:
+                description: |-
+                  The time when the DB instance was created, in UTC.
+                  Read-only: reported by AWS after creation.
+                type: string
+              iops:
+                description: |-
+                  The Provisioned IOPS value of the DB instance at the time of the snapshot.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              kmsKeyId:
+                description: |-
+                  If Encrypted is true, the AWS KMS key identifier for the encrypted DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              licenseModel:
+                description: |-
+                  License model information for the restored DB instance.
+                  Read-only: reported by AWS after creation.
+                type: string
+              masterUsername:
+                description: |-
+                  The master username for the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              optionGroupName:
+                description: |-
+                  The option group name for the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              originalSnapshotCreateTime:
+                description: |-
+                  The time of the CreateDBSnapshot operation in UTC. Doesn't change when the snapshot is copied.
+                  Read-only: reported by AWS after creation.
+                type: string
+              port:
+                description: |-
+                  The port that the database engine was listening on at the time of the snapshot.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              snapshotCreateTime:
+                description: |-
+                  The time when the snapshot was taken, in UTC.
+                  Read-only: reported by AWS after creation.
+                type: string
+              snapshotType:
+                description: |-
+                  The type of the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              status:
+                description: |-
+                  The status of this DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              storageThroughput:
+                description: |-
+                  The storage throughput for the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              storageType:
+                description: |-
+                  The storage type associated with the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              vpcId:
+                description: |-
+                  The VPC ID associated with the DB snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rdsintegrations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RDSIntegration
+    listKind: RDSIntegrationList
+    plural: rdsintegrations
+    singular: rdsintegration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RDSIntegration manages AWS::RDS::Integration through the AWS Cloud Control API. A zero-ETL integration with
+          Amazon Redshift.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RDSIntegrationSpec is the desired state of AWS::RDS::Integration.
+            properties:
+              additionalEncryptionContext:
+                additionalProperties:
+                  type: string
+                description: |-
+                  An optional set of non-secret key–value pairs that contains additional contextual information about the data.
+                  For more information, see [Encryption
+                  context](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context) in the *Key
+                  Management Service Developer Guide*. You can only include this parameter if you specify the ``KMSKeyId``
+                  parameter.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: object
+              dataFilter:
+                description: |-
+                  Data filters for the integration. These filters determine which tables from the source database are sent to
+                  the target Amazon Redshift data warehouse.
+                maxLength: 25600
+                type: string
+              description:
+                description: A description of the integration.
+                maxLength: 1000
+                type: string
+              integrationName:
+                description: The name of the integration.
+                maxLength: 64
+                type: string
+              kmsKeyId:
+                description: |-
+                  The AWS Key Management System (AWS KMS) key identifier for the key to use to encrypt the integration. If you
+                  don't specify an encryption key, RDS uses a default AWS owned key.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the database to use as the source for replication.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: sourceArn is immutable
+                  rule: self == oldSelf
+              tags:
+                description: |-
+                  A list of tags. For more information, see [Tagging Amazon RDS
+                  Resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html) in the *Amazon RDS User
+                  Guide.*.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              targetArn:
+                description: |-
+                  The ARN of the Redshift data warehouse to use as the target for replication.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: targetArn is immutable
+                  rule: self == oldSelf
+            required:
+            - sourceArn
+            - targetArn
+            type: object
+          status:
+            description: RDSIntegrationStatus is the observed state of AWS::RDS::Integration.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createTime:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              integrationArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

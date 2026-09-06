@@ -89,8 +89,9 @@ const (
 func newTestPIA(mutators ...func(*awsv1alpha1.PodIdentityAssociation)) *awsv1alpha1.PodIdentityAssociation {
 	pia := &awsv1alpha1.PodIdentityAssociation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-pia",
-			Namespace: "default",
+			Name:       "test-pia",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.PodIdentityAssociationSpec{
 			ClusterName:        "my-cluster",

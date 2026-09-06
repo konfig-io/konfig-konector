@@ -84,8 +84,9 @@ func (f *fakeAPIGWv2Stage) DeleteStage(ctx context.Context, params *awsapigwv2.D
 func stageCR(mutate ...func(*awsv1alpha1.APIGatewayV2Stage)) *awsv1alpha1.APIGatewayV2Stage {
 	s := &awsv1alpha1.APIGatewayV2Stage{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-stage",
-			Namespace: "default",
+			Name:       "my-stage",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.APIGatewayV2StageSpec{
 			APIRef:     awsv1alpha1.APIRef{Name: "my-api"},

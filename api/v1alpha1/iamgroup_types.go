@@ -22,6 +22,12 @@ import (
 
 // IAMGroupSpec defines the desired state of an AWS IAM Group.
 type IAMGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupName is the name of the IAM group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -35,6 +41,9 @@ type IAMGroupSpec struct {
 
 // IAMGroupStatus defines the observed state of IAMGroup.
 type IAMGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

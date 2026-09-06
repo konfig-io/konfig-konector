@@ -53,6 +53,12 @@ type EKSOIDCConfig struct {
 
 // EKSIdentityProviderConfigSpec defines the desired state of an EKS Identity Provider Config.
 type EKSIdentityProviderConfigSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the EKS cluster.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
@@ -73,6 +79,9 @@ type EKSIdentityProviderConfigSpec struct {
 
 // EKSIdentityProviderConfigStatus defines the observed state of EKSIdentityProviderConfig.
 type EKSIdentityProviderConfigStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the identity provider configuration.
 	// +optional
 	ARN string `json:"arn,omitempty"`

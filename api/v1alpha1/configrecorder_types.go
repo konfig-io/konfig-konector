@@ -40,6 +40,12 @@ type ConfigRecordingGroup struct {
 
 // ConfigRecorderSpec defines the desired state of an AWS Config configuration recorder.
 type ConfigRecorderSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RecorderName is the name of the configuration recorder. AWS uses
 	// "default" by convention. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
@@ -67,6 +73,9 @@ type ConfigRecorderSpec struct {
 
 // ConfigRecorderStatus defines the observed state of ConfigRecorder.
 type ConfigRecorderStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RecorderName is the name of the recorder in AWS.
 	// +optional
 	RecorderName string `json:"recorderName,omitempty"`

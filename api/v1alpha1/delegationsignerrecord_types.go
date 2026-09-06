@@ -22,6 +22,12 @@ import (
 
 // DelegationSignerRecordSpec defines the desired state of a DS record for DNSSEC delegation.
 type DelegationSignerRecordSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// HostedZoneID is the Route53 hosted zone ID of the parent zone.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="hostedZoneID is immutable"
 	HostedZoneID string `json:"hostedZoneID"`
@@ -40,6 +46,9 @@ type DelegationSignerRecordSpec struct {
 
 // DelegationSignerRecordStatus defines the observed state of DelegationSignerRecord.
 type DelegationSignerRecordStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ChangeID is the Route53 change ID for the DS record change.
 	// +optional
 	ChangeID string `json:"changeID,omitempty"`

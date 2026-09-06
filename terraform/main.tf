@@ -60,6 +60,21 @@ resource "aws_iam_role" "operator" {
   })
 }
 
+# ── Multi-account: allow assuming spoke roles ────────────────────────────────
+resource "aws_iam_role_policy" "operator_assume_spokes" {
+  count = length(var.spoke_role_arns) > 0 ? 1 : 0
+  name  = "${local.prefix}-konfig-konector-assume-spokes"
+  role  = aws_iam_role.operator.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["sts:AssumeRole", "sts:TagSession"]
+      Resource = var.spoke_role_arns
+    }]
+  })
+}
+
 resource "aws_iam_role_policy" "operator" {
   name   = "${local.prefix}-konfig-konector-operator-policy"
   role   = aws_iam_role.operator.id

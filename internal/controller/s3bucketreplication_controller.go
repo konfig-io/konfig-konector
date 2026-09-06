@@ -32,13 +32,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // S3BucketReplicationReconciler reconciles S3BucketReplication objects.
 type S3BucketReplicationReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
-	S3Client *awss3.Client
+	S3Client *multi.S3
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=s3bucketreplications,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *S3BucketReplicationReconciler) Reconcile(ctx context.Context, req ctrl.
 	obj := &awsv1alpha1.S3BucketReplication{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -75,6 +80,10 @@ func (r *S3BucketReplicationReconciler) Reconcile(ctx context.Context, req ctrl.
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileReplication(ctx, obj); err != nil {
@@ -99,7 +108,7 @@ func (r *S3BucketReplicationReconciler) reconcileReplication(ctx context.Context
 			rr.ID = aws.String(rule.ID)
 		}
 		if rule.Prefix != "" {
-			rr.Filter = &s3types.ReplicationRuleFilterMemberPrefix{Value: rule.Prefix}
+			rr.Filter = &s3types.ReplicationRuleFilter{Prefix: aws.String(rule.Prefix)}
 		}
 		if rule.Priority != nil {
 			rr.Priority = rule.Priority

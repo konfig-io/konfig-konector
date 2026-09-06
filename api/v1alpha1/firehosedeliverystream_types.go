@@ -43,6 +43,12 @@ type FirehoseS3Destination struct {
 
 // FirehoseDeliveryStreamSpec defines the desired state of a Firehose delivery stream.
 type FirehoseDeliveryStreamSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DeliveryStreamName is the name of the delivery stream. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="deliveryStreamName is immutable"
 	DeliveryStreamName string `json:"deliveryStreamName"`
@@ -63,6 +69,9 @@ type FirehoseDeliveryStreamSpec struct {
 
 // FirehoseDeliveryStreamStatus defines the observed state of FirehoseDeliveryStream.
 type FirehoseDeliveryStreamStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DeliveryStreamARN is the ARN of the delivery stream.
 	// +optional
 	DeliveryStreamARN string `json:"deliveryStreamARN,omitempty"`

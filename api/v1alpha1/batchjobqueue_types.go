@@ -44,6 +44,12 @@ type BatchComputeEnvironmentOrder struct {
 
 // BatchJobQueueSpec defines the desired state of a Batch job queue.
 type BatchJobQueueSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the job queue. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -69,6 +75,9 @@ type BatchJobQueueSpec struct {
 
 // BatchJobQueueStatus defines the observed state of BatchJobQueue.
 type BatchJobQueueStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// JobQueueARN is the ARN of the job queue.
 	// +optional
 	JobQueueARN string `json:"jobQueueArn,omitempty"`

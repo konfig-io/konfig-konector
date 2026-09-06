@@ -1,0 +1,67 @@
+{{- if .Values.webhook.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: konfig-konector-webhook
+  namespace: konfig-system
+  labels:
+    app.kubernetes.io/name: konfig-konector
+spec:
+  selector:
+    app: konfig-controller
+  ports:
+    - name: webhook
+      port: 443
+      targetPort: 9443
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: konfig-konector-providerref
+  {{- if .Values.webhook.certManager }}
+  annotations:
+    cert-manager.io/inject-ca-from: konfig-system/konfig-konector-webhook
+  {{- end }}
+webhooks:
+  - name: providerref.aws.konfig.io
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: {{ .Values.webhook.failurePolicy }}
+    clientConfig:
+      service:
+        name: konfig-konector-webhook
+        namespace: konfig-system
+        path: /validate-aws-konfig-io-providerref
+      {{- if and (not .Values.webhook.certManager) .Values.webhook.caBundle }}
+      caBundle: {{ .Values.webhook.caBundle | quote }}
+      {{- end }}
+    rules:
+      - apiGroups: ["aws.konfig.io"]
+        apiVersions: ["v1alpha1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["*"]
+        scope: Namespaced
+{{- if .Values.webhook.certManager }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: konfig-konector-selfsigned
+  namespace: konfig-system
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: konfig-konector-webhook
+  namespace: konfig-system
+spec:
+  secretName: {{ .Values.webhook.secretName }}
+  dnsNames:
+    - konfig-konector-webhook.konfig-system.svc
+    - konfig-konector-webhook.konfig-system.svc.cluster.local
+  issuerRef:
+    name: konfig-konector-selfsigned
+{{- end }}
+{{- end }}

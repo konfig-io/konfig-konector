@@ -32,13 +32,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+	s3helper "github.com/konfig-io/konfig-konector/internal/aws/s3"
 )
 
 // S3BucketLifecycleReconciler reconciles S3BucketLifecycle objects.
 type S3BucketLifecycleReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
-	S3Client *awss3.Client
+	S3Client *multi.S3
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=s3bucketlifecycles,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +53,10 @@ func (r *S3BucketLifecycleReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	obj := &awsv1alpha1.S3BucketLifecycle{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -75,6 +81,10 @@ func (r *S3BucketLifecycleReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileLifecycle(ctx, obj); err != nil {
@@ -96,7 +106,7 @@ func (r *S3BucketLifecycleReconciler) reconcileLifecycle(ctx context.Context, ob
 			lr.ID = aws.String(rule.ID)
 		}
 		if rule.Prefix != "" {
-			lr.Filter = &s3types.LifecycleRuleFilterMemberPrefix{Value: rule.Prefix}
+			lr.Filter = &s3types.LifecycleRuleFilter{Prefix: aws.String(rule.Prefix)}
 		}
 		if rule.ExpirationDays != nil || rule.ExpirationDate != "" {
 			exp := &s3types.LifecycleExpiration{}
@@ -148,7 +158,7 @@ func (r *S3BucketLifecycleReconciler) deleteLifecycle(ctx context.Context, obj *
 	_, err := r.S3Client.DeleteBucketLifecycle(ctx, &awss3.DeleteBucketLifecycleInput{
 		Bucket: aws.String(obj.Spec.BucketName),
 	})
-	if err != nil {
+	if err != nil && !s3helper.IsNotFound(err) {
 		return fmt.Errorf("delete bucket lifecycle: %w", err)
 	}
 	return nil

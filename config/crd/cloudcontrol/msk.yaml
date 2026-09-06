@@ -1,0 +1,2039 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mskbatchscramsecrets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKBatchScramSecret
+    listKind: MSKBatchScramSecretList
+    plural: mskbatchscramsecrets
+    singular: mskbatchscramsecret
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKBatchScramSecret manages AWS::MSK::BatchScramSecret through the AWS Cloud Control API. Resource Type
+          definition for AWS::MSK::BatchScramSecret
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKBatchScramSecretSpec is the desired state of AWS::MSK::BatchScramSecret.
+            properties:
+              clusterArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: clusterArn is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              secretArnList:
+                items:
+                  type: string
+                type: array
+            required:
+            - clusterArn
+            type: object
+          status:
+            description: MSKBatchScramSecretStatus is the observed state of AWS::MSK::BatchScramSecret.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mskchannels.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKChannel
+    listKind: MSKChannelList
+    plural: mskchannels
+    singular: mskchannel
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKChannel manages AWS::MSK::Channel through the AWS Cloud Control API. Resource Type definition for
+          AWS::MSK::Channel
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKChannelSpec is the desired state of AWS::MSK::Channel.
+            properties:
+              channelName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: channelName is immutable
+                  rule: self == oldSelf
+              clusterArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the cluster
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              encryptionConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  kmsKeyArn:
+                    description: The ARN of the KMS key for encryption
+                    type: string
+                required:
+                - kmsKeyArn
+                type: object
+              icebergDestinationConfiguration:
+                description: MSKChannelIcebergDestinationConfiguration is a nested
+                  property type of AWS::MSK::Channel.
+                properties:
+                  appendOnly:
+                    description: Append only mode
+                    type: boolean
+                  catalog:
+                    description: MSKChannelCatalog is a nested property type of AWS::MSK::Channel.
+                    properties:
+                      catalogArn:
+                        description: The ARN of the catalog
+                        type: string
+                      warehouseLocation:
+                        description: The warehouse location
+                        type: string
+                    type: object
+                  compressionType:
+                    enum:
+                    - ZSTD
+                    - SNAPPY
+                    type: string
+                  dataFreshnessInSeconds:
+                    description: Data freshness in seconds
+                    format: int64
+                    maximum: 900
+                    minimum: 60
+                    type: integer
+                  deadLetterQueueS3:
+                    description: MSKChannelDeadLetterQueueS3 is a nested property
+                      type of AWS::MSK::Channel.
+                    properties:
+                      bucketArn:
+                        description: The ARN of the S3 bucket
+                        type: string
+                      errorOutputPrefix:
+                        description: The error output prefix
+                        type: string
+                      expectedBucketOwner:
+                        description: Optional 12-digit AWS account ID expected to
+                          own the dead-letter S3 bucket
+                        type: string
+                    required:
+                    - bucketArn
+                    - errorOutputPrefix
+                    type: object
+                  destinationTableList:
+                    description: List of destination tables
+                    items:
+                      description: MSKChannelDestinationTable is a nested property
+                        type of AWS::MSK::Channel.
+                      properties:
+                        destinationDatabaseName:
+                          description: The destination database name
+                          type: string
+                        destinationTableName:
+                          description: The destination table name
+                          type: string
+                        partitionSpec:
+                          description: MSKChannelPartitionSpec is a nested property
+                            type of AWS::MSK::Channel.
+                          properties:
+                            partitionStrategy:
+                              enum:
+                              - TIME_HOUR
+                              type: string
+                            sourceList:
+                              description: Source list
+                              items:
+                                description: MSKChannelPartitionSource is a nested
+                                  property type of AWS::MSK::Channel.
+                                properties:
+                                  sourceName:
+                                    description: Source name
+                                    type: string
+                                type: object
+                              type: array
+                          required:
+                          - partitionStrategy
+                          type: object
+                      required:
+                      - destinationDatabaseName
+                      - destinationTableName
+                      type: object
+                    type: array
+                  schemaEvolution:
+                    description: MSKChannelSchemaEvolution is a nested property type
+                      of AWS::MSK::Channel.
+                    properties:
+                      enableSchemaEvolution:
+                        description: Whether schema evolution is enabled
+                        type: boolean
+                    required:
+                    - enableSchemaEvolution
+                    type: object
+                  serviceExecutionRoleArn:
+                    description: The Amazon Resource Name (ARN) of an IAM role used
+                      by MSK to access the table
+                    type: string
+                  tableCreation:
+                    description: MSKChannelTableCreation is a nested property type
+                      of AWS::MSK::Channel.
+                    properties:
+                      enableTableCreation:
+                        description: Whether table creation is enabled
+                        type: boolean
+                    required:
+                    - enableTableCreation
+                    type: object
+                required:
+                - appendOnly
+                - deadLetterQueueS3
+                - destinationTableList
+                - schemaEvolution
+                - serviceExecutionRoleArn
+                - tableCreation
+                type: object
+              loggingInfo:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  cloudWatchLogs:
+                    description: MSKChannelCloudWatchLogsLogDestination is a nested
+                      property type of AWS::MSK::Channel.
+                    properties:
+                      enabled:
+                        description: Whether CloudWatch Logs logging is enabled
+                        type: boolean
+                      logGroup:
+                        description: The CloudWatch log group for log delivery
+                        type: string
+                    required:
+                    - enabled
+                    type: object
+                  firehose:
+                    description: MSKChannelFirehoseLogDestination is a nested property
+                      type of AWS::MSK::Channel.
+                    properties:
+                      deliveryStream:
+                        description: The Firehose delivery stream for log delivery
+                        type: string
+                      enabled:
+                        description: Whether Firehose logging is enabled
+                        type: boolean
+                    required:
+                    - enabled
+                    type: object
+                  s3:
+                    description: MSKChannelS3LogDestination is a nested property type
+                      of AWS::MSK::Channel.
+                    properties:
+                      bucket:
+                        description: The name of the S3 bucket for log delivery
+                        type: string
+                      enabled:
+                        description: Whether S3 logging is enabled
+                        type: boolean
+                      prefix:
+                        description: The S3 prefix for log delivery
+                        type: string
+                    required:
+                    - enabled
+                    type: object
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3DestinationConfiguration:
+                description: MSKChannelS3DestinationConfiguration is a nested property
+                  type of AWS::MSK::Channel.
+                properties:
+                  dataFreshnessInSeconds:
+                    description: Data freshness in seconds
+                    format: int64
+                    maximum: 900
+                    minimum: 60
+                    type: integer
+                  deadLetterQueueS3:
+                    description: MSKChannelDeadLetterQueueS3 is a nested property
+                      type of AWS::MSK::Channel.
+                    properties:
+                      bucketArn:
+                        description: The ARN of the S3 bucket
+                        type: string
+                      errorOutputPrefix:
+                        description: The error output prefix
+                        type: string
+                      expectedBucketOwner:
+                        description: Optional 12-digit AWS account ID expected to
+                          own the dead-letter S3 bucket
+                        type: string
+                    required:
+                    - bucketArn
+                    - errorOutputPrefix
+                    type: object
+                  serviceExecutionRoleArn:
+                    description: The Amazon Resource Name (ARN) of an IAM role used
+                      by MSK to access S3
+                    type: string
+                  storage:
+                    description: MSKChannelS3Storage is a nested property type of
+                      AWS::MSK::Channel.
+                    properties:
+                      bucketArn:
+                        description: ARN of the S3 bucket
+                        type: string
+                      compressionType:
+                        enum:
+                        - NONE
+                        - GZIP
+                        - ZSTD
+                        type: string
+                      expectedBucketOwner:
+                        description: Optional 12-digit AWS account ID expected to
+                          own the S3 bucket
+                        type: string
+                      outputKeyTemplate:
+                        description: Template for S3 key for output objects, used
+                          for partitioning
+                        type: string
+                      outputPrefix:
+                        description: Optional prefix for output objects
+                        type: string
+                      storageClass:
+                        enum:
+                        - STANDARD
+                        - INTELLIGENT_TIERING
+                        - GLACIER_IR
+                        type: string
+                    required:
+                    - bucketArn
+                    - compressionType
+                    - storageClass
+                    type: object
+                required:
+                - deadLetterQueueS3
+                - serviceExecutionRoleArn
+                - storage
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                type: object
+              topicConfigurationList:
+                description: |-
+                  Topic configuration
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: MSKChannelTopicConfiguration is a nested property type
+                    of AWS::MSK::Channel.
+                  properties:
+                    recordConverter:
+                      description: MSKChannelRecordConverter is a nested property
+                        type of AWS::MSK::Channel.
+                      properties:
+                        valueConverter:
+                          enum:
+                          - BYTE_ARRAY
+                          - JSON
+                          - JSON_SCHEMA_GSR
+                          - STRING
+                          type: string
+                      required:
+                      - valueConverter
+                      type: object
+                    recordSchema:
+                      description: MSKChannelRecordSchema is a nested property type
+                        of AWS::MSK::Channel.
+                      properties:
+                        gsrArn:
+                          description: ARN of Glue Schema Registry resource used for
+                            table schema
+                          type: string
+                      required:
+                      - gsrArn
+                      type: object
+                    topicArn:
+                      description: The Amazon Resource Name (ARN) that uniquely identifies
+                        the topic
+                      type: string
+                  required:
+                  - recordConverter
+                  - topicArn
+                  type: object
+                type: array
+            required:
+            - channelName
+            - topicConfigurationList
+            type: object
+          status:
+            description: MSKChannelStatus is the observed state of AWS::MSK::Channel.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              channelArn:
+                description: |-
+                  The Amazon Resource Name (ARN) that uniquely identifies the channel
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              stateInfo:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  code:
+                    description: Code for channel state
+                    type: string
+                  message:
+                    description: Message for channel state
+                    type: string
+                type: object
+              status:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - CREATING
+                - ACTIVE
+                - UPDATING
+                - DELETING
+                - FAILED
+                - SUSPENDING
+                - SUSPENDED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mskclusterpolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKClusterPolicy
+    listKind: MSKClusterPolicyList
+    plural: mskclusterpolicies
+    singular: mskclusterpolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKClusterPolicy manages AWS::MSK::ClusterPolicy through the AWS Cloud Control API. Resource Type definition
+          for AWS::MSK::ClusterPolicy
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKClusterPolicySpec is the desired state of AWS::MSK::ClusterPolicy.
+            properties:
+              clusterArn:
+                description: |-
+                  The arn of the cluster for the resource policy.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: clusterArn is immutable
+                  rule: self == oldSelf
+              policy:
+                description: A policy document containing permissions to add to the
+                  specified cluster.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - clusterArn
+            - policy
+            type: object
+          status:
+            description: MSKClusterPolicyStatus is the observed state of AWS::MSK::ClusterPolicy.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              currentVersion:
+                description: |-
+                  The current version of the policy attached to the specified cluster
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mskreplicators.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKReplicator
+    listKind: MSKReplicatorList
+    plural: mskreplicators
+    singular: mskreplicator
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKReplicator manages AWS::MSK::Replicator through the AWS Cloud Control API. Resource Type definition for
+          AWS::MSK::Replicator
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKReplicatorSpec is the desired state of AWS::MSK::Replicator.
+            properties:
+              description:
+                description: |-
+                  A summary description of the replicator.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+              kafkaClusters:
+                description: |-
+                  Specifies a list of Kafka clusters which are targets of the replicator.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: MSKReplicatorKafkaCluster is a nested property type
+                    of AWS::MSK::Replicator.
+                  properties:
+                    amazonMskCluster:
+                      description: Details of an Amazon MSK cluster.
+                      properties:
+                        mskClusterArn:
+                          description: The ARN of an Amazon MSK cluster.
+                          type: string
+                      required:
+                      - mskClusterArn
+                      type: object
+                    apacheKafkaCluster:
+                      description: Details of an Apache Kafka cluster.
+                      properties:
+                        apacheKafkaClusterId:
+                          description: The ID of the Apache Kafka cluster.
+                          type: string
+                        bootstrapBrokerString:
+                          description: The bootstrap broker string of the Apache Kafka
+                            cluster.
+                          type: string
+                      required:
+                      - apacheKafkaClusterId
+                      - bootstrapBrokerString
+                      type: object
+                    clientAuthentication:
+                      description: Details of the client authentication used by the
+                        Apache Kafka cluster.
+                      properties:
+                        mtls:
+                          description: Details for mTLS client authentication.
+                          properties:
+                            secretArn:
+                              description: The Amazon Resource Name (ARN) of the Secrets
+                                Manager secret.
+                              type: string
+                          required:
+                          - secretArn
+                          type: object
+                        saslOAuthBearer:
+                          description: Details for client authentication using SASL/OAUTHBEARER.
+                          properties:
+                            clientCredentials:
+                              description: |-
+                                Details for SASL/OAUTHBEARER using standard client_credentials grant. Mutually exclusive with iamJwtBearer and
+                                clientCredentialsAssertion.
+                              properties:
+                                tokenRequestSecretArn:
+                                  description: |-
+                                    Secrets Manager ARN of the secret containing the client_id and client_secret used to obtain an OAuth Bearer
+                                    token via the client_credentials grant.
+                                  type: string
+                              required:
+                              - tokenRequestSecretArn
+                              type: object
+                            clientCredentialsAssertion:
+                              description: |-
+                                Details for SASL/OAUTHBEARER using client credentials grant with JWT client assertion (RFC 7521/7523).
+                                Mutually exclusive with clientCredentials and iamJwtBearer.
+                              properties:
+                                audience:
+                                  description: The audience (aud claim) set in the
+                                    STS JWT client assertion.
+                                  type: string
+                                signingAlgorithm:
+                                  description: The algorithm used to sign the JWT
+                                    client assertion.
+                                  enum:
+                                  - RS256
+                                  - ES384
+                                  type: string
+                                tokenRequestSecretArn:
+                                  description: |-
+                                    Optional Secrets Manager ARN for identity providers that require client_id as a form parameter alongside the
+                                    JWT client assertion.
+                                  type: string
+                              required:
+                              - audience
+                              - signingAlgorithm
+                              type: object
+                            iamJwtBearer:
+                              description: |-
+                                Details for SASL/OAUTHBEARER using JWT Bearer assertion grant (RFC 7523). Mutually exclusive with
+                                clientCredentials and clientCredentialsAssertion.
+                              properties:
+                                audience:
+                                  description: The audience (aud claim) set in the
+                                    STS JWT assertion.
+                                  type: string
+                                signingAlgorithm:
+                                  description: The algorithm used to sign the JWT
+                                    assertion.
+                                  enum:
+                                  - RS256
+                                  - ES384
+                                  type: string
+                                tokenRequestSecretArn:
+                                  description: |-
+                                    Optional Secrets Manager ARN for identity providers that require client authentication alongside the JWT
+                                    Bearer assertion.
+                                  type: string
+                              required:
+                              - audience
+                              - signingAlgorithm
+                              type: object
+                            scope:
+                              description: OAuth scope to request. Included in the
+                                token request if provided.
+                              type: string
+                            tokenEndpointAuthenticationMethod:
+                              description: How client credentials are sent to the
+                                identity provider (POST, BASIC, or NONE).
+                              enum:
+                              - POST
+                              - BASIC
+                              - NONE
+                              type: string
+                            tokenEndpointTlsCertificateArn:
+                              description: |-
+                                Secrets Manager ARN containing a custom CA certificate for the identity provider. Required only if the
+                                identity provider uses a private CA.
+                              type: string
+                            tokenEndpointUrl:
+                              description: The HTTPS URL of the OAuth token endpoint
+                                that vends OAuth Bearer tokens per RFC 6749.
+                              type: string
+                          required:
+                          - tokenEndpointAuthenticationMethod
+                          - tokenEndpointUrl
+                          type: object
+                        saslScram:
+                          description: Details for SASL/SCRAM client authentication.
+                          properties:
+                            mechanism:
+                              description: The SASL/SCRAM authentication mechanism.
+                              enum:
+                              - SHA256
+                              - SHA512
+                              type: string
+                            secretArn:
+                              description: The Amazon Resource Name (ARN) of the Secrets
+                                Manager secret.
+                              type: string
+                          required:
+                          - mechanism
+                          - secretArn
+                          type: object
+                      type: object
+                    encryptionInTransit:
+                      description: Details of encryption in transit to the Apache
+                        Kafka cluster.
+                      properties:
+                        encryptionType:
+                          description: The type of encryption in transit to the Apache
+                            Kafka cluster.
+                          enum:
+                          - TLS
+                          type: string
+                        rootCaCertificate:
+                          description: The root CA certificate.
+                          type: string
+                      required:
+                      - encryptionType
+                      type: object
+                    vpcConfig:
+                      description: Details of an Amazon VPC which has network connectivity
+                        to the Apache Kafka cluster.
+                      properties:
+                        securityGroupIds:
+                          description: |-
+                            The AWS security groups to associate with the elastic network interfaces in order to specify what the
+                            replicator has access to. If a security group is not specified, the default security group associated with the
+                            VPC is used.
+                          items:
+                            type: string
+                          type: array
+                        subnetIds:
+                          description: |-
+                            The list of subnets to connect to in the virtual private cloud (VPC). AWS creates elastic network interfaces
+                            inside these subnets.
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - subnetIds
+                      type: object
+                  type: object
+                type: array
+              logDelivery:
+                description: Configuration for log delivery for the replicator.
+                properties:
+                  replicatorLogDelivery:
+                    description: The replicator logs configuration.
+                    properties:
+                      cloudWatchLogs:
+                        description: Details of the CloudWatch Logs destination for
+                          replicator logs.
+                        properties:
+                          enabled:
+                            description: Whether log delivery to CloudWatch Logs is
+                              enabled.
+                            type: boolean
+                          logGroup:
+                            description: The CloudWatch log group that is the destination
+                              for log delivery.
+                            type: string
+                        required:
+                        - enabled
+                        type: object
+                      firehose:
+                        description: Details of the Kinesis Data Firehose delivery
+                          stream that is the destination for replicator logs.
+                        properties:
+                          deliveryStream:
+                            description: The Firehose delivery stream that is the
+                              destination for log delivery.
+                            type: string
+                          enabled:
+                            description: Whether log delivery to Firehose is enabled.
+                            type: boolean
+                        required:
+                        - enabled
+                        type: object
+                      s3:
+                        description: Details of the Amazon S3 destination for replicator
+                          logs.
+                        properties:
+                          bucket:
+                            description: The S3 bucket that is the destination for
+                              log delivery.
+                            type: string
+                          enabled:
+                            description: Whether log delivery to S3 is enabled.
+                            type: boolean
+                          prefix:
+                            description: The S3 prefix that is the destination for
+                              log delivery.
+                            type: string
+                        required:
+                        - enabled
+                        type: object
+                    type: object
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              replicationInfoList:
+                description: |-
+                  A list of replication configurations, where each configuration targets a given source cluster to target
+                  cluster replication flow.
+                items:
+                  description: MSKReplicatorReplicationInfo is a nested property type
+                    of AWS::MSK::Replicator.
+                  properties:
+                    consumerGroupReplication:
+                      description: Configuration relating to consumer group replication.
+                      properties:
+                        consumerGroupOffsetSyncMode:
+                          description: The consumer group offset synchronization mode.
+                          enum:
+                          - LEGACY
+                          - ENHANCED
+                          type: string
+                        consumerGroupsToExclude:
+                          description: List of regular expression patterns indicating
+                            the consumer groups that should not be replicated.
+                          items:
+                            type: string
+                          type: array
+                        consumerGroupsToReplicate:
+                          description: List of regular expression patterns indicating
+                            the consumer groups to copy.
+                          items:
+                            type: string
+                          type: array
+                        detectAndCopyNewConsumerGroups:
+                          description: Whether to periodically check for new consumer
+                            groups.
+                          type: boolean
+                        synchroniseConsumerGroupOffsets:
+                          description: Whether to periodically write the translated
+                            offsets to __consumer_offsets topic in target cluster.
+                          type: boolean
+                      required:
+                      - consumerGroupsToReplicate
+                      type: object
+                    sourceKafkaClusterArn:
+                      description: Amazon Resource Name of the source Kafka cluster.
+                      type: string
+                    sourceKafkaClusterId:
+                      description: The ID of the source Kafka cluster.
+                      type: string
+                    targetCompressionType:
+                      description: The type of compression to use writing records
+                        to target Kafka cluster.
+                      enum:
+                      - NONE
+                      - GZIP
+                      - SNAPPY
+                      - LZ4
+                      - ZSTD
+                      type: string
+                    targetKafkaClusterArn:
+                      description: Amazon Resource Name of the target Kafka cluster.
+                      type: string
+                    targetKafkaClusterId:
+                      description: The ID of the target Kafka cluster.
+                      type: string
+                    topicReplication:
+                      description: Configuration relating to topic replication.
+                      properties:
+                        copyAccessControlListsForTopics:
+                          description: Whether to periodically configure remote topic
+                            ACLs to match their corresponding upstream topics.
+                          type: boolean
+                        copyTopicConfigurations:
+                          description: Whether to periodically configure remote topics
+                            to match their corresponding upstream topics.
+                          type: boolean
+                        detectAndCopyNewTopics:
+                          description: Whether to periodically check for new topics
+                            and partitions.
+                          type: boolean
+                        startingPosition:
+                          description: Configuration for specifying the position in
+                            the topics to start replicating from.
+                          properties:
+                            type:
+                              enum:
+                              - LATEST
+                              - EARLIEST
+                              type: string
+                          type: object
+                        topicNameConfiguration:
+                          description: |-
+                            Configuration for specifying replicated topic names should be the same as their corresponding upstream topics
+                            or prefixed with source cluster alias.
+                          properties:
+                            type:
+                              enum:
+                              - PREFIXED_WITH_SOURCE_CLUSTER_ALIAS
+                              - IDENTICAL
+                              type: string
+                          type: object
+                        topicsToExclude:
+                          description: List of regular expression patterns indicating
+                            the topics that should not be replicated.
+                          items:
+                            type: string
+                          type: array
+                        topicsToReplicate:
+                          description: List of regular expression patterns indicating
+                            the topics to copy.
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - topicsToReplicate
+                      type: object
+                  required:
+                  - consumerGroupReplication
+                  - targetCompressionType
+                  - topicReplication
+                  type: object
+                type: array
+              replicatorName:
+                description: |-
+                  The name of the replicator.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: replicatorName is immutable
+                  rule: self == oldSelf
+              serviceExecutionRoleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the IAM role used by the replicator to access external resources.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: serviceExecutionRoleArn is immutable
+                  rule: self == oldSelf
+              tags:
+                description: A collection of tags associated with a resource
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - kafkaClusters
+            - replicationInfoList
+            - replicatorName
+            - serviceExecutionRoleArn
+            type: object
+          status:
+            description: MSKReplicatorStatus is the observed state of AWS::MSK::Replicator.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              currentVersion:
+                description: |-
+                  The current version of the MSK replicator.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              replicatorArn:
+                description: |-
+                  Amazon Resource Name for the created replicator.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: msktopics.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKTopic
+    listKind: MSKTopicList
+    plural: msktopics
+    singular: msktopic
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKTopic manages AWS::MSK::Topic through the AWS Cloud Control API. Resource Type definition for
+          AWS::MSK::Topic
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKTopicSpec is the desired state of AWS::MSK::Topic.
+            properties:
+              clusterArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the MSK cluster
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: clusterArn is immutable
+                  rule: self == oldSelf
+              configs:
+                description: Base64 encoded configuration properties of the topic
+                type: string
+              partitionCount:
+                description: The number of partitions for the topic
+                format: int64
+                minimum: 1
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              replicationFactor:
+                description: |-
+                  The replication factor for the topic
+                  Create-only in AWS: changing it requires replacing the resource.
+                format: int64
+                minimum: 1
+                type: integer
+                x-kubernetes-validations:
+                - message: replicationFactor is immutable
+                  rule: self == oldSelf
+              topicName:
+                description: |-
+                  The name of the topic
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: topicName is immutable
+                  rule: self == oldSelf
+            required:
+            - clusterArn
+            - partitionCount
+            - replicationFactor
+            - topicName
+            type: object
+          status:
+            description: MSKTopicStatus is the observed state of AWS::MSK::Topic.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              topicArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the topic
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: mskvpcconnections.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: MSKVpcConnection
+    listKind: MSKVpcConnectionList
+    plural: mskvpcconnections
+    singular: mskvpcconnection
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MSKVpcConnection manages AWS::MSK::VpcConnection through the AWS Cloud Control API. Resource Type definition
+          for AWS::MSK::VpcConnection
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MSKVpcConnectionSpec is the desired state of AWS::MSK::VpcConnection.
+            properties:
+              authentication:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                enum:
+                - SASL_IAM
+                - SASL_SCRAM
+                - TLS
+                maxLength: 10
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: authentication is immutable
+                  rule: self == oldSelf
+              clientSubnets:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityGroups:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  type: string
+                type: array
+              tags:
+                additionalProperties:
+                  type: string
+                type: object
+              targetClusterArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the target cluster
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: targetClusterArn is immutable
+                  rule: self == oldSelf
+              vpcId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: vpcId is immutable
+                  rule: self == oldSelf
+            required:
+            - authentication
+            - clientSubnets
+            - securityGroups
+            - targetClusterArn
+            - vpcId
+            type: object
+          status:
+            description: MSKVpcConnectionStatus is the observed state of AWS::MSK::VpcConnection.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

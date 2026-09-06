@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	rdshelper "github.com/konfig-io/konfig-konector/internal/aws/rds"
 )
 
@@ -40,7 +41,7 @@ import (
 type DBSnapshotReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	RDSClient *awsrds.Client
+	RDSClient *multi.RDS
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dbsnapshots,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *DBSnapshotReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	snap := &awsv1alpha1.DBSnapshot{}
 	if err := r.Get(ctx, req.NamespacedName, snap); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, snap); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !snap.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *DBSnapshotReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		if err := r.Update(ctx, snap); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileDBSnapshot(ctx, snap); err != nil {

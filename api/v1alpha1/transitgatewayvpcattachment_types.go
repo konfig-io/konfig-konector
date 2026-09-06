@@ -32,6 +32,12 @@ type TransitGatewayRef struct {
 
 // TransitGatewayVpcAttachmentSpec defines the desired state of a TGW VPC attachment.
 type TransitGatewayVpcAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TransitGatewayRef references the Transit Gateway to attach to.
 	TransitGatewayRef TransitGatewayRef `json:"transitGatewayRef"`
 
@@ -54,6 +60,13 @@ type TransitGatewayVpcAttachmentSpec struct {
 	// +optional
 	ApplianceModeSupport bool `json:"applianceModeSupport,omitempty"`
 
+	// AccepterProviderRef names the AWSProvider of the account that owns the
+	// Transit Gateway when it is shared into this account via RAM. When set
+	// the controller accepts the attachment on the owner's behalf and Ready
+	// only becomes True once the attachment is available.
+	// +optional
+	AccepterProviderRef *ProviderRef `json:"accepterProviderRef,omitempty"`
+
 	// Tags are AWS resource tags to apply.
 	// +optional
 	Tags map[string]string `json:"tags,omitempty"`
@@ -61,6 +74,9 @@ type TransitGatewayVpcAttachmentSpec struct {
 
 // TransitGatewayVpcAttachmentStatus defines the observed state of TransitGatewayVpcAttachment.
 type TransitGatewayVpcAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AttachmentID is the AWS TGW VPC attachment ID.
 	// +optional
 	AttachmentID string `json:"attachmentId,omitempty"`
@@ -89,6 +105,9 @@ type TransitGatewayVpcAttachmentStatus struct {
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
+// STATUS: WIP. The cross-account path of this kind (acting under another
+// account's AWSProvider) is implemented and unit-tested but has not yet been
+// verified against a second live AWS account. Same-account use is verified.
 // TransitGatewayVpcAttachment is the Schema for managing TGW VPC attachments.
 type TransitGatewayVpcAttachment struct {
 	metav1.TypeMeta   `json:",inline"`

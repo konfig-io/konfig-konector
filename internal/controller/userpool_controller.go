@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cognitohelper "github.com/konfig-io/konfig-konector/internal/aws/cognito"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // UserPoolReconciler reconciles UserPool objects.
 type UserPoolReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	CognitoClient *awscognito.Client
+	CognitoClient *multi.Cognito
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=userpools,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *UserPoolReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	up := &awsv1alpha1.UserPool{}
 	if err := r.Get(ctx, req.NamespacedName, up); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, up); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !up.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *UserPoolReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, up); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileUserPool(ctx, up); err != nil {

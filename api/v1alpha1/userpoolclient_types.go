@@ -32,6 +32,12 @@ type UserPoolRef struct {
 
 // UserPoolClientSpec defines the desired state of a Cognito User Pool Client.
 type UserPoolClientSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// UserPoolRef references the user pool.
 	UserPoolRef UserPoolRef `json:"userPoolRef"`
 
@@ -83,6 +89,9 @@ type UserPoolClientSpec struct {
 
 // UserPoolClientStatus defines the observed state of UserPoolClient.
 type UserPoolClientStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClientID is the AWS Cognito app client ID.
 	// +optional
 	ClientID string `json:"clientId,omitempty"`

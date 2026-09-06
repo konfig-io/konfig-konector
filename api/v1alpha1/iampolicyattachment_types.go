@@ -22,6 +22,12 @@ import (
 
 // IAMPolicyAttachmentSpec defines the desired state of IAMPolicyAttachment.
 type IAMPolicyAttachmentSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RoleRef references the IAMRole CR to attach the policy to.
 	RoleRef RoleRef `json:"roleRef"`
 
@@ -31,6 +37,9 @@ type IAMPolicyAttachmentSpec struct {
 
 // IAMPolicyAttachmentStatus defines the observed state of IAMPolicyAttachment.
 type IAMPolicyAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Attached indicates whether the policy is currently attached.
 	// +optional
 	Attached bool `json:"attached,omitempty"`

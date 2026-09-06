@@ -53,6 +53,12 @@ type SpotFleetLaunchSpec struct {
 
 // SpotFleetSpec defines the desired state of a Spot Fleet Request.
 type SpotFleetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// IAMFleetRole is the ARN of the IAM role for the Spot Fleet.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="iamFleetRole is immutable"
@@ -90,6 +96,9 @@ type SpotFleetSpec struct {
 
 // SpotFleetStatus defines the observed state of SpotFleet.
 type SpotFleetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SpotFleetRequestID is the ID of the Spot Fleet request.
 	// +optional
 	SpotFleetRequestID string `json:"spotFleetRequestId,omitempty"`

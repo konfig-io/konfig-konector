@@ -21,6 +21,16 @@ import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CRDS = os.path.join(ROOT, "helm/konfig-konector/crds")
+CC_CRDS = os.path.join(ROOT, "config/crd/cloudcontrol")
+CC_KINDS = os.path.join(ROOT, "hack/gen-cloudcontrol/kinds.json")
+# CloudFormation service (lowercase) -> reference service page it belongs on.
+CC_SERVICE_ALIAS = {
+    "logs": "cloudwatchlogs", "elasticloadbalancingv2": "elbv2", "elasticloadbalancing": "elbv2",
+    "certificatemanager": "acm", "kinesisfirehose": "firehose", "opensearchservice": "opensearch",
+    "stepfunctions": "sfn", "amazonmq": "mq", "events": "eventbridge", "sso": "ssoadmin", "aps": "amp",
+    "config": "configservice", "ce": "costexplorer", "msk": "kafka", "inspectorv2": "inspector2",
+    "cognito": "cognito", "servicediscovery": "servicediscovery",
+}
 CONTROLLERS = os.path.join(ROOT, "internal/controller")
 EXAMPLES = os.path.join(ROOT, "examples")
 DOCS = os.path.join(ROOT, "web/static/docs")
@@ -56,25 +66,87 @@ SERVICE_LABELS = {
     "sesv2": "SES", "sfn": "Step Functions", "shield": "Shield",
     "sns": "SNS", "sqs": "SQS", "ssm": "SSM", "ssoadmin": "IAM Identity Center",
     "vpclattice": "VPC Lattice", "wafv2": "WAFv2", "xray": "X-Ray",
+    "provider": "Multi-Account Provider", "cloudcontrol": "Cloud Control API",
+    "bedrock": "Bedrock", "bedrockagentcore": "Bedrock AgentCore", "datazone": "DataZone",
+    "networkmanager": "Network Manager", "sagemaker": "SageMaker", "ses": "SES", "s3": "S3",
+    "eventschemas": "EventBridge Schemas", "eventbridge": "EventBridge", "appconfig": "AppConfig",
+    "appsync": "AppSync", "datasync": "DataSync", "transfer": "Transfer Family", "fsx": "FSx",
+    "storagegateway": "Storage Gateway", "dms": "DMS", "docdb": "DocumentDB", "neptune": "Neptune",
+    "emr": "EMR", "emrcontainers": "EMR on EKS", "emrserverless": "EMR Serverless", "lakeformation": "Lake Formation",
+    "mwaa": "MWAA", "imagebuilder": "EC2 Image Builder", "elasticbeanstalk": "Elastic Beanstalk",
+    "globalaccelerator": "Global Accelerator", "directconnect": "Direct Connect", "route53profiles": "Route 53 Profiles",
+    "route53recoverycontrol": "Route 53 ARC Control", "route53recoveryreadiness": "Route 53 ARC Readiness",
+    "arczonalshift": "ARC Zonal Shift", "identitystore": "IAM Identity Store", "rolesanywhere": "IAM Roles Anywhere",
+    "accessanalyzer": "IAM Access Analyzer", "macie": "Macie", "detective": "Detective", "securitylake": "Security Lake",
+    "fms": "Firewall Manager", "verifiedpermissions": "Verified Permissions", "cloudhsm": "CloudHSM", "signer": "Signer",
+    "auditmanager": "Audit Manager", "ssmcontacts": "Incident Manager Contacts", "ssmincidents": "Incident Manager",
+    "ssmquicksetup": "SSM Quick Setup", "synthetics": "CloudWatch Synthetics", "rum": "CloudWatch RUM",
+    "evidently": "CloudWatch Evidently", "applicationinsights": "Application Insights", "applicationsignals": "Application Signals",
+    "internetmonitor": "Internet Monitor", "networkflowmonitor": "Network Flow Monitor", "observabilityadmin": "Observability Admin",
+    "oam": "CloudWatch OAM", "notifications": "User Notifications", "notificationscontacts": "Notification Contacts",
+    "chatbot": "Chatbot", "fis": "Fault Injection Service", "resiliencehub": "Resilience Hub", "resiliencehubv2": "Resilience Hub v2",
+    "resourcegroups": "Resource Groups", "resourceexplorer2": "Resource Explorer", "licensemanager": "License Manager",
+    "computeoptimizer": "Compute Optimizer", "rbin": "Recycle Bin", "cassandra": "Keyspaces", "timestream": "Timestream",
+    "kafkaconnect": "MSK Connect", "kinesisanalyticsv2": "Managed Flink", "osis": "OpenSearch Ingestion",
+    "redshiftserverless": "Redshift Serverless", "s3express": "S3 Express", "s3objectlambda": "S3 Object Lambda", "s3tables": "S3 Tables",
+    "codeconnections": "CodeConnections", "codestarconnections": "CodeStar Connections", "codestarnotifications": "CodeStar Notifications",
+    "codeguruprofiler": "CodeGuru Profiler", "codegurureviewer": "CodeGuru Reviewer", "amplify": "Amplify", "appflow": "AppFlow",
+    "cloudtrail": "CloudTrail", "inspectorv2": "Inspector", "inspector": "Inspector Classic", "elb": "Classic ELB",
+    "cloudformation": "CloudFormation", "servicecatalog": "Service Catalog", "ram": "RAM", "organizations": "Organizations",
+    "controltower": "Control Tower", "budgets": "Budgets", "ce": "Cost Explorer", "ssm": "Systems Manager", "sso": "IAM Identity Center",
+    "wafv2": "WAFv2", "shield": "Shield", "networkfirewall": "Network Firewall", "guardduty": "GuardDuty", "securityhub": "Security Hub",
+    "kms": "KMS", "secretsmanager": "Secrets Manager", "acm": "ACM", "acmpca": "ACM PCA", "cognito": "Cognito", "grafana": "Managed Grafana",
+    "amp": "Managed Prometheus", "xray": "X-Ray", "cloudwatch": "CloudWatch", "cloudwatchlogs": "CloudWatch Logs", "kinesis": "Kinesis",
+    "firehose": "Data Firehose", "kafka": "MSK", "mq": "Amazon MQ", "sqs": "SQS", "sns": "SNS", "pipes": "EventBridge Pipes",
+    "scheduler": "EventBridge Scheduler", "sfn": "Step Functions", "lambda": "Lambda", "ecs": "ECS", "eks": "EKS", "ecr": "ECR",
+    "ec2": "EC2 & VPC", "elbv2": "Elastic Load Balancing", "vpclattice": "VPC Lattice", "servicediscovery": "Cloud Map",
+    "efs": "EFS", "backup": "Backup", "dynamodb": "DynamoDB", "dax": "DAX", "elasticache": "ElastiCache", "memorydb": "MemoryDB",
+    "rds": "RDS & Aurora", "redshift": "Redshift", "opensearch": "OpenSearch", "opensearchserverless": "OpenSearch Serverless",
+    "glue": "Glue", "athena": "Athena", "batch": "Batch", "apprunner": "App Runner", "autoscaling": "Auto Scaling",
+    "appautoscaling": "Application Auto Scaling", "iam": "IAM", "route53": "Route 53", "route53resolver": "Route 53 Resolver",
+    "cloudfront": "CloudFront", "apigateway": "API Gateway", "apigatewayv2": "API Gateway v2", "codebuild": "CodeBuild",
+    "codecommit": "CodeCommit", "codedeploy": "CodeDeploy", "codepipeline": "CodePipeline", "codeartifact": "CodeArtifact",
+    "configservice": "AWS Config", "costexplorer": "Cost Explorer", "ssoadmin": "IAM Identity Center", "sesv2": "SES",
 }
 
 MAX_DEPTH = 5
 
+# Kinds whose cross-account behaviour is implemented and unit-tested but not yet
+# verified against a second live AWS account.
+WIP_KINDS = {"VPCPeeringConnection", "TransitGatewayVpcAttachment", "ResourceShareInvitation",
+             "HostedZoneVPCAssociation", "VPCEndpointService"}
+
 
 def load_crds():
+    """Native CRDs from the Helm chart plus generated Cloud Control kinds from
+    the per-service bundles (marked generated=True with their CFN service)."""
     crds = []
-    for f in sorted(glob.glob(os.path.join(CRDS, "*.yaml"))):
-        doc = yaml.safe_load(open(f))
-        if not doc or doc.get("kind") != "CustomResourceDefinition":
-            continue
-        version = doc["spec"]["versions"][0]
-        crds.append({
-            "kind": doc["spec"]["names"]["kind"],
-            "plural": doc["spec"]["names"]["plural"],
-            "group": doc["spec"]["group"],
-            "version": version["name"],
-            "schema": version["schema"]["openAPIV3Schema"],
-        })
+    cc_service = {}
+    if os.path.exists(CC_KINDS):
+        for m in json.load(open(CC_KINDS)):
+            cc_service[m["kind"]] = (m["service"], m["typeName"], m.get("caution"))
+    files = [(f, False) for f in sorted(glob.glob(os.path.join(CRDS, "*.yaml")))]
+    files += [(f, True) for f in sorted(glob.glob(os.path.join(CC_CRDS, "*.yaml")))]
+    for f, generated in files:
+        for doc in yaml.safe_load_all(open(f)):
+            if not doc or doc.get("kind") != "CustomResourceDefinition":
+                continue
+            version = doc["spec"]["versions"][0]
+            kind = doc["spec"]["names"]["kind"]
+            entry = {
+                "kind": kind,
+                "plural": doc["spec"]["names"]["plural"],
+                "group": doc["spec"]["group"],
+                "version": version["name"],
+                "schema": version["schema"]["openAPIV3Schema"],
+                "generated": generated,
+            }
+            if generated and kind in cc_service:
+                svc, tn, caution = cc_service[kind]
+                entry["cc_service"] = CC_SERVICE_ALIAS.get(svc, svc)
+                entry["cfn_type"] = tn
+                entry["caution"] = caution
+            crds.append(entry)
     return crds
 
 
@@ -84,7 +156,8 @@ def kind_to_service():
     for f in glob.glob(os.path.join(CONTROLLERS, "*_controller.go")):
         base = os.path.basename(f)[: -len("_controller.go")]
         src = open(f).read()
-        m = re.findall(r'"github\.com/[^"]+/internal/aws/([a-z0-9]+)"', src)
+        m = [x for x in re.findall(r'"github\.com/[^"]+/internal/aws/([a-z0-9]+)"', src)
+             if x not in ("multi", "provider", "cloudcontrol")]
         if not m:
             # some controllers use the AWS SDK client directly
             m = re.findall(r'"github\.com/aws/aws-sdk-go-v2/service/([a-z0-9]+)"', src)
@@ -398,9 +471,24 @@ def render_service_page(service, label, kinds_data):
         anchor = kind.lower()
         props = crd["schema"].get("properties", {})
         desc = first_sentence(crd["schema"].get("description")) or f"{kind} resource."
+        if crd.get("generated"):
+            badge = (f'<span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" '
+                     f'title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">'
+                     f'CLOUD CONTROL · {html.escape(crd.get("cfn_type", ""))}</span>')
+            if crd.get("caution"):
+                badge += (f' <span class="resource-badge" style="background:rgba(248,113,113,.18);color:#f87171" '
+                          f'title="{html.escape(crd["caution"])}">⚠ DESTRUCTIVE SCOPE</span>')
+                desc = ("Caution, destructive scope: " + crd["caution"] + ". Provided for completeness; do not use from application "
+                        "namespaces. Restrict with AWSProvider.allowedNamespaces and RBAC. ") + desc
+        else:
+            badge = '<span class="resource-badge">GA</span>'
+            if kind in WIP_KINDS:
+                badge += (' <span class="resource-badge" style="background:rgba(251,191,36,.18);color:#fbbf24" '
+                          'title="Cross-account acceptance is implemented and unit-tested; not yet verified against a second live AWS account">'
+                          'WIP · CROSS-ACCOUNT</span>')
         parts.append(f"""
     <section id="{anchor}" class="resource-section">
-      <h2>{kind} <a href="#{anchor}" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <h2>{kind} <a href="#{anchor}" class="anchor">#</a> {badge}</h2>
       <p class="resource-desc">{html.escape(desc)}</p>
       <p class="resource-desc"><code>kubectl get {crd['plural']}</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/{service}/{anchor}.yaml">example on GitHub</a></p>
 
@@ -429,6 +517,7 @@ def render_index(services):
             f'<div><div class="doc-name">{html.escape(label)}</div>'
             f'<div class="doc-count">{n} kind{"s" if n != 1 else ""}</div></div></a>'
         )
+    cautions = sum(1 for kinds in services.values() for k in kinds if k["crd"].get("caution"))
     parts = [PAGE_HEAD.format(title="API Reference", meta=f"API reference for all {total} konfig-konector resource kinds.")]
     parts.append(f"""    <div class="breadcrumb">
       <span class="breadcrumb-current">docs</span>
@@ -439,6 +528,21 @@ def render_index(services):
     <code>aws.konfig.io/v1alpha1</code> API group. Every page is generated from the operator's CRD
     schemas; every kind has a full-options example in the
     <a href="https://github.com/konfig-io/konfig-konector/tree/main/examples">examples/</a> directory.</p>
+
+    <div class="code-wrap" style="margin-top:24px;padding:16px 20px;border-left:3px solid #f87171;">
+      <p class="resource-desc" style="margin:0 0 8px 0;"><strong>Coverage policy.</strong>
+      <span class="resource-badge">GA</span> kinds have hand-written controllers.
+      <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)">CLOUD CONTROL</span> kinds are
+      generated from the CloudFormation schema registry and reconciled through the AWS Cloud Control API; install them per
+      service bundle from <code>config/crd/cloudcontrol/</code>.
+      <span class="resource-badge" style="background:rgba(248,113,113,.18);color:#f87171">⚠ DESTRUCTIVE SCOPE</span> marks
+      {cautions} kinds that change account-, region- or organization-wide state (or must carry credential material in their
+      spec). They exist for completeness and should not be used from application namespaces; restrict them with
+      <code>AWSProvider.allowedNamespaces</code> and RBAC.</p>
+      <p class="resource-desc" style="margin:0;"><strong>Deliberately excluded.</strong> Billing, Invoicing, Cost and Usage Reports,
+      BCM Data Exports, Budget actions and payment connectors are not generated: automating account finances from a cluster is a
+      liability, not a platform capability. They remain reachable through the generic <code>CloudControlResource</code>.</p>
+    </div>
 
     <div class="docs-grid" style="margin-top:32px;">
 {chr(10).join(cards)}
@@ -493,7 +597,7 @@ def main():
     services = {}
     unmapped = []
     for crd in crds:
-        svc = ctrl_service.get(crd["kind"].lower())
+        svc = crd.get("cc_service") or ctrl_service.get(crd["kind"].lower())
         if not svc:
             unmapped.append(crd["kind"])
             svc = "other"

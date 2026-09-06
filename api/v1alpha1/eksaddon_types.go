@@ -22,6 +22,12 @@ import (
 
 // EKSAddonSpec defines the desired state of an EKS Add-on.
 type EKSAddonSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the EKS cluster name. Either clusterName or clusterRef must be set.
 	// +optional
 	ClusterName string `json:"clusterName,omitempty"`
@@ -63,6 +69,9 @@ type EKSAddonSpec struct {
 
 // EKSAddonStatus defines the observed state of EKSAddon.
 type EKSAddonStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AddonArn is the ARN of the EKS add-on.
 	// +optional
 	AddonArn string `json:"addonArn,omitempty"`

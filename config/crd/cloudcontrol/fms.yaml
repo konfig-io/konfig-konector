@@ -1,0 +1,933 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fmsnotificationchannels.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FMSNotificationChannel
+    listKind: FMSNotificationChannelList
+    plural: fmsnotificationchannels
+    singular: fmsnotificationchannel
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FMSNotificationChannel manages AWS::FMS::NotificationChannel through the AWS Cloud Control API. Designates the
+          IAM role and Amazon Simple Notification Service (SNS) topic that AWS Firewall Manager uses to record SNS logs.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FMSNotificationChannelSpec is the desired state of AWS::FMS::NotificationChannel.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              snsRoleName:
+                maxLength: 1024
+                minLength: 1
+                type: string
+              snsTopicArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 1024
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: snsTopicArn is immutable
+                  rule: self == oldSelf
+            required:
+            - snsRoleName
+            - snsTopicArn
+            type: object
+          status:
+            description: FMSNotificationChannelStatus is the observed state of AWS::FMS::NotificationChannel.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fmspolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FMSPolicy
+    listKind: FMSPolicyList
+    plural: fmspolicies
+    singular: fmspolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: FMSPolicy manages AWS::FMS::Policy through the AWS Cloud Control
+          API. Creates an AWS Firewall Manager policy.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FMSPolicySpec is the desired state of AWS::FMS::Policy.
+            properties:
+              deleteAllPolicyResources:
+                type: boolean
+              excludeMap:
+                description: FMSPolicyIEMap is a nested property type of AWS::FMS::Policy.
+                properties:
+                  account:
+                    items:
+                      type: string
+                    type: array
+                  orgunit:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              excludeResourceTags:
+                type: boolean
+              includeMap:
+                description: FMSPolicyIEMap is a nested property type of AWS::FMS::Policy.
+                properties:
+                  account:
+                    items:
+                      type: string
+                    type: array
+                  orgunit:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              policyDescription:
+                maxLength: 256
+                type: string
+              policyName:
+                maxLength: 1024
+                minLength: 1
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              remediationEnabled:
+                type: boolean
+              resourceSetIds:
+                items:
+                  type: string
+                type: array
+              resourceTagLogicalOperator:
+                enum:
+                - AND
+                - OR
+                type: string
+              resourceTags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              resourceType:
+                maxLength: 128
+                type: string
+              resourceTypeList:
+                items:
+                  type: string
+                type: array
+              resourcesCleanUp:
+                type: boolean
+              securityServicePolicyData:
+                description: FMSPolicySecurityServicePolicyData is a nested property
+                  type of AWS::FMS::Policy.
+                properties:
+                  managedServiceData:
+                    maxLength: 30000
+                    type: string
+                  policyOption:
+                    description: FMSPolicyPolicyOption is a nested property type of
+                      AWS::FMS::Policy.
+                    properties:
+                      networkAclCommonPolicy:
+                        description: FMSPolicyNetworkAclCommonPolicy is a nested property
+                          type of AWS::FMS::Policy.
+                        properties:
+                          networkAclEntrySet:
+                            description: FMSPolicyNetworkAclEntrySet is a nested property
+                              type of AWS::FMS::Policy.
+                            properties:
+                              firstEntries:
+                                items:
+                                  description: FMSPolicyNetworkAclEntry is a nested
+                                    property type of AWS::FMS::Policy.
+                                  properties:
+                                    cidrBlock:
+                                      description: CIDR block.
+                                      type: string
+                                    egress:
+                                      description: Whether the entry is an egress
+                                        entry.
+                                      type: boolean
+                                    icmpTypeCode:
+                                      description: ICMP type and code.
+                                      properties:
+                                        code:
+                                          description: Code.
+                                          format: int64
+                                          maximum: 255
+                                          minimum: 0
+                                          type: integer
+                                        type:
+                                          description: Type.
+                                          format: int64
+                                          maximum: 255
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - code
+                                      - type
+                                      type: object
+                                    ipv6CidrBlock:
+                                      description: IPv6 CIDR block.
+                                      type: string
+                                    portRange:
+                                      description: Port range.
+                                      properties:
+                                        from:
+                                          description: From Port.
+                                          format: int64
+                                          maximum: 65535
+                                          minimum: 0
+                                          type: integer
+                                        to:
+                                          description: To Port.
+                                          format: int64
+                                          maximum: 65535
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - from
+                                      - to
+                                      type: object
+                                    protocol:
+                                      description: Protocol.
+                                      type: string
+                                    ruleAction:
+                                      description: Rule Action.
+                                      enum:
+                                      - allow
+                                      - deny
+                                      type: string
+                                  required:
+                                  - egress
+                                  - protocol
+                                  - ruleAction
+                                  type: object
+                                type: array
+                              forceRemediateForFirstEntries:
+                                type: boolean
+                              forceRemediateForLastEntries:
+                                type: boolean
+                              lastEntries:
+                                items:
+                                  description: FMSPolicyNetworkAclEntry is a nested
+                                    property type of AWS::FMS::Policy.
+                                  properties:
+                                    cidrBlock:
+                                      description: CIDR block.
+                                      type: string
+                                    egress:
+                                      description: Whether the entry is an egress
+                                        entry.
+                                      type: boolean
+                                    icmpTypeCode:
+                                      description: ICMP type and code.
+                                      properties:
+                                        code:
+                                          description: Code.
+                                          format: int64
+                                          maximum: 255
+                                          minimum: 0
+                                          type: integer
+                                        type:
+                                          description: Type.
+                                          format: int64
+                                          maximum: 255
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - code
+                                      - type
+                                      type: object
+                                    ipv6CidrBlock:
+                                      description: IPv6 CIDR block.
+                                      type: string
+                                    portRange:
+                                      description: Port range.
+                                      properties:
+                                        from:
+                                          description: From Port.
+                                          format: int64
+                                          maximum: 65535
+                                          minimum: 0
+                                          type: integer
+                                        to:
+                                          description: To Port.
+                                          format: int64
+                                          maximum: 65535
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - from
+                                      - to
+                                      type: object
+                                    protocol:
+                                      description: Protocol.
+                                      type: string
+                                    ruleAction:
+                                      description: Rule Action.
+                                      enum:
+                                      - allow
+                                      - deny
+                                      type: string
+                                  required:
+                                  - egress
+                                  - protocol
+                                  - ruleAction
+                                  type: object
+                                type: array
+                            required:
+                            - forceRemediateForFirstEntries
+                            - forceRemediateForLastEntries
+                            type: object
+                        required:
+                        - networkAclEntrySet
+                        type: object
+                      networkFirewallPolicy:
+                        description: FMSPolicyNetworkFirewallPolicy is a nested property
+                          type of AWS::FMS::Policy.
+                        properties:
+                          firewallDeploymentModel:
+                            enum:
+                            - DISTRIBUTED
+                            - CENTRALIZED
+                            type: string
+                        required:
+                        - firewallDeploymentModel
+                        type: object
+                      thirdPartyFirewallPolicy:
+                        description: FMSPolicyThirdPartyFirewallPolicy is a nested
+                          property type of AWS::FMS::Policy.
+                        properties:
+                          firewallDeploymentModel:
+                            enum:
+                            - DISTRIBUTED
+                            - CENTRALIZED
+                            type: string
+                        required:
+                        - firewallDeploymentModel
+                        type: object
+                    type: object
+                  type:
+                    enum:
+                    - WAF
+                    - WAFV2
+                    - SHIELD_ADVANCED
+                    - SECURITY_GROUPS_COMMON
+                    - SECURITY_GROUPS_CONTENT_AUDIT
+                    - SECURITY_GROUPS_USAGE_AUDIT
+                    - NETWORK_FIREWALL
+                    - THIRD_PARTY_FIREWALL
+                    - DNS_FIREWALL
+                    - IMPORT_NETWORK_FIREWALL
+                    - NETWORK_ACL_COMMON
+                    type: string
+                required:
+                - type
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - excludeResourceTags
+            - policyName
+            - remediationEnabled
+            - securityServicePolicyData
+            type: object
+          status:
+            description: FMSPolicyStatus is the observed state of AWS::FMS::Policy.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1024
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 36
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fmsresourcesets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FMSResourceSet
+    listKind: FMSResourceSetList
+    plural: fmsresourcesets
+    singular: fmsresourceset
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FMSResourceSet manages AWS::FMS::ResourceSet through the AWS Cloud Control API. Creates an AWS Firewall
+          Manager resource set.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FMSResourceSetSpec is the desired state of AWS::FMS::ResourceSet.
+            properties:
+              description:
+                maxLength: 256
+                type: string
+              name:
+                maxLength: 128
+                minLength: 1
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceTypeList:
+                items:
+                  type: string
+                type: array
+              resources:
+                items:
+                  type: string
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            - resourceTypeList
+            type: object
+          status:
+            description: FMSResourceSetStatus is the observed state of AWS::FMS::ResourceSet.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 22
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -22,6 +22,12 @@ import (
 
 // AthenaDataCatalogSpec defines the desired state of an Athena data catalog.
 type AthenaDataCatalogSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the data catalog name. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=127
@@ -48,6 +54,9 @@ type AthenaDataCatalogSpec struct {
 
 // AthenaDataCatalogStatus defines the observed state of AthenaDataCatalog.
 type AthenaDataCatalogStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CatalogName is the name of the data catalog in AWS.
 	// +optional
 	CatalogName string `json:"catalogName,omitempty"`

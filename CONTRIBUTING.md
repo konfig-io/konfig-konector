@@ -12,7 +12,7 @@ side of getting a change merged.
 
 ## Development setup
 
-Prerequisites: Go 1.22+, Docker, Helm 3.x, `make`.
+Prerequisites: Go 1.24+, Docker, Helm 3.x, `make`, Python 3 (generators), and for live testing the AWS CLI v2 and k3d (installed by `scripts/local-dev.sh`).
 
 ```bash
 git clone https://github.com/konfig-io/konfig-konector.git

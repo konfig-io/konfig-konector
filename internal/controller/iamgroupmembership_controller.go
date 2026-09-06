@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awsiam "github.com/aws/aws-sdk-go-v2/service/iam"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,13 +32,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	iamhelper "github.com/konfig-io/konfig-konector/internal/aws/iam"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // IAMGroupMembershipReconciler reconciles IAMGroupMembership objects.
 type IAMGroupMembershipReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	IAMClient *awsiam.Client
+	IAMClient *multi.IAM
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=iamgroupmemberships,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +52,10 @@ func (r *IAMGroupMembershipReconciler) Reconcile(ctx context.Context, req ctrl.R
 	mem := &awsv1alpha1.IAMGroupMembership{}
 	if err := r.Get(ctx, req.NamespacedName, mem); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, mem); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !mem.DeletionTimestamp.IsZero() {
@@ -86,6 +90,10 @@ func (r *IAMGroupMembershipReconciler) Reconcile(ctx context.Context, req ctrl.R
 		if err := r.Update(ctx, mem); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileMembership(ctx, mem); err != nil {

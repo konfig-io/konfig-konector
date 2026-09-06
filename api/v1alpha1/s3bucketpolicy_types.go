@@ -33,6 +33,12 @@ type S3BucketRef struct {
 
 // S3BucketPolicySpec defines the desired state of an S3 Bucket Policy.
 type S3BucketPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BucketRef references the target bucket.
 	BucketRef S3BucketRef `json:"bucketRef"`
 
@@ -43,6 +49,9 @@ type S3BucketPolicySpec struct {
 
 // S3BucketPolicyStatus defines the observed state of S3BucketPolicy.
 type S3BucketPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

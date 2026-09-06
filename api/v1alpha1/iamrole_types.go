@@ -22,6 +22,12 @@ import (
 
 // IAMRoleSpec defines the desired state of an AWS IAM Role.
 type IAMRoleSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RoleName is the name of the IAM role. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
@@ -57,6 +63,9 @@ type IAMRoleSpec struct {
 
 // IAMRoleStatus defines the observed state of IAMRole.
 type IAMRoleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM role.
 	// +optional
 	ARN string `json:"arn,omitempty"`

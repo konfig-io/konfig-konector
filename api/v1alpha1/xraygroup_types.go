@@ -34,15 +34,23 @@ type XRayInsightsConfiguration struct {
 
 // XRayGroupSpec defines the desired state of an X-Ray group.
 type XRayGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupName is the case-sensitive name of the group. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="groupName is immutable"
 	GroupName string `json:"groupName"`
 
-	// FilterExpression defines criteria by which to group traces.
+	// FilterExpression defines criteria by which to group traces. AWS requires
+	// one, e.g. service("api") or fault = true.
+	// +kubebuilder:validation:MinLength=1
 	// +optional
-	FilterExpression string `json:"filterExpression,omitempty"`
+	FilterExpression string `json:"filterExpression"`
 
 	// InsightsConfiguration configures insights and insight notifications.
 	// +optional
@@ -55,6 +63,9 @@ type XRayGroupSpec struct {
 
 // XRayGroupStatus defines the observed state of XRayGroup.
 type XRayGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

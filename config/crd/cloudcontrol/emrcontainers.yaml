@@ -1,0 +1,1050 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: emrcontainersendpoints.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EMRContainersEndpoint
+    listKind: EMRContainersEndpointList
+    plural: emrcontainersendpoints
+    singular: emrcontainersendpoint
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          EMRContainersEndpoint manages AWS::EMRContainers::Endpoint through the AWS Cloud Control API. Resource Schema
+          of AWS::EMRContainers::Endpoint Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EMRContainersEndpointSpec is the desired state of AWS::EMRContainers::Endpoint.
+            properties:
+              configurationOverrides:
+                description: |-
+                  The configuration overrides for the managed endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  applicationConfiguration:
+                    items:
+                      description: EMRContainersEndpointEMREKSConfiguration is a nested
+                        property type of AWS::EMRContainers::Endpoint.
+                      properties:
+                        classification:
+                          type: string
+                        configurations:
+                          items: {}
+                          type: array
+                        properties:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      required:
+                      - classification
+                      type: object
+                    type: array
+                  monitoringConfiguration:
+                    description: EMRContainersEndpointMonitoringConfiguration is a
+                      nested property type of AWS::EMRContainers::Endpoint.
+                    properties:
+                      cloudWatchMonitoringConfiguration:
+                        description: EMRContainersEndpointCloudWatchMonitoringConfiguration
+                          is a nested property type of AWS::EMRContainers::Endpoint.
+                        properties:
+                          logGroupName:
+                            type: string
+                          logStreamNamePrefix:
+                            type: string
+                        required:
+                        - logGroupName
+                        type: object
+                      containerLogRotationConfiguration:
+                        description: EMRContainersEndpointContainerLogRotationConfiguration
+                          is a nested property type of AWS::EMRContainers::Endpoint.
+                        properties:
+                          maxFilesToKeep:
+                            format: int64
+                            type: integer
+                          rotationSize:
+                            type: string
+                        required:
+                        - maxFilesToKeep
+                        - rotationSize
+                        type: object
+                      persistentAppUI:
+                        enum:
+                        - ENABLED
+                        - DISABLED
+                        type: string
+                      s3MonitoringConfiguration:
+                        description: EMRContainersEndpointS3MonitoringConfiguration
+                          is a nested property type of AWS::EMRContainers::Endpoint.
+                        properties:
+                          logUri:
+                            type: string
+                        required:
+                        - logUri
+                        type: object
+                    type: object
+                type: object
+              executionRoleArn:
+                description: |-
+                  The execution role ARN for the managed endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: executionRoleArn is immutable
+                  rule: self == oldSelf
+              name:
+                description: |-
+                  The name of the managed endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              releaseLabel:
+                description: |-
+                  The Amazon EMR release label.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: releaseLabel is immutable
+                  rule: self == oldSelf
+              sessionIdleTimeoutInMinutes:
+                description: |-
+                  The idle timeout in minutes for sessions on the managed endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                format: int64
+                maximum: 1440
+                minimum: 1
+                type: integer
+              tags:
+                description: An array of key-value pairs to apply to this managed
+                  endpoint.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              type:
+                description: |-
+                  The type of the managed endpoint.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: type is immutable
+                  rule: self == oldSelf
+              virtualClusterId:
+                description: |-
+                  The ID of the virtual cluster for which the managed endpoint is created.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: virtualClusterId is immutable
+                  rule: self == oldSelf
+            required:
+            - executionRoleArn
+            - releaseLabel
+            - type
+            - virtualClusterId
+            type: object
+          status:
+            description: EMRContainersEndpointStatus is the observed state of AWS::EMRContainers::Endpoint.
+            properties:
+              arn:
+                description: |-
+                  The ARN of the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              authProxyUrl:
+                description: |-
+                  The auth proxy URL for Spark Connect connections.
+                  Read-only: reported by AWS after creation.
+                type: string
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              certificateAuthority:
+                description: |-
+                  The certificate authority for the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  certificateArn:
+                    type: string
+                  certificateData:
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The date and time when the managed endpoint was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              failureReason:
+                description: |-
+                  The reason for a failed managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              id:
+                description: |-
+                  The ID of the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              securityGroup:
+                description: |-
+                  The security group associated with the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              serverUrl:
+                description: |-
+                  The server URL of the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              state:
+                description: |-
+                  The state of the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+              stateDetails:
+                description: |-
+                  Additional details about the state of the managed endpoint.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: emrcontainerssecurityconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EMRContainersSecurityConfiguration
+    listKind: EMRContainersSecurityConfigurationList
+    plural: emrcontainerssecurityconfigurations
+    singular: emrcontainerssecurityconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          EMRContainersSecurityConfiguration manages AWS::EMRContainers::SecurityConfiguration through the AWS Cloud
+          Control API. Resource Schema of AWS::EMRContainers::SecurityConfiguration Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EMRContainersSecurityConfigurationSpec is the desired state
+              of AWS::EMRContainers::SecurityConfiguration.
+            properties:
+              containerProvider:
+                description: |-
+                  Container provider for the security configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  id:
+                    description: The container provider ID.
+                    type: string
+                  info:
+                    description: EMRContainersSecurityConfigurationContainerInfo is
+                      a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                    properties:
+                      eksInfo:
+                        description: EMRContainersSecurityConfigurationEksInfo is
+                          a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          namespace:
+                            description: The EKS namespace.
+                            type: string
+                        type: object
+                    type: object
+                  type:
+                    description: The container provider type.
+                    enum:
+                    - EKS
+                    type: string
+                required:
+                - id
+                - type
+                type: object
+              name:
+                description: |-
+                  The name of the security configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityConfigurationData:
+                description: |-
+                  Security configuration input for the security configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  authenticationConfiguration:
+                    description: EMRContainersSecurityConfigurationAuthenticationConfiguration
+                      is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                    properties:
+                      iamConfiguration:
+                        description: EMRContainersSecurityConfigurationIAMConfiguration
+                          is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          systemRole:
+                            description: The system role ARN.
+                            type: string
+                        type: object
+                      identityCenterConfiguration:
+                        description: EMRContainersSecurityConfigurationIdentityCenterConfiguration
+                          is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          enableIdentityCenter:
+                            description: Whether to enable Identity Center integration.
+                            type: boolean
+                          identityCenterApplicationAssignmentRequired:
+                            description: Whether Identity Center application assignment
+                              is required.
+                            type: boolean
+                          identityCenterInstanceARN:
+                            description: The ARN of the Identity Center instance.
+                            type: string
+                        type: object
+                    type: object
+                  authorizationConfiguration:
+                    description: EMRContainersSecurityConfigurationAuthorizationConfiguration
+                      is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                    properties:
+                      lakeFormationConfiguration:
+                        description: EMRContainersSecurityConfigurationLakeFormationConfiguration
+                          is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          authorizedSessionTagValue:
+                            description: The session tag to authorize Lake Formation
+                              access.
+                            maxLength: 256
+                            type: string
+                          queryAccessControlEnabled:
+                            description: Whether query access control is enabled.
+                            type: boolean
+                          queryEngineRoleArn:
+                            description: The ARN of the query engine role.
+                            type: string
+                          secureNamespaceInfo:
+                            description: EMRContainersSecurityConfigurationSecureNamespaceInfo
+                              is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                            properties:
+                              clusterId:
+                                description: The ID of the cluster.
+                                maxLength: 100
+                                type: string
+                              namespace:
+                                description: The namespace.
+                                maxLength: 63
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                  encryptionConfiguration:
+                    description: EMRContainersSecurityConfigurationEncryptionConfiguration
+                      is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                    properties:
+                      atRestEncryptionConfiguration:
+                        description: EMRContainersSecurityConfigurationAtRestEncryptionConfiguration
+                          is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          localDiskEncryptionConfiguration:
+                            description: EMRContainersSecurityConfigurationLocalDiskEncryptionConfiguration
+                              is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                            properties:
+                              awsKmsKeyId:
+                                description: The AWS KMS key ID.
+                                type: string
+                              encryptionKeyProviderType:
+                                description: The encryption key provider type.
+                                enum:
+                                - AwsKms
+                                type: string
+                            type: object
+                          s3EncryptionConfiguration:
+                            description: EMRContainersSecurityConfigurationS3EncryptionConfiguration
+                              is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                            properties:
+                              encryptionOption:
+                                description: The S3 encryption option.
+                                enum:
+                                - SSE-S3
+                                - SSE-KMS
+                                - CSE-KMS
+                                type: string
+                              kmsKeyId:
+                                description: The KMS key ID for encryption.
+                                type: string
+                            type: object
+                        type: object
+                      inTransitEncryptionConfiguration:
+                        description: EMRContainersSecurityConfigurationInTransitEncryptionConfiguration
+                          is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                        properties:
+                          tlsCertificateConfiguration:
+                            description: EMRContainersSecurityConfigurationTLSCertificateConfiguration
+                              is a nested property type of AWS::EMRContainers::SecurityConfiguration.
+                            properties:
+                              certificateProviderType:
+                                description: The certificate provider type.
+                                enum:
+                                - PEM
+                                type: string
+                              privateKeySecretArn:
+                                description: The ARN of the secret containing the
+                                  private key.
+                                type: string
+                              publicKeySecretArn:
+                                description: The ARN of the secret containing the
+                                  public key.
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this security
+                  configuration.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - securityConfigurationData
+            type: object
+          status:
+            description: EMRContainersSecurityConfigurationStatus is the observed
+              state of AWS::EMRContainers::SecurityConfiguration.
+            properties:
+              arn:
+                description: |-
+                  The ARN of the security configuration.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  The ID of the security configuration.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: emrcontainersvirtualclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: EMRContainersVirtualCluster
+    listKind: EMRContainersVirtualClusterList
+    plural: emrcontainersvirtualclusters
+    singular: emrcontainersvirtualcluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          EMRContainersVirtualCluster manages AWS::EMRContainers::VirtualCluster through the AWS Cloud Control API.
+          Resource Schema of AWS::EMRContainers::VirtualCluster Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EMRContainersVirtualClusterSpec is the desired state of AWS::EMRContainers::VirtualCluster.
+            properties:
+              containerProvider:
+                description: |-
+                  Container provider of the virtual cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  id:
+                    description: The ID of the container cluster
+                    maxLength: 100
+                    minLength: 1
+                    type: string
+                  info:
+                    description: EMRContainersVirtualClusterContainerInfo is a nested
+                      property type of AWS::EMRContainers::VirtualCluster.
+                    properties:
+                      eksInfo:
+                        description: EMRContainersVirtualClusterEksInfo is a nested
+                          property type of AWS::EMRContainers::VirtualCluster.
+                        properties:
+                          namespace:
+                            maxLength: 63
+                            minLength: 1
+                            type: string
+                        required:
+                        - namespace
+                        type: object
+                    required:
+                    - eksInfo
+                    type: object
+                  type:
+                    description: The type of the container provider
+                    type: string
+                required:
+                - id
+                - info
+                - type
+                type: object
+              name:
+                description: |-
+                  Name of the virtual cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityConfigurationId:
+                description: |-
+                  The ID of the security configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              sessionEnabled:
+                description: |-
+                  Whether the virtual cluster is session-enabled for Spark Connect.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: An array of key-value pairs to apply to this virtual
+                  cluster.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - containerProvider
+            - name
+            type: object
+          status:
+            description: EMRContainersVirtualClusterStatus is the observed state of
+              AWS::EMRContainers::VirtualCluster.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  Id of the virtual cluster.
+                  Read-only: reported by AWS after creation.
+                maxLength: 64
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

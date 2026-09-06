@@ -22,6 +22,12 @@ import (
 
 // APIGatewayV2IntegrationSpec defines the desired state of an API Gateway v2 integration.
 type APIGatewayV2IntegrationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// APIRef references the APIGatewayV2API this integration belongs to.
 	APIRef APIRef `json:"apiRef"`
 
@@ -84,6 +90,9 @@ type APIGatewayV2IntegrationSpec struct {
 
 // APIGatewayV2IntegrationStatus defines the observed state of APIGatewayV2Integration.
 type APIGatewayV2IntegrationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// IntegrationID is the integration identifier.
 	// +optional
 	IntegrationID string `json:"integrationId,omitempty"`

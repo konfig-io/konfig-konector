@@ -137,7 +137,7 @@ func TestSecurityGroupReconcile(t *testing.T) {
 
 	newSG := func(mutate ...func(*awsv1alpha1.SecurityGroup)) *awsv1alpha1.SecurityGroup {
 		sg := &awsv1alpha1.SecurityGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Generation: 1},
+			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}, Generation: 1},
 			Spec: awsv1alpha1.SecurityGroupSpec{
 				VPCRef:      awsv1alpha1.VPCResourceRef{ID: "vpc-0123"},
 				GroupName:   "web-sg",

@@ -61,6 +61,10 @@ func (r *LambdaEventInvokeConfigReconciler) Reconcile(ctx context.Context, req c
 	if err := r.Get(ctx, req.NamespacedName, eic); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, eic); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !eic.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(eic, awsv1alpha1.FinalizerName) {
@@ -84,6 +88,10 @@ func (r *LambdaEventInvokeConfigReconciler) Reconcile(ctx context.Context, req c
 		if err := r.Update(ctx, eic); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileConfig(ctx, eic); err != nil {

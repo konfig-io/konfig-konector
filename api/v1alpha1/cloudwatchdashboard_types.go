@@ -22,6 +22,12 @@ import (
 
 // CloudWatchDashboardSpec defines the desired state of a CloudWatch Dashboard.
 type CloudWatchDashboardSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DashboardName is the name of the dashboard.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="dashboardName is immutable"
 	DashboardName string `json:"dashboardName"`
@@ -32,6 +38,9 @@ type CloudWatchDashboardSpec struct {
 
 // CloudWatchDashboardStatus defines the observed state of CloudWatchDashboard.
 type CloudWatchDashboardStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DashboardARN is the ARN of the dashboard.
 	// +optional
 	DashboardARN string `json:"dashboardArn,omitempty"`

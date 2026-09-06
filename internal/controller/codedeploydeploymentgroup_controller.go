@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cdhelper "github.com/konfig-io/konfig-konector/internal/aws/codedeploy"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CodeDeployDeploymentGroupReconciler reconciles CodeDeployDeploymentGroup objects.
 type CodeDeployDeploymentGroupReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CodeDeployClient *awscd.Client
+	CodeDeployClient *multi.CodeDeploy
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=codedeploydeploymentgroups,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CodeDeployDeploymentGroupReconciler) Reconcile(ctx context.Context, req
 	obj := &awsv1alpha1.CodeDeployDeploymentGroup{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *CodeDeployDeploymentGroupReconciler) Reconcile(ctx context.Context, req
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileDeploymentGroup(ctx, obj); err != nil {

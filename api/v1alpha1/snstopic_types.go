@@ -22,6 +22,12 @@ import (
 
 // SNSTopicSpec defines the desired state of an SNS Topic.
 type SNSTopicSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// TopicName is the name of the SNS topic. Immutable after creation.
 	// FIFO topics must end with ".fifo".
 	// +kubebuilder:validation:MinLength=1
@@ -53,6 +59,9 @@ type SNSTopicSpec struct {
 
 // SNSTopicStatus defines the observed state of SNSTopic.
 type SNSTopicStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TopicARN is the ARN of the SNS topic.
 	// +optional
 	TopicARN string `json:"topicArn,omitempty"`

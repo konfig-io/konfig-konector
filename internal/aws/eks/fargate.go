@@ -19,12 +19,14 @@ package eks
 import (
 	"context"
 
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
 
-func DescribeFargateProfile(ctx context.Context, c *eks.Client, clusterName, profileName string) (*types.FargateProfile, error) {
+func DescribeFargateProfile(ctx context.Context, c *multi.EKS, clusterName, profileName string) (*types.FargateProfile, error) {
 	out, err := c.DescribeFargateProfile(ctx, &eks.DescribeFargateProfileInput{
 		ClusterName:        aws.String(clusterName),
 		FargateProfileName: aws.String(profileName),
@@ -44,7 +46,7 @@ type FargateProfileInput struct {
 	Tags             map[string]string
 }
 
-func CreateFargateProfile(ctx context.Context, c *eks.Client, in FargateProfileInput) (*types.FargateProfile, error) {
+func CreateFargateProfile(ctx context.Context, c *multi.EKS, in FargateProfileInput) (*types.FargateProfile, error) {
 	input := &eks.CreateFargateProfileInput{
 		ClusterName:         aws.String(in.ClusterName),
 		FargateProfileName:  aws.String(in.ProfileName),
@@ -60,7 +62,7 @@ func CreateFargateProfile(ctx context.Context, c *eks.Client, in FargateProfileI
 	return out.FargateProfile, nil
 }
 
-func DeleteFargateProfile(ctx context.Context, c *eks.Client, clusterName, profileName string) error {
+func DeleteFargateProfile(ctx context.Context, c *multi.EKS, clusterName, profileName string) error {
 	_, err := c.DeleteFargateProfile(ctx, &eks.DeleteFargateProfileInput{
 		ClusterName:        aws.String(clusterName),
 		FargateProfileName: aws.String(profileName),

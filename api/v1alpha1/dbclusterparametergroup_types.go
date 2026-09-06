@@ -22,6 +22,12 @@ import (
 
 // DBClusterParameterGroupSpec defines the desired state of an RDS DB Cluster Parameter Group.
 type DBClusterParameterGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DBClusterParameterGroupName is the name of the cluster parameter group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -49,6 +55,9 @@ type DBClusterParameterGroupSpec struct {
 
 // DBClusterParameterGroupStatus defines the observed state of DBClusterParameterGroup.
 type DBClusterParameterGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the DB cluster parameter group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

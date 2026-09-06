@@ -322,7 +322,7 @@ func exportSSMMaintenanceWindows(ctx context.Context, clients *awsclient.Clients
 				Spec: awsv1alpha1.SSMMaintenanceWindowSpec{
 					Name:                     name,
 					Schedule:                 aws.ToString(detail.Schedule),
-					Duration:                 detail.Duration,
+					Duration:                 aws.ToInt32(detail.Duration),
 					Cutoff:                   detail.Cutoff,
 					AllowUnassociatedTargets: detail.AllowUnassociatedTargets,
 					Timezone:                 aws.ToString(detail.ScheduleTimezone),

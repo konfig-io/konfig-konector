@@ -42,6 +42,12 @@ type DBProxyAuthConfig struct {
 
 // DBProxySpec defines the desired state of an RDS Proxy.
 type DBProxySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DBProxyName is the name of the proxy. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="dbProxyName is immutable"
@@ -87,6 +93,9 @@ type DBProxySpec struct {
 
 // DBProxyStatus defines the observed state of DBProxy.
 type DBProxyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DBProxyARN is the ARN of the RDS proxy.
 	// +optional
 	DBProxyARN string `json:"dbProxyArn,omitempty"`

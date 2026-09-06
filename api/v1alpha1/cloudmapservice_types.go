@@ -59,6 +59,12 @@ type CloudMapHealthCheckCustomConfig struct {
 
 // CloudMapServiceSpec defines the desired state of a Cloud Map service.
 type CloudMapServiceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name of the service. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=127
@@ -87,6 +93,9 @@ type CloudMapServiceSpec struct {
 
 // CloudMapServiceStatus defines the observed state of CloudMapService.
 type CloudMapServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ServiceID is the ID of the service.
 	// +optional
 	ServiceID string `json:"serviceId,omitempty"`

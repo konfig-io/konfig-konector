@@ -63,6 +63,10 @@ func (r *AthenaWorkGroupReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Get(ctx, req.NamespacedName, wg); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, wg); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !wg.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(wg, awsv1alpha1.FinalizerName) {
@@ -86,6 +90,10 @@ func (r *AthenaWorkGroupReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err := r.Update(ctx, wg); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileWorkGroup(ctx, wg); err != nil {

@@ -32,13 +32,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	dynamohelper "github.com/konfig-io/konfig-konector/internal/aws/dynamodb"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // DynamoDBBackupReconciler reconciles DynamoDBBackup objects.
 type DynamoDBBackupReconciler struct {
 	client.Client
 	Scheme         *runtime.Scheme
-	DynamoDBClient *awsdynamodb.Client
+	DynamoDBClient *multi.DynamoDB
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dynamodbbackups,verbs=get;list;watch;create;update;patch;delete
@@ -51,6 +52,10 @@ func (r *DynamoDBBackupReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	obj := &awsv1alpha1.DynamoDBBackup{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -75,6 +80,10 @@ func (r *DynamoDBBackupReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileBackup(ctx, obj); err != nil {

@@ -22,6 +22,12 @@ import (
 
 // CompositeAlarmSpec defines the desired state of a CloudWatch Composite Alarm.
 type CompositeAlarmSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AlarmName is the name of the composite alarm.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="alarmName is immutable"
 	AlarmName string `json:"alarmName"`
@@ -56,6 +62,9 @@ type CompositeAlarmSpec struct {
 
 // CompositeAlarmStatus defines the observed state of CompositeAlarm.
 type CompositeAlarmStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AlarmARN is the ARN of the composite alarm.
 	// +optional
 	AlarmARN string `json:"alarmArn,omitempty"`

@@ -22,6 +22,12 @@ import (
 
 // MSKConfigurationSpec defines the desired state of an MSK cluster configuration.
 type MSKConfigurationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the configuration. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -40,6 +46,9 @@ type MSKConfigurationSpec struct {
 
 // MSKConfigurationStatus defines the observed state of MSKConfiguration.
 type MSKConfigurationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConfigurationARN is the ARN of the MSK configuration.
 	// +optional
 	ConfigurationARN string `json:"configurationARN,omitempty"`

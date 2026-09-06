@@ -103,8 +103,9 @@ func glueJobScheme(t *testing.T) *runtime.Scheme {
 func glueJobCR(mutate ...func(*awsv1alpha1.GlueJob)) *awsv1alpha1.GlueJob {
 	j := &awsv1alpha1.GlueJob{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-job",
-			Namespace: "default",
+			Name:       "my-job",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.GlueJobSpec{
 			Name:    "my-job",
@@ -254,7 +255,7 @@ func TestGlueJobReconcile(t *testing.T) {
 					j.Spec.RoleRef = awsv1alpha1.RoleRef{Name: "my-role"}
 				}),
 				&awsv1alpha1.IAMRole{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-role", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-role", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.IAMRoleSpec{RoleName: "my-role"},
 				},
 			},

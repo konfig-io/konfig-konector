@@ -1,0 +1,652 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: codepipelinecustomactiontypes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CodePipelineCustomActionType
+    listKind: CodePipelineCustomActionTypeList
+    plural: codepipelinecustomactiontypes
+    singular: codepipelinecustomactiontype
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CodePipelineCustomActionType manages AWS::CodePipeline::CustomActionType through the AWS Cloud Control API.
+          The AWS::CodePipeline::CustomActionType resource creates a custom action for activities that aren't included
+          in the CodePipeline default actions, such as running an internally developed build process or a test suite.
+          You can use these custom actions in the stage of a pipeline.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CodePipelineCustomActionTypeSpec is the desired state of
+              AWS::CodePipeline::CustomActionType.
+            properties:
+              category:
+                description: |-
+                  The category of the custom action, such as a build action or a test action.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: category is immutable
+                  rule: self == oldSelf
+              configurationProperties:
+                description: |-
+                  The configuration properties for the custom action.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: CodePipelineCustomActionTypeConfigurationProperties
+                    is a nested property type of AWS::CodePipeline::CustomActionType.
+                  properties:
+                    description:
+                      description: The description of the action configuration property
+                        that is displayed to users.
+                      type: string
+                    key:
+                      description: Whether the configuration property is a key.
+                      type: boolean
+                    name:
+                      description: The name of the action configuration property.
+                      type: string
+                    queryable:
+                      description: |-
+                        Indicates that the property is used with PollForJobs. When creating a custom action, an action can have up to
+                        one queryable property. If it has one, that property must be both required and not secret.If you create a
+                        pipeline with a custom action type, and that custom action contains a queryable property, the value for that
+                        configuration property is subject to other restrictions. The value must ...
+                      type: boolean
+                    required:
+                      description: Whether the configuration property is a required
+                        value.
+                      type: boolean
+                    secret:
+                      description: |-
+                        Whether the configuration property is secret. Secrets are hidden from all calls except for GetJobDetails,
+                        GetThirdPartyJobDetails, PollForJobs, and PollForThirdPartyJobs.
+                      type: boolean
+                    type:
+                      description: The type of the configuration property.
+                      type: string
+                  required:
+                  - key
+                  - name
+                  - required
+                  - secret
+                  type: object
+                type: array
+              inputArtifactDetails:
+                description: |-
+                  The details of the input artifact for the action, such as its commit ID.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  maximumCount:
+                    description: The maximum number of artifacts allowed for the action
+                      type.
+                    format: int64
+                    type: integer
+                  minimumCount:
+                    description: The minimum number of artifacts allowed for the action
+                      type.
+                    format: int64
+                    type: integer
+                required:
+                - maximumCount
+                - minimumCount
+                type: object
+              outputArtifactDetails:
+                description: |-
+                  The details of the output artifact of the action, such as its commit ID.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  maximumCount:
+                    description: The maximum number of artifacts allowed for the action
+                      type.
+                    format: int64
+                    type: integer
+                  minimumCount:
+                    description: The minimum number of artifacts allowed for the action
+                      type.
+                    format: int64
+                    type: integer
+                required:
+                - maximumCount
+                - minimumCount
+                type: object
+              provider:
+                description: |-
+                  The provider of the service used in the custom action, such as AWS CodeDeploy.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: provider is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              settings:
+                description: |-
+                  URLs that provide users information about this custom action.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  entityUrlTemplate:
+                    description: |-
+                      The URL returned to the AWS CodePipeline console that provides a deep link to the resources of the external
+                      system, such as the configuration page for an AWS CodeDeploy deployment group. This link is provided as part
+                      of the action display in the pipeline.
+                    type: string
+                  executionUrlTemplate:
+                    description: |-
+                      The URL returned to the AWS CodePipeline console that contains a link to the top-level landing page for the
+                      external system, such as the console page for AWS CodeDeploy. This link is shown on the pipeline view page in
+                      the AWS CodePipeline console and provides a link to the execution entity of the external action.
+                    type: string
+                  revisionUrlTemplate:
+                    description: |-
+                      The URL returned to the AWS CodePipeline console that contains a link to the page where customers can update
+                      or change the configuration of the external action.
+                    type: string
+                  thirdPartyConfigurationUrl:
+                    description: |-
+                      The URL of a sign-up page where users can sign up for an external service and perform initial configuration of
+                      the action provided by that service.
+                    type: string
+                type: object
+              tags:
+                description: Any tags assigned to the custom action.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              version:
+                description: |-
+                  The version identifier of the custom action.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: version is immutable
+                  rule: self == oldSelf
+            required:
+            - category
+            - inputArtifactDetails
+            - outputArtifactDetails
+            - provider
+            - version
+            type: object
+          status:
+            description: CodePipelineCustomActionTypeStatus is the observed state
+              of AWS::CodePipeline::CustomActionType.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: codepipelinewebhooks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CodePipelineWebhook
+    listKind: CodePipelineWebhookList
+    plural: codepipelinewebhooks
+    singular: codepipelinewebhook
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CodePipelineWebhook manages AWS::CodePipeline::Webhook through the AWS Cloud Control API. Resource Type
+          definition for AWS::CodePipeline::Webhook
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CodePipelineWebhookSpec is the desired state of AWS::CodePipeline::Webhook.
+            properties:
+              authentication:
+                description: Supported options are GITHUB_HMAC, IP, and UNAUTHENTICATED.
+                enum:
+                - GITHUB_HMAC
+                - IP
+                - UNAUTHENTICATED
+                type: string
+              authenticationConfiguration:
+                description: Properties that configure the authentication applied
+                  to incoming webhook trigger requests
+                properties:
+                  allowedIPRange:
+                    description: |-
+                      The property used to configure acceptance of webhooks in an IP address range. For IP, only the AllowedIPRange
+                      property must be set. This property must be set to a valid CIDR range.
+                    maxLength: 100
+                    type: string
+                  secretToken:
+                    description: |-
+                      The property used to configure GitHub authentication. For GITHUB_HMAC, only the SecretToken property must be
+                      set.
+                    maxLength: 100
+                    type: string
+                type: object
+              filters:
+                description: A list of rules applied to the body/payload sent in the
+                  POST request to a webhook URL
+                items:
+                  description: CodePipelineWebhookWebhookFilterRule is a nested property
+                    type of AWS::CodePipeline::Webhook.
+                  properties:
+                    jsonPath:
+                      description: |-
+                        A JsonPath expression that is applied to the body/payload of the webhook. The value selected by the JsonPath
+                        expression must match the value specified in the MatchEquals field. Otherwise, the request is ignored.
+                      maxLength: 150
+                      minLength: 1
+                      type: string
+                    matchEquals:
+                      description: |-
+                        The value selected by the JsonPath expression must match what is supplied in the MatchEquals field. Otherwise,
+                        the request is ignored.
+                      maxLength: 150
+                      type: string
+                  required:
+                  - jsonPath
+                  type: object
+                type: array
+              name:
+                description: |-
+                  The name of the webhook
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 100
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              registerWithThirdParty:
+                description: Configures a connection between the webhook that was
+                  created and the external tool with events to be detected.
+                type: boolean
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              targetAction:
+                description: The name of the action in a pipeline you want to connect
+                  to the webhook.
+                maxLength: 100
+                minLength: 1
+                type: string
+              targetPipeline:
+                description: The name of the pipeline you want to connect to the webhook.
+                maxLength: 100
+                minLength: 1
+                type: string
+              targetPipelineVersion:
+                description: The version number of the pipeline to be connected to
+                  the trigger request.
+                format: int64
+                type: integer
+            required:
+            - authentication
+            - authenticationConfiguration
+            - filters
+            - targetAction
+            - targetPipeline
+            type: object
+          status:
+            description: CodePipelineWebhookStatus is the observed state of AWS::CodePipeline::Webhook.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  logical id of the webhook
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              url:
+                description: |-
+                  The webhook URL generated by AWS CodePipeline
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

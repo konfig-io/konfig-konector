@@ -102,8 +102,9 @@ const testSecretARN = "arn:aws:secretsmanager:us-east-1:123456789012:secret:my-s
 func secretCR(mutate ...func(*awsv1alpha1.Secret)) *awsv1alpha1.Secret {
 	s := &awsv1alpha1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-secret",
-			Namespace: "default",
+			Name:       "my-secret",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.SecretSpec{
 			SecretName: "my-secret",
@@ -122,8 +123,9 @@ func secretCR(mutate ...func(*awsv1alpha1.Secret)) *awsv1alpha1.Secret {
 func sourceK8sSecret(value string) *corev1.Secret {
 	return &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "source-secret",
-			Namespace: "default",
+			Name:       "source-secret",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Data: map[string][]byte{"password": []byte(value)},
 	}

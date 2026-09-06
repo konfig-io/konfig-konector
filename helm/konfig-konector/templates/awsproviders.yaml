@@ -1,0 +1,32 @@
+{{- range .Values.providers }}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: AWSProvider
+metadata:
+  name: {{ .name }}
+  labels:
+    app.kubernetes.io/name: konfig-konector
+spec:
+  {{- if .default }}
+  default: true
+  {{- end }}
+  {{- with .roleArn }}
+  roleArn: {{ . | quote }}
+  {{- end }}
+  {{- with .region }}
+  region: {{ . | quote }}
+  {{- end }}
+  {{- with .externalId }}
+  externalId: {{ . | quote }}
+  {{- end }}
+  {{- with .sessionName }}
+  sessionName: {{ . | quote }}
+  {{- end }}
+  {{- with .durationSeconds }}
+  durationSeconds: {{ . }}
+  {{- end }}
+  {{- with .allowedNamespaces }}
+  allowedNamespaces:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

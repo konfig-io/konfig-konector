@@ -38,6 +38,12 @@ type GluePhysicalConnectionRequirements struct {
 
 // GlueConnectionSpec defines the desired state of a Glue connection.
 type GlueConnectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the connection. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -77,6 +83,9 @@ type GlueConnectionSpec struct {
 
 // GlueConnectionStatus defines the observed state of GlueConnection.
 type GlueConnectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConnectionName is the name of the connection in AWS.
 	// +optional
 	ConnectionName string `json:"connectionName,omitempty"`

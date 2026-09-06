@@ -1,0 +1,487 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elbloadbalancers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ELBLoadBalancer
+    listKind: ELBLoadBalancerList
+    plural: elbloadbalancers
+    singular: elbloadbalancer
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ELBLoadBalancer manages AWS::ElasticLoadBalancing::LoadBalancer through the AWS Cloud Control API. Resource
+          Type definition for AWS::ElasticLoadBalancing::LoadBalancer
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ELBLoadBalancerSpec is the desired state of AWS::ElasticLoadBalancing::LoadBalancer.
+            properties:
+              accessLoggingPolicy:
+                description: Information about where and how access logs are stored
+                  for the load balancer.
+                properties:
+                  emitInterval:
+                    description: |-
+                      The interval for publishing the access logs. You can specify an interval of either 5 minutes or 60 minutes.
+                      Default: 60 minutes
+                    format: int64
+                    type: integer
+                  enabled:
+                    description: Specifies whether access logs are enabled for the
+                      load balancer.
+                    type: boolean
+                  s3BucketName:
+                    description: The name of the Amazon S3 bucket where the access
+                      logs are stored.
+                    type: string
+                  s3BucketPrefix:
+                    description: |-
+                      The logical hierarchy you created for your Amazon S3 bucket, for example `my-bucket-prefix/prod`. If the
+                      prefix is not provided, the log is placed at the root level of the bucket.
+                    type: string
+                required:
+                - enabled
+                - s3BucketName
+                type: object
+              appCookieStickinessPolicy:
+                description: Information about a policy for application-controlled
+                  session stickiness.
+                items:
+                  description: ELBLoadBalancerAppCookieStickinessPolicy is a nested
+                    property type of AWS::ElasticLoadBalancing::LoadBalancer.
+                  properties:
+                    cookieName:
+                      description: The name of the application cookie used for stickiness.
+                      type: string
+                    policyName:
+                      description: |-
+                        The mnemonic name for the policy being created. The name must be unique within a set of policies for this load
+                        balancer.
+                      type: string
+                  required:
+                  - cookieName
+                  - policyName
+                  type: object
+                type: array
+              availabilityZones:
+                description: |-
+                  The Availability Zones for a load balancer in a default VPC. For a load balancer in a nondefault VPC, specify
+                  Subnets instead.
+                items:
+                  type: string
+                type: array
+              connectionDrainingPolicy:
+                description: |-
+                  If enabled, the load balancer allows existing requests to complete before the load balancer shifts traffic
+                  away from a deregistered or unhealthy instance.
+                properties:
+                  enabled:
+                    description: Specifies whether connection draining is enabled
+                      for the load balancer.
+                    type: boolean
+                  timeout:
+                    description: The maximum time, in seconds, to keep the existing
+                      connections open before deregistering the instances.
+                    format: int64
+                    type: integer
+                required:
+                - enabled
+                type: object
+              connectionSettings:
+                description: |-
+                  If enabled, the load balancer allows the connections to remain idle (no data is sent over the connection) for
+                  the specified duration.
+                properties:
+                  idleTimeout:
+                    description: |-
+                      The time, in seconds, that the connection is allowed to be idle (no data has been sent over the connection)
+                      before it is closed by the load balancer.
+                    format: int64
+                    type: integer
+                required:
+                - idleTimeout
+                type: object
+              crossZone:
+                description: |-
+                  If enabled, the load balancer routes the request traffic evenly across all instances regardless of the
+                  Availability Zones.
+                type: boolean
+              healthCheck:
+                description: The health check settings to use when evaluating the
+                  health of your EC2 instances.
+                properties:
+                  healthyThreshold:
+                    description: The number of consecutive health checks successes
+                      required before moving the instance to the `Healthy` state.
+                    type: string
+                  interval:
+                    description: The approximate interval, in seconds, between health
+                      checks of an individual instance.
+                    type: string
+                  target:
+                    description: The instance being checked.
+                    type: string
+                  timeout:
+                    description: |-
+                      The amount of time, in seconds, during which no response means a failed health check. This value must be less
+                      than the `Interval` value.
+                    type: string
+                  unhealthyThreshold:
+                    description: The number of consecutive health check failures required
+                      before moving the instance to the `Unhealthy` state.
+                    type: string
+                required:
+                - healthyThreshold
+                - interval
+                - target
+                - timeout
+                - unhealthyThreshold
+                type: object
+              instances:
+                description: The IDs of the instances for the load balancer.
+                items:
+                  type: string
+                type: array
+              lbCookieStickinessPolicy:
+                description: Information about a policy for duration-based session
+                  stickiness.
+                items:
+                  description: ELBLoadBalancerLBCookieStickinessPolicy is a nested
+                    property type of AWS::ElasticLoadBalancing::LoadBalancer.
+                  properties:
+                    cookieExpirationPeriod:
+                      description: |-
+                        The time period, in seconds, after which the cookie should be considered stale. If this parameter is not
+                        specified, the stickiness session lasts for the duration of the browser session.
+                      type: string
+                    policyName:
+                      description: The name of the policy. This name must be unique
+                        within the set of policies for this load balancer.
+                      type: string
+                  type: object
+                type: array
+              listeners:
+                description: The Listeners for the load balancer. You can specify
+                  at most one listener per port.
+                items:
+                  description: ELBLoadBalancerListeners is a nested property type
+                    of AWS::ElasticLoadBalancing::LoadBalancer.
+                  properties:
+                    instancePort:
+                      description: The port on which the instance is listening.
+                      type: string
+                    instanceProtocol:
+                      description: |-
+                        The protocol to use for routing traffic to instances: HTTP, HTTPS, TCP, or SSL. If the front-end protocol is
+                        TCP or SSL, the back-end protocol must be TCP or SSL. If the front-end protocol is HTTP or HTTPS, the back-end
+                        protocol must be HTTP or HTTPS. If there is another listener with the same `InstancePort` whose
+                        `InstanceProtocol` is secure, (HTTPS or SSL), the listener's `InstanceProtocol` m...
+                      type: string
+                    loadBalancerPort:
+                      description: |-
+                        The port on which the load balancer is listening. On EC2-VPC, you can specify any port from the range 1-65535.
+                        On EC2-Classic, you can specify any port from the following list: 25, 80, 443, 465, 587, 1024-65535.
+                      type: string
+                    policyNames:
+                      description: The names of the policies to associate with the
+                        listener.
+                      items:
+                        type: string
+                      type: array
+                    protocol:
+                      description: 'The load balancer transport protocol to use for
+                        routing: HTTP, HTTPS, TCP, or SSL.'
+                      type: string
+                    sslCertificateId:
+                      description: The Amazon Resource Name (ARN) of the server certificate.
+                      type: string
+                  required:
+                  - instancePort
+                  - loadBalancerPort
+                  - protocol
+                  type: object
+                type: array
+              loadBalancerName:
+                description: |-
+                  The name of the load balancer. This name must be unique within your set of load balancers for the region.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              policies:
+                description: The policies defined for your Classic Load Balancer.
+                  Specify only back-end server policies.
+                items:
+                  description: ELBLoadBalancerPolicies is a nested property type of
+                    AWS::ElasticLoadBalancing::LoadBalancer.
+                  properties:
+                    attributes:
+                      description: The policy attributes.
+                      items:
+                        description: ELBLoadBalancerPolicyItem is a nested property
+                          type of AWS::ElasticLoadBalancing::LoadBalancer.
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        type: object
+                      type: array
+                    instancePorts:
+                      description: The instance ports for the policy. Required only
+                        for some policy types.
+                      items:
+                        type: string
+                      type: array
+                    loadBalancerPorts:
+                      description: The load balancer ports for the policy. Required
+                        only for some policy types.
+                      items:
+                        type: string
+                      type: array
+                    policyName:
+                      description: The name of the policy.
+                      type: string
+                    policyType:
+                      description: The name of the policy type.
+                      type: string
+                  required:
+                  - attributes
+                  - policyName
+                  - policyType
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              scheme:
+                description: |-
+                  The type of load balancer. Valid only for load balancers in a VPC.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              securityGroups:
+                description: The security groups for the load balancer. Valid only
+                  for load balancers in a VPC.
+                items:
+                  type: string
+                type: array
+              subnets:
+                description: The IDs of the subnets for the load balancer. You can
+                  specify at most one subnet per Availability Zone.
+                items:
+                  type: string
+                type: array
+              tags:
+                description: The tags associated with a load balancer.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - listeners
+            type: object
+          status:
+            description: ELBLoadBalancerStatus is the observed state of AWS::ElasticLoadBalancing::LoadBalancer.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              canonicalHostedZoneName:
+                description: |-
+                  The name of the Route 53 hosted zone that is associated with the load balancer. Internal-facing load
+                  balancers.
+                  Read-only: reported by AWS after creation.
+                type: string
+              canonicalHostedZoneNameID:
+                description: |-
+                  The ID of the Route 53 hosted zone name that is associated with the load balancer.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dnsName:
+                description: |-
+                  The DNS name for the load balancer
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              sourceSecurityGroup:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  groupName:
+                    description: |-
+                      The name of the security group that you can use as part of your inbound rules for your load balancer's
+                      back-end instances.
+                    type: string
+                  ownerAlias:
+                    description: The owner of the source security group.
+                    type: string
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

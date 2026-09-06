@@ -1,0 +1,799 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: syntheticscanaries.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SyntheticsCanary
+    listKind: SyntheticsCanaryList
+    plural: syntheticscanaries
+    singular: syntheticscanary
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SyntheticsCanary manages AWS::Synthetics::Canary through the AWS Cloud Control API. Resource Type definition
+          for AWS::Synthetics::Canary
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SyntheticsCanarySpec is the desired state of AWS::Synthetics::Canary.
+            properties:
+              artifactConfig:
+                description: Provide artifact configuration
+                properties:
+                  s3Encryption:
+                    description: Encryption configuration for uploading artifacts
+                      to S3
+                    properties:
+                      encryptionMode:
+                        description: 'Encryption mode for encrypting artifacts when
+                          uploading to S3. Valid values: SSE_S3 and SSE_KMS.'
+                        type: string
+                      kmsKeyArn:
+                        description: |-
+                          KMS key Arn for encrypting artifacts when uploading to S3. You must specify KMS key Arn for SSE_KMS encryption
+                          mode only.
+                        type: string
+                    type: object
+                type: object
+              artifactS3Location:
+                description: Provide the s3 bucket output location for test results
+                type: string
+              browserConfigs:
+                description: List of browser configurations for the canary
+                items:
+                  description: SyntheticsCanaryBrowserConfig is a nested property
+                    type of AWS::Synthetics::Canary.
+                  properties:
+                    browserType:
+                      enum:
+                      - CHROME
+                      - FIREFOX
+                      type: string
+                  required:
+                  - browserType
+                  type: object
+                type: array
+              code:
+                description: Provide the canary script source
+                properties:
+                  blueprintTypes:
+                    items:
+                      type: string
+                    type: array
+                  dependencies:
+                    description: List of Lambda layers to attach to the canary
+                    items:
+                      description: SyntheticsCanaryDependency is a nested property
+                        type of AWS::Synthetics::Canary.
+                      properties:
+                        reference:
+                          description: ARN of the Lambda layer
+                          maxLength: 140
+                          minLength: 1
+                          type: string
+                        type:
+                          description: Type of dependency
+                          enum:
+                          - LambdaLayer
+                          type: string
+                      required:
+                      - reference
+                      type: object
+                    type: array
+                  handler:
+                    type: string
+                  s3Bucket:
+                    type: string
+                  s3Key:
+                    type: string
+                  s3ObjectVersion:
+                    type: string
+                  script:
+                    type: string
+                  sourceLocationArn:
+                    type: string
+                type: object
+              deleteLambdaResourcesOnCanaryDeletion:
+                description: Deletes associated lambda resources created by Synthetics
+                  if set to True. Default is False
+                type: boolean
+              dryRunAndUpdate:
+                description: |-
+                  Setting to control if UpdateCanary will perform a DryRun and validate it is PASSING before performing the
+                  Update. Default is FALSE.
+                type: boolean
+              executionRoleArn:
+                description: Lambda Execution role used to run your canaries
+                type: string
+              failureRetentionPeriod:
+                description: Retention period of failed canary runs represented in
+                  number of days
+                format: int64
+                type: integer
+              kmsKeyArn:
+                description: |-
+                  KMS key ARN for encrypting the canary's Lambda function environment variables at rest. If omitted, Lambda uses
+                  an AWS-managed key.
+                type: string
+              name:
+                description: |-
+                  Name of the canary.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              provisionedResourceCleanup:
+                description: |-
+                  Setting to control if provisioned resources created by Synthetics are deleted alongside the canary. Default is
+                  AUTOMATIC.
+                enum:
+                - AUTOMATIC
+                - "OFF"
+                type: string
+              replicas:
+                description: List of replica locations for multi-location canary execution
+                items:
+                  description: SyntheticsCanaryReplica is a nested property type of
+                    AWS::Synthetics::Canary.
+                  properties:
+                    canaryState:
+                      description: State of the replica canary (CREATING, READY, RUNNING,
+                        etc.)
+                      type: string
+                    kmsKeyArn:
+                      description: ARN of the KMS key used to encrypt the replica
+                        canary's Lambda function environment variables
+                      type: string
+                    lastModified:
+                      description: Last modified timestamp of the replica
+                      type: number
+                    location:
+                      description: AWS region for the replica (e.g., us-east-1)
+                      type: string
+                    replicationStatus:
+                      description: Replication status for this replica
+                      properties:
+                        state:
+                          description: 'Replication state: InProgress, InSync, or
+                            Inconsistent'
+                          type: string
+                      type: object
+                    resourcesToReplicateTags:
+                      description: Resources to replicate tags to for this replica
+                        (e.g., lambda-function)
+                      items:
+                        type: string
+                      type: array
+                    tags:
+                      description: Tags to apply to this replica canary and optionally
+                        its Lambda function
+                      items:
+                        description: CFNTag is the CloudFormation Tag shape shared
+                          by generated kinds.
+                        properties:
+                          key:
+                            minLength: 1
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                        type: object
+                      type: array
+                    vpcConfig:
+                      description: VPC configuration for this replica location
+                      properties:
+                        ipv6AllowedForDualStack:
+                          description: Allow outbound IPv6 traffic on VPC canaries
+                            that are connected to dual-stack subnets if set to true
+                          type: boolean
+                        securityGroupIds:
+                          items:
+                            type: string
+                          type: array
+                        subnetIds:
+                          items:
+                            type: string
+                          type: array
+                        vpcId:
+                          type: string
+                      required:
+                      - securityGroupIds
+                      - subnetIds
+                      type: object
+                  required:
+                  - location
+                  type: object
+                type: array
+              resourcesToReplicateTags:
+                description: List of resources which canary tags should be replicated
+                  to.
+                items:
+                  type: string
+                type: array
+              runConfig:
+                description: Provide canary run configuration
+                properties:
+                  activeTracing:
+                    description: Enable active tracing if set to true
+                    type: boolean
+                  environmentVariables:
+                    additionalProperties:
+                      type: string
+                    description: Environment variable key-value pairs.
+                    type: object
+                  ephemeralStorage:
+                    description: Provide ephemeralStorage available for canary in
+                      MB
+                    format: int64
+                    type: integer
+                  memoryInMB:
+                    description: Provide maximum memory available for canary in MB
+                    format: int64
+                    type: integer
+                  timeoutInSeconds:
+                    description: Provide maximum canary timeout per run in seconds
+                    format: int64
+                    type: integer
+                type: object
+              runtimeVersion:
+                description: Runtime version of Synthetics Library
+                type: string
+              schedule:
+                description: Frequency to run your canaries
+                properties:
+                  durationInSeconds:
+                    type: string
+                  expression:
+                    type: string
+                  retryConfig:
+                    description: Provide canary auto retry configuration
+                    properties:
+                      maxRetries:
+                        description: maximum times the canary will be retried upon
+                          the scheduled run failure
+                        format: int64
+                        type: integer
+                    required:
+                    - maxRetries
+                    type: object
+                required:
+                - expression
+                type: object
+              startCanaryAfterCreation:
+                description: Runs canary if set to True. Default is False
+                type: boolean
+              successRetentionPeriod:
+                description: Retention period of successful canary runs represented
+                  in number of days
+                format: int64
+                type: integer
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              visualReference:
+                description: Visual reference configuration for visual testing
+                properties:
+                  baseCanaryRunId:
+                    description: Canary run id to be used as base reference for visual
+                      testing
+                    type: string
+                  baseScreenshots:
+                    description: List of screenshots used as base reference for visual
+                      testing
+                    items:
+                      description: SyntheticsCanaryBaseScreenshot is a nested property
+                        type of AWS::Synthetics::Canary.
+                      properties:
+                        ignoreCoordinates:
+                          description: List of coordinates of rectangles to be ignored
+                            during visual testing
+                          items:
+                            type: string
+                          type: array
+                        screenshotName:
+                          description: Name of the screenshot to be used as base reference
+                            for visual testing
+                          type: string
+                      required:
+                      - screenshotName
+                      type: object
+                    type: array
+                  browserType:
+                    enum:
+                    - CHROME
+                    - FIREFOX
+                    type: string
+                required:
+                - baseCanaryRunId
+                type: object
+              visualReferences:
+                description: List of visual references for the canary
+                items:
+                  description: SyntheticsCanaryVisualReference is a nested property
+                    type of AWS::Synthetics::Canary.
+                  properties:
+                    baseCanaryRunId:
+                      description: Canary run id to be used as base reference for
+                        visual testing
+                      type: string
+                    baseScreenshots:
+                      description: List of screenshots used as base reference for
+                        visual testing
+                      items:
+                        description: SyntheticsCanaryBaseScreenshot is a nested property
+                          type of AWS::Synthetics::Canary.
+                        properties:
+                          ignoreCoordinates:
+                            description: List of coordinates of rectangles to be ignored
+                              during visual testing
+                            items:
+                              type: string
+                            type: array
+                          screenshotName:
+                            description: Name of the screenshot to be used as base
+                              reference for visual testing
+                            type: string
+                        required:
+                        - screenshotName
+                        type: object
+                      type: array
+                    browserType:
+                      enum:
+                      - CHROME
+                      - FIREFOX
+                      type: string
+                  required:
+                  - baseCanaryRunId
+                  type: object
+                type: array
+              vpcConfig:
+                description: Provide VPC Configuration if enabled.
+                properties:
+                  ipv6AllowedForDualStack:
+                    description: Allow outbound IPv6 traffic on VPC canaries that
+                      are connected to dual-stack subnets if set to true
+                    type: boolean
+                  securityGroupIds:
+                    items:
+                      type: string
+                    type: array
+                  subnetIds:
+                    items:
+                      type: string
+                    type: array
+                  vpcId:
+                    type: string
+                required:
+                - securityGroupIds
+                - subnetIds
+                type: object
+            required:
+            - artifactS3Location
+            - code
+            - executionRoleArn
+            - name
+            - runtimeVersion
+            - schedule
+            type: object
+          status:
+            description: SyntheticsCanaryStatus is the observed state of AWS::Synthetics::Canary.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  Id of the canary
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              state:
+                description: |-
+                  State of the canary
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: syntheticsgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SyntheticsGroup
+    listKind: SyntheticsGroupList
+    plural: syntheticsgroups
+    singular: syntheticsgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SyntheticsGroup manages AWS::Synthetics::Group through the AWS Cloud Control API. Resource Type definition for
+          AWS::Synthetics::Group
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SyntheticsGroupSpec is the desired state of AWS::Synthetics::Group.
+            properties:
+              name:
+                description: |-
+                  Name of the group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceArns:
+                items:
+                  type: string
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: SyntheticsGroupStatus is the observed state of AWS::Synthetics::Group.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  Id of the group.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

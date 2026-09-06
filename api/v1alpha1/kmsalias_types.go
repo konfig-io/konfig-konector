@@ -32,6 +32,12 @@ type KMSKeyRef struct {
 
 // KMSAliasSpec defines the desired state of a KMS Alias.
 type KMSAliasSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AliasName is the alias name. Must start with "alias/". Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:Pattern=`^alias/[a-zA-Z0-9/_-]+$`
@@ -44,6 +50,9 @@ type KMSAliasSpec struct {
 
 // KMSAliasStatus defines the observed state of KMSAlias.
 type KMSAliasStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the alias.
 	// +optional
 	ARN string `json:"arn,omitempty"`

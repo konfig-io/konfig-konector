@@ -22,6 +22,12 @@ import (
 
 // IAMUserSpec defines the desired state of an AWS IAM User.
 type IAMUserSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// UserName is the name of the IAM user. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
@@ -43,6 +49,9 @@ type IAMUserSpec struct {
 
 // IAMUserStatus defines the observed state of IAMUser.
 type IAMUserStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM user.
 	// +optional
 	ARN string `json:"arn,omitempty"`

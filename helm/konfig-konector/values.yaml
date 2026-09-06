@@ -7,6 +7,21 @@ image:
 
 aws:
   region: us-east-1
+  # Name of a Secret in the release namespace holding AWS_ACCESS_KEY_ID /
+  # AWS_SECRET_ACCESS_KEY (and optionally AWS_SESSION_TOKEN) for clusters
+  # without EKS Pod Identity (k3s, kind, on-prem). Leave empty on EKS.
+  credentialsSecret: ""
+
+# Multi-account. Each entry renders a cluster-scoped AWSProvider that resources
+# select with spec.providerRef (or namespaces select via the
+# aws.konfig.io/provider annotation). roleArn is assumed from the operator role
+# with sts:AssumeRole; see terraform/spoke for the matching spoke role.
+providers: []
+#  - name: prod
+#    roleArn: arn:aws:iam::111122223333:role/konfig-konector-spoke
+#    region: us-east-1
+#    externalId: ""
+#    allowedNamespaces: ["prod-*"]
 
 # Name of the IAM role to bind to the operator ServiceAccount via EKS Pod Identity.
 # You must create this role and association before installing.
@@ -31,3 +46,16 @@ serviceAccount:
 
 # Install CRDs as part of the Helm release.
 installCRDs: true
+
+# Validating admission webhook: rejects resources whose spec.providerRef names
+# a missing AWSProvider or one whose allowedNamespaces exclude the namespace.
+# Needs a TLS cert for the webhook Service. With certManager: true a
+# cert-manager Certificate + self-signed Issuer are created and the CA is
+# injected into the webhook configuration; otherwise supply a Secret
+# (tls.crt/tls.key) and the base64 CA bundle yourself.
+webhook:
+  enabled: false
+  certManager: true
+  secretName: konfig-konector-webhook-tls
+  caBundle: ""
+  failurePolicy: Fail

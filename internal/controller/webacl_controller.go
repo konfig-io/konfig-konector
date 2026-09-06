@@ -33,6 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 	wafhelper "github.com/konfig-io/konfig-konector/internal/aws/wafv2"
 )
 
@@ -40,7 +41,7 @@ import (
 type WebACLReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	WAFv2Client *awswafv2.Client
+	WAFv2Client *multi.WAFv2
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=webacls,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *WebACLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	wa := &awsv1alpha1.WebACL{}
 	if err := r.Get(ctx, req.NamespacedName, wa); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, wa); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !wa.DeletionTimestamp.IsZero() {
@@ -77,6 +82,10 @@ func (r *WebACLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		if err := r.Update(ctx, wa); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileWebACL(ctx, wa); err != nil {

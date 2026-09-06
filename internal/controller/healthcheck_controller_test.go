@@ -113,7 +113,7 @@ func hcScheme(t *testing.T) *runtime.Scheme {
 
 func testHealthCheck() *awsv1alpha1.HealthCheck {
 	return &awsv1alpha1.HealthCheck{
-		ObjectMeta: metav1.ObjectMeta{Name: "hc1", Namespace: "default", UID: "uid-hc", Generation: 1},
+		ObjectMeta: metav1.ObjectMeta{Name: "hc1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-hc", Generation: 1},
 		Spec: awsv1alpha1.HealthCheckSpec{
 			Type:             "HTTPS",
 			FQDN:             "app.example.com",

@@ -22,6 +22,12 @@ import (
 
 // PodIdentityAssociationSpec defines the desired state of an EKS Pod Identity Association.
 type PodIdentityAssociationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterName is the name of the EKS cluster.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterName is immutable"
@@ -53,6 +59,9 @@ type PodIdentityAssociationSpec struct {
 
 // PodIdentityAssociationStatus defines the observed state of PodIdentityAssociation.
 type PodIdentityAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AssociationID is the EKS Pod Identity association identifier.
 	// +optional
 	AssociationID string `json:"associationId,omitempty"`

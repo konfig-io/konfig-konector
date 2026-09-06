@@ -1,0 +1,413 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: osispipelines.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: OSISPipeline
+    listKind: OSISPipelineList
+    plural: osispipelines
+    singular: osispipeline
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          OSISPipeline manages AWS::OSIS::Pipeline through the AWS Cloud Control API. An OpenSearch Ingestion Service
+          Data Prepper pipeline running Data Prepper.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: OSISPipelineSpec is the desired state of AWS::OSIS::Pipeline.
+            properties:
+              bufferOptions:
+                description: OSISPipelineBufferOptions is a nested property type of
+                  AWS::OSIS::Pipeline.
+                properties:
+                  persistentBufferEnabled:
+                    description: Whether persistent buffering should be enabled.
+                    type: boolean
+                required:
+                - persistentBufferEnabled
+                type: object
+              encryptionAtRestOptions:
+                description: OSISPipelineEncryptionAtRestOptions is a nested property
+                  type of AWS::OSIS::Pipeline.
+                properties:
+                  kmsKeyArn:
+                    description: The KMS key to use for encrypting data. By default
+                      an AWS owned key is used
+                    type: string
+                required:
+                - kmsKeyArn
+                type: object
+              logPublishingOptions:
+                description: OSISPipelineLogPublishingOptions is a nested property
+                  type of AWS::OSIS::Pipeline.
+                properties:
+                  cloudWatchLogDestination:
+                    description: The destination for OpenSearch Ingestion Service
+                      logs sent to Amazon CloudWatch.
+                    properties:
+                      logGroup:
+                        maxLength: 512
+                        minLength: 1
+                        type: string
+                    required:
+                    - logGroup
+                    type: object
+                  isLoggingEnabled:
+                    description: Whether logs should be published.
+                    type: boolean
+                type: object
+              maxUnits:
+                description: The maximum pipeline capacity, in Ingestion OpenSearch
+                  Compute Units (OCUs).
+                format: int64
+                maximum: 384
+                minimum: 1
+                type: integer
+              minUnits:
+                description: The minimum pipeline capacity, in Ingestion OpenSearch
+                  Compute Units (OCUs).
+                format: int64
+                maximum: 384
+                minimum: 1
+                type: integer
+              pipelineConfigurationBody:
+                description: The Data Prepper pipeline configuration.
+                maxLength: 100000
+                minLength: 1
+                type: string
+              pipelineName:
+                description: |-
+                  Name of the OpenSearch Ingestion Service pipeline to create. Pipeline names are unique across the pipelines
+                  owned by an account within an AWS Region.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 28
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: pipelineName is immutable
+                  rule: self == oldSelf
+              pipelineRoleArn:
+                description: The Pipeline Role (ARN) for the pipeline.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourcePolicy:
+                description: OSISPipelineResourcePolicy is a nested property type
+                  of AWS::OSIS::Pipeline.
+                properties:
+                  policy:
+                    x-kubernetes-preserve-unknown-fields: true
+                required:
+                - policy
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              vpcOptions:
+                description: OSISPipelineVpcOptions is a nested property type of AWS::OSIS::Pipeline.
+                properties:
+                  securityGroupIds:
+                    description: A list of security groups associated with the VPC
+                      endpoint.
+                    items:
+                      type: string
+                    type: array
+                  subnetIds:
+                    description: A list of subnet IDs associated with the VPC endpoint.
+                    items:
+                      type: string
+                    type: array
+                  vpcAttachmentOptions:
+                    description: Options for attaching a VPC to the pipeline.
+                    properties:
+                      attachToVpc:
+                        description: Whether the pipeline should be attached to the
+                          provided VPC
+                        type: boolean
+                      cidrBlock:
+                        description: The CIDR block to be reserved for OpenSearch
+                          Ingestion to create elastic network interfaces (ENIs).
+                        type: string
+                    required:
+                    - attachToVpc
+                    - cidrBlock
+                    type: object
+                  vpcEndpointManagement:
+                    description: |-
+                      Defines whether you or Amazon OpenSearch Ingestion service create and manage the VPC endpoint configured for
+                      the pipeline.
+                    enum:
+                    - CUSTOMER
+                    - SERVICE
+                    type: string
+                required:
+                - subnetIds
+                type: object
+            required:
+            - maxUnits
+            - minUnits
+            - pipelineConfigurationBody
+            - pipelineName
+            type: object
+          status:
+            description: OSISPipelineStatus is the observed state of AWS::OSIS::Pipeline.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              ingestEndpointUrls:
+                description: |-
+                  A list of endpoints that can be used for ingesting data into a pipeline
+                  Read-only: reported by AWS after creation.
+                items:
+                  type: string
+                type: array
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              pipelineArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the pipeline.
+                  Read-only: reported by AWS after creation.
+                maxLength: 78
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              vpcEndpointService:
+                description: |-
+                  The VPC endpoint service name for the pipeline.
+                  Read-only: reported by AWS after creation.
+                maxLength: 128
+                type: string
+              vpcEndpoints:
+                description: |-
+                  The VPC interface endpoints that have access to the pipeline.
+                  Read-only: reported by AWS after creation.
+                items:
+                  description: OSISPipelineVpcEndpoint is a nested property type of
+                    AWS::OSIS::Pipeline.
+                  properties:
+                    vpcEndpointId:
+                      description: The unique identifier of the endpoint.
+                      type: string
+                    vpcId:
+                      description: The ID for your VPC. AWS Privatelink generates
+                        this value when you create a VPC.
+                      type: string
+                    vpcOptions:
+                      description: OSISPipelineVpcOptions is a nested property type
+                        of AWS::OSIS::Pipeline.
+                      properties:
+                        securityGroupIds:
+                          description: A list of security groups associated with the
+                            VPC endpoint.
+                          items:
+                            type: string
+                          type: array
+                        subnetIds:
+                          description: A list of subnet IDs associated with the VPC
+                            endpoint.
+                          items:
+                            type: string
+                          type: array
+                        vpcAttachmentOptions:
+                          description: Options for attaching a VPC to the pipeline.
+                          properties:
+                            attachToVpc:
+                              description: Whether the pipeline should be attached
+                                to the provided VPC
+                              type: boolean
+                            cidrBlock:
+                              description: The CIDR block to be reserved for OpenSearch
+                                Ingestion to create elastic network interfaces (ENIs).
+                              type: string
+                          required:
+                          - attachToVpc
+                          - cidrBlock
+                          type: object
+                        vpcEndpointManagement:
+                          description: |-
+                            Defines whether you or Amazon OpenSearch Ingestion service create and manage the VPC endpoint configured for
+                            the pipeline.
+                          enum:
+                          - CUSTOMER
+                          - SERVICE
+                          type: string
+                      required:
+                      - subnetIds
+                      type: object
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

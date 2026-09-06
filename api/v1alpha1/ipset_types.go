@@ -22,6 +22,12 @@ import (
 
 // IPSetSpec defines the desired state of a WAFv2 IPSet.
 type IPSetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the IP set. Immutable.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
@@ -52,6 +58,9 @@ type IPSetSpec struct {
 
 // IPSetStatus defines the observed state of IPSet.
 type IPSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the IPSet ID.
 	// +optional
 	ID string `json:"id,omitempty"`

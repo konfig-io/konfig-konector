@@ -80,7 +80,7 @@ func TestLambdaProvisionedConcurrencyReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-pc", Namespace: "default"}}
 	pcCR := func(mutate ...func(*awsv1alpha1.LambdaProvisionedConcurrency)) *awsv1alpha1.LambdaProvisionedConcurrency {
 		pc := &awsv1alpha1.LambdaProvisionedConcurrency{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-pc", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-pc", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LambdaProvisionedConcurrencySpec{
 				FunctionName:                    "my-fn",
 				Qualifier:                       "live",
@@ -181,7 +181,7 @@ func TestLambdaEventInvokeConfigReconcile(t *testing.T) {
 	fnARN := "arn:aws:lambda:us-east-1:123456789012:function:my-fn:$LATEST"
 	eicCR := func(mutate ...func(*awsv1alpha1.LambdaEventInvokeConfig)) *awsv1alpha1.LambdaEventInvokeConfig {
 		eic := &awsv1alpha1.LambdaEventInvokeConfig{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-eic", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-eic", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LambdaEventInvokeConfigSpec{
 				FunctionName:             "my-fn",
 				MaximumRetryAttempts:     aws.Int32(1),

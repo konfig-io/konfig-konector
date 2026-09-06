@@ -36,6 +36,12 @@ type DBParameter struct {
 
 // DBParameterGroupSpec defines the desired state of an RDS DB Parameter Group.
 type DBParameterGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DBParameterGroupName is the name of the parameter group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -63,6 +69,9 @@ type DBParameterGroupSpec struct {
 
 // DBParameterGroupStatus defines the observed state of DBParameterGroup.
 type DBParameterGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the DB parameter group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

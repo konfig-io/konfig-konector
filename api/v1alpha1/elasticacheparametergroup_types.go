@@ -32,6 +32,12 @@ type ElastiCacheParameter struct {
 
 // ElastiCacheParameterGroupSpec defines the desired state of an ElastiCache Parameter Group.
 type ElastiCacheParameterGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// CacheParameterGroupName is the name of the parameter group.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="cacheParameterGroupName is immutable"
@@ -57,6 +63,9 @@ type ElastiCacheParameterGroupSpec struct {
 
 // ElastiCacheParameterGroupStatus defines the observed state of ElastiCacheParameterGroup.
 type ElastiCacheParameterGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the parameter group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

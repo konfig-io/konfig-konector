@@ -30,6 +30,12 @@ type CloudWatchDimension struct {
 
 // CloudWatchAlarmSpec defines the desired state of a CloudWatch Alarm.
 type CloudWatchAlarmSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AlarmName is the name of the alarm.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="alarmName is immutable"
 	AlarmName string `json:"alarmName"`
@@ -106,6 +112,9 @@ type CloudWatchAlarmSpec struct {
 
 // CloudWatchAlarmStatus defines the observed state of CloudWatchAlarm.
 type CloudWatchAlarmStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AlarmARN is the ARN of the alarm.
 	// +optional
 	AlarmARN string `json:"alarmArn,omitempty"`

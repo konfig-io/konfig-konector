@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	cfhelper "github.com/konfig-io/konfig-konector/internal/aws/cloudfront"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // CloudFrontCachePolicyReconciler reconciles CloudFrontCachePolicy objects.
 type CloudFrontCachePolicyReconciler struct {
 	client.Client
 	Scheme           *runtime.Scheme
-	CloudFrontClient *awscf.Client
+	CloudFrontClient *multi.CloudFront
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=cloudfrontcachepolicies,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *CloudFrontCachePolicyReconciler) Reconcile(ctx context.Context, req ctr
 	obj := &awsv1alpha1.CloudFrontCachePolicy{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *CloudFrontCachePolicyReconciler) Reconcile(ctx context.Context, req ctr
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileCachePolicy(ctx, obj); err != nil {
@@ -90,6 +99,15 @@ func buildCachePolicyConfig(obj *awsv1alpha1.CloudFrontCachePolicy) *cftypes.Cac
 	cfg := &cftypes.CachePolicyConfig{
 		Name:   aws.String(obj.Spec.Name),
 		MinTTL: aws.Int64(obj.Spec.MinTTL),
+		// Required by UpdateCachePolicy (CreateCachePolicy tolerates its
+		// absence); the conservative default forwards nothing to the cache key.
+		ParametersInCacheKeyAndForwardedToOrigin: &cftypes.ParametersInCacheKeyAndForwardedToOrigin{
+			EnableAcceptEncodingGzip:   aws.Bool(false),
+			EnableAcceptEncodingBrotli: aws.Bool(false),
+			HeadersConfig:              &cftypes.CachePolicyHeadersConfig{HeaderBehavior: cftypes.CachePolicyHeaderBehaviorNone},
+			CookiesConfig:              &cftypes.CachePolicyCookiesConfig{CookieBehavior: cftypes.CachePolicyCookieBehaviorNone},
+			QueryStringsConfig:         &cftypes.CachePolicyQueryStringsConfig{QueryStringBehavior: cftypes.CachePolicyQueryStringBehaviorNone},
+		},
 	}
 	if obj.Spec.DefaultTTL != nil {
 		cfg.DefaultTTL = obj.Spec.DefaultTTL
@@ -113,13 +131,15 @@ func (r *CloudFrontCachePolicyReconciler) reconcileCachePolicy(ctx context.Conte
 		}
 		if err == nil && getOut.CachePolicy != nil {
 			obj.Status.ETag = aws.ToString(getOut.ETag)
-			_, err := r.CloudFrontClient.UpdateCachePolicy(ctx, &awscf.UpdateCachePolicyInput{
-				Id:                aws.String(obj.Status.PolicyID),
-				IfMatch:           aws.String(obj.Status.ETag),
-				CachePolicyConfig: buildCachePolicyConfig(obj),
-			})
-			if err != nil {
-				return fmt.Errorf("update cloudfront cache policy: %w", err)
+			// CloudFront control-plane APIs are rate limited; only update on spec change.
+			if obj.Status.ObservedGeneration != obj.Generation {
+				if _, err := r.CloudFrontClient.UpdateCachePolicy(ctx, &awscf.UpdateCachePolicyInput{
+					Id:                aws.String(obj.Status.PolicyID),
+					IfMatch:           aws.String(obj.Status.ETag),
+					CachePolicyConfig: buildCachePolicyConfig(obj),
+				}); err != nil {
+					return fmt.Errorf("update cloudfront cache policy: %w", err)
+				}
 			}
 			obj.Status.ObservedGeneration = obj.Generation
 			now := metav1.Now()

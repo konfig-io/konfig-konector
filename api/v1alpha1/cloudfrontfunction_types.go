@@ -22,6 +22,12 @@ import (
 
 // CloudFrontFunctionSpec defines the desired state of a CloudFront Function.
 type CloudFrontFunctionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the function.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -41,6 +47,9 @@ type CloudFrontFunctionSpec struct {
 
 // CloudFrontFunctionStatus defines the observed state of CloudFrontFunction.
 type CloudFrontFunctionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionARN is the ARN of the function.
 	// +optional
 	FunctionARN string `json:"functionArn,omitempty"`

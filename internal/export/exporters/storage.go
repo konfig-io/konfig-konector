@@ -87,7 +87,7 @@ func listOwnedBuckets(ctx context.Context, clients *awsclient.Clients) ([]string
 	if err != nil {
 		return nil, fmt.Errorf("list buckets: %w", err)
 	}
-	region := clients.S3.Options().Region
+	region := clients.Config.Region
 	var names []string
 	for _, b := range out.Buckets {
 		name := aws.ToString(b.Name)
@@ -112,7 +112,7 @@ func exportS3Buckets(ctx context.Context, clients *awsclient.Clients, opts *expo
 	if err != nil {
 		return nil, err
 	}
-	region := clients.S3.Options().Region
+	region := clients.Config.Region
 	var objs []client.Object
 	for _, name := range names {
 		b := &awsv1alpha1.S3Bucket{
@@ -326,11 +326,12 @@ func s3LifecycleRules(rules []s3types.LifecycleRule) []awsv1alpha1.S3LifecycleRu
 			Status: string(r.Status),
 			Prefix: aws.ToString(r.Prefix),
 		}
-		switch f := r.Filter.(type) {
-		case *s3types.LifecycleRuleFilterMemberPrefix:
-			rule.Prefix = f.Value
-		case *s3types.LifecycleRuleFilterMemberAnd:
-			rule.Prefix = aws.ToString(f.Value.Prefix)
+		if f := r.Filter; f != nil {
+			if f.Prefix != nil {
+				rule.Prefix = aws.ToString(f.Prefix)
+			} else if f.And != nil {
+				rule.Prefix = aws.ToString(f.And.Prefix)
+			}
 		}
 		if r.Expiration != nil {
 			rule.ExpirationDays = r.Expiration.Days
@@ -531,11 +532,12 @@ func exportS3BucketReplications(ctx context.Context, clients *awsclient.Clients,
 				Priority: rr.Priority,
 			}
 			// The CRD only models a prefix filter; tag filters are dropped.
-			switch f := rr.Filter.(type) {
-			case *s3types.ReplicationRuleFilterMemberPrefix:
-				rule.Prefix = f.Value
-			case *s3types.ReplicationRuleFilterMemberAnd:
-				rule.Prefix = aws.ToString(f.Value.Prefix)
+			if f := rr.Filter; f != nil {
+				if f.Prefix != nil {
+					rule.Prefix = aws.ToString(f.Prefix)
+				} else if f.And != nil {
+					rule.Prefix = aws.ToString(f.And.Prefix)
+				}
 			}
 			if rr.Destination != nil {
 				rule.Destination = awsv1alpha1.S3ReplicationDestination{

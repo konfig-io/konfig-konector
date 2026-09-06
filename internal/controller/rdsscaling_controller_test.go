@@ -106,7 +106,7 @@ func TestRDSGlobalClusterReconcile(t *testing.T) {
 	gcARN := "arn:aws:rds::123456789012:global-cluster:my-global"
 	gcCR := func(mutate ...func(*awsv1alpha1.RDSGlobalCluster)) *awsv1alpha1.RDSGlobalCluster {
 		gc := &awsv1alpha1.RDSGlobalCluster{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-global", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-global", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.RDSGlobalClusterSpec{
 				GlobalClusterIdentifier: "my-global",
 				Engine:                  "aurora-postgresql",
@@ -212,7 +212,7 @@ func TestRDSEventSubscriptionReconcile(t *testing.T) {
 	topicARN := "arn:aws:sns:us-east-1:123456789012:rds-events"
 	esCR := func(mutate ...func(*awsv1alpha1.RDSEventSubscription)) *awsv1alpha1.RDSEventSubscription {
 		es := &awsv1alpha1.RDSEventSubscription{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-sub", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-sub", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.RDSEventSubscriptionSpec{
 				SubscriptionName: "my-sub",
 				SnsTopicRef:      awsv1alpha1.SNSTopicRef{ARN: topicARN},

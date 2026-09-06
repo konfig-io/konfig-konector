@@ -32,6 +32,12 @@ type ResolverIPAddress struct {
 
 // ResolverEndpointSpec defines the desired state of a Route53 Resolver endpoint.
 type ResolverEndpointSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the friendly name of the endpoint.
 	Name string `json:"name"`
 
@@ -53,6 +59,9 @@ type ResolverEndpointSpec struct {
 
 // ResolverEndpointStatus defines the observed state of ResolverEndpoint.
 type ResolverEndpointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// EndpointID is the unique identifier of the endpoint.
 	// +optional
 	EndpointID string `json:"endpointID,omitempty"`

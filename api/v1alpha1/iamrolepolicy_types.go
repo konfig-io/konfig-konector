@@ -22,6 +22,12 @@ import (
 
 // IAMRolePolicySpec defines the desired state of an inline IAM policy on a role.
 type IAMRolePolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RoleRef references the IAMRole CR that owns this inline policy.
 	RoleRef RoleRef `json:"roleRef"`
 
@@ -38,6 +44,9 @@ type IAMRolePolicySpec struct {
 
 // IAMRolePolicyStatus defines the observed state of IAMRolePolicy.
 type IAMRolePolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RoleARN is the resolved IAM role ARN.
 	// +optional
 	RoleARN string `json:"roleArn,omitempty"`

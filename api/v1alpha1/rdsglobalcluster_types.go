@@ -22,6 +22,12 @@ import (
 
 // RDSGlobalClusterSpec defines the desired state of an Aurora global cluster.
 type RDSGlobalClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GlobalClusterIdentifier is the identifier of the global cluster.
 	// Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
@@ -53,6 +59,9 @@ type RDSGlobalClusterSpec struct {
 
 // RDSGlobalClusterStatus defines the observed state of RDSGlobalCluster.
 type RDSGlobalClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the global cluster.
 	// +optional
 	ARN string `json:"arn,omitempty"`

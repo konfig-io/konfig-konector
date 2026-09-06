@@ -22,6 +22,12 @@ import (
 
 // ActivitySpec defines the desired state of a Step Functions activity.
 type ActivitySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the activity. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -33,6 +39,9 @@ type ActivitySpec struct {
 
 // ActivityStatus defines the observed state of Activity.
 type ActivityStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ActivityARN is the ARN of the activity.
 	// +optional
 	ActivityARN string `json:"activityARN,omitempty"`

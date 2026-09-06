@@ -76,6 +76,12 @@ type ECSContainerDefinition struct {
 // ECSTaskDefinitionSpec defines the desired state of an ECS Task Definition.
 // A new revision is registered whenever the spec changes.
 type ECSTaskDefinitionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Family is the task definition family name. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="family is immutable"
@@ -124,6 +130,9 @@ type ECSTaskDefinitionSpec struct {
 
 // ECSTaskDefinitionStatus defines the observed state of ECSTaskDefinition.
 type ECSTaskDefinitionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TaskDefinitionARN is the full ARN including revision of the latest registered task definition.
 	// +optional
 	TaskDefinitionARN string `json:"taskDefinitionArn,omitempty"`

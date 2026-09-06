@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VPC Lattice — konfig-konector Docs</title>
-  <meta name="description" content="API reference for LatticeListener, LatticeService, LatticeServiceNetwork, LatticeServiceNetworkServiceAssociation, LatticeServiceNetworkVpcAssociation, LatticeTargetGroup." />
+  <meta name="description" content="API reference for LatticeListener, LatticeService, LatticeServiceNetwork, LatticeServiceNetworkServiceAssociation, LatticeServiceNetworkVpcAssociation, LatticeTargetGroup, VpcLatticeAccessLogSubscription, VpcLatticeAuthPolicy, VpcLatticeDomainVerification, VpcLatticeResourceConfiguration, VpcLatticeResourceGateway, VpcLatticeResourcePolicy, VpcLatticeRule, VpcLatticeServiceNetworkResourceAssociation." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">VPC Lattice</h1>
-    <p class="docs-page-subtitle">6 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">14 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -74,6 +74,9 @@ spec:
   name: example-latticelistener
   port: 1
   protocol: HTTP
+  providerRef:
+    name: example-latticelistener
+    region: us-east-1
   serviceRef:
     name: example-service
   tags:
@@ -95,6 +98,9 @@ spec:
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the listener.</td></tr>
 <tr><td><code>port</code></td><td>integer</td><td>—</td><td>Port on which the listener accepts traffic.</td></tr>
 <tr><td><code>protocol</code></td><td>enum</td><td><span class="req">yes</span></td><td>Protocol of the listener. Allowed: <code>HTTP, HTTPS</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>serviceRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceRef references the service the listener belongs to.</td></tr>
 <tr><td><code>serviceRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service ID or ARN.</td></tr>
 <tr><td><code>serviceRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeService CR in the same namespace.</td></tr>
@@ -105,6 +111,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the listener.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -139,6 +149,9 @@ spec:
   certificateArn: arn:aws:iam::123456789012:role/example-role
   customDomainName: example-latticeservice
   name: example-latticeservice
+  providerRef:
+    name: example-latticeservice
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -151,6 +164,9 @@ spec:
 <tr><td><code>certificateArn</code></td><td>string</td><td>—</td><td>CertificateARN is the ARN of the ACM certificate for the custom domain.</td></tr>
 <tr><td><code>customDomainName</code></td><td>string</td><td>—</td><td>CustomDomainName is the custom domain name of the service.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the service.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 </tbody></table></div>
 
@@ -158,6 +174,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the service.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -191,6 +211,9 @@ metadata:
 spec:
   authType: NONE
   name: example-latticeservicenetwork
+  providerRef:
+    name: example-latticeservicenetwork
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -201,6 +224,9 @@ spec:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>authType</code></td><td>enum</td><td>—</td><td>AuthType determines how clients are authenticated. Allowed: <code>NONE, AWS_IAM</code></td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the service network.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 </tbody></table></div>
 
@@ -208,6 +234,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the service network.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -237,6 +267,9 @@ metadata:
   name: example-latticeservicenetworkserviceassociation
   namespace: default
 spec:
+  providerRef:
+    name: example-latticeservicenetworkserviceassociation
+    region: us-east-1
   serviceNetworkRef:
     name: example-servicenetwork
   serviceRef:
@@ -249,6 +282,9 @@ spec:
       <h3>Spec</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>serviceNetworkRef</code></td><td>object</td><td><span class="req">yes</span></td><td>ServiceNetworkRef references the service network to associate.</td></tr>
 <tr><td><code>serviceNetworkRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS service network ID or ARN.</td></tr>
 <tr><td><code>serviceNetworkRef.name</code></td><td>string</td><td>—</td><td>Name of a LatticeServiceNetwork CR in the same namespace.</td></tr>
@@ -262,6 +298,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the association.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -292,6 +332,9 @@ metadata:
   name: example-latticeservicenetworkvpcassociation
   namespace: default
 spec:
+  providerRef:
+    name: example-latticeservicenetworkvpcassociation
+    region: us-east-1
   securityGroupRefs:
   - name: example-securitygrouprefs
   serviceNetworkRef:
@@ -306,6 +349,9 @@ spec:
       <h3>Spec</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>securityGroupRefs</code></td><td>array&lt;object&gt;</td><td>—</td><td>SecurityGroupRefs are security groups to apply to the association.</td></tr>
 <tr><td><code>securityGroupRefs[].id</code></td><td>string</td><td>—</td><td>ID is a direct AWS Security Group ID (e.g.</td></tr>
 <tr><td><code>securityGroupRefs[].name</code></td><td>string</td><td>—</td><td>Name of a SecurityGroup CR in the same namespace.</td></tr>
@@ -322,6 +368,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the association.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -361,6 +411,9 @@ spec:
     vpcRef:
       name: example-vpc
   name: example-latticetargetgroup
+  providerRef:
+    name: example-latticetargetgroup
+    region: us-east-1
   tags:
     environment: dev
     team: platform
@@ -380,6 +433,9 @@ spec:
 <tr><td><code>config.vpcRef.id</code></td><td>string</td><td>—</td><td>ID is a direct AWS VPC ID (e.g.</td></tr>
 <tr><td><code>config.vpcRef.name</code></td><td>string</td><td>—</td><td>Name of a VPC CR in the same namespace.</td></tr>
 <tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of the target group.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>tags</code></td><td>map&lt;string&gt;</td><td>—</td><td>Tags are AWS resource tags to apply.</td></tr>
 <tr><td><code>type</code></td><td>enum</td><td><span class="req">yes</span></td><td>Type of target group. Allowed: <code>INSTANCE, IP, LAMBDA, ALB</code></td></tr>
 </tbody></table></div>
@@ -388,6 +444,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the target group.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -399,6 +459,590 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the lifecycle status reported by AWS.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeaccesslogsubscription" class="resource-section">
+      <h2>VpcLatticeAccessLogSubscription <a href="#vpclatticeaccesslogsubscription" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::AccessLogSubscription</span></h2>
+      <p class="resource-desc">VpcLatticeAccessLogSubscription manages AWS::VpcLattice::AccessLogSubscription through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeaccesslogsubscriptions</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeaccesslogsubscription.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeAccessLogSubscription — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeaccesslogsubscription
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeAccessLogSubscription
+metadata:
+  name: example-vpclatticeaccesslogsubscription
+  namespace: default
+spec:
+  destinationArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-vpclatticeaccesslogsubscription
+    region: us-east-1
+  resourceIdentifier: example
+  serviceNetworkLogType: SERVICE
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>destinationArn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceIdentifier</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>serviceNetworkLogType</code></td><td>enum</td><td>—</td><td>Allowed: <code>SERVICE, RESOURCE</code></td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>resourceArn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>resourceId</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeauthpolicy" class="resource-section">
+      <h2>VpcLatticeAuthPolicy <a href="#vpclatticeauthpolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::AuthPolicy</span></h2>
+      <p class="resource-desc">VpcLatticeAuthPolicy manages AWS::VpcLattice::AuthPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeauthpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeauthpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeAuthPolicy — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeauthpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeAuthPolicy
+metadata:
+  name: example-vpclatticeauthpolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-vpclatticeauthpolicy
+    region: us-east-1
+  resourceIdentifier: example-xxxxxxxxx
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policy</code></td><td>object</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>Read-only: reported by AWS after creation. Allowed: <code>Active, Inactive</code></td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticedomainverification" class="resource-section">
+      <h2>VpcLatticeDomainVerification <a href="#vpclatticedomainverification" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::DomainVerification</span></h2>
+      <p class="resource-desc">VpcLatticeDomainVerification manages AWS::VpcLattice::DomainVerification through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticedomainverifications</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticedomainverification.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeDomainVerification — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticedomainverification
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeDomainVerification
+metadata:
+  name: example-vpclatticedomainverification
+  namespace: default
+spec:
+  domainName: example-vpclatticedomainverification
+  providerRef:
+    name: example-vpclatticedomainverification
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>domainName</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>status</code></td><td>enum</td><td>—</td><td>Read-only: reported by AWS after creation. Allowed: <code>VERIFIED, PENDING, VERIFICATION_TIMED_OUT</code></td></tr>
+<tr><td><code>txtMethodConfig</code></td><td>object</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>txtMethodConfig.name</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>txtMethodConfig.value</code></td><td>string</td><td>—</td><td></td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeresourceconfiguration" class="resource-section">
+      <h2>VpcLatticeResourceConfiguration <a href="#vpclatticeresourceconfiguration" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::ResourceConfiguration</span></h2>
+      <p class="resource-desc">VpcLatticeResourceConfiguration manages AWS::VpcLattice::ResourceConfiguration through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeresourceconfigurations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeresourceconfiguration.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeResourceConfiguration — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeresourceconfiguration
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeResourceConfiguration
+metadata:
+  name: example-vpclatticeresourceconfiguration
+  namespace: default
+spec:
+  allowAssociationToSharableServiceNetwork: false
+  customDomainName: example-vpclatticeresourceconfiguration
+  groupDomain: example
+  name: example-vpclatticeresourceconfiguration
+  portRanges:
+  - example
+  protocolType: TCP
+  providerRef:
+    name: example-vpclatticeresourceconfiguration
+    region: us-east-1
+  resourceConfigurationAuthType: NONE
+  resourceConfigurationType: GROUP
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>allowAssociationToSharableServiceNetwork</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>customDomainName</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>domainVerificationId</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>groupDomain</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>portRanges</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>protocolType</code></td><td>enum</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>TCP</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceConfigurationAuthType</code></td><td>enum</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>NONE, AWS_IAM</code></td></tr>
+<tr><td><code>resourceConfigurationDefinition</code></td><td>object</td><td>—</td><td></td></tr>
+<tr><td><code>resourceConfigurationGroupId</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>resourceConfigurationType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>GROUP, CHILD, SINGLE, ARN</code></td></tr>
+<tr><td><code>resourceGatewayId</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeresourcegateway" class="resource-section">
+      <h2>VpcLatticeResourceGateway <a href="#vpclatticeresourcegateway" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::ResourceGateway</span></h2>
+      <p class="resource-desc">VpcLatticeResourceGateway manages AWS::VpcLattice::ResourceGateway through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeresourcegateways</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeresourcegateway.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeResourceGateway — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeresourcegateway
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeResourceGateway
+metadata:
+  name: example-vpclatticeresourcegateway
+  namespace: default
+spec:
+  ipAddressType: IPV4
+  ipv4AddressesPerEni: 1
+  name: example-vpclatticeresourcegateway
+  providerRef:
+    name: example-vpclatticeresourcegateway
+    region: us-east-1
+  resourceConfigDnsResolution: IN_VPC
+  subnetIds:
+  - example
+  tags:
+  - key: example
+    value: example
+  vpcIdentifier: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ipAddressType</code></td><td>enum</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>IPV4, IPV6, DUALSTACK</code></td></tr>
+<tr><td><code>ipv4AddressesPerEni</code></td><td>integer</td><td>—</td><td>The number of IPv4 addresses to allocate per ENI for the resource gateway</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceConfigDnsResolution</code></td><td>enum</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource. Allowed: <code>IN_VPC, PUBLIC</code></td></tr>
+<tr><td><code>securityGroupIds</code></td><td>array&lt;object&gt;</td><td>—</td><td>The ID of one or more security groups to associate with the endpoint network interface.</td></tr>
+<tr><td><code>subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>The ID of one or more subnets in which to create an endpoint network interface.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>vpcIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeresourcepolicy" class="resource-section">
+      <h2>VpcLatticeResourcePolicy <a href="#vpclatticeresourcepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::ResourcePolicy</span></h2>
+      <p class="resource-desc">VpcLatticeResourcePolicy manages AWS::VpcLattice::ResourcePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeresourcepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeresourcepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeResourcePolicy — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeresourcepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeResourcePolicy
+metadata:
+  name: example-vpclatticeresourcepolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-vpclatticeresourcepolicy
+    region: us-east-1
+  resourceArn: arn:aws:iam::123456789012:role/example-role
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policy</code></td><td>object</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceArn</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticerule" class="resource-section">
+      <h2>VpcLatticeRule <a href="#vpclatticerule" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::Rule</span></h2>
+      <p class="resource-desc">VpcLatticeRule manages AWS::VpcLattice::Rule through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticerules</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticerule.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeRule — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticerule
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeRule
+metadata:
+  name: example-vpclatticerule
+  namespace: default
+spec:
+  action:
+    fixedResponse:
+      statusCode: 100
+    forward:
+      targetGroups:
+      - targetGroupIdentifier: example-xxxxxxxxxxxx
+        weight: 1
+  listenerIdentifier: example
+  match:
+    httpMatch:
+      headerMatches:
+      - caseSensitive: false
+        match:
+          contains: example
+          exact: example
+          prefix: example
+        name: example-vpclatticerule
+      method: CONNECT
+      pathMatch:
+        caseSensitive: false
+        match:
+          exact: example
+          prefix: example
+  name: example-vpclatticerule
+  priority: 1
+  providerRef:
+    name: example-vpclatticerule
+    region: us-east-1
+  serviceIdentifier: example
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>action</code></td><td>object</td><td><span class="req">yes</span></td><td>VpcLatticeRuleAction is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>action.fixedResponse</code></td><td>object</td><td>—</td><td>VpcLatticeRuleFixedResponse is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>action.fixedResponse.statusCode</code></td><td>integer</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>action.forward</code></td><td>object</td><td>—</td><td>VpcLatticeRuleForward is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>action.forward.targetGroups</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>action.forward.targetGroups[].targetGroupIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>action.forward.targetGroups[].weight</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>listenerIdentifier</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>match</code></td><td>object</td><td><span class="req">yes</span></td><td>VpcLatticeRuleMatch is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>match.httpMatch</code></td><td>object</td><td><span class="req">yes</span></td><td>VpcLatticeRuleHttpMatch is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>match.httpMatch.headerMatches</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].caseSensitive</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].match</code></td><td>object</td><td><span class="req">yes</span></td><td>VpcLatticeRuleHeaderMatchType is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].match.contains</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].match.exact</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].match.prefix</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.headerMatches[].name</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>match.httpMatch.method</code></td><td>enum</td><td>—</td><td>Allowed: <code>CONNECT, DELETE, GET, HEAD, OPTIONS, POST, PUT, TRACE</code></td></tr>
+<tr><td><code>match.httpMatch.pathMatch</code></td><td>object</td><td>—</td><td>VpcLatticeRulePathMatch is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>match.httpMatch.pathMatch.caseSensitive</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.pathMatch.match</code></td><td>object</td><td><span class="req">yes</span></td><td>VpcLatticeRulePathMatchType is a nested property type of AWS::VpcLattice::Rule.</td></tr>
+<tr><td><code>match.httpMatch.pathMatch.match.exact</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>match.httpMatch.pathMatch.match.prefix</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>name</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>priority</code></td><td>integer</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>serviceIdentifier</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="vpclatticeservicenetworkresourceassociation" class="resource-section">
+      <h2>VpcLatticeServiceNetworkResourceAssociation <a href="#vpclatticeservicenetworkresourceassociation" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::VpcLattice::ServiceNetworkResourceAssociation</span></h2>
+      <p class="resource-desc">VpcLatticeServiceNetworkResourceAssociation manages AWS::VpcLattice::ServiceNetworkResourceAssociation through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get vpclatticeservicenetworkresourceassociations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/vpclattice/vpclatticeservicenetworkresourceassociation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># VpcLatticeServiceNetworkResourceAssociation — VPC Lattice
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/vpclattice.html#vpclatticeservicenetworkresourceassociation
+apiVersion: aws.konfig.io/v1alpha1
+kind: VpcLatticeServiceNetworkResourceAssociation
+metadata:
+  name: example-vpclatticeservicenetworkresourceassociation
+  namespace: default
+spec:
+  privateDnsEnabled: true
+  providerRef:
+    name: example-vpclatticeservicenetworkresourceassociation
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>privateDnsEnabled</code></td><td>boolean</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceConfigurationId</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>serviceNetworkId</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

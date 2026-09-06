@@ -127,8 +127,9 @@ const (
 func sqsQueueCR(mutate ...func(*awsv1alpha1.SQSQueue)) *awsv1alpha1.SQSQueue {
 	q := &awsv1alpha1.SQSQueue{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-queue",
-			Namespace: "default",
+			Name:       "my-queue",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.SQSQueueSpec{
 			QueueName:         "my-queue",
@@ -346,7 +347,7 @@ func TestSQSQueueReconcile(t *testing.T) {
 					}
 				}),
 				&awsv1alpha1.SQSQueue{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-dlq", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-dlq", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.SQSQueueSpec{QueueName: "my-dlq"},
 				},
 			},
@@ -374,7 +375,7 @@ func TestSQSQueueReconcile(t *testing.T) {
 					}
 				}),
 				&awsv1alpha1.SQSQueue{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-dlq", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-dlq", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.SQSQueueSpec{QueueName: "my-dlq"},
 					Status: awsv1alpha1.SQSQueueStatus{
 						QueueARN: "arn:aws:sqs:us-east-1:123456789012:my-dlq",
@@ -429,5 +430,27 @@ func TestSQSQueueReconcile(t *testing.T) {
 			}
 			tc.assert(t, ctx, c, tc.fake, res)
 		})
+	}
+}
+
+// A queue with no attribute fields set must not call SetQueueAttributes:
+// SQS returns MissingParameter for an empty attribute map.
+func TestSQSQueueSteadyStateNoAttributesSkipsSetQueueAttributes(t *testing.T) {
+	scheme := newSQSScheme(t)
+	q := &awsv1alpha1.SQSQueue{
+		ObjectMeta: metav1.ObjectMeta{Name: "plain", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}},
+		Spec:       awsv1alpha1.SQSQueueSpec{QueueName: "plain"},
+	}
+	f := &fakeSQS{
+		getQueueUrl: func(context.Context, *awssqs.GetQueueUrlInput) (*awssqs.GetQueueUrlOutput, error) {
+			return &awssqs.GetQueueUrlOutput{QueueUrl: aws.String("https://sqs/plain")}, nil
+		},
+		getQueueAttributes: func(context.Context, *awssqs.GetQueueAttributesInput) (*awssqs.GetQueueAttributesOutput, error) {
+			return &awssqs.GetQueueAttributesOutput{Attributes: map[string]string{"QueueArn": "arn:plain"}}, nil
+		},
+	}
+	r := &SQSQueueReconciler{Client: newSQSFakeClient(scheme, q), Scheme: scheme, SQSClient: f}
+	if _, err := r.Reconcile(context.Background(), ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "plain", Namespace: "ns"}}); err != nil {
+		t.Fatalf("reconcile: %v", err)
 	}
 }

@@ -92,6 +92,12 @@ type ListenerFixedResponseConfig struct {
 
 // ListenerSpec defines the desired state of a Listener.
 type ListenerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// LoadBalancerRef references the load balancer.
 	LoadBalancerRef LoadBalancerRef `json:"loadBalancerRef"`
 
@@ -123,6 +129,9 @@ type ListenerSpec struct {
 
 // ListenerStatus defines the observed state of Listener.
 type ListenerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the listener.
 	// +optional
 	ARN string `json:"arn,omitempty"`

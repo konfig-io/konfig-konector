@@ -91,8 +91,9 @@ func cloudMapServiceScheme(t *testing.T) *runtime.Scheme {
 func cloudMapServiceCR(mutate ...func(*awsv1alpha1.CloudMapService)) *awsv1alpha1.CloudMapService {
 	svc := &awsv1alpha1.CloudMapService{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-service",
-			Namespace: "default",
+			Name:       "my-service",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.CloudMapServiceSpec{
 			Name:         "my-service",
@@ -248,7 +249,7 @@ func TestCloudMapServiceReconcile(t *testing.T) {
 		f := &fakeCloudMapServiceAPI{}
 		// Namespace CR exists but has no ID yet.
 		nsCR := &awsv1alpha1.CloudMapNamespace{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		}
 		svc := cloudMapServiceCR(func(s *awsv1alpha1.CloudMapService) {
 			s.Finalizers = []string{awsv1alpha1.FinalizerName}
@@ -285,7 +286,7 @@ func TestCloudMapServiceReconcile(t *testing.T) {
 			},
 		}
 		nsCR := &awsv1alpha1.CloudMapNamespace{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Status:     awsv1alpha1.CloudMapNamespaceStatus{NamespaceID: testCloudMapNSID},
 		}
 		svc := cloudMapServiceCR(func(s *awsv1alpha1.CloudMapService) {

@@ -288,6 +288,12 @@ type S3BucketEncryption struct {
 
 // S3BucketSpec defines the desired state of an S3 Bucket.
 type S3BucketSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// BucketName is the globally unique name of the bucket. Immutable after creation.
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:MaxLength=63
@@ -347,6 +353,9 @@ type S3BucketSpec struct {
 
 // S3BucketStatus defines the observed state of S3Bucket.
 type S3BucketStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the bucket.
 	// +optional
 	ARN string `json:"arn,omitempty"`

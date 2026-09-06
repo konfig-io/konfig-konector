@@ -67,7 +67,7 @@ func (f *fakeBatchJQAPI) DeleteJobQueue(_ context.Context, params *awsbatch.Dele
 
 func batchJQCR(mutate ...func(*awsv1alpha1.BatchJobQueue)) *awsv1alpha1.BatchJobQueue {
 	jq := &awsv1alpha1.BatchJobQueue{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-queue", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-queue", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.BatchJobQueueSpec{
 			Name:     "my-queue",
 			Priority: 10,
@@ -134,7 +134,7 @@ func TestBatchJobQueueReconcile(t *testing.T) {
 		ctx := context.Background()
 		f := &fakeBatchJQAPI{}
 		ceCR := &awsv1alpha1.BatchComputeEnvironment{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-ce", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-ce", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		}
 		jq := batchJQCR(func(jq *awsv1alpha1.BatchJobQueue) {
 			jq.Finalizers = []string{awsv1alpha1.FinalizerName}

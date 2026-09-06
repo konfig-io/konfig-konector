@@ -1,0 +1,1905 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptunedbclusterparametergroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneDBClusterParameterGroup
+    listKind: NeptuneDBClusterParameterGroupList
+    plural: neptunedbclusterparametergroups
+    singular: neptunedbclusterparametergroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneDBClusterParameterGroup manages AWS::Neptune::DBClusterParameterGroup through the AWS Cloud Control
+          API. The AWS::Neptune::DBClusterParameterGroup resource creates a new Amazon Neptune DB cluster parameter
+          group
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneDBClusterParameterGroupSpec is the desired state of
+              AWS::Neptune::DBClusterParameterGroup.
+            properties:
+              description:
+                description: |-
+                  Provides the customer-specified description for this DB cluster parameter group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: description is immutable
+                  rule: self == oldSelf
+              family:
+                description: |-
+                  Must be neptune1 for engine versions prior to 1.2.0.0, or neptune1.2 for engine version 1.2.0.0 and higher.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: family is immutable
+                  rule: self == oldSelf
+              name:
+                description: |-
+                  Provides the name of the DB cluster parameter group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              parameters:
+                description: An array of parameters to be modified. A maximum of 20
+                  parameters can be modified in a single request.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: The list of tags for the cluster parameter group.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - description
+            - family
+            - parameters
+            type: object
+          status:
+            description: NeptuneDBClusterParameterGroupStatus is the observed state
+              of AWS::Neptune::DBClusterParameterGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptunedbclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneDBCluster
+    listKind: NeptuneDBClusterList
+    plural: neptunedbclusters
+    singular: neptunedbcluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneDBCluster manages AWS::Neptune::DBCluster through the AWS Cloud Control API. The
+          AWS::Neptune::DBCluster resource creates an Amazon Neptune DB cluster.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneDBClusterSpec is the desired state of AWS::Neptune::DBCluster.
+            properties:
+              associatedRoles:
+                description: |-
+                  Provides a list of the AWS Identity and Access Management (IAM) roles that are associated with the DB cluster.
+                  IAM roles that are associated with a DB cluster grant permission for the DB cluster to access other AWS
+                  services on your behalf.
+                items:
+                  description: NeptuneDBClusterDBClusterRole is a nested property
+                    type of AWS::Neptune::DBCluster.
+                  properties:
+                    featureName:
+                      description: |-
+                        The name of the feature associated with the AWS Identity and Access Management (IAM) role. For the list of
+                        supported feature names, see DBEngineVersion in the Amazon Neptune API Reference.
+                      type: string
+                    roleArn:
+                      description: The Amazon Resource Name (ARN) of the IAM role
+                        that is associated with the DB cluster.
+                      type: string
+                  required:
+                  - roleArn
+                  type: object
+                type: array
+              availabilityZones:
+                description: |-
+                  Provides the list of EC2 Availability Zones that instances in the DB cluster can be created in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              backupRetentionPeriod:
+                description: Specifies the number of days for which automatic DB snapshots
+                  are retained.
+                format: int64
+                minimum: 1
+                type: integer
+              copyTagsToSnapshot:
+                description: |-
+                  A value that indicates whether to copy all tags from the DB cluster to snapshots of the DB cluster. The
+                  default behaviour is not to copy them.
+                type: boolean
+              dbClusterIdentifier:
+                description: |-
+                  The DB cluster identifier. Contains a user-supplied DB cluster identifier. This identifier is the unique key
+                  that identifies a DB cluster stored as a lowercase string.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 63
+                type: string
+              dbClusterParameterGroupName:
+                description: Provides the name of the DB cluster parameter group.
+                type: string
+              dbInstanceParameterGroupName:
+                description: |-
+                  The name of the DB parameter group to apply to all instances of the DB cluster. Used only in case of a major
+                  EngineVersion upgrade request.
+                type: string
+              dbPort:
+                description: |-
+                  The port number on which the DB instances in the DB cluster accept connections. If not specified, the default
+                  port used is `8182`. Note: `Port` property will soon be deprecated from this resource. Please update existing
+                  templates to rename it with new property `DBPort` having same functionalities.
+                format: int64
+                type: integer
+              dbSubnetGroupName:
+                description: |-
+                  Specifies information on the subnet group associated with the DB cluster, including the name, description, and
+                  subnets in the subnet group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              deletionProtection:
+                description: |-
+                  Indicates whether or not the DB cluster has deletion protection enabled. The database can't be deleted when
+                  deletion protection is enabled.
+                type: boolean
+              enableCloudwatchLogsExports:
+                description: Specifies a list of log types that are enabled for export
+                  to CloudWatch Logs.
+                items:
+                  type: string
+                type: array
+              engineVersion:
+                description: Indicates the database engine version.
+                type: string
+              globalClusterIdentifier:
+                description: |-
+                  The ID of the Neptune global database to which this new DB cluster should be added.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              iamAuthEnabled:
+                description: |-
+                  True if mapping of Amazon Identity and Access Management (IAM) accounts to database accounts is enabled, and
+                  otherwise false.
+                type: boolean
+              kmsKeyId:
+                description: |-
+                  The Amazon Resource Name (ARN) of the AWS KMS key that is used to encrypt the database instances in the DB
+                  cluster, such as arn:aws:kms:us-east-1:012345678910:key/abcd1234-a123-456a-a12b-a123b4cd56ef. If you enable
+                  the StorageEncrypted property but don't specify this property, the default KMS key is used. If you specify
+                  this property, you must set the StorageEncrypted property to true.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              networkType:
+                description: The network type of the DB cluster.
+                enum:
+                - IPV4
+                - DUAL
+                type: string
+              preferredBackupWindow:
+                description: |-
+                  Specifies the daily time range during which automated backups are created if automated backups are enabled, as
+                  determined by the BackupRetentionPeriod.
+                type: string
+              preferredMaintenanceWindow:
+                description: |-
+                  Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time
+                  (UTC).
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              restoreToTime:
+                description: |-
+                  Creates a new DB cluster from a DB snapshot or DB cluster snapshot. If a DB snapshot is specified, the target
+                  DB cluster is created from the source DB snapshot with a default configuration and default security group. If
+                  a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point
+                  with the same configuration as the original source DB cluster, exce...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              restoreType:
+                description: |-
+                  Creates a new DB cluster from a DB snapshot or DB cluster snapshot. If a DB snapshot is specified, the target
+                  DB cluster is created from the source DB snapshot with a default configuration and default security group. If
+                  a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point
+                  with the same configuration as the original source DB cluster, exce...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              serverlessScalingConfiguration:
+                description: Contains the scaling configuration used by the Neptune
+                  Serverless Instances within this DB cluster.
+                properties:
+                  maxCapacity:
+                    description: |-
+                      The maximum number of Neptune capacity units (NCUs) for a DB instance in an Neptune Serverless cluster. You
+                      can specify NCU values in half-step increments, such as 40, 40.5, 41, and so on. The smallest value you can
+                      use is 2.5, whereas the largest is 128.
+                    type: number
+                  minCapacity:
+                    description: |-
+                      The minimum number of Neptune capacity units (NCUs) for a DB instance in an Neptune Serverless cluster. You
+                      can specify NCU values in half-step increments, such as 8, 8.5, 9, and so on. The smallest value you can use
+                      is 1, whereas the largest is 128.
+                    type: number
+                required:
+                - maxCapacity
+                - minCapacity
+                type: object
+              snapshotIdentifier:
+                description: |-
+                  Specifies the identifier for a DB cluster snapshot. Must match the identifier of an existing snapshot. After
+                  you restore a DB cluster using a SnapshotIdentifier, you must specify the same SnapshotIdentifier for any
+                  future updates to the DB cluster. When you specify this property for an update, the DB cluster is not restored
+                  from the snapshot again, and the data in the database is not changed. H...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              sourceDBClusterIdentifier:
+                description: |-
+                  Creates a new DB cluster from a DB snapshot or DB cluster snapshot. If a DB snapshot is specified, the target
+                  DB cluster is created from the source DB snapshot with a default configuration and default security group. If
+                  a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point
+                  with the same configuration as the original source DB cluster, exce...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              storageEncrypted:
+                description: |-
+                  Indicates whether the DB cluster is encrypted. If you specify the KmsKeyId property, then you must enable
+                  encryption and set this property to true. If you enable the StorageEncrypted property but don't specify
+                  KmsKeyId property, then the default KMS key is used. If you specify KmsKeyId property, then that KMS Key is
+                  used to encrypt the database instances in the DB cluster. If you specify the So...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: The tags assigned to this cluster.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              useLatestRestorableTime:
+                description: |-
+                  Creates a new DB cluster from a DB snapshot or DB cluster snapshot. If a DB snapshot is specified, the target
+                  DB cluster is created from the source DB snapshot with a default configuration and default security group. If
+                  a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point
+                  with the same configuration as the original source DB cluster, exce...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              vpcSecurityGroupIds:
+                description: Provides a list of VPC security groups that the DB cluster
+                  belongs to.
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: NeptuneDBClusterStatus is the observed state of AWS::Neptune::DBCluster.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              clusterResourceId:
+                description: |-
+                  The resource id for the DB cluster. For example: `cluster-ABCD1234EFGH5678IJKL90MNOP`. The cluster ID uniquely
+                  identifies the cluster and is used in things like IAM authentication policies.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpoint:
+                description: |-
+                  The connection endpoint for the DB cluster. For example:
+                  `mystack-mydbcluster-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              port:
+                description: |-
+                  The port number on which the DB cluster accepts connections. For example: `8182`.
+                  Read-only: reported by AWS after creation.
+                type: string
+              readEndpoint:
+                description: |-
+                  The reader endpoint for the DB cluster. For example:
+                  `mystack-mydbcluster-ro-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptunedbinstances.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneDBInstance
+    listKind: NeptuneDBInstanceList
+    plural: neptunedbinstances
+    singular: neptunedbinstance
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneDBInstance manages AWS::Neptune::DBInstance through the AWS Cloud Control API. The
+          AWS::Neptune::DBInstance resource creates an Amazon Neptune DB instance.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneDBInstanceSpec is the desired state of AWS::Neptune::DBInstance.
+            properties:
+              allowMajorVersionUpgrade:
+                description: |-
+                  Indicates that major version upgrades are allowed. Changing this parameter doesn't result in an outage and the
+                  change is asynchronously applied as soon as possible. This parameter must be set to true when specifying a
+                  value for the EngineVersion parameter that is a different major version than the DB instance's current
+                  version.
+                type: boolean
+              autoMinorVersionUpgrade:
+                description: |-
+                  Indicates that minor version patches are applied automatically. When updating this property, some
+                  interruptions may occur.
+                type: boolean
+              availabilityZone:
+                description: |-
+                  Specifies the name of the Availability Zone the DB instance is located in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dbClusterIdentifier:
+                description: |-
+                  If the DB instance is a member of a DB cluster, contains the name of the DB cluster that the DB instance is a
+                  member of.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dbInstanceClass:
+                description: |-
+                  Contains the name of the compute and memory capacity class of the DB instance. If you update this property,
+                  some interruptions may occur.
+                type: string
+              dbInstanceIdentifier:
+                description: |-
+                  Contains a user-supplied database identifier. This identifier is the unique key that identifies a DB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dbParameterGroupName:
+                description: |-
+                  The name of an existing DB parameter group or a reference to an AWS::Neptune::DBParameterGroup resource
+                  created in the template. If any of the data members of the referenced parameter group are changed during an
+                  update, the DB instance might need to be restarted, which causes some interruption. If the parameter group
+                  contains static parameters, whether they were changed or not, an update trigge...
+                type: string
+              dbSnapshotIdentifier:
+                description: |-
+                  This parameter is not supported. `AWS::Neptune::DBInstance` does not support restoring from snapshots.
+                  `AWS::Neptune::DBCluster` does support restoring from snapshots.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dbSubnetGroupName:
+                description: |-
+                  A DB subnet group to associate with the DB instance. If you update this value, the new subnet group must be a
+                  subnet group in a new virtual private cloud (VPC).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              preferredMaintenanceWindow:
+                description: |-
+                  Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time
+                  (UTC).
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publiclyAccessible:
+                description: |-
+                  Indicates that public accessibility is enabled. This should be enabled in combination with IAM Auth enabled on
+                  the DBCluster
+                type: boolean
+              tags:
+                description: An arbitrary set of tags (key-value pairs) for this DB
+                  instance.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dbInstanceClass
+            type: object
+          status:
+            description: NeptuneDBInstanceStatus is the observed state of AWS::Neptune::DBInstance.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpoint:
+                description: |-
+                  The connection endpoint for the database. For example:
+                  `mystack-mydb-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              port:
+                description: |-
+                  The port number on which the database accepts connections. For example: `8182`.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptunedbparametergroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneDBParameterGroup
+    listKind: NeptuneDBParameterGroupList
+    plural: neptunedbparametergroups
+    singular: neptunedbparametergroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneDBParameterGroup manages AWS::Neptune::DBParameterGroup through the AWS Cloud Control API.
+          AWS::Neptune::DBParameterGroup creates a new DB parameter group. This type can be declared in a template and
+          referenced in the DBParameterGroupName parameter of AWS::Neptune::DBInstance
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneDBParameterGroupSpec is the desired state of AWS::Neptune::DBParameterGroup.
+            properties:
+              description:
+                description: |-
+                  Provides the customer-specified description for this DB parameter group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: description is immutable
+                  rule: self == oldSelf
+              family:
+                description: |-
+                  Must be `neptune1` for engine versions prior to 1.2.0.0, or `neptune1.2` for engine version `1.2.0.0` and
+                  higher.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: family is immutable
+                  rule: self == oldSelf
+              name:
+                description: |-
+                  Provides the name of the DB parameter group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              parameters:
+                description: |-
+                  The parameters to set for this DB parameter group. The parameters are expressed as a JSON object consisting of
+                  key-value pairs. Changes to dynamic parameters are applied immediately. During an update, if you have static
+                  parameters (whether they were changed or not), it triggers AWS CloudFormation to reboot the associated DB
+                  instance without failover.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An optional array of key-value pairs to apply to this
+                  DB parameter group.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - description
+            - family
+            - parameters
+            type: object
+          status:
+            description: NeptuneDBParameterGroupStatus is the observed state of AWS::Neptune::DBParameterGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptunedbsubnetgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneDBSubnetGroup
+    listKind: NeptuneDBSubnetGroupList
+    plural: neptunedbsubnetgroups
+    singular: neptunedbsubnetgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneDBSubnetGroup manages AWS::Neptune::DBSubnetGroup through the AWS Cloud Control API. The
+          AWS::Neptune::DBSubnetGroup type creates an Amazon Neptune DB subnet group. Subnet groups must contain at
+          least two subnets in two different Availability Zones in the same AWS Region.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneDBSubnetGroupSpec is the desired state of AWS::Neptune::DBSubnetGroup.
+            properties:
+              dbSubnetGroupDescription:
+                description: The description for the DB subnet group.
+                type: string
+              dbSubnetGroupName:
+                description: |-
+                  The name for the DB subnet group. This value is stored as a lowercase string. Constraints: Must contain no
+                  more than 255 lowercase alphanumeric characters or hyphens. Must not be "Default". Example: mysubnetgroup
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              subnetIds:
+                description: The Amazon EC2 subnet IDs for the DB subnet group.
+                items:
+                  type: string
+                type: array
+              tags:
+                description: An optional array of key-value pairs to apply to this
+                  DB subnet group.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dbSubnetGroupDescription
+            - subnetIds
+            type: object
+          status:
+            description: NeptuneDBSubnetGroupStatus is the observed state of AWS::Neptune::DBSubnetGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptuneeventsubscriptions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneEventSubscription
+    listKind: NeptuneEventSubscriptionList
+    plural: neptuneeventsubscriptions
+    singular: neptuneeventsubscription
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneEventSubscription manages AWS::Neptune::EventSubscription through the AWS Cloud Control API. Resource
+          Type definition for AWS::Neptune::EventSubscription
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneEventSubscriptionSpec is the desired state of AWS::Neptune::EventSubscription.
+            properties:
+              enabled:
+                description: |-
+                  A Boolean value; set to true to activate the subscription, set to false to create the subscription but not
+                  active it.
+                type: boolean
+              eventCategories:
+                description: |-
+                  A list of event categories for a SourceType that you want to subscribe to. You can see a list of the
+                  categories for a given SourceType in the Events topic in the Amazon Neptune User Guide or by using the
+                  DescribeEventCategories action.
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              snsTopicArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the SNS topic created for event notification. The ARN is created by Amazon
+                  SNS when you create a topic and subscribe to it.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: snsTopicArn is immutable
+                  rule: self == oldSelf
+              sourceIds:
+                description: |-
+                  The list of identifiers of the event sources for which events will be returned. If not specified, then all
+                  sources are included in the response. An identifier must begin with a letter and must contain only ASCII
+                  letters, digits, and hyphens; it cannot end with a hyphen or contain two consecutive hyphens.
+                items:
+                  type: string
+                type: array
+              sourceType:
+                description: |-
+                  The type of source that will be generating the events. For example, if you want to be notified of events
+                  generated by a DB instance, you would set this parameter to db-instance. if this value is not specified, all
+                  events are returned.
+                type: string
+              subscriptionName:
+                description: |-
+                  The name of the subscription.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - snsTopicArn
+            type: object
+          status:
+            description: NeptuneEventSubscriptionStatus is the observed state of AWS::Neptune::EventSubscription.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: neptuneglobalclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: NeptuneGlobalCluster
+    listKind: NeptuneGlobalClusterList
+    plural: neptuneglobalclusters
+    singular: neptuneglobalcluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          NeptuneGlobalCluster manages AWS::Neptune::GlobalCluster through the AWS Cloud Control API. Resource Type
+          definition for AWS::Neptune::GlobalCluster
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: NeptuneGlobalClusterSpec is the desired state of AWS::Neptune::GlobalCluster.
+            properties:
+              deletionProtection:
+                description: Whether deletion protection is enabled.
+                type: boolean
+              engine:
+                description: |-
+                  The name of the database engine.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - neptune
+                type: string
+              engineVersion:
+                description: The version number of the database engine.
+                type: string
+              globalClusterIdentifier:
+                description: |-
+                  The cluster identifier of the global database cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceDBClusterIdentifier:
+                description: |-
+                  The Amazon Resource Name (ARN) of an existing Neptune DB cluster to use as the primary cluster of the new
+                  global database.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              storageEncrypted:
+                description: |-
+                  Whether the global database cluster is storage encrypted.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: NeptuneGlobalClusterStatus is the observed state of AWS::Neptune::GlobalCluster.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

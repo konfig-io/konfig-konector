@@ -44,6 +44,12 @@ type DBOptionSetting struct {
 
 // DBOptionGroupSpec defines the desired state of a DB Option Group.
 type DBOptionGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// OptionGroupName is the name of the option group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -73,6 +79,9 @@ type DBOptionGroupSpec struct {
 
 // DBOptionGroupStatus defines the observed state of DBOptionGroup.
 type DBOptionGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the option group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

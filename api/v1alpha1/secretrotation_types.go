@@ -32,6 +32,12 @@ type SecretsManagerSecretRef struct {
 
 // SecretRotationSpec defines the desired state of a Secret Rotation configuration.
 type SecretRotationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// SecretRef references the secret to rotate.
 	SecretRef SecretsManagerSecretRef `json:"secretRef"`
 
@@ -46,6 +52,9 @@ type SecretRotationSpec struct {
 
 // SecretRotationStatus defines the observed state of SecretRotation.
 type SecretRotationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RotationEnabled indicates whether rotation is enabled.
 	// +optional
 	RotationEnabled bool `json:"rotationEnabled,omitempty"`

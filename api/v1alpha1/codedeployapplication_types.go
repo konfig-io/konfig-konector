@@ -22,6 +22,12 @@ import (
 
 // CodeDeployApplicationSpec defines the desired state of a CodeDeploy application.
 type CodeDeployApplicationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ApplicationName is the name of the application. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="applicationName is immutable"
 	ApplicationName string `json:"applicationName"`
@@ -38,6 +44,9 @@ type CodeDeployApplicationSpec struct {
 
 // CodeDeployApplicationStatus defines the observed state of CodeDeployApplication.
 type CodeDeployApplicationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ApplicationID is the CodeDeploy application ID.
 	// +optional
 	ApplicationID string `json:"applicationID,omitempty"`

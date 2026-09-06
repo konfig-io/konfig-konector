@@ -32,6 +32,12 @@ type ECRRepositoryRef struct {
 
 // ECRRepositoryPolicySpec defines the desired state of an ECR Repository Policy.
 type ECRRepositoryPolicySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// RepositoryRef references the ECR repository.
 	RepositoryRef ECRRepositoryRef `json:"repositoryRef"`
 
@@ -41,6 +47,9 @@ type ECRRepositoryPolicySpec struct {
 
 // ECRRepositoryPolicyStatus defines the observed state of ECRRepositoryPolicy.
 type ECRRepositoryPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

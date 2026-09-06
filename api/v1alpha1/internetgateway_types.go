@@ -22,6 +22,12 @@ import (
 
 // InternetGatewaySpec defines the desired state of an AWS Internet Gateway.
 type InternetGatewaySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC to attach this internet gateway to.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 
@@ -32,6 +38,9 @@ type InternetGatewaySpec struct {
 
 // InternetGatewayStatus defines the observed state of InternetGateway.
 type InternetGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// InternetGatewayID is the AWS Internet Gateway identifier.
 	// +optional
 	InternetGatewayID string `json:"internetGatewayId,omitempty"`

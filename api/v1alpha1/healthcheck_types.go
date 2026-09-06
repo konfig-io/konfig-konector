@@ -22,6 +22,12 @@ import (
 
 // HealthCheckSpec defines the desired state of a Route53 Health Check.
 type HealthCheckSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Type is the type of health check.
 	// +kubebuilder:validation:Enum=HTTP;HTTPS;HTTP_STR_MATCH;HTTPS_STR_MATCH;TCP;CALCULATED;CLOUDWATCH_METRIC;RECOVERY_CONTROL
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="type is immutable"
@@ -67,6 +73,9 @@ type HealthCheckSpec struct {
 
 // HealthCheckStatus defines the observed state of HealthCheck.
 type HealthCheckStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HealthCheckID is the Route53 health check identifier.
 	// +optional
 	HealthCheckID string `json:"healthCheckId,omitempty"`

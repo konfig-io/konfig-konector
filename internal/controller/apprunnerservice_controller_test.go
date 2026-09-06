@@ -72,7 +72,7 @@ func (f *fakeAppRunnerServiceAPI) ListServices(_ context.Context, _ *awsapprunne
 
 func appRunnerServiceCR(mutate ...func(*awsv1alpha1.AppRunnerService)) *awsv1alpha1.AppRunnerService {
 	svc := &awsv1alpha1.AppRunnerService{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-service", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-service", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.AppRunnerServiceSpec{
 			ServiceName: "my-service",
 			SourceConfiguration: awsv1alpha1.AppRunnerSourceConfiguration{

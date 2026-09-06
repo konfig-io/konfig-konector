@@ -85,8 +85,9 @@ func batchCEScheme(t *testing.T) *runtime.Scheme {
 func batchCECR(mutate ...func(*awsv1alpha1.BatchComputeEnvironment)) *awsv1alpha1.BatchComputeEnvironment {
 	ce := &awsv1alpha1.BatchComputeEnvironment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-ce",
-			Namespace: "default",
+			Name:       "my-ce",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.BatchComputeEnvironmentSpec{
 			Name:  "my-ce",
@@ -316,7 +317,7 @@ func TestBatchComputeEnvironmentReconcile(t *testing.T) {
 		}
 		// Subnet CR exists but has no ID yet.
 		subnet := &awsv1alpha1.Subnet{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-subnet", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-subnet", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		}
 		ce := batchCECR(func(ce *awsv1alpha1.BatchComputeEnvironment) {
 			ce.Finalizers = []string{awsv1alpha1.FinalizerName}

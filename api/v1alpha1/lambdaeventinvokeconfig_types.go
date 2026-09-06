@@ -23,6 +23,12 @@ import (
 // LambdaEventInvokeConfigSpec defines the desired state of a Lambda function
 // event invoke config (async invocation settings).
 type LambdaEventInvokeConfigSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FunctionName is a direct Lambda function name or ARN. Either
 	// functionName or functionRef must be set.
 	// +optional
@@ -60,6 +66,9 @@ type LambdaEventInvokeConfigSpec struct {
 
 // LambdaEventInvokeConfigStatus defines the observed state of LambdaEventInvokeConfig.
 type LambdaEventInvokeConfigStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionARN is the ARN of the function (with qualifier) the config applies to.
 	// +optional
 	FunctionARN string `json:"functionArn,omitempty"`

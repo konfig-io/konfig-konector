@@ -1,0 +1,1498 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elasticachecacheclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ElastiCacheCacheCluster
+    listKind: ElastiCacheCacheClusterList
+    plural: elasticachecacheclusters
+    singular: elasticachecachecluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ElastiCacheCacheCluster manages AWS::ElastiCache::CacheCluster through the AWS Cloud Control API. Resource
+          type definition for AWS::ElastiCache::CacheCluster
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ElastiCacheCacheClusterSpec is the desired state of AWS::ElastiCache::CacheCluster.
+            properties:
+              autoMinorVersionUpgrade:
+                description: |-
+                  If you are running Redis engine version 6.0 or later, set this parameter to yes if you want to opt-in to the
+                  next minor version upgrade campaign.
+                type: boolean
+              azMode:
+                description: |-
+                  Specifies whether the nodes in this Memcached cluster are created in a single Availability Zone or created
+                  across multiple Availability Zones in the cluster's region.
+                type: string
+              cacheNodeType:
+                description: The compute and memory capacity of the nodes in the node
+                  group (shard).
+                type: string
+              cacheParameterGroupName:
+                description: The name of the parameter group to associate with this
+                  cluster.
+                type: string
+              cacheSecurityGroupNames:
+                description: A list of security group names to associate with this
+                  cluster.
+                items:
+                  type: string
+                type: array
+              cacheSubnetGroupName:
+                description: |-
+                  The name of the subnet group to be used for the cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              clusterName:
+                description: |-
+                  A name for the cache cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              engine:
+                description: |-
+                  The name of the cache engine to be used for this cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: engine is immutable
+                  rule: self == oldSelf
+              engineVersion:
+                description: The version number of the cache engine to be used for
+                  this cluster
+                type: string
+              ipDiscovery:
+                description: The Ip Discovery parameter for cachecluster.
+                type: string
+              logDeliveryConfigurations:
+                description: Specifies the destination, format and type of the logs
+                items:
+                  description: ElastiCacheCacheClusterLogDeliveryConfigurationRequest
+                    is a nested property type of AWS::ElastiCache::CacheCluster.
+                  properties:
+                    destinationDetails:
+                      description: Configuration details of either a CloudWatch Logs
+                        destination or Kinesis Data Firehose destination.
+                      properties:
+                        cloudWatchLogsDetails:
+                          description: The configuration details of the CloudWatch
+                            Logs destination
+                          properties:
+                            logGroup:
+                              description: The name of the CloudWatch Logs log group.
+                              type: string
+                          required:
+                          - logGroup
+                          type: object
+                        kinesisFirehoseDetails:
+                          description: The configuration details of the Kinesis Data
+                            Firehose destination.
+                          properties:
+                            deliveryStream:
+                              description: The name of the Kinesis Data Firehose delivery
+                                stream
+                              type: string
+                          required:
+                          - deliveryStream
+                          type: object
+                      type: object
+                    destinationType:
+                      description: Specify either CloudWatch Logs or Kinesis Data
+                        Firehose as the destination type.
+                      type: string
+                    logFormat:
+                      description: Valid values are either json or text
+                      type: string
+                    logType:
+                      description: Valid value is either slow-log, which refers to
+                        slow-log or engine-log
+                      type: string
+                  required:
+                  - destinationDetails
+                  - destinationType
+                  - logFormat
+                  - logType
+                  type: object
+                type: array
+              networkType:
+                description: |-
+                  The network type parameter for cachecluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              notificationTopicArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic to which notifications
+                  are sent.
+                type: string
+              numCacheNodes:
+                description: The number of cache nodes that the cache cluster should
+                  have.
+                format: int64
+                type: integer
+              port:
+                description: |-
+                  The port number on which each of the cache nodes accepts connections.
+                  Create-only in AWS: changing it requires replacing the resource.
+                format: int64
+                type: integer
+              preferredAvailabilityZone:
+                description: The EC2 Availability Zone in which the cluster is created.
+                type: string
+              preferredAvailabilityZones:
+                description: |-
+                  A list of the Availability Zones in which cache nodes are created. The order of the zones in the list is not
+                  important.
+                items:
+                  type: string
+                type: array
+              preferredMaintenanceWindow:
+                description: Specifies the weekly time range during which maintenance
+                  on the cluster is performed.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              snapshotArns:
+                description: |-
+                  A single-element string list containing an Amazon Resource Name (ARN) that uniquely identifies a Redis RDB
+                  snapshot file stored in Amazon S3.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              snapshotName:
+                description: |-
+                  The name of a Redis snapshot from which to restore data into the new node group (shard).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              snapshotRetentionLimit:
+                description: The number of days for which ElastiCache retains automatic
+                  snapshots before deleting them.
+                format: int64
+                type: integer
+              snapshotWindow:
+                description: |-
+                  The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of your node group
+                  (shard).
+                type: string
+              tags:
+                description: A list of tags to be added to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              transitEncryptionEnabled:
+                description: |-
+                  A flag that enables in-transit encryption when set to true. You cannot modify the value of
+                  TransitEncryptionEnabled after the cluster is created
+                type: boolean
+              vpcSecurityGroupIds:
+                description: One or more VPC security groups associated with the cluster.
+                items:
+                  type: string
+                type: array
+            required:
+            - cacheNodeType
+            - engine
+            - numCacheNodes
+            type: object
+          status:
+            description: ElastiCacheCacheClusterStatus is the observed state of AWS::ElastiCache::CacheCluster.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              configurationEndpoint:
+                description: |-
+                  Specifies the ConfigurationEndpoint address and port
+                  Read-only: reported by AWS after creation.
+                properties:
+                  address:
+                    type: string
+                  port:
+                    type: string
+                type: object
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              redisEndpoint:
+                description: |-
+                  Specifies the RedisEndPoint address and port
+                  Read-only: reported by AWS after creation.
+                properties:
+                  address:
+                    type: string
+                  port:
+                    type: string
+                type: object
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elasticacheglobalreplicationgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ElastiCacheGlobalReplicationGroup
+    listKind: ElastiCacheGlobalReplicationGroupList
+    plural: elasticacheglobalreplicationgroups
+    singular: elasticacheglobalreplicationgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ElastiCacheGlobalReplicationGroup manages AWS::ElastiCache::GlobalReplicationGroup through the AWS Cloud
+          Control API. The AWS::ElastiCache::GlobalReplicationGroup resource creates an Amazon ElastiCache Global
+          Replication Group.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ElastiCacheGlobalReplicationGroupSpec is the desired state
+              of AWS::ElastiCache::GlobalReplicationGroup.
+            properties:
+              automaticFailoverEnabled:
+                description: AutomaticFailoverEnabled
+                type: boolean
+              cacheNodeType:
+                description: The cache node type of the Global Datastore
+                type: string
+              cacheParameterGroupName:
+                description: Cache parameter group name to use for the new engine
+                  version. This parameter cannot be modified independently.
+                type: string
+              engine:
+                description: The engine of the Global Datastore.
+                type: string
+              engineVersion:
+                description: The engine version of the Global Datastore.
+                type: string
+              globalNodeGroupCount:
+                description: Indicates the number of node groups in the Global Datastore.
+                format: int64
+                type: integer
+              globalReplicationGroupDescription:
+                description: The optional description of the Global Datastore
+                type: string
+              globalReplicationGroupIdSuffix:
+                description: |-
+                  The suffix name of a Global Datastore. Amazon ElastiCache automatically applies a prefix to the Global
+                  Datastore ID when it is created. Each AWS Region has its own prefix.
+                type: string
+              members:
+                description: The replication groups that comprise the Global Datastore.
+                items:
+                  description: ElastiCacheGlobalReplicationGroupGlobalReplicationGroupMember
+                    is a nested property type of AWS::ElastiCache::GlobalReplicationGroup.
+                  properties:
+                    replicationGroupId:
+                      description: Regionally unique identifier for the member i.e.
+                        ReplicationGroupId.
+                      type: string
+                    replicationGroupRegion:
+                      description: The AWS region of the Global Datastore member.
+                      type: string
+                    role:
+                      description: Indicates the role of the member, primary or secondary.
+                      enum:
+                      - PRIMARY
+                      - SECONDARY
+                      type: string
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              regionalConfigurations:
+                description: |-
+                  Describes the replication group IDs, the AWS regions where they are stored and the shard configuration for
+                  each that comprise the Global Datastore
+                items:
+                  description: ElastiCacheGlobalReplicationGroupRegionalConfiguration
+                    is a nested property type of AWS::ElastiCache::GlobalReplicationGroup.
+                  properties:
+                    replicationGroupId:
+                      description: The replication group id of the Global Datastore
+                        member.
+                      type: string
+                    replicationGroupRegion:
+                      description: The AWS region of the Global Datastore member.
+                      type: string
+                    reshardingConfigurations:
+                      description: |-
+                        A list of PreferredAvailabilityZones objects that specifies the configuration of a node group in the resharded
+                        cluster.
+                      items:
+                        description: ElastiCacheGlobalReplicationGroupReshardingConfiguration
+                          is a nested property type of AWS::ElastiCache::GlobalReplicationGroup.
+                        properties:
+                          nodeGroupId:
+                            description: |-
+                              Unique identifier for the Node Group. This is either auto-generated by ElastiCache (4-digit id) or a user
+                              supplied id.
+                            type: string
+                          preferredAvailabilityZones:
+                            description: A list of preferred availability zones for
+                              the nodes of new node groups.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      type: array
+                  type: object
+                type: array
+            required:
+            - members
+            type: object
+          status:
+            description: ElastiCacheGlobalReplicationGroupStatus is the observed state
+              of AWS::ElastiCache::GlobalReplicationGroup.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              globalReplicationGroupId:
+                description: |-
+                  The name of the Global Datastore, it is generated by ElastiCache adding a prefix to
+                  GlobalReplicationGroupIdSuffix.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The status of the Global Datastore
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elasticacheserverlesscachesnapshots.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ElastiCacheServerlessCacheSnapshot
+    listKind: ElastiCacheServerlessCacheSnapshotList
+    plural: elasticacheserverlesscachesnapshots
+    singular: elasticacheserverlesscachesnapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ElastiCacheServerlessCacheSnapshot manages AWS::ElastiCache::ServerlessCacheSnapshot through the AWS Cloud
+          Control API. Resource Type definition for AWS::ElastiCache::ServerlessCacheSnapshot. A serverless cache
+          snapshot is a point-in-time backup of an ElastiCache serverless cache. Available for Valkey, Redis OSS and
+          Serverless Memcached only.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ElastiCacheServerlessCacheSnapshotSpec is the desired state
+              of AWS::ElastiCache::ServerlessCacheSnapshot.
+            properties:
+              kmsKeyId:
+                description: |-
+                  The Amazon Resource Name (ARN) of the AWS KMS key used to encrypt the snapshot. Provide the key ARN: the
+                  resource returns the key ARN on read, so supplying a bare key ID or alias for this createOnly property may be
+                  reported as drift by CloudFormation.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serverlessCacheName:
+                description: |-
+                  The name of an existing serverless cache. The snapshot is created from this cache.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: serverlessCacheName is immutable
+                  rule: self == oldSelf
+              serverlessCacheSnapshotName:
+                description: |-
+                  The name of the serverless cache snapshot. Must be unique for the customer account. This value is stored as a
+                  lowercase string.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: serverlessCacheSnapshotName is immutable
+                  rule: self == oldSelf
+              tags:
+                description: A list of tags to be added to the serverless cache snapshot
+                  resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - serverlessCacheName
+            - serverlessCacheSnapshotName
+            type: object
+          status:
+            description: ElastiCacheServerlessCacheSnapshotStatus is the observed
+              state of AWS::ElastiCache::ServerlessCacheSnapshot.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the serverless cache snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              bytesUsedForCache:
+                description: |-
+                  The total size of the serverless cache snapshot, in bytes.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createTime:
+                description: |-
+                  The date and time that the source serverless cache's metadata and cache data set was obtained for the
+                  snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serverlessCacheConfiguration:
+                description: |-
+                  The configuration of the serverless cache, at the time the snapshot was taken.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  engine:
+                    description: The engine that the serverless cache is configured
+                      with.
+                    type: string
+                  majorEngineVersion:
+                    description: The engine version number that the serverless cache
+                      is configured with.
+                    type: string
+                  serverlessCacheName:
+                    description: The identifier of the serverless cache.
+                    type: string
+                type: object
+              snapshotType:
+                description: |-
+                  The type of snapshot of the serverless cache.
+                  Read-only: reported by AWS after creation.
+                type: string
+              status:
+                description: |-
+                  The current status of the serverless cache snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elasticacheusergroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ElastiCacheUserGroup
+    listKind: ElastiCacheUserGroupList
+    plural: elasticacheusergroups
+    singular: elasticacheusergroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ElastiCacheUserGroup manages AWS::ElastiCache::UserGroup through the AWS Cloud Control API. Resource Type
+          definition for AWS::ElastiCache::UserGroup
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ElastiCacheUserGroupSpec is the desired state of AWS::ElastiCache::UserGroup.
+            properties:
+              engine:
+                description: The target cache engine for the user group.
+                enum:
+                - redis
+                - valkey
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this user.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              userGroupId:
+                description: |-
+                  The ID of the user group.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: userGroupId is immutable
+                  rule: self == oldSelf
+              userIds:
+                description: List of users associated to this user group.
+                items:
+                  type: string
+                type: array
+            required:
+            - engine
+            - userGroupId
+            - userIds
+            type: object
+          status:
+            description: ElastiCacheUserGroupStatus is the observed state of AWS::ElastiCache::UserGroup.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the user account.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  Indicates user group status. Can be "creating", "active", "modifying", "deleting".
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: elasticacheusers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ElastiCacheUser
+    listKind: ElastiCacheUserList
+    plural: elasticacheusers
+    singular: elasticacheuser
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ElastiCacheUser manages AWS::ElastiCache::User through the AWS Cloud Control API. Resource Type definition for
+          AWS::ElastiCache::User
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ElastiCacheUserSpec is the desired state of AWS::ElastiCache::User.
+            properties:
+              accessString:
+                description: Access permissions string used for this user account.
+                type: string
+              authenticationMode:
+                description: ElastiCacheUserAuthenticationMode is a nested property
+                  type of AWS::ElastiCache::User.
+                properties:
+                  passwords:
+                    description: Passwords used for this user account. You can create
+                      up to two passwords for each user.
+                    items:
+                      type: string
+                    type: array
+                  type:
+                    description: Authentication Type
+                    enum:
+                    - password
+                    - no-password-required
+                    - iam
+                    type: string
+                required:
+                - type
+                type: object
+              engine:
+                description: The target cache engine for the user.
+                enum:
+                - redis
+                - valkey
+                type: string
+              noPasswordRequired:
+                description: Indicates a password is not required for this user account.
+                type: boolean
+              passwords:
+                description: Passwords used for this user account. You can create
+                  up to two passwords for each user.
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this user.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              userId:
+                description: |-
+                  The ID of the user.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: userId is immutable
+                  rule: self == oldSelf
+              userName:
+                description: |-
+                  The username of the user.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: userName is immutable
+                  rule: self == oldSelf
+            required:
+            - engine
+            - userId
+            - userName
+            type: object
+          status:
+            description: ElastiCacheUserStatus is the observed state of AWS::ElastiCache::User.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the user account.
+                  Read-only: reported by AWS after creation.
+                type: string
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  Indicates the user status. Can be "active", "modifying" or "deleting".
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

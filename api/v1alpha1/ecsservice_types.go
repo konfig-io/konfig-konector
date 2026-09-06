@@ -45,6 +45,12 @@ type ECSLoadBalancer struct {
 
 // ECSServiceSpec defines the desired state of an ECS Service.
 type ECSServiceSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// ClusterRef references the ECS cluster to run the service in.
 	// Either clusterRef or clusterName must be set.
 	// +optional
@@ -100,6 +106,9 @@ type ECSServiceSpec struct {
 
 // ECSServiceStatus defines the observed state of ECSService.
 type ECSServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ServiceARN is the ARN of the ECS service.
 	// +optional
 	ServiceARN string `json:"serviceArn,omitempty"`

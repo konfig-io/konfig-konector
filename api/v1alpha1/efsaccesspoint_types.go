@@ -59,6 +59,12 @@ type EFSCreationInfo struct {
 
 // EFSAccessPointSpec defines the desired state of an EFS Access Point.
 type EFSAccessPointSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// FileSystemID is the ID of the EFS file system.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="fileSystemId is immutable"
@@ -79,6 +85,9 @@ type EFSAccessPointSpec struct {
 
 // EFSAccessPointStatus defines the observed state of EFSAccessPoint.
 type EFSAccessPointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccessPointID is the ID of the access point.
 	// +optional
 	AccessPointID string `json:"accessPointId,omitempty"`

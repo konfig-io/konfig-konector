@@ -25,7 +25,7 @@ import (
 )
 
 // RecordChangeAPI is the narrow Route53 client subset needed by
-// UpsertRecordSet and DeleteRecordSet. It is satisfied by *route53.Client.
+// UpsertRecordSet and DeleteRecordSet. It is satisfied by *multi.Route53.
 type RecordChangeAPI interface {
 	ChangeResourceRecordSets(ctx context.Context, params *route53.ChangeResourceRecordSetsInput, optFns ...func(*route53.Options)) (*route53.ChangeResourceRecordSetsOutput, error)
 }
@@ -70,7 +70,7 @@ func DeleteRecordSet(ctx context.Context, client RecordChangeAPI, zoneID string,
 }
 
 // ChangeStatusAPI is the narrow Route53 client subset needed by
-// GetChangeStatus. It is satisfied by *route53.Client.
+// GetChangeStatus. It is satisfied by *multi.Route53.
 type ChangeStatusAPI interface {
 	GetChange(ctx context.Context, params *route53.GetChangeInput, optFns ...func(*route53.Options)) (*route53.GetChangeOutput, error)
 }

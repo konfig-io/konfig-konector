@@ -23,6 +23,12 @@ import (
 // SecurityHubStandardSpec defines the desired state of a Security Hub
 // standards subscription.
 type SecurityHubStandardSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// StandardsARN is the ARN of the standard to enable (see
 	// DescribeStandards), e.g.
 	// arn:aws:securityhub:us-east-1::standards/aws-foundational-security-best-practices/v/1.0.0.
@@ -34,6 +40,9 @@ type SecurityHubStandardSpec struct {
 
 // SecurityHubStandardStatus defines the observed state of SecurityHubStandard.
 type SecurityHubStandardStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SubscriptionARN is the ARN of the standards subscription.
 	// +optional
 	SubscriptionARN string `json:"subscriptionArn,omitempty"`

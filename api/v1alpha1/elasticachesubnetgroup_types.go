@@ -22,6 +22,12 @@ import (
 
 // ElastiCacheSubnetGroupSpec defines the desired state of an ElastiCache Subnet Group.
 type ElastiCacheSubnetGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// SubnetGroupName is the name of the subnet group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -43,6 +49,9 @@ type ElastiCacheSubnetGroupSpec struct {
 
 // ElastiCacheSubnetGroupStatus defines the observed state of ElastiCacheSubnetGroup.
 type ElastiCacheSubnetGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the subnet group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

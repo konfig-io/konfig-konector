@@ -24,6 +24,12 @@ import (
 // manager definition of an Amazon Managed Prometheus workspace. A workspace
 // has at most one alert manager definition.
 type PrometheusAlertManagerDefinitionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// WorkspaceRef references the Prometheus workspace holding the definition.
 	WorkspaceRef PrometheusWorkspaceRef `json:"workspaceRef"`
 
@@ -35,6 +41,9 @@ type PrometheusAlertManagerDefinitionSpec struct {
 // PrometheusAlertManagerDefinitionStatus defines the observed state of
 // PrometheusAlertManagerDefinition.
 type PrometheusAlertManagerDefinitionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WorkspaceID is the resolved AWS workspace ID the definition was created in.
 	// +optional
 	WorkspaceID string `json:"workspaceId,omitempty"`

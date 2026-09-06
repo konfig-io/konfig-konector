@@ -24,6 +24,12 @@ import (
 // account subscription. Security Hub is a singleton per account/region:
 // create at most one SecurityHubAccount CR per region.
 type SecurityHubAccountSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// EnableDefaultStandards enables the standards Security Hub designates as
 	// automatically enabled. Defaults to true in AWS if unset.
 	// +optional
@@ -43,6 +49,9 @@ type SecurityHubAccountSpec struct {
 
 // SecurityHubAccountStatus defines the observed state of SecurityHubAccount.
 type SecurityHubAccountStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HubARN is the ARN of the Hub resource.
 	// +optional
 	HubARN string `json:"hubArn,omitempty"`

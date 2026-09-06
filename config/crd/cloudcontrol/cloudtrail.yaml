@@ -1,0 +1,1171 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cloudtrailchannels.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CloudTrailChannel
+    listKind: CloudTrailChannelList
+    plural: cloudtrailchannels
+    singular: cloudtrailchannel
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CloudTrailChannel manages AWS::CloudTrail::Channel through the AWS Cloud Control API. A channel receives
+          events from a specific source (such as an on-premises storage solution or application, or a partner event data
+          source), and delivers the events to one or more event data stores. You use channels to ingest events into
+          CloudTrail from sources outside AWS.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CloudTrailChannelSpec is the desired state of AWS::CloudTrail::Channel.
+            properties:
+              destinations:
+                description: One or more resources to which events arriving through
+                  a channel are logged and stored.
+                items:
+                  description: CloudTrailChannelDestination is a nested property type
+                    of AWS::CloudTrail::Channel.
+                  properties:
+                    location:
+                      description: The ARN of a resource that receives events from
+                        a channel.
+                      maxLength: 1024
+                      minLength: 3
+                      type: string
+                    type:
+                      description: The type of destination for events arriving from
+                        a channel.
+                      enum:
+                      - EVENT_DATA_STORE
+                      type: string
+                  required:
+                  - location
+                  - type
+                  type: object
+                type: array
+              name:
+                maxLength: 128
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              source:
+                description: |-
+                  The ARN of an on-premises storage solution or application, or a partner event source.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 256
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: CloudTrailChannelStatus is the observed state of AWS::CloudTrail::Channel.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              channelArn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 256
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cloudtraildashboards.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CloudTrailDashboard
+    listKind: CloudTrailDashboardList
+    plural: cloudtraildashboards
+    singular: cloudtraildashboard
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CloudTrailDashboard manages AWS::CloudTrail::Dashboard through the AWS Cloud Control API. The Amazon
+          CloudTrail dashboard resource allows customers to manage managed dashboards and create custom dashboards. You
+          can manually refresh custom and managed dashboards. For custom dashboards, you can also set up an automatic
+          refresh schedule and modify dashboard widgets.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CloudTrailDashboardSpec is the desired state of AWS::CloudTrail::Dashboard.
+            properties:
+              name:
+                description: The name of the dashboard.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              refreshSchedule:
+                description: |-
+                  Configures the automatic refresh schedule for the dashboard. Includes the frequency unit (DAYS or HOURS) and
+                  value, as well as the status (ENABLED or DISABLED) of the refresh schedule.
+                properties:
+                  frequency:
+                    description: CloudTrailDashboardRefreshScheduleFrequency is a
+                      nested property type of AWS::CloudTrail::Dashboard.
+                    properties:
+                      unit:
+                        description: The frequency unit. Supported values are HOURS
+                          and DAYS.
+                        enum:
+                        - HOURS
+                        - DAYS
+                        type: string
+                      value:
+                        description: The frequency value.
+                        format: int64
+                        type: integer
+                    required:
+                    - unit
+                    - value
+                    type: object
+                  status:
+                    description: The status of the schedule. Supported values are
+                      ENABLED and DISABLED.
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                  timeOfDay:
+                    description: StartTime of the automatic schedule refresh.
+                    type: string
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              terminationProtectionEnabled:
+                description: Indicates whether the dashboard is protected from termination.
+                type: boolean
+              widgets:
+                description: List of widgets on the dashboard
+                items:
+                  description: CloudTrailDashboardWidget is a nested property type
+                    of AWS::CloudTrail::Dashboard.
+                  properties:
+                    queryParameters:
+                      description: 'The placeholder keys in the QueryStatement. For
+                        example: $StartTime$, $EndTime$, $Period$.'
+                      items:
+                        type: string
+                      type: array
+                    queryStatement:
+                      description: The SQL query statement on one or more event data
+                        stores.
+                      maxLength: 10000
+                      minLength: 1
+                      type: string
+                    viewProperties:
+                      additionalProperties:
+                        type: string
+                      description: The view properties of the widget.
+                      type: object
+                  required:
+                  - queryStatement
+                  type: object
+                type: array
+            type: object
+          status:
+            description: CloudTrailDashboardStatus is the observed state of AWS::CloudTrail::Dashboard.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdTimestamp:
+                description: |-
+                  The timestamp of the dashboard creation.
+                  Read-only: reported by AWS after creation.
+                type: string
+              dashboardArn:
+                description: |-
+                  The ARN of the dashboard.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The status of the dashboard. Values are CREATING, CREATED, UPDATING, UPDATED and DELETING.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - CREATING
+                - CREATED
+                - UPDATING
+                - UPDATED
+                - DELETING
+                type: string
+              type:
+                description: |-
+                  The type of the dashboard. Values are CUSTOM and MANAGED.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - MANAGED
+                - CUSTOM
+                type: string
+              updatedTimestamp:
+                description: |-
+                  The timestamp showing when the dashboard was updated, if applicable. UpdatedTimestamp is always either the
+                  same or newer than the time shown in CreatedTimestamp.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cloudtraileventdatastores.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CloudTrailEventDataStore
+    listKind: CloudTrailEventDataStoreList
+    plural: cloudtraileventdatastores
+    singular: cloudtraileventdatastore
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CloudTrailEventDataStore manages AWS::CloudTrail::EventDataStore through the AWS Cloud Control API. A storage
+          lake of event data against which you can run complex SQL-based queries. An event data store can include events
+          that you have logged on your account from the last 7 to 2557 or 3653 days (about seven or ten years) depending
+          on the selected BillingMode.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CloudTrailEventDataStoreSpec is the desired state of AWS::CloudTrail::EventDataStore.
+            properties:
+              advancedEventSelectors:
+                description: The advanced event selectors that were used to select
+                  events for the data store.
+                items:
+                  description: CloudTrailEventDataStoreAdvancedEventSelector is a
+                    nested property type of AWS::CloudTrail::EventDataStore.
+                  properties:
+                    fieldSelectors:
+                      description: Contains all selector statements in an advanced
+                        event selector.
+                      items:
+                        description: CloudTrailEventDataStoreAdvancedFieldSelector
+                          is a nested property type of AWS::CloudTrail::EventDataStore.
+                        properties:
+                          endsWith:
+                            description: |-
+                              An operator that includes events that match the last few characters of the event record field specified as the
+                              value of Field.
+                            items:
+                              type: string
+                            type: array
+                          equals:
+                            description: |-
+                              An operator that includes events that match the exact value of the event record field specified as the value
+                              of Field. This is the only valid operator that you can use with the readOnly, eventCategory, and
+                              resources.type fields.
+                            items:
+                              type: string
+                            type: array
+                          field:
+                            description: |-
+                              A field in an event record on which to filter events to be logged. Supported fields include readOnly,
+                              eventCategory, eventSource (for management events), eventName, resources.type, and resources.ARN.
+                            maxLength: 1000
+                            minLength: 1
+                            type: string
+                          notEndsWith:
+                            description: |-
+                              An operator that excludes events that match the last few characters of the event record field specified as the
+                              value of Field.
+                            items:
+                              type: string
+                            type: array
+                          notEquals:
+                            description: |-
+                              An operator that excludes events that match the exact value of the event record field specified as the value
+                              of Field.
+                            items:
+                              type: string
+                            type: array
+                          notStartsWith:
+                            description: |-
+                              An operator that excludes events that match the first few characters of the event record field specified as
+                              the value of Field.
+                            items:
+                              type: string
+                            type: array
+                          startsWith:
+                            description: |-
+                              An operator that includes events that match the first few characters of the event record field specified as
+                              the value of Field.
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - field
+                        type: object
+                      type: array
+                    name:
+                      description: |-
+                        An optional, descriptive name for an advanced event selector, such as "Log data events for only two S3
+                        buckets".
+                      maxLength: 1000
+                      type: string
+                  required:
+                  - fieldSelectors
+                  type: object
+                type: array
+              billingMode:
+                description: The mode that the event data store will use to charge
+                  for event storage.
+                type: string
+              contextKeySelectors:
+                description: |-
+                  An array that enriches event records in an existing event data store by including additional information
+                  specified in individual ContexKeySelector entries. If you add ContextKeySelectors, you must set MaxEventSize
+                  to Large.
+                items:
+                  description: CloudTrailEventDataStoreContextKeySelector is a nested
+                    property type of AWS::CloudTrail::EventDataStore.
+                  properties:
+                    equals:
+                      description: An operator that includes events that match the
+                        exact value of the event record field specified in Type.
+                      items:
+                        type: string
+                      type: array
+                    type:
+                      description: |-
+                        Specifies the type of the event record field in ContextKeySelector. Valid values include RequestContext,
+                        TagContext.
+                      enum:
+                      - RequestContext
+                      - TagContext
+                      type: string
+                  required:
+                  - equals
+                  - type
+                  type: object
+                type: array
+              federationEnabled:
+                description: Indicates whether federation is enabled on an event data
+                  store.
+                type: boolean
+              federationRoleArn:
+                description: The ARN of the role used for event data store federation.
+                type: string
+              ingestionEnabled:
+                description: Indicates whether the event data store is ingesting events.
+                type: boolean
+              insightSelectors:
+                description: |-
+                  Lets you enable Insights event logging by specifying the Insights selectors that you want to enable on an
+                  existing event data store. Both InsightSelectors and InsightsDestination need to have a value in order to
+                  enable Insights events on an event data store.
+                items:
+                  description: CloudTrailEventDataStoreInsightSelector is a nested
+                    property type of AWS::CloudTrail::EventDataStore.
+                  properties:
+                    insightType:
+                      description: The type of Insights to log on an event data store.
+                      type: string
+                  type: object
+                type: array
+              insightsDestination:
+                description: |-
+                  Specifies the ARN of the event data store that will collect Insights events. Both InsightSelectors and
+                  InsightsDestination need to have a value in order to enable Insights events on an event data store
+                type: string
+              kmsKeyId:
+                description: |-
+                  Specifies the KMS key ID to use to encrypt the events delivered by CloudTrail. The value can be an alias name
+                  prefixed by 'alias/', a fully specified ARN to an alias, a fully specified ARN to a key, or a globally unique
+                  identifier.
+                type: string
+              maxEventSize:
+                description: |-
+                  Specifies the maximum size allowed for the event. Valid values are Standard and Large. If you add
+                  ContextKeySelectors, this value must be set to Large.
+                enum:
+                - Standard
+                - Large
+                type: string
+              multiRegionEnabled:
+                description: |-
+                  Indicates whether the event data store includes events from all regions, or only from the region in which it
+                  was created.
+                type: boolean
+              name:
+                description: The name of the event data store.
+                type: string
+              organizationEnabled:
+                description: Indicates that an event data store is collecting logged
+                  events for an organization.
+                type: boolean
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              retentionPeriod:
+                description: The retention period, in days.
+                format: int64
+                type: integer
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              terminationProtectionEnabled:
+                description: Indicates whether the event data store is protected from
+                  termination.
+                type: boolean
+            type: object
+          status:
+            description: CloudTrailEventDataStoreStatus is the observed state of AWS::CloudTrail::EventDataStore.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdTimestamp:
+                description: |-
+                  The timestamp of the event data store's creation.
+                  Read-only: reported by AWS after creation.
+                type: string
+              eventDataStoreArn:
+                description: |-
+                  The ARN of the event data store.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The status of an event data store. Values are STARTING_INGESTION, ENABLED, STOPPING_INGESTION,
+                  STOPPED_INGESTION and PENDING_DELETION.
+                  Read-only: reported by AWS after creation.
+                type: string
+              updatedTimestamp:
+                description: |-
+                  The timestamp showing when an event data store was updated, if applicable. UpdatedTimestamp is always either
+                  the same or newer than the time shown in CreatedTimestamp.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: cloudtrailresourcepolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: CloudTrailResourcePolicy
+    listKind: CloudTrailResourcePolicyList
+    plural: cloudtrailresourcepolicies
+    singular: cloudtrailresourcepolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          CloudTrailResourcePolicy manages AWS::CloudTrail::ResourcePolicy through the AWS Cloud Control API. Resource
+          Type definition for AWS::CloudTrail::ResourcePolicy
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CloudTrailResourcePolicySpec is the desired state of AWS::CloudTrail::ResourcePolicy.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceArn:
+                description: |-
+                  The ARN of the AWS CloudTrail resource to which the policy applies.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: resourceArn is immutable
+                  rule: self == oldSelf
+              resourcePolicy:
+                description: |-
+                  A policy document containing permissions to add to the specified resource. In IAM, you must provide policy
+                  documents in JSON format. However, in CloudFormation you can provide the policy in JSON or YAML format because
+                  CloudFormation converts YAML to JSON before submitting it to IAM.
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - resourceArn
+            - resourcePolicy
+            type: object
+          status:
+            description: CloudTrailResourcePolicyStatus is the observed state of AWS::CloudTrail::ResourcePolicy.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

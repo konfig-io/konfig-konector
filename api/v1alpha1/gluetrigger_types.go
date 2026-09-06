@@ -67,6 +67,12 @@ type GlueTriggerPredicate struct {
 
 // GlueTriggerSpec defines the desired state of a Glue trigger.
 type GlueTriggerSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the trigger. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -106,6 +112,9 @@ type GlueTriggerSpec struct {
 
 // GlueTriggerStatus defines the observed state of GlueTrigger.
 type GlueTriggerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TriggerName is the name of the trigger in AWS.
 	// +optional
 	TriggerName string `json:"triggerName,omitempty"`

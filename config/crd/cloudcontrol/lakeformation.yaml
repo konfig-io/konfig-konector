@@ -1,0 +1,1263 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lakeformationdatacellsfilters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LakeFormationDataCellsFilter
+    listKind: LakeFormationDataCellsFilterList
+    plural: lakeformationdatacellsfilters
+    singular: lakeformationdatacellsfilter
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LakeFormationDataCellsFilter manages AWS::LakeFormation::DataCellsFilter through the AWS Cloud Control API.
+          Resource Type definition for AWS::LakeFormation::DataCellsFilter
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LakeFormationDataCellsFilterSpec is the desired state of
+              AWS::LakeFormation::DataCellsFilter.
+            properties:
+              columnNames:
+                description: |-
+                  A list of columns to be included in this Data Cells Filter.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              columnWildcard:
+                description: |-
+                  An object representing the Data Cells Filter's Columns. Either Column Names or a Wildcard is required
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  excludedColumnNames:
+                    description: A list of column names to be excluded from the Data
+                      Cells Filter.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              databaseName:
+                description: |-
+                  The name of the Database that the Table resides in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: databaseName is immutable
+                  rule: self == oldSelf
+              name:
+                description: |-
+                  The desired name of the Data Cells Filter.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              rowFilter:
+                description: |-
+                  An object representing the Data Cells Filter's Row Filter. Either a Filter Expression or a Wildcard is
+                  required
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  allRowsWildcard:
+                    description: An empty object representing a row wildcard.
+                    x-kubernetes-preserve-unknown-fields: true
+                  filterExpression:
+                    description: A PartiQL predicate.
+                    type: string
+                type: object
+              tableCatalogId:
+                description: |-
+                  The Catalog Id of the Table on which to create a Data Cells Filter.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 12
+                minLength: 12
+                type: string
+                x-kubernetes-validations:
+                - message: tableCatalogId is immutable
+                  rule: self == oldSelf
+              tableName:
+                description: |-
+                  The name of the Table to create a Data Cells Filter for.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: tableName is immutable
+                  rule: self == oldSelf
+            required:
+            - databaseName
+            - name
+            - tableCatalogId
+            - tableName
+            type: object
+          status:
+            description: LakeFormationDataCellsFilterStatus is the observed state
+              of AWS::LakeFormation::DataCellsFilter.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lakeformationprincipalpermissions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LakeFormationPrincipalPermissions
+    listKind: LakeFormationPrincipalPermissionsList
+    plural: lakeformationprincipalpermissions
+    singular: lakeformationprincipalpermissions
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LakeFormationPrincipalPermissions manages AWS::LakeFormation::PrincipalPermissions through the AWS Cloud
+          Control API. The “AWS::LakeFormation::PrincipalPermissions“ resource represents the permissions that a
+          principal has on a GLUDC resource (such as GLUlong databases or GLUlong tables). When you create a
+          “PrincipalPermissions“ resource, the permissions are granted via the LFlong“GrantPerm...
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LakeFormationPrincipalPermissionsSpec is the desired state
+              of AWS::LakeFormation::PrincipalPermissions.
+            properties:
+              catalog:
+                description: |-
+                  The identifier for the GLUDC. By default, the account ID. The GLUDC is the persistent metadata store. It
+                  contains database definitions, table definitions, and other control information to manage your Lake Formation
+                  environment.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                type: string
+              permissions:
+                description: |-
+                  The permissions granted or revoked.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              permissionsWithGrantOption:
+                description: |-
+                  Indicates the ability to grant permissions (as a subset of permissions granted).
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              principal:
+                description: |-
+                  The principal to be granted a permission.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  dataLakePrincipalIdentifier:
+                    description: An identifier for the LFlong principal.
+                    maxLength: 255
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resource:
+                description: |-
+                  The resource to be granted or revoked permissions.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  catalog:
+                    description: |-
+                      The identifier for the Data Catalog. By default, the account ID. The Data Catalog is the persistent metadata
+                      store. It contains database definitions, table definitions, and other control information to manage your
+                      LFlong environment.
+                    properties:
+                      id:
+                        maxLength: 255
+                        type: string
+                    type: object
+                  dataCellsFilter:
+                    description: A data cell filter.
+                    properties:
+                      databaseName:
+                        description: A database in the GLUDC.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      name:
+                        description: The name given by the user to the data filter
+                          cell.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      tableCatalogId:
+                        description: The ID of the catalog to which the table belongs.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      tableName:
+                        description: The name of the table.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - databaseName
+                    - name
+                    - tableCatalogId
+                    - tableName
+                    type: object
+                  dataLocation:
+                    description: The location of an Amazon S3 path where permissions
+                      are granted or revoked.
+                    properties:
+                      catalogId:
+                        description: The identifier for the GLUDC where the location
+                          is registered with LFlong.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      resourceArn:
+                        description: The Amazon Resource Name (ARN) that uniquely
+                          identifies the data location resource.
+                        type: string
+                    required:
+                    - catalogId
+                    - resourceArn
+                    type: object
+                  database:
+                    description: |-
+                      The database for the resource. Unique to the Data Catalog. A database is a set of associated table definitions
+                      organized into a logical group. You can Grant and Revoke database permissions to a principal.
+                    properties:
+                      catalogId:
+                        description: The identifier for the Data Catalog. By default,
+                          it is the account ID of the caller.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      name:
+                        description: The name of the database resource. Unique to
+                          the Data Catalog.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - catalogId
+                    - name
+                    type: object
+                  lfTag:
+                    description: The LF-tag key and values attached to a resource.
+                    properties:
+                      catalogId:
+                        description: The identifier for the GLUDC where the location
+                          is registered with GLUDC.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      tagKey:
+                        description: The key-name for the LF-tag.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      tagValues:
+                        description: A list of possible values for the corresponding
+                          ``TagKey`` of an LF-tag key-value pair.
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - catalogId
+                    - tagKey
+                    - tagValues
+                    type: object
+                  lfTagPolicy:
+                    description: A list of LF-tag conditions that define a resource's
+                      LF-tag policy.
+                    properties:
+                      catalogId:
+                        description: |-
+                          The identifier for the GLUDC. The GLUDC is the persistent metadata store. It contains database definitions,
+                          table definitions, and other control information to manage your LFlong environment.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      expression:
+                        description: A list of LF-tag conditions that apply to the
+                          resource's LF-tag policy.
+                        items:
+                          description: LakeFormationPrincipalPermissionsLFTag is a
+                            nested property type of AWS::LakeFormation::PrincipalPermissions.
+                          properties:
+                            tagKey:
+                              description: The key-name for the LF-tag.
+                              maxLength: 128
+                              type: string
+                            tagValues:
+                              description: A list of possible values of the corresponding
+                                ``TagKey`` of an LF-tag key-value pair.
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        type: array
+                      resourceType:
+                        description: The resource type for which the LF-tag policy
+                          applies.
+                        enum:
+                        - DATABASE
+                        - TABLE
+                        type: string
+                    required:
+                    - catalogId
+                    - expression
+                    - resourceType
+                    type: object
+                  table:
+                    description: |-
+                      The table for the resource. A table is a metadata definition that represents your data. You can Grant and
+                      Revoke table privileges to a principal.
+                    properties:
+                      catalogId:
+                        description: The identifier for the Data Catalog. By default,
+                          it is the account ID of the caller.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      databaseName:
+                        description: |-
+                          The name of the database for the table. Unique to a Data Catalog. A database is a set of associated table
+                          definitions organized into a logical group. You can Grant and Revoke database privileges to a principal.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      name:
+                        description: The name of the table.
+                        maxLength: 255
+                        type: string
+                      tableWildcard:
+                        description: |-
+                          A wildcard object representing every table under a database. At least one of ``TableResource$Name`` or
+                          ``TableResource$TableWildcard`` is required.
+                        x-kubernetes-preserve-unknown-fields: true
+                    required:
+                    - catalogId
+                    - databaseName
+                    type: object
+                  tableWithColumns:
+                    description: |-
+                      The table with columns for the resource. A principal with permissions to this resource can select metadata
+                      from the columns of a table in the Data Catalog and the underlying data in Amazon S3.
+                    properties:
+                      catalogId:
+                        description: The identifier for the GLUDC where the location
+                          is registered with LFlong.
+                        maxLength: 255
+                        minLength: 12
+                        type: string
+                      columnNames:
+                        description: The list of column names for the table. At least
+                          one of ``ColumnNames`` or ``ColumnWildcard`` is required.
+                        items:
+                          type: string
+                        type: array
+                      columnWildcard:
+                        description: |-
+                          A wildcard specified by a ``ColumnWildcard`` object. At least one of ``ColumnNames`` or ``ColumnWildcard`` is
+                          required.
+                        properties:
+                          excludedColumnNames:
+                            description: Excludes column names. Any column with this
+                              name will be excluded.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      databaseName:
+                        description: |-
+                          The name of the database for the table with columns resource. Unique to the Data Catalog. A database is a set
+                          of associated table definitions organized into a logical group. You can Grant and Revoke database privileges
+                          to a principal.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      name:
+                        description: |-
+                          The name of the table resource. A table is a metadata definition that represents your data. You can Grant and
+                          Revoke table privileges to a principal.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - catalogId
+                    - databaseName
+                    - name
+                    type: object
+                type: object
+            required:
+            - permissions
+            - permissionsWithGrantOption
+            - principal
+            - resource
+            type: object
+          status:
+            description: LakeFormationPrincipalPermissionsStatus is the observed state
+              of AWS::LakeFormation::PrincipalPermissions.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              principalIdentifier:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resourceIdentifier:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lakeformationtagassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LakeFormationTagAssociation
+    listKind: LakeFormationTagAssociationList
+    plural: lakeformationtagassociations
+    singular: lakeformationtagassociation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LakeFormationTagAssociation manages AWS::LakeFormation::TagAssociation through the AWS Cloud Control API. A
+          resource schema representing a Lake Formation Tag Association. While tag associations are not explicit Lake
+          Formation resources, this CloudFormation resource can be used to associate tags with Lake Formation entities.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LakeFormationTagAssociationSpec is the desired state of AWS::LakeFormation::TagAssociation.
+            properties:
+              lfTags:
+                description: |-
+                  List of Lake Formation Tags to associate with the Lake Formation Resource
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: LakeFormationTagAssociationLFTagPair is a nested property
+                    type of AWS::LakeFormation::TagAssociation.
+                  properties:
+                    catalogId:
+                      maxLength: 12
+                      minLength: 12
+                      type: string
+                    tagKey:
+                      maxLength: 128
+                      minLength: 1
+                      type: string
+                    tagValues:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - catalogId
+                  - tagKey
+                  - tagValues
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resource:
+                description: |-
+                  Resource to tag with the Lake Formation Tags
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  catalog:
+                    x-kubernetes-preserve-unknown-fields: true
+                  database:
+                    description: LakeFormationTagAssociationDatabaseResource is a
+                      nested property type of AWS::LakeFormation::TagAssociation.
+                    properties:
+                      catalogId:
+                        maxLength: 12
+                        minLength: 12
+                        type: string
+                      name:
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - catalogId
+                    - name
+                    type: object
+                  table:
+                    description: LakeFormationTagAssociationTableResource is a nested
+                      property type of AWS::LakeFormation::TagAssociation.
+                    properties:
+                      catalogId:
+                        maxLength: 12
+                        minLength: 12
+                        type: string
+                      databaseName:
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      name:
+                        maxLength: 255
+                        type: string
+                      tableWildcard:
+                        x-kubernetes-preserve-unknown-fields: true
+                    required:
+                    - catalogId
+                    - databaseName
+                    type: object
+                  tableWithColumns:
+                    description: LakeFormationTagAssociationTableWithColumnsResource
+                      is a nested property type of AWS::LakeFormation::TagAssociation.
+                    properties:
+                      catalogId:
+                        maxLength: 12
+                        minLength: 12
+                        type: string
+                      columnNames:
+                        items:
+                          type: string
+                        type: array
+                      databaseName:
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                      name:
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - catalogId
+                    - columnNames
+                    - databaseName
+                    - name
+                    type: object
+                type: object
+            required:
+            - lfTags
+            - resource
+            type: object
+          status:
+            description: LakeFormationTagAssociationStatus is the observed state of
+              AWS::LakeFormation::TagAssociation.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resourceIdentifier:
+                description: |-
+                  Unique string identifying the resource. Used as primary identifier, which ideally should be a string
+                  Read-only: reported by AWS after creation.
+                type: string
+              tagsIdentifier:
+                description: |-
+                  Unique string identifying the resource's tags. Used as primary identifier, which ideally should be a string
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: lakeformationtags.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LakeFormationTag
+    listKind: LakeFormationTagList
+    plural: lakeformationtags
+    singular: lakeformationtag
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LakeFormationTag manages AWS::LakeFormation::Tag through the AWS Cloud Control API. A resource schema
+          representing a Lake Formation Tag.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LakeFormationTagSpec is the desired state of AWS::LakeFormation::Tag.
+            properties:
+              catalogId:
+                description: |-
+                  The identifier for the Data Catalog. By default, the account ID. The Data Catalog is the persistent metadata
+                  store. It contains database definitions, table definitions, and other control information to manage your Lake
+                  Formation environment.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 12
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tagKey:
+                description: |-
+                  The key-name for the LF-tag.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 128
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: tagKey is immutable
+                  rule: self == oldSelf
+              tagValues:
+                description: A list of possible values an attribute can take.
+                items:
+                  type: string
+                type: array
+            required:
+            - tagKey
+            - tagValues
+            type: object
+          status:
+            description: LakeFormationTagStatus is the observed state of AWS::LakeFormation::Tag.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

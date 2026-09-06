@@ -61,6 +61,10 @@ func (r *SSMParameterReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	if err := r.Get(ctx, req.NamespacedName, p); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, p); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
+	}
 
 	if !p.DeletionTimestamp.IsZero() {
 		if controllerutil.ContainsFinalizer(p, awsv1alpha1.FinalizerName) {
@@ -84,6 +88,10 @@ func (r *SSMParameterReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if err := r.Update(ctx, p); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileSSMParameter(ctx, p); err != nil {

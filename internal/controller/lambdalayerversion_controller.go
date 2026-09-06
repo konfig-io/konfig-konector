@@ -33,13 +33,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	lambdahelper "github.com/konfig-io/konfig-konector/internal/aws/lambda"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LambdaLayerVersionReconciler reconciles LambdaLayerVersion objects.
 type LambdaLayerVersionReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
-	LambdaClient *awslambda.Client
+	LambdaClient *multi.Lambda
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=lambdalayerversions,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +53,10 @@ func (r *LambdaLayerVersionReconciler) Reconcile(ctx context.Context, req ctrl.R
 	obj := &awsv1alpha1.LambdaLayerVersion{}
 	if err := r.Get(ctx, req.NamespacedName, obj); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, obj); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !obj.DeletionTimestamp.IsZero() {
@@ -76,6 +81,10 @@ func (r *LambdaLayerVersionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileLayerVersion(ctx, obj); err != nil {

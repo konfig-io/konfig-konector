@@ -22,6 +22,12 @@ import (
 
 // BackupVaultSpec defines the desired state of an AWS Backup vault.
 type BackupVaultSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VaultName is the name of the backup vault. Immutable after creation.
 	// +kubebuilder:validation:MinLength=2
 	// +kubebuilder:validation:MaxLength=50
@@ -39,6 +45,9 @@ type BackupVaultSpec struct {
 
 // BackupVaultStatus defines the observed state of BackupVault.
 type BackupVaultStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VaultARN is the ARN of the backup vault.
 	// +optional
 	VaultARN string `json:"vaultArn,omitempty"`

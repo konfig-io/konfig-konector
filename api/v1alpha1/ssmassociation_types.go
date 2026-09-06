@@ -44,6 +44,12 @@ type SSMAssociationTarget struct {
 
 // SSMAssociationSpec defines the desired state of an SSM State Manager association.
 type SSMAssociationSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is a direct SSM document name to associate. Either name or
 	// documentRef must be set.
 	// +optional
@@ -72,6 +78,9 @@ type SSMAssociationSpec struct {
 
 // SSMAssociationStatus defines the observed state of SSMAssociation.
 type SSMAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AssociationID is the AWS association ID.
 	// +optional
 	AssociationID string `json:"associationId,omitempty"`

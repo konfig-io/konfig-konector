@@ -22,6 +22,12 @@ import (
 
 // TransitGatewaySpec defines the desired state of a Transit Gateway.
 type TransitGatewaySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Description is a human-readable description for the transit gateway.
 	// +optional
 	Description string `json:"description,omitempty"`
@@ -59,6 +65,9 @@ type TransitGatewaySpec struct {
 
 // TransitGatewayStatus defines the observed state of TransitGateway.
 type TransitGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TransitGatewayID is the AWS Transit Gateway ID.
 	// +optional
 	TransitGatewayID string `json:"transitGatewayId,omitempty"`

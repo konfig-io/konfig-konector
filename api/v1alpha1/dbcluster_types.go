@@ -30,6 +30,12 @@ type RDSServerlessV2ScalingConfig struct {
 
 // DBClusterSpec defines the desired state of an Aurora DB Cluster.
 type DBClusterSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// DBClusterIdentifier is the unique name for the DB cluster. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
@@ -164,6 +170,9 @@ type DBClusterSpec struct {
 
 // DBClusterStatus defines the observed state of DBCluster.
 type DBClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DBClusterARN is the Amazon Resource Name of the DB cluster.
 	// +optional
 	DBClusterARN string `json:"dbClusterArn,omitempty"`

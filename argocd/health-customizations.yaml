@@ -1,0 +1,23 @@
+# Argo CD health check for every konfig-konector kind: maps the Ready
+# condition to Healthy / Progressing so CRs show real status in the UI.
+# Apply with:
+#   kubectl -n argocd patch configmap argocd-cm --type merge --patch-file argocd/health-customizations.yaml
+#   kubectl -n argocd rollout restart statefulset/argocd-application-controller
+# (If your argocd-cm already has resource.customizations, merge this block into it.)
+data:
+  resource.customizations: |
+    aws.konfig.io/*:
+      health.lua: |
+        hs = {}
+        if obj.status ~= nil and obj.status.conditions ~= nil then
+          for _, c in ipairs(obj.status.conditions) do
+            if c.type == "Ready" then
+              if c.status == "True" then hs.status = "Healthy" else hs.status = "Progressing" end
+              hs.message = (c.reason or "") .. ": " .. (c.message or "")
+              return hs
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "waiting for reconcile"
+        return hs

@@ -1,0 +1,1057 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: licensemanagergrants.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LicenseManagerGrant
+    listKind: LicenseManagerGrantList
+    plural: licensemanagergrants
+    singular: licensemanagergrant
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LicenseManagerGrant manages AWS::LicenseManager::Grant through the AWS Cloud Control API. An example resource
+          schema demonstrating some basic constructs and validation rules.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LicenseManagerGrantSpec is the desired state of AWS::LicenseManager::Grant.
+            properties:
+              allowedOperations:
+                items:
+                  type: string
+                type: array
+              grantName:
+                description: Name for the created Grant.
+                type: string
+              homeRegion:
+                description: Home region for the created grant.
+                type: string
+              licenseArn:
+                description: License Arn for the grant.
+                maxLength: 2048
+                type: string
+              principals:
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              status:
+                type: string
+              tags:
+                description: A list of tags to attach.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: LicenseManagerGrantStatus is the observed state of AWS::LicenseManager::Grant.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              grantArn:
+                description: |-
+                  Arn of the grant.
+                  Read-only: reported by AWS after creation.
+                maxLength: 2048
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              version:
+                description: |-
+                  The version of the grant.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: licensemanagerlicenseassetrulesets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LicenseManagerLicenseAssetRuleSet
+    listKind: LicenseManagerLicenseAssetRuleSetList
+    plural: licensemanagerlicenseassetrulesets
+    singular: licensemanagerlicenseassetruleset
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LicenseManagerLicenseAssetRuleSet manages AWS::LicenseManager::LicenseAssetRuleSet through the AWS Cloud
+          Control API. Resource schema for AWS::LicenseManager::LicenseAssetRuleSet.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LicenseManagerLicenseAssetRuleSetSpec is the desired state
+              of AWS::LicenseManager::LicenseAssetRuleSet.
+            properties:
+              description:
+                description: License asset ruleset description.
+                maxLength: 1024
+                type: string
+              name:
+                description: License asset ruleset name.
+                maxLength: 128
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              rules:
+                description: License asset rules.
+                items:
+                  description: LicenseManagerLicenseAssetRuleSetLicenseAssetRule is
+                    a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                  properties:
+                    ruleStatement:
+                      description: LicenseManagerLicenseAssetRuleSetRuleStatement
+                        is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                      properties:
+                        instanceRuleStatement:
+                          description: LicenseManagerLicenseAssetRuleSetInstanceRuleStatement
+                            is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                          properties:
+                            andRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetAndRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                            matchingRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                constraint:
+                                  description: Constraint (e.g. Equals, Not_Equals).
+                                  type: string
+                                keyToMatch:
+                                  description: Key to match.
+                                  type: string
+                                valueToMatch:
+                                  description: Values to match.
+                                  items:
+                                    type: string
+                                  type: array
+                              required:
+                              - constraint
+                              - keyToMatch
+                              - valueToMatch
+                              type: object
+                            orRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetOrRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        licenseConfigurationRuleStatement:
+                          description: LicenseManagerLicenseAssetRuleSetLicenseConfigurationRuleStatement
+                            is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                          properties:
+                            andRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetAndRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                            matchingRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                constraint:
+                                  description: Constraint (e.g. Equals, Not_Equals).
+                                  type: string
+                                keyToMatch:
+                                  description: Key to match.
+                                  type: string
+                                valueToMatch:
+                                  description: Values to match.
+                                  items:
+                                    type: string
+                                  type: array
+                              required:
+                              - constraint
+                              - keyToMatch
+                              - valueToMatch
+                              type: object
+                            orRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetOrRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                        licenseRuleStatement:
+                          description: LicenseManagerLicenseAssetRuleSetLicenseRuleStatement
+                            is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                          properties:
+                            andRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetAndRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                            matchingRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                constraint:
+                                  description: Constraint (e.g. Equals, Not_Equals).
+                                  type: string
+                                keyToMatch:
+                                  description: Key to match.
+                                  type: string
+                                valueToMatch:
+                                  description: Values to match.
+                                  items:
+                                    type: string
+                                  type: array
+                              required:
+                              - constraint
+                              - keyToMatch
+                              - valueToMatch
+                              type: object
+                            orRuleStatement:
+                              description: LicenseManagerLicenseAssetRuleSetOrRuleStatement
+                                is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                              properties:
+                                matchingRuleStatements:
+                                  items:
+                                    description: LicenseManagerLicenseAssetRuleSetMatchingRuleStatement
+                                      is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
+                                    properties:
+                                      constraint:
+                                        description: Constraint (e.g. Equals, Not_Equals).
+                                        type: string
+                                      keyToMatch:
+                                        description: Key to match.
+                                        type: string
+                                      valueToMatch:
+                                        description: Values to match.
+                                        items:
+                                          type: string
+                                        type: array
+                                    required:
+                                    - constraint
+                                    - keyToMatch
+                                    - valueToMatch
+                                    type: object
+                                  type: array
+                              type: object
+                          type: object
+                      type: object
+                  required:
+                  - ruleStatement
+                  type: object
+                type: array
+              tags:
+                description: Tags to add to the license asset ruleset.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            - rules
+            type: object
+          status:
+            description: LicenseManagerLicenseAssetRuleSetStatus is the observed state
+              of AWS::LicenseManager::LicenseAssetRuleSet.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              licenseAssetRulesetArn:
+                description: |-
+                  Amazon Resource Name (ARN) of the license asset ruleset.
+                  Read-only: reported by AWS after creation.
+                maxLength: 2048
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: licensemanagerlicenses.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: LicenseManagerLicense
+    listKind: LicenseManagerLicenseList
+    plural: licensemanagerlicenses
+    singular: licensemanagerlicense
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          LicenseManagerLicense manages AWS::LicenseManager::License through the AWS Cloud Control API. Resource Type
+          definition for AWS::LicenseManager::License
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LicenseManagerLicenseSpec is the desired state of AWS::LicenseManager::License.
+            properties:
+              beneficiary:
+                description: Beneficiary of the license.
+                type: string
+              consumptionConfiguration:
+                description: LicenseManagerLicenseConsumptionConfiguration is a nested
+                  property type of AWS::LicenseManager::License.
+                properties:
+                  borrowConfiguration:
+                    description: LicenseManagerLicenseBorrowConfiguration is a nested
+                      property type of AWS::LicenseManager::License.
+                    properties:
+                      allowEarlyCheckIn:
+                        type: boolean
+                      maxTimeToLiveInMinutes:
+                        format: int64
+                        type: integer
+                    required:
+                    - allowEarlyCheckIn
+                    - maxTimeToLiveInMinutes
+                    type: object
+                  provisionalConfiguration:
+                    description: LicenseManagerLicenseProvisionalConfiguration is
+                      a nested property type of AWS::LicenseManager::License.
+                    properties:
+                      maxTimeToLiveInMinutes:
+                        format: int64
+                        type: integer
+                    required:
+                    - maxTimeToLiveInMinutes
+                    type: object
+                  renewType:
+                    type: string
+                type: object
+              entitlements:
+                items:
+                  description: LicenseManagerLicenseEntitlement is a nested property
+                    type of AWS::LicenseManager::License.
+                  properties:
+                    allowCheckIn:
+                      type: boolean
+                    maxCount:
+                      format: int64
+                      type: integer
+                    name:
+                      type: string
+                    overage:
+                      type: boolean
+                    unit:
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - name
+                  - unit
+                  type: object
+                type: array
+              homeRegion:
+                description: Home region for the created license.
+                type: string
+              issuer:
+                description: LicenseManagerLicenseIssuerData is a nested property
+                  type of AWS::LicenseManager::License.
+                properties:
+                  name:
+                    type: string
+                  signKey:
+                    type: string
+                required:
+                - name
+                type: object
+              licenseMetadata:
+                items:
+                  description: LicenseManagerLicenseMetadata is a nested property
+                    type of AWS::LicenseManager::License.
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - name
+                  - value
+                  type: object
+                type: array
+              licenseName:
+                description: Name for the created license.
+                type: string
+              productName:
+                description: Product name for the created license.
+                type: string
+              productSKU:
+                description: ProductSKU of the license.
+                maxLength: 1024
+                minLength: 1
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              status:
+                type: string
+              tags:
+                description: A list of tags to attach.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              validity:
+                description: LicenseManagerLicenseValidityDateFormat is a nested property
+                  type of AWS::LicenseManager::License.
+                properties:
+                  begin:
+                    description: Validity begin date for the license.
+                    type: string
+                  end:
+                    description: Validity begin date for the license.
+                    type: string
+                required:
+                - begin
+                - end
+                type: object
+            required:
+            - beneficiary
+            - consumptionConfiguration
+            - entitlements
+            - homeRegion
+            - issuer
+            - licenseName
+            - productName
+            - productSKU
+            - validity
+            type: object
+          status:
+            description: LicenseManagerLicenseStatus is the observed state of AWS::LicenseManager::License.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              licenseArn:
+                description: |-
+                  Amazon Resource Name is a unique name for each resource.
+                  Read-only: reported by AWS after creation.
+                maxLength: 2048
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              version:
+                description: |-
+                  The version of the license.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

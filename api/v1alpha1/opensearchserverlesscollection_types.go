@@ -22,6 +22,12 @@ import (
 
 // OpenSearchServerlessCollectionSpec defines the desired state of an OpenSearch Serverless collection.
 type OpenSearchServerlessCollectionSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// Name is the name of the collection. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable"
 	Name string `json:"name"`
@@ -42,6 +48,9 @@ type OpenSearchServerlessCollectionSpec struct {
 
 // OpenSearchServerlessCollectionStatus defines the observed state of OpenSearchServerlessCollection.
 type OpenSearchServerlessCollectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CollectionID is the unique identifier of the collection.
 	// +optional
 	CollectionID string `json:"collectionID,omitempty"`

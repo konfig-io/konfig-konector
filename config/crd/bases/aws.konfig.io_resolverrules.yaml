@@ -63,6 +63,23 @@ spec:
               name:
                 description: Name is the friendly name of the rule.
                 type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
               resolverEndpointID:
                 description: ResolverEndpointID is the ID of the outbound endpoint
                   for forwarding.
@@ -106,6 +123,21 @@ spec:
           status:
             description: ResolverRuleStatus defines the observed state of ResolverRule.
             properties:
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
               conditions:
                 description: Conditions describe the current state of the resource.
                 items:

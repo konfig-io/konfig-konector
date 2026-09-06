@@ -1,0 +1,454 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rumappmonitors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RUMAppMonitor
+    listKind: RUMAppMonitorList
+    plural: rumappmonitors
+    singular: rumappmonitor
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RUMAppMonitor manages AWS::RUM::AppMonitor through the AWS Cloud Control API. Resource Type definition for
+          AWS::RUM::AppMonitor
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RUMAppMonitorSpec is the desired state of AWS::RUM::AppMonitor.
+            properties:
+              appMonitorConfiguration:
+                description: RUMAppMonitorAppMonitorConfiguration is a nested property
+                  type of AWS::RUM::AppMonitor.
+                properties:
+                  allowCookies:
+                    description: |-
+                      If you set this to true, the RUM web client sets two cookies, a session cookie and a user cookie. The cookies
+                      allow the RUM web client to collect data relating to the number of users an application has and the behavior
+                      of the application across a sequence of events. Cookies are stored in the top-level domain of the current
+                      page.
+                    type: boolean
+                  enableXRay:
+                    description: |-
+                      If you set this to true, RUM enables xray tracing for the user sessions that RUM samples. RUM adds an xray
+                      trace header to allowed HTTP requests. It also records an xray segment for allowed HTTP requests. You can see
+                      traces and segments from these user sessions in the xray console and the CW ServiceLens console.
+                    type: boolean
+                  excludedPages:
+                    description: |-
+                      A list of URLs in your website or application to exclude from RUM data collection. You can't include both
+                      ExcludedPages and IncludedPages in the same operation.
+                    items:
+                      type: string
+                    type: array
+                  favoritePages:
+                    description: A list of pages in the RUM console that are to be
+                      displayed with a favorite icon.
+                    items:
+                      type: string
+                    type: array
+                  guestRoleArn:
+                    description: |-
+                      The ARN of the guest IAM role that is attached to the identity pool that is used to authorize the sending of
+                      data to RUM.
+                    type: string
+                  identityPoolId:
+                    description: The ID of the identity pool that is used to authorize
+                      the sending of data to RUM.
+                    maxLength: 55
+                    type: string
+                  includedPages:
+                    description: |-
+                      If this app monitor is to collect data from only certain pages in your application, this structure lists those
+                      pages. You can't include both ExcludedPages and IncludedPages in the same operation.
+                    items:
+                      type: string
+                    type: array
+                  metricDestinations:
+                    description: An array of structures which define the destinations
+                      and the metrics that you want to send.
+                    items:
+                      description: RUMAppMonitorMetricDestination is a nested property
+                        type of AWS::RUM::AppMonitor.
+                      properties:
+                        destination:
+                          description: |-
+                            Defines the destination to send the metrics to. Valid values are CloudWatch and Evidently. Note: Evidently has
+                            been discontinued and is no longer supported - requests with Evidently will be rejected.
+                          enum:
+                          - CloudWatch
+                          - Evidently
+                          type: string
+                        destinationArn:
+                          description: |-
+                            Evidently has been discontinued and therefore this is no longer an acceptable field. If Destination is
+                            CloudWatch, do not use this parameter. This parameter specifies the ARN of the Evidently experiment that will
+                            receive the extended metrics.
+                          type: string
+                        iamRoleArn:
+                          description: |-
+                            Evidently has been discontinued and therefore this is no longer an acceptable field. If Destination is
+                            CloudWatch, do not use this parameter. This parameter specifies the ARN of an IAM role that RUM will assume to
+                            write to the Evidently experiment that you are sending metrics to. This role must have permission to write to
+                            that experiment.
+                          type: string
+                        metricDefinitions:
+                          description: An array of structures which define the metrics
+                            that you want to send.
+                          items:
+                            description: RUMAppMonitorMetricDefinition is a nested
+                              property type of AWS::RUM::AppMonitor.
+                            properties:
+                              dimensionKeys:
+                                additionalProperties:
+                                  type: string
+                                description: |-
+                                  Use this field only if you are sending the metric to CloudWatch. This field is a map of field paths to
+                                  dimension names. It defines the dimensions to associate with this metric in CloudWatch. For extended metrics,
+                                  valid values for the entries in this field are the following: "metadata.pageId": "PageId"
+                                  "metadata.browserName": "BrowserName" "metadata.deviceType": "DeviceType" "metadata.osName": "...
+                                type: object
+                              eventPattern:
+                                description: |-
+                                  The pattern that defines the metric, specified as a JSON object. RUM checks events that happen in a user's
+                                  session against the pattern, and events that match the pattern are sent to the metric destination. When you
+                                  define extended metrics, the metric definition is not valid if EventPattern is omitted. Example event
+                                  patterns: '{ "event_type": ["com.amazon.rum.js_error_event"], "metadata": { "bro...
+                                maxLength: 4000
+                                type: string
+                              name:
+                                description: |-
+                                  The name for the metric that is defined in this structure. For extended metrics, valid values are the
+                                  following: PerformanceNavigationDuration PerformanceResourceDuration NavigationSatisfiedTransaction
+                                  NavigationToleratedTransaction NavigationFrustratedTransaction WebVitalsCumulativeLayoutShift
+                                  WebVitalsFirstInputDelay WebVitalsLargestContentfulPaint WebVitalsInteractionToNextPaint JsErrorCount...
+                                maxLength: 255
+                                minLength: 1
+                                type: string
+                              namespace:
+                                description: The namespace used by CloudWatch Metrics
+                                  for the metric that is defined in this structure
+                                maxLength: 237
+                                type: string
+                              unitLabel:
+                                description: |-
+                                  The CloudWatch metric unit to use for this metric. If you omit this field, the metric is recorded with no
+                                  unit.
+                                maxLength: 256
+                                type: string
+                              valueKey:
+                                description: |-
+                                  The field within the event object that the metric value is sourced from. If you omit this field, a hardcoded
+                                  value of 1 is pushed as the metric value. This is useful if you just want to count the number of events that
+                                  the filter catches. If this metric is sent to Evidently, this field will be passed to Evidently raw and
+                                  Evidently will handle data extraction from the event. Note: Evidently has b...
+                                maxLength: 256
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          type: array
+                      required:
+                      - destination
+                      type: object
+                    type: array
+                  sessionSampleRate:
+                    description: |-
+                      Specifies the percentage of user sessions to use for RUM data collection. Choosing a higher percentage gives
+                      you more data but also incurs more costs. The number you specify is the percentage of user sessions that will
+                      be used. If you omit this parameter, the default of 10 is used.
+                    type: number
+                  telemetries:
+                    description: An array that lists the types of telemetry data that
+                      this app monitor is to collect.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              customEvents:
+                description: RUMAppMonitorCustomEvents is a nested property type of
+                  AWS::RUM::AppMonitor.
+                properties:
+                  status:
+                    description: Indicates whether AppMonitor accepts custom events.
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                type: object
+              cwLogEnabled:
+                description: |-
+                  Data collected by RUM is kept by RUM for 30 days and then deleted. This parameter specifies whether RUM sends
+                  a copy of this telemetry data to CWLlong in your account. This enables you to keep the telemetry data for more
+                  than 30 days, but it does incur CWLlong charges. If you omit this parameter, the default is false
+                type: boolean
+              deobfuscationConfiguration:
+                description: RUMAppMonitorDeobfuscationConfiguration is a nested property
+                  type of AWS::RUM::AppMonitor.
+                properties:
+                  javaScriptSourceMaps:
+                    description: |-
+                      A structure that contains the configuration for how an app monitor can unminify JavaScript error stack traces
+                      using source maps.
+                    properties:
+                      s3Uri:
+                        description: The S3Uri of the bucket or folder that stores
+                          the source map files. It is required if status is ENABLED.
+                        type: string
+                      status:
+                        description: |-
+                          Specifies whether JavaScript error stack traces should be unminified for this app monitor. The default is for
+                          JavaScript error stack trace unminification to be DISABLED
+                        enum:
+                        - ENABLED
+                        - DISABLED
+                        type: string
+                    required:
+                    - status
+                    type: object
+                type: object
+              domain:
+                description: |-
+                  The top-level internet domain name for which your application has administrative authority. The
+                  CreateAppMonitor requires either the domain or the domain list.
+                maxLength: 253
+                type: string
+              domainList:
+                description: |-
+                  The top-level internet domain names for which your application has administrative authority. The
+                  CreateAppMonitor requires either the domain or the domain list.
+                items:
+                  type: string
+                type: array
+              name:
+                description: |-
+                  A name for the app monitor
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 255
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              platform:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                enum:
+                - Web
+                - Android
+                - iOS
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourcePolicy:
+                description: RUMAppMonitorResourcePolicy is a nested property type
+                  of AWS::RUM::AppMonitor.
+                properties:
+                  policyDocument:
+                    description: The JSON to use as the resource policy. The document
+                      can be up to 4 KB in size.
+                    type: string
+                  policyRevisionId:
+                    description: |-
+                      A string value that you can use to conditionally update your policy. You can provide the revision ID of your
+                      existing policy to make mutating requests against that policy. When you assign a policy revision ID, then
+                      later requests about that policy will be rejected with an InvalidPolicyRevisionIdException error if they don't
+                      provide the correct current revision ID.
+                    maxLength: 255
+                    type: string
+                required:
+                - policyDocument
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: RUMAppMonitorStatus is the observed state of AWS::RUM::AppMonitor.
+            properties:
+              attempt:
+                description: |-
+                  Attempt counts failed create/delete requests; it salts the Cloud Control
+                  idempotency token so a retry is not served the cached failure.
+                format: int32
+                type: integer
+              awsProvider:
+                description: AWSProvider confirms the account and region this resource
+                  was reconciled against.
+                properties:
+                  accountId:
+                    description: AccountID the resource lives in.
+                    type: string
+                  name:
+                    description: Name of the AWSProvider used; empty when the operator's
+                      own credentials were used.
+                    type: string
+                  region:
+                    description: Region the resource lives in (empty for global services).
+                    type: string
+                type: object
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  The unique ID of the new app monitor.
+                  Read-only: reported by AWS after creation.
+                maxLength: 36
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

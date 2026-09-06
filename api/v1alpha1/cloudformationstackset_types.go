@@ -22,6 +22,12 @@ import (
 
 // CloudFormationStackSetSpec defines the desired state of a CloudFormation StackSet.
 type CloudFormationStackSetSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// StackSetName is the name of the StackSet. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="stackSetName is immutable"
 	StackSetName string `json:"stackSetName"`
@@ -53,6 +59,9 @@ type CloudFormationStackSetSpec struct {
 
 // CloudFormationStackSetStatus defines the observed state of CloudFormationStackSet.
 type CloudFormationStackSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StackSetID is the unique identifier of the StackSet.
 	// +optional
 	StackSetID string `json:"stackSetID,omitempty"`

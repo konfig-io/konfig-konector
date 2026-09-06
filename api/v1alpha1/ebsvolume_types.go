@@ -22,6 +22,12 @@ import (
 
 // EBSVolumeSpec defines the desired state of an EBS Volume.
 type EBSVolumeSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// AvailabilityZone is the AZ in which to create the volume.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="availabilityZone is immutable"
@@ -68,6 +74,9 @@ type EBSVolumeSpec struct {
 
 // EBSVolumeStatus defines the observed state of EBSVolume.
 type EBSVolumeStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VolumeID is the EBS volume ID.
 	// +optional
 	VolumeID string `json:"volumeId,omitempty"`

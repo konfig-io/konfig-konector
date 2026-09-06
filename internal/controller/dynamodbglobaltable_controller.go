@@ -34,13 +34,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	ddbhelper "github.com/konfig-io/konfig-konector/internal/aws/dynamodb"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // DynamoDBGlobalTableReconciler reconciles DynamoDBGlobalTable objects.
 type DynamoDBGlobalTableReconciler struct {
 	client.Client
 	Scheme         *runtime.Scheme
-	DynamoDBClient *awsddb.Client
+	DynamoDBClient *multi.DynamoDB
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=dynamodbglobaltables,verbs=get;list;watch;create;update;patch;delete
@@ -53,6 +54,10 @@ func (r *DynamoDBGlobalTableReconciler) Reconcile(ctx context.Context, req ctrl.
 	gt := &awsv1alpha1.DynamoDBGlobalTable{}
 	if err := r.Get(ctx, req.NamespacedName, gt); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, gt); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !gt.DeletionTimestamp.IsZero() {
@@ -73,6 +78,10 @@ func (r *DynamoDBGlobalTableReconciler) Reconcile(ctx context.Context, req ctrl.
 		if err := r.Update(ctx, gt); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileDynamoDBGlobalTable(ctx, gt); err != nil {

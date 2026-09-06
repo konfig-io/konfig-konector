@@ -57,6 +57,12 @@ type SGRule struct {
 
 // SecurityGroupSpec defines the desired state of an AWS Security Group.
 type SecurityGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// VPCRef references the VPC this security group belongs to.
 	VPCRef VPCResourceRef `json:"vpcRef"`
 
@@ -85,6 +91,9 @@ type SecurityGroupSpec struct {
 
 // SecurityGroupStatus defines the observed state of SecurityGroup.
 type SecurityGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// GroupID is the AWS Security Group identifier.
 	// +optional
 	GroupID string `json:"groupId,omitempty"`

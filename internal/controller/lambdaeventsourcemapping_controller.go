@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	awslambda "github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,13 +32,14 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	lambdahelper "github.com/konfig-io/konfig-konector/internal/aws/lambda"
+	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
 // LambdaEventSourceMappingReconciler reconciles LambdaEventSourceMapping objects.
 type LambdaEventSourceMappingReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
-	LambdaClient *awslambda.Client
+	LambdaClient *multi.Lambda
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=lambdaeventsourcemappings,verbs=get;list;watch;create;update;patch;delete
@@ -52,6 +52,10 @@ func (r *LambdaEventSourceMappingReconciler) Reconcile(ctx context.Context, req 
 	esm := &awsv1alpha1.LambdaEventSourceMapping{}
 	if err := r.Get(ctx, req.NamespacedName, esm); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	var scopeErr error
+	if ctx, scopeErr = withProviderScope(ctx, esm); scopeErr != nil {
+		return ctrl.Result{}, scopeErr
 	}
 
 	if !esm.DeletionTimestamp.IsZero() {
@@ -78,6 +82,10 @@ func (r *LambdaEventSourceMappingReconciler) Reconcile(ctx context.Context, req 
 		if err := r.Update(ctx, esm); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	result, err := r.reconcileESM(ctx, esm)

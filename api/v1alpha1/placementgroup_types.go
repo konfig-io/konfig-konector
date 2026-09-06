@@ -22,6 +22,12 @@ import (
 
 // PlacementGroupSpec defines the desired state of a Placement Group.
 type PlacementGroupSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// GroupName is the name of the placement group. Immutable after creation.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
@@ -51,6 +57,9 @@ type PlacementGroupSpec struct {
 
 // PlacementGroupStatus defines the observed state of PlacementGroup.
 type PlacementGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// GroupID is the AWS placement group ID.
 	// +optional
 	GroupID string `json:"groupId,omitempty"`

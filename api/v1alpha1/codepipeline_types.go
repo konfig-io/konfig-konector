@@ -81,6 +81,12 @@ type CodePipelineStage struct {
 
 // CodePipelineSpec defines the desired state of a CodePipeline pipeline.
 type CodePipelineSpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// PipelineName is the name of the pipeline. Immutable.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="pipelineName is immutable"
 	PipelineName string `json:"pipelineName"`
@@ -101,6 +107,9 @@ type CodePipelineSpec struct {
 
 // CodePipelineStatus defines the observed state of CodePipeline.
 type CodePipelineStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PipelineARN is the ARN of the pipeline.
 	// +optional
 	PipelineARN string `json:"pipelineARN,omitempty"`

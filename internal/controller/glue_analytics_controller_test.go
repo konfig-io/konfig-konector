@@ -84,7 +84,7 @@ func TestGlueDatabaseReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-db", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.GlueDatabase)) *awsv1alpha1.GlueDatabase {
 		db := &awsv1alpha1.GlueDatabase{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-db", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-db", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.GlueDatabaseSpec{
 				Name:        "my_db",
 				Description: "test db",
@@ -204,7 +204,7 @@ func TestGlueCrawlerReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-crawler", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.GlueCrawler)) *awsv1alpha1.GlueCrawler {
 		cr := &awsv1alpha1.GlueCrawler{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-crawler", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-crawler", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.GlueCrawlerSpec{
 				Name:         "my-crawler",
 				RoleRef:      awsv1alpha1.RoleRef{ARN: testGlueRoleARN},
@@ -325,7 +325,7 @@ func TestGlueTriggerReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-trigger", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.GlueTrigger)) *awsv1alpha1.GlueTrigger {
 		tr := &awsv1alpha1.GlueTrigger{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-trigger", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-trigger", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.GlueTriggerSpec{
 				Name:     "my-trigger",
 				Type:     "SCHEDULED",
@@ -442,13 +442,13 @@ func TestGlueConnectionReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-conn", Namespace: "default"}}
 	passwordSecret := func() *corev1.Secret {
 		return &corev1.Secret{
-			ObjectMeta: metav1.ObjectMeta{Name: "conn-creds", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "conn-creds", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Data:       map[string][]byte{"password": []byte(testGlueConnPassword)},
 		}
 	}
 	newCR := func(mutate ...func(*awsv1alpha1.GlueConnection)) *awsv1alpha1.GlueConnection {
 		conn := &awsv1alpha1.GlueConnection{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-conn", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-conn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.GlueConnectionSpec{
 				Name:           "my-conn",
 				ConnectionType: "JDBC",

@@ -77,7 +77,7 @@ func (f *fakeOrgOU) TagResource(_ context.Context, _ *awsorgs.TagResourceInput, 
 
 func orgOUCR(mutate ...func(*awsv1alpha1.OrganizationsOU)) *awsv1alpha1.OrganizationsOU {
 	ou := &awsv1alpha1.OrganizationsOU{
-		ObjectMeta: metav1.ObjectMeta{Name: "workloads", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "workloads", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.OrganizationsOUSpec{
 			Name:     "workloads",
 			ParentID: "r-abcd",
@@ -124,7 +124,7 @@ func TestOrganizationsOUReconcile(t *testing.T) {
 		ctx := context.Background()
 		scheme := newOrgScheme(t)
 		parent := &awsv1alpha1.OrganizationsOU{
-			ObjectMeta: metav1.ObjectMeta{Name: "parent-ou", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "parent-ou", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec:       awsv1alpha1.OrganizationsOUSpec{Name: "parent", ParentID: "r-abcd"},
 		}
 		child := orgOUCR(func(ou *awsv1alpha1.OrganizationsOU) {

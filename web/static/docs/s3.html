@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>S3 — konfig-konector Docs</title>
-  <meta name="description" content="API reference for S3Bucket, S3BucketCORS, S3BucketLifecycle, S3BucketNotification, S3BucketPolicy, S3BucketReplication." />
+  <meta name="description" content="API reference for S3AccessGrant, S3AccessGrantsInstance, S3AccessGrantsLocation, S3Bucket, S3BucketCORS, S3BucketLifecycle, S3BucketNotification, S3BucketPolicy, S3BucketReplication, S3MultiRegionAccessPoint, S3MultiRegionAccessPointPolicy, S3StorageLens, S3StorageLensGroup." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,12 +41,220 @@
     </div>
 
     <h1 class="docs-page-title">S3</h1>
-    <p class="docs-page-subtitle">6 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">13 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
       <code>aws.konfig.io/v1alpha1</code>
     </div>
+
+    <section id="s3accessgrant" class="resource-section">
+      <h2>S3AccessGrant <a href="#s3accessgrant" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::AccessGrant</span></h2>
+      <p class="resource-desc">S3AccessGrant manages AWS::S3::AccessGrant through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3accessgrants</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3accessgrant.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3AccessGrant — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3accessgrant
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3AccessGrant
+metadata:
+  name: example-s3accessgrant
+  namespace: default
+spec:
+  accessGrantsLocationConfiguration:
+    s3SubPrefix: example
+  accessGrantsLocationId: example-id
+  applicationArn: arn:aws:iam::123456789012:role/example-role
+  grantee:
+    granteeIdentifier: example
+    granteeType: IAM
+  permission: READ
+  providerRef:
+    name: example-s3accessgrant
+    region: us-east-1
+  s3PrefixType: Object
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessGrantsLocationConfiguration</code></td><td>object</td><td>—</td><td>The configuration options of the grant location, which is the S3 path to the data to which you are granting access.</td></tr>
+<tr><td><code>accessGrantsLocationConfiguration.s3SubPrefix</code></td><td>string</td><td><span class="req">yes</span></td><td>The S3 sub prefix of a registered location in your S3 Access Grants instance</td></tr>
+<tr><td><code>accessGrantsLocationId</code></td><td>string</td><td><span class="req">yes</span></td><td>The custom S3 location to be accessed by the grantee</td></tr>
+<tr><td><code>applicationArn</code></td><td>string</td><td>—</td><td>The ARN of the application grantees will use to access the location</td></tr>
+<tr><td><code>grantee</code></td><td>object</td><td><span class="req">yes</span></td><td>The principal who will be granted permission to access S3.</td></tr>
+<tr><td><code>grantee.granteeIdentifier</code></td><td>string</td><td><span class="req">yes</span></td><td>The unique identifier of the Grantee</td></tr>
+<tr><td><code>grantee.granteeType</code></td><td>enum</td><td><span class="req">yes</span></td><td>Configures the transfer acceleration state for an Amazon S3 bucket. Allowed: <code>IAM, DIRECTORY_USER, DIRECTORY_GROUP</code></td></tr>
+<tr><td><code>permission</code></td><td>enum</td><td><span class="req">yes</span></td><td>The level of access to be afforded to the grantee Allowed: <code>READ, WRITE, READWRITE</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>s3PrefixType</code></td><td>enum</td><td>—</td><td>The type of S3SubPrefix. Allowed: <code>Object</code></td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessGrantArn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the specified access grant.</td></tr>
+<tr><td><code>accessGrantId</code></td><td>string</td><td>—</td><td>The ID assigned to this access grant.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>grantScope</code></td><td>string</td><td>—</td><td>The S3 path of the data to which you are granting access.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3accessgrantsinstance" class="resource-section">
+      <h2>S3AccessGrantsInstance <a href="#s3accessgrantsinstance" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::AccessGrantsInstance</span></h2>
+      <p class="resource-desc">S3AccessGrantsInstance manages AWS::S3::AccessGrantsInstance through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3accessgrantsinstances</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3accessgrantsinstance.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3AccessGrantsInstance — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3accessgrantsinstance
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3AccessGrantsInstance
+metadata:
+  name: example-s3accessgrantsinstance
+  namespace: default
+spec:
+  identityCenterArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-s3accessgrantsinstance
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>identityCenterArn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the specified AWS Identity Center.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessGrantsInstanceArn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the specified Access Grants instance.</td></tr>
+<tr><td><code>accessGrantsInstanceId</code></td><td>string</td><td>—</td><td>A unique identifier for the specified access grants instance.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3accessgrantslocation" class="resource-section">
+      <h2>S3AccessGrantsLocation <a href="#s3accessgrantslocation" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::AccessGrantsLocation</span></h2>
+      <p class="resource-desc">S3AccessGrantsLocation manages AWS::S3::AccessGrantsLocation through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3accessgrantslocations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3accessgrantslocation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3AccessGrantsLocation — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3accessgrantslocation
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3AccessGrantsLocation
+metadata:
+  name: example-s3accessgrantslocation
+  namespace: default
+spec:
+  iamRoleArn: arn:aws:iam::123456789012:role/example-role
+  locationScope: example
+  providerRef:
+    name: example-s3accessgrantslocation
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>iamRoleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The Amazon Resource Name (ARN) of the access grant location's associated IAM role.</td></tr>
+<tr><td><code>locationScope</code></td><td>string</td><td><span class="req">yes</span></td><td>Descriptor for where the location actually points</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accessGrantsLocationArn</code></td><td>string</td><td>—</td><td>The Amazon Resource Name (ARN) of the specified Access Grants location.</td></tr>
+<tr><td><code>accessGrantsLocationId</code></td><td>string</td><td>—</td><td>The unique identifier for the specified Access Grants location.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
 
     <section id="s3bucket" class="resource-section">
       <h2>S3Bucket <a href="#s3bucket" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
@@ -125,6 +333,9 @@ spec:
         days: 7
         mode: GOVERNANCE
         years: 1
+  providerRef:
+    name: example-s3bucket
+    region: us-east-1
   region: us-east-1
   serverSideEncryption:
     kmsKeyId: arn:aws:kms:us-east-1:123456789012:key/1234abcd-12ab-34cd-56ef-1234567890ab
@@ -210,6 +421,9 @@ spec:
 <tr><td><code>objectLockConfig.rule.defaultRetention.days</code></td><td>integer</td><td>—</td><td>Days is the retention period in days.</td></tr>
 <tr><td><code>objectLockConfig.rule.defaultRetention.mode</code></td><td>enum</td><td><span class="req">yes</span></td><td>Mode is GOVERNANCE or COMPLIANCE. Allowed: <code>GOVERNANCE, COMPLIANCE</code></td></tr>
 <tr><td><code>objectLockConfig.rule.defaultRetention.years</code></td><td>integer</td><td>—</td><td>Years is the retention period in years.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>region</code></td><td>string</td><td>—</td><td>Region is the AWS region where the bucket is created.</td></tr>
 <tr><td><code>serverSideEncryption</code></td><td>object</td><td>—</td><td>ServerSideEncryption configures default SSE for new objects.</td></tr>
 <tr><td><code>serverSideEncryption.kmsKeyId</code></td><td>string</td><td>—</td><td>KMSKeyID is the KMS key ARN or ID (only for aws:kms).</td></tr>
@@ -238,6 +452,10 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>arn</code></td><td>string</td><td>—</td><td>ARN is the Amazon Resource Name of the bucket.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -279,6 +497,9 @@ spec:
     exposeHeaders:
     - example
     maxAgeSeconds: 300
+  providerRef:
+    name: example-s3bucketcors
+    region: us-east-1
 </code></pre></div>
 
       <h3>Spec</h3>
@@ -292,11 +513,18 @@ spec:
 <tr><td><code>corsRules[].exposeHeaders</code></td><td>array&lt;string&gt;</td><td>—</td><td>ExposeHeaders specifies headers the browser can access.</td></tr>
 <tr><td><code>corsRules[].id</code></td><td>string</td><td>—</td><td>ID is an optional unique identifier for the rule.</td></tr>
 <tr><td><code>corsRules[].maxAgeSeconds</code></td><td>integer</td><td>—</td><td>MaxAgeSeconds specifies how long the browser can cache the preflight response.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 </tbody></table></div>
 
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -326,6 +554,9 @@ metadata:
   namespace: default
 spec:
   bucketName: example-s3bucketlifecycle
+  providerRef:
+    name: example-s3bucketlifecycle
+    region: us-east-1
   rules:
   - abortIncompleteMultipartUploadDays: 7
     expirationDate: example
@@ -346,6 +577,9 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>bucketName</code></td><td>string</td><td><span class="req">yes</span></td><td>BucketName is the name of the S3 bucket.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Rules are the lifecycle rules to apply.</td></tr>
 <tr><td><code>rules[].abortIncompleteMultipartUploadDays</code></td><td>integer</td><td>—</td><td>AbortIncompleteMultipartUploadDays cancels incomplete multipart uploads after this many days.</td></tr>
 <tr><td><code>rules[].expirationDate</code></td><td>string</td><td>—</td><td>ExpirationDate is the ISO 8601 date for expiration.</td></tr>
@@ -366,6 +600,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -400,6 +638,9 @@ spec:
   - events:
     - example
     lambdaFunctionArn: arn:aws:iam::123456789012:role/example-role
+  providerRef:
+    name: example-s3bucketnotification
+    region: us-east-1
   queueConfigurations:
   - events:
     - example
@@ -419,6 +660,9 @@ spec:
 <tr><td><code>lambdaFunctionConfigurations[].events</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>Events is the list of S3 events that trigger this notification.</td></tr>
 <tr><td><code>lambdaFunctionConfigurations[].id</code></td><td>string</td><td>—</td><td>ID is an optional unique identifier for this configuration.</td></tr>
 <tr><td><code>lambdaFunctionConfigurations[].lambdaFunctionArn</code></td><td>string</td><td><span class="req">yes</span></td><td>LambdaFunctionARN is the ARN of the Lambda function.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>queueConfigurations</code></td><td>array&lt;object&gt;</td><td>—</td><td>QueueConfigurations are SQS queue notification configurations.</td></tr>
 <tr><td><code>queueConfigurations[].events</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>Events is the list of S3 events that trigger this notification.</td></tr>
 <tr><td><code>queueConfigurations[].id</code></td><td>string</td><td>—</td><td>ID is an optional unique identifier for this configuration.</td></tr>
@@ -432,6 +676,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -465,6 +713,9 @@ spec:
     name: example-s3bucketpolicy
   policyDocument: &#x27;{&quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Statement&quot;: [{&quot;Effect&quot;: &quot;Allow&quot;, &quot;Action&quot;: [&quot;s3:GetObject&quot;],
     &quot;Resource&quot;: &quot;*&quot;}]}&#x27;
+  providerRef:
+    name: example-s3bucketpolicy
+    region: us-east-1
 </code></pre></div>
 
       <h3>Spec</h3>
@@ -474,11 +725,18 @@ spec:
 <tr><td><code>bucketRef.bucketName</code></td><td>string</td><td>—</td><td>BucketName is a direct S3 bucket name (bypasses CR lookup).</td></tr>
 <tr><td><code>bucketRef.name</code></td><td>string</td><td>—</td><td>Name is the name of an S3Bucket CR in the same namespace.</td></tr>
 <tr><td><code>policyDocument</code></td><td>string</td><td><span class="req">yes</span></td><td>PolicyDocument is the JSON IAM resource policy to attach to the bucket.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 </tbody></table></div>
 
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -508,6 +766,9 @@ metadata:
   namespace: default
 spec:
   bucketName: example-s3bucketreplication
+  providerRef:
+    name: example-s3bucketreplication
+    region: us-east-1
   roleArn: arn:aws:iam::123456789012:role/example-role
   rules:
   - destination:
@@ -523,6 +784,9 @@ spec:
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>bucketName</code></td><td>string</td><td><span class="req">yes</span></td><td>BucketName is the name of the source S3 bucket.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
 <tr><td><code>roleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>RoleARN is the IAM role ARN that S3 assumes for replication.</td></tr>
 <tr><td><code>rules</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Rules are the replication rules.</td></tr>
 <tr><td><code>rules[].destination</code></td><td>object</td><td><span class="req">yes</span></td><td>Destination is the destination configuration for the rule.</td></tr>
@@ -538,6 +802,10 @@ spec:
       <h3>Status</h3>
       <div class="docs-table-wrap"><table class="docs-table">
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
 <tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
 <tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
 <tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
@@ -547,6 +815,451 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3multiregionaccesspoint" class="resource-section">
+      <h2>S3MultiRegionAccessPoint <a href="#s3multiregionaccesspoint" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::MultiRegionAccessPoint</span></h2>
+      <p class="resource-desc">S3MultiRegionAccessPoint manages AWS::S3::MultiRegionAccessPoint through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3multiregionaccesspoints</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3multiregionaccesspoint.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3MultiRegionAccessPoint — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3multiregionaccesspoint
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3MultiRegionAccessPoint
+metadata:
+  name: example-s3multiregionaccesspoint
+  namespace: default
+spec:
+  name: example-s3multiregionaccesspoint
+  providerRef:
+    name: example-s3multiregionaccesspoint
+    region: us-east-1
+  publicAccessBlockConfiguration:
+    blockPublicAcls: false
+    blockPublicPolicy: false
+    ignorePublicAcls: false
+    restrictPublicBuckets: false
+  regions:
+  - bucket: example
+    bucketAccountId: &#x27;123456789012&#x27;
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>name</code></td><td>string</td><td>—</td><td>The name you want to assign to this Multi Region Access Point.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>publicAccessBlockConfiguration</code></td><td>object</td><td>—</td><td>The PublicAccessBlock configuration that you want to apply to this Multi Region Access Point.</td></tr>
+<tr><td><code>publicAccessBlockConfiguration.blockPublicAcls</code></td><td>boolean</td><td>—</td><td>Specifies whether Amazon S3 should block public access control lists (ACLs) for buckets in this account.</td></tr>
+<tr><td><code>publicAccessBlockConfiguration.blockPublicPolicy</code></td><td>boolean</td><td>—</td><td>Specifies whether Amazon S3 should block public bucket policies for buckets in this account.</td></tr>
+<tr><td><code>publicAccessBlockConfiguration.ignorePublicAcls</code></td><td>boolean</td><td>—</td><td>Specifies whether Amazon S3 should ignore public ACLs for buckets in this account.</td></tr>
+<tr><td><code>publicAccessBlockConfiguration.restrictPublicBuckets</code></td><td>boolean</td><td>—</td><td>Specifies whether Amazon S3 should restrict public bucket policies for this bucket.</td></tr>
+<tr><td><code>regions</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>The list of buckets that you want to associate this Multi Region Access Point with.</td></tr>
+<tr><td><code>regions[].bucket</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>regions[].bucketAccountId</code></td><td>string</td><td>—</td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>alias</code></td><td>string</td><td>—</td><td>The alias is a unique identifier to, and is part of the public DNS name for this Multi Region Access Point Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>createdAt</code></td><td>string</td><td>—</td><td>The timestamp of the when the Multi Region Access Point is created Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3multiregionaccesspointpolicy" class="resource-section">
+      <h2>S3MultiRegionAccessPointPolicy <a href="#s3multiregionaccesspointpolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::MultiRegionAccessPointPolicy</span></h2>
+      <p class="resource-desc">S3MultiRegionAccessPointPolicy manages AWS::S3::MultiRegionAccessPointPolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3multiregionaccesspointpolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3multiregionaccesspointpolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3MultiRegionAccessPointPolicy — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3multiregionaccesspointpolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3MultiRegionAccessPointPolicy
+metadata:
+  name: example-s3multiregionaccesspointpolicy
+  namespace: default
+spec:
+  mrapName: example-s3multiregionaccesspointpolicy
+  providerRef:
+    name: example-s3multiregionaccesspointpolicy
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>mrapName</code></td><td>string</td><td><span class="req">yes</span></td><td>The name of the Multi Region Access Point to apply policy Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>policy</code></td><td>object</td><td><span class="req">yes</span></td><td>Policy document to apply to a Multi Region Access Point</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>policyStatus</code></td><td>object</td><td>—</td><td>The Policy Status associated with this Multi Region Access Point Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>policyStatus.isPublic</code></td><td>enum</td><td><span class="req">yes</span></td><td>Specifies whether the policy is public or not. Allowed: <code>True, False</code></td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3storagelens" class="resource-section">
+      <h2>S3StorageLens <a href="#s3storagelens" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::StorageLens</span></h2>
+      <p class="resource-desc">S3StorageLens manages AWS::S3::StorageLens through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3storagelens</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3storagelens.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3StorageLens — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3storagelens
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3StorageLens
+metadata:
+  name: example-s3storagelens
+  namespace: default
+spec:
+  providerRef:
+    name: example-s3storagelens
+    region: us-east-1
+  storageLensConfiguration:
+    accountLevel:
+      activityMetrics:
+        isEnabled: true
+      advancedCostOptimizationMetrics:
+        isEnabled: true
+      advancedDataProtectionMetrics:
+        isEnabled: true
+      advancedPerformanceMetrics:
+        isEnabled: true
+      detailedStatusCodesMetrics:
+        isEnabled: true
+    awsOrg:
+      name: example-awsorg
+    dataExport:
+      cloudWatchMetrics:
+        isEnabled: true
+      s3BucketDestination:
+        accountId: &#x27;123456789012&#x27;
+        arn: arn:aws:iam::123456789012:role/example-role
+        format: CSV
+        outputSchemaVersion: V_1
+        prefix: example
+      storageLensTableDestination:
+        isEnabled: true
+    exclude:
+      buckets:
+      - example
+      regions:
+      - example
+    expandedPrefixesDataExport:
+      s3BucketDestination:
+        accountId: &#x27;123456789012&#x27;
+        arn: arn:aws:iam::123456789012:role/example-role
+        format: CSV
+        outputSchemaVersion: V_1
+        prefix: example
+      storageLensTableDestination:
+        isEnabled: true
+    id: example-id
+    include:
+      buckets:
+      - example
+      regions:
+      - example
+    isEnabled: true
+    prefixDelimiter: example
+    storageLensArn: arn:aws:iam::123456789012:role/example-role
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>storageLensConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>S3StorageLensStorageLensConfiguration is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel</code></td><td>object</td><td><span class="req">yes</span></td><td>S3StorageLensAccountLevel is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.activityMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensActivityMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.activityMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether activity metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedCostOptimizationMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedCostOptimizationMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedCostOptimizationMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether advanced cost optimization metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedDataProtectionMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedDataProtectionMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedDataProtectionMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether advanced data protection metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedPerformanceMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedPerformanceMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.advancedPerformanceMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether the Advanced Performance Metrics is enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel</code></td><td>object</td><td><span class="req">yes</span></td><td>S3StorageLensBucketLevel is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.activityMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensActivityMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.activityMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether activity metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedCostOptimizationMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedCostOptimizationMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedCostOptimizationMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether advanced cost optimization metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedDataProtectionMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedDataProtectionMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedDataProtectionMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether advanced data protection metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedPerformanceMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensAdvancedPerformanceMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.advancedPerformanceMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether the Advanced Performance Metrics is enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.detailedStatusCodesMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensDetailedStatusCodesMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.detailedStatusCodesMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether detailed status codes metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.prefixLevel</code></td><td>object</td><td>—</td><td>S3StorageLensPrefixLevel is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.prefixLevel.storageMetrics</code></td><td>object</td><td><span class="req">yes</span></td><td>S3StorageLensPrefixLevelStorageMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.prefixLevel.storageMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether prefix-level storage metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.bucketLevel.prefixLevel.storageMetrics.selectionCriteria</code></td><td>object</td><td>—</td><td>S3StorageLensSelectionCriteria is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.detailedStatusCodesMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensDetailedStatusCodesMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.detailedStatusCodesMetrics.isEnabled</code></td><td>boolean</td><td>—</td><td>Specifies whether detailed status codes metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.storageLensGroupLevel</code></td><td>object</td><td>—</td><td>S3StorageLensStorageLensGroupLevel is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.storageLensGroupLevel.storageLensGroupSelectionCriteria</code></td><td>object</td><td>—</td><td>S3StorageLensStorageLensGroupSelectionCriteria is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.storageLensGroupLevel.storageLensGroupSelectionCriteria.exclude</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.accountLevel.storageLensGroupLevel.storageLensGroupSelectionCriteria.include</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.awsOrg</code></td><td>object</td><td>—</td><td>S3StorageLensAwsOrg is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.awsOrg.arn</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>storageLensConfiguration.dataExport</code></td><td>object</td><td>—</td><td>S3StorageLensDataExport is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.cloudWatchMetrics</code></td><td>object</td><td>—</td><td>S3StorageLensCloudWatchMetrics is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.cloudWatchMetrics.isEnabled</code></td><td>boolean</td><td><span class="req">yes</span></td><td>Specifies whether CloudWatch metrics are enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination</code></td><td>object</td><td>—</td><td>S3StorageLensS3BucketDestination is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.accountId</code></td><td>string</td><td><span class="req">yes</span></td><td>The AWS account ID that owns the destination S3 bucket.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.arn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the bucket to which Amazon S3 Storage Lens exports will be placed.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.encryption</code></td><td>object</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.format</code></td><td>enum</td><td><span class="req">yes</span></td><td>Specifies the file format to use when exporting Amazon S3 Storage Lens metrics export. Allowed: <code>CSV, Parquet</code></td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.outputSchemaVersion</code></td><td>enum</td><td><span class="req">yes</span></td><td>The version of the output schema to use when exporting Amazon S3 Storage Lens metrics. Allowed: <code>V_1</code></td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.s3BucketDestination.prefix</code></td><td>string</td><td>—</td><td>The prefix to use for Amazon S3 Storage Lens export.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.storageLensTableDestination</code></td><td>object</td><td>—</td><td>S3StorageLensStorageLensTableDestination is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.storageLensTableDestination.encryption</code></td><td>object</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.dataExport.storageLensTableDestination.isEnabled</code></td><td>boolean</td><td><span class="req">yes</span></td><td>Specifies whether the export to S3 Tables is enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.exclude</code></td><td>object</td><td>—</td><td>S3StorageLensBucketsAndRegions is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.exclude.buckets</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.exclude.regions</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport</code></td><td>object</td><td>—</td><td>S3StorageLensStorageLensExpandedPrefixesDataExport is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination</code></td><td>object</td><td>—</td><td>S3StorageLensS3BucketDestination is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.accountId</code></td><td>string</td><td><span class="req">yes</span></td><td>The AWS account ID that owns the destination S3 bucket.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.arn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the bucket to which Amazon S3 Storage Lens exports will be placed.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.encryption</code></td><td>object</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.format</code></td><td>enum</td><td><span class="req">yes</span></td><td>Specifies the file format to use when exporting Amazon S3 Storage Lens metrics export. Allowed: <code>CSV, Parquet</code></td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.outputSchemaVersion</code></td><td>enum</td><td><span class="req">yes</span></td><td>The version of the output schema to use when exporting Amazon S3 Storage Lens metrics. Allowed: <code>V_1</code></td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.s3BucketDestination.prefix</code></td><td>string</td><td>—</td><td>The prefix to use for Amazon S3 Storage Lens export.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.storageLensTableDestination</code></td><td>object</td><td>—</td><td>S3StorageLensStorageLensTableDestination is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.storageLensTableDestination.encryption</code></td><td>object</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.expandedPrefixesDataExport.storageLensTableDestination.isEnabled</code></td><td>boolean</td><td><span class="req">yes</span></td><td>Specifies whether the export to S3 Tables is enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.id</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>storageLensConfiguration.include</code></td><td>object</td><td>—</td><td>S3StorageLensBucketsAndRegions is a nested property type of AWS::S3::StorageLens.</td></tr>
+<tr><td><code>storageLensConfiguration.include.buckets</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.include.regions</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>storageLensConfiguration.isEnabled</code></td><td>boolean</td><td><span class="req">yes</span></td><td>Specifies whether the Amazon S3 Storage Lens configuration is enabled or disabled.</td></tr>
+<tr><td><code>storageLensConfiguration.prefixDelimiter</code></td><td>string</td><td>—</td><td>The delimiter to divide S3 key into hierarchy of prefixes.</td></tr>
+<tr><td><code>storageLensConfiguration.storageLensArn</code></td><td>string</td><td>—</td><td>The ARN for the Amazon S3 Storage Lens configuration.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>A set of tags (key-value pairs) for this Amazon S3 Storage Lens configuration.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="s3storagelensgroup" class="resource-section">
+      <h2>S3StorageLensGroup <a href="#s3storagelensgroup" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::S3::StorageLensGroup</span></h2>
+      <p class="resource-desc">S3StorageLensGroup manages AWS::S3::StorageLensGroup through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get s3storagelensgroups</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/s3/s3storagelensgroup.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># S3StorageLensGroup — S3
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/s3.html#s3storagelensgroup
+apiVersion: aws.konfig.io/v1alpha1
+kind: S3StorageLensGroup
+metadata:
+  name: example-s3storagelensgroup
+  namespace: default
+spec:
+  filter:
+    and:
+      matchAnyPrefix:
+      - example
+      matchAnySuffix:
+      - example
+      matchAnyTag:
+      - key: example
+        value: example
+      matchObjectAge:
+        daysGreaterThan: 1
+        daysLessThan: 1
+      matchObjectSize:
+        bytesGreaterThan: 1
+        bytesLessThan: 1
+    matchAnyPrefix:
+    - example
+    matchAnySuffix:
+    - example
+    matchAnyTag:
+    - key: example
+      value: example
+    matchObjectAge:
+      daysGreaterThan: 1
+      daysLessThan: 1
+    matchObjectSize:
+      bytesGreaterThan: 1
+      bytesLessThan: 1
+    or:
+      matchAnyPrefix:
+      - example
+      matchAnySuffix:
+      - example
+      matchAnyTag:
+      - key: example
+        value: example
+      matchObjectAge:
+        daysGreaterThan: 1
+        daysLessThan: 1
+      matchObjectSize:
+        bytesGreaterThan: 1
+        bytesLessThan: 1
+  name: example-s3storagelensgroup
+  providerRef:
+    name: example-s3storagelensgroup
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>filter</code></td><td>object</td><td><span class="req">yes</span></td><td>S3StorageLensGroupFilter is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.and</code></td><td>object</td><td>—</td><td>S3StorageLensGroupAnd is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.and.matchAnyPrefix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.and.matchAnySuffix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.and.matchAnyTag</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.and.matchAnyTag[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.and.matchAnyTag[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.and.matchObjectAge</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectAge is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.and.matchObjectAge.daysGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.and.matchObjectAge.daysLessThan</code></td><td>integer</td><td>—</td><td>Maximum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.and.matchObjectSize</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectSize is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.and.matchObjectSize.bytesGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object size to which the rule applies.</td></tr>
+<tr><td><code>filter.and.matchObjectSize.bytesLessThan</code></td><td>integer</td><td>—</td><td>Maximum object size to which the rule applies.</td></tr>
+<tr><td><code>filter.matchAnyPrefix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.matchAnySuffix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.matchAnyTag</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.matchAnyTag[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.matchAnyTag[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.matchObjectAge</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectAge is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.matchObjectAge.daysGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.matchObjectAge.daysLessThan</code></td><td>integer</td><td>—</td><td>Maximum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.matchObjectSize</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectSize is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.matchObjectSize.bytesGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object size to which the rule applies.</td></tr>
+<tr><td><code>filter.matchObjectSize.bytesLessThan</code></td><td>integer</td><td>—</td><td>Maximum object size to which the rule applies.</td></tr>
+<tr><td><code>filter.or</code></td><td>object</td><td>—</td><td>S3StorageLensGroupOr is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.or.matchAnyPrefix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.or.matchAnySuffix</code></td><td>array&lt;string&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.or.matchAnyTag</code></td><td>array&lt;object&gt;</td><td>—</td><td></td></tr>
+<tr><td><code>filter.or.matchAnyTag[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.or.matchAnyTag[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>filter.or.matchObjectAge</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectAge is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.or.matchObjectAge.daysGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.or.matchObjectAge.daysLessThan</code></td><td>integer</td><td>—</td><td>Maximum object age to which the rule applies.</td></tr>
+<tr><td><code>filter.or.matchObjectSize</code></td><td>object</td><td>—</td><td>S3StorageLensGroupMatchObjectSize is a nested property type of AWS::S3::StorageLensGroup.</td></tr>
+<tr><td><code>filter.or.matchObjectSize.bytesGreaterThan</code></td><td>integer</td><td>—</td><td>Minimum object size to which the rule applies.</td></tr>
+<tr><td><code>filter.or.matchObjectSize.bytesLessThan</code></td><td>integer</td><td>—</td><td>Maximum object size to which the rule applies.</td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>A set of tags (key-value pairs) for this Amazon S3 Storage Lens Group.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>attempt</code></td><td>integer</td><td>—</td><td>Attempt counts failed create/delete requests; it salts the Cloud Control idempotency token so a retry is not served the cached failure.</td></tr>
+<tr><td><code>awsProvider</code></td><td>object</td><td>—</td><td>AWSProvider confirms the account and region this resource was reconciled against.</td></tr>
+<tr><td><code>awsProvider.accountId</code></td><td>string</td><td>—</td><td>AccountID the resource lives in.</td></tr>
+<tr><td><code>awsProvider.name</code></td><td>string</td><td>—</td><td>Name of the AWSProvider used; empty when the operator's own credentials were used.</td></tr>
+<tr><td><code>awsProvider.region</code></td><td>string</td><td>—</td><td>Region the resource lives in (empty for global services).</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>storageLensGroupArn</code></td><td>string</td><td>—</td><td>The ARN for the Amazon S3 Storage Lens Group.</td></tr>
 </tbody></table></div>
     </section>
   </main>

@@ -22,6 +22,12 @@ import (
 
 // NatGatewaySpec defines the desired state of an AWS NAT Gateway.
 type NatGatewaySpec struct {
+	// ProviderRef selects the AWSProvider (account/region) this resource is
+	// reconciled against. Defaults to the namespace annotation, then the
+	// operator's own credentials.
+	// +optional
+	ProviderRef *ProviderRef `json:"providerRef,omitempty"`
+
 	// SubnetRef references the subnet in which to create the NAT gateway.
 	// Must be a public subnet for connectivity-type public.
 	SubnetRef SubnetRef `json:"subnetRef"`
@@ -38,6 +44,9 @@ type NatGatewaySpec struct {
 
 // NatGatewayStatus defines the observed state of NatGateway.
 type NatGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NatGatewayID is the AWS NAT Gateway identifier.
 	// +optional
 	NatGatewayID string `json:"natGatewayId,omitempty"`

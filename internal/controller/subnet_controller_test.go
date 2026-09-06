@@ -104,7 +104,7 @@ func TestSubnetReconcile(t *testing.T) {
 
 	newSubnet := func(mutate ...func(*awsv1alpha1.Subnet)) *awsv1alpha1.Subnet {
 		sn := &awsv1alpha1.Subnet{
-			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace},
+			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.SubnetSpec{
 				VPCRef:           awsv1alpha1.VPCResourceRef{ID: "vpc-0123"},
 				CIDRBlock:        "10.0.1.0/24",
