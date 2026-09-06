@@ -570,8 +570,10 @@ type TransferHostKeyStatus struct {
 	DateImported string `json:"dateImported,omitempty" cfn:"DateImported"`
 }
 
-// TransferHostKey manages AWS::Transfer::HostKey through the AWS Cloud Control API. Resource type definition for
-// AWS::Transfer::HostKey
+// TransferHostKey manages AWS::Transfer::HostKey through the AWS Cloud Control API. CAUTION, DESTRUCTIVE SCOPE:
+// spec must contain the SSH host private key in plain text. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNamespaces a...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

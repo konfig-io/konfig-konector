@@ -74,6 +74,31 @@ lists the exact IAM actions its handlers need under `handlers.<op>.permissions`.
 The Terraform spoke module attaches an administrator policy by default; narrow
 it with the permissions from the schemas you use.
 
+## Deliberately excluded
+
+Billing, Invoicing, Cost and Usage Reports, BCM Data Exports, Budget actions
+and Bedrock payment connectors are not generated (`EXCLUDE` in
+`hack/gen-cloudcontrol/gen.py`). Automating account finances from a cluster
+is a liability rather than a platform capability. Anyone who still needs one
+can use the generic `CloudControlResource`.
+
+## Destructive scope
+
+Some kinds change state shared by every workload in an account, region, or
+organization, or must carry credential material in their spec. They are
+generated for completeness and marked in three places: the CRD description,
+the reference site (`⚠ DESTRUCTIVE SCOPE` badge), and `kinds.json`
+(`caution`). Examples: `OrganizationsOrganization`, `ControlTowerLandingZone`,
+`SSOAdminInstance`, `LogsAccountPolicy`, `EC2VPCBlockPublicAccessOptions`,
+`Route53ResolverResolverConfig`, `SecurityHubOrganizationConfiguration`,
+`IAMServerCertificate`, `CodeBuildSourceCredential`.
+
+Do not use them from application namespaces. Put them in a dedicated
+platform namespace, point that namespace at a provider whose
+`allowedNamespaces` lists only it, and grant RBAC on those kinds to the
+platform team alone. Two CRs managing the same singleton will fight over it;
+keep exactly one.
+
 ## Limits worth knowing
 
 - **Create-only properties.** Changing a property the schema marks

@@ -256,8 +256,10 @@ type SSOAdminInstanceStatus struct {
 	Status string `json:"status,omitempty" cfn:"Status"`
 }
 
-// SSOAdminInstance manages AWS::SSO::Instance through the AWS Cloud Control API. Resource Type definition for
-// Identity Center (SSO) Instance
+// SSOAdminInstance manages AWS::SSO::Instance through the AWS Cloud Control API. CAUTION, DESTRUCTIVE SCOPE:
+// account-wide IAM Identity Center instance. This kind changes shared account, region or organization state (or
+// carries credential material); it is provided for completeness and should not be used from application
+// namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC. Resource ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -318,8 +320,10 @@ type SSOAdminInstanceAccessControlAttributeConfigurationStatus struct {
 }
 
 // SSOAdminInstanceAccessControlAttributeConfiguration manages
-// AWS::SSO::InstanceAccessControlAttributeConfiguration through the AWS Cloud Control API. Resource Type
-// definition for SSO InstanceAccessControlAttributeConfiguration
+// AWS::SSO::InstanceAccessControlAttributeConfiguration through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: account-wide Identity Center attribute configuration. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from applicati...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

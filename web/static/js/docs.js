@@ -286,14 +286,6 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "bcmdataexports",
-    label: "BCMDATAEXPORTS",
-    href: "/docs/bcmdataexports.html",
-    items: [
-      { label: "BCMDataExportsExport", anchor: "bcmdataexportsexport" }
-    ]
-  },
-  {
     id: "bedrock",
     label: "BEDROCK",
     href: "/docs/bedrock.html",
@@ -344,9 +336,6 @@ const SIDEBAR_DATA = [
       { label: "BedrockAgentCoreMemory", anchor: "bedrockagentcorememory" },
       { label: "BedrockAgentCoreOAuth2CredentialProvider", anchor: "bedrockagentcoreoauth2credentialprovider" },
       { label: "BedrockAgentCoreOnlineEvaluationConfig", anchor: "bedrockagentcoreonlineevaluationconfig" },
-      { label: "BedrockAgentCorePaymentConnector", anchor: "bedrockagentcorepaymentconnector" },
-      { label: "BedrockAgentCorePaymentCredentialProvider", anchor: "bedrockagentcorepaymentcredentialprovider" },
-      { label: "BedrockAgentCorePaymentManager", anchor: "bedrockagentcorepaymentmanager" },
       { label: "BedrockAgentCorePolicy", anchor: "bedrockagentcorepolicy" },
       { label: "BedrockAgentCorePolicyEngine", anchor: "bedrockagentcorepolicyengine" },
       { label: "BedrockAgentCoreResourcePolicy", anchor: "bedrockagentcoreresourcepolicy" },
@@ -356,20 +345,11 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "billing",
-    label: "BILLING",
-    href: "/docs/billing.html",
-    items: [
-      { label: "BillingBillingView", anchor: "billingbillingview" }
-    ]
-  },
-  {
     id: "budgets",
     label: "Budgets",
     href: "/docs/budgets.html",
     items: [
-      { label: "Budget", anchor: "budget" },
-      { label: "BudgetsBudgetsAction", anchor: "budgetsbudgetsaction" }
+      { label: "Budget", anchor: "budget" }
     ]
   },
   {
@@ -661,14 +641,6 @@ const SIDEBAR_DATA = [
       { label: "CECostCategory", anchor: "cecostcategory" },
       { label: "CostAnomalyMonitor", anchor: "costanomalymonitor" },
       { label: "CostAnomalySubscription", anchor: "costanomalysubscription" }
-    ]
-  },
-  {
-    id: "cur",
-    label: "CUR",
-    href: "/docs/cur.html",
-    items: [
-      { label: "CURReportDefinition", anchor: "curreportdefinition" }
     ]
   },
   {
@@ -1260,15 +1232,6 @@ const SIDEBAR_DATA = [
     href: "/docs/internetmonitor.html",
     items: [
       { label: "InternetMonitorMonitor", anchor: "internetmonitormonitor" }
-    ]
-  },
-  {
-    id: "invoicing",
-    label: "INVOICING",
-    href: "/docs/invoicing.html",
-    items: [
-      { label: "InvoicingInvoiceUnit", anchor: "invoicinginvoiceunit" },
-      { label: "InvoicingProcurementPortalPreference", anchor: "invoicingprocurementportalpreference" }
     ]
   },
   {

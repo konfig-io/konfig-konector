@@ -72,8 +72,10 @@ type LogsAccountPolicyStatus struct {
 	AccountId string `json:"accountId,omitempty" cfn:"AccountId"`
 }
 
-// LogsAccountPolicy manages AWS::Logs::AccountPolicy through the AWS Cloud Control API. The
-// AWS::Logs::AccountPolicy resource specifies a CloudWatch Logs AccountPolicy.
+// LogsAccountPolicy manages AWS::Logs::AccountPolicy through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: account-wide CloudWatch Logs policy applied to every log group. This kind changes shared account,
+// region or organization state (or carries credential material); it is provided for completeness and should not
+// be used from application namespaces. Restrict it with AWSProvider.allowedNa...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

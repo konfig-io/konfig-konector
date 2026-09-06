@@ -58,10 +58,10 @@ type SecurityHubAggregatorV2Status struct {
 	AggregationRegion string `json:"aggregationRegion,omitempty" cfn:"AggregationRegion"`
 }
 
-// SecurityHubAggregatorV2 manages AWS::SecurityHub::AggregatorV2 through the AWS Cloud Control API. The
-// AWS::SecurityHub::AggregatorV2 resource represents the AWS Security Hub AggregatorV2 in your account. One
-// aggregatorv2 resource is created for each account in non opt-in region in which you configure region linking
-// mode.
+// SecurityHubAggregatorV2 manages AWS::SecurityHub::AggregatorV2 through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: account-wide finding aggregation. This kind changes shared account, region or organization
+// state (or carries credential material); it is provided for completeness and should not be used from
+// application namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC....
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -1352,10 +1352,10 @@ type SecurityHubDelegatedAdminStatus struct {
 	Status string `json:"status,omitempty" cfn:"Status"`
 }
 
-// SecurityHubDelegatedAdmin manages AWS::SecurityHub::DelegatedAdmin through the AWS Cloud Control API. The
-// “AWS::SecurityHub::DelegatedAdmin“ resource designates the delegated ASHlong administrator account for an
-// organization. You must enable the integration between ASH and AOlong before you can designate a delegated ASH
-// administrator. Only the management account for an organization can design...
+// SecurityHubDelegatedAdmin manages AWS::SecurityHub::DelegatedAdmin through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: organization-wide delegated administrator. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNamespa...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -1424,9 +1424,9 @@ type SecurityHubFindingAggregatorStatus struct {
 }
 
 // SecurityHubFindingAggregator manages AWS::SecurityHub::FindingAggregator through the AWS Cloud Control API.
-// The “AWS::SecurityHub::FindingAggregator“ resource enables cross-Region aggregation. When cross-Region
-// aggregation is enabled, you can aggregate findings, finding updates, insights, control compliance statuses,
-// and security scores from one or more linked Regions to a single aggregation ...
+// CAUTION, DESTRUCTIVE SCOPE: account-wide finding aggregation. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNamespaces...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -1485,9 +1485,10 @@ type SecurityHubHubV2Status struct {
 	SubscribedAt string `json:"subscribedAt,omitempty" cfn:"SubscribedAt"`
 }
 
-// SecurityHubHubV2 manages AWS::SecurityHub::HubV2 through the AWS Cloud Control API. The
-// AWS::SecurityHub::HubV2 resource represents the implementation of the AWS Security Hub V2 service in your
-// account. Only one hubv2 resource can created in each region in which you enable Security Hub V2.
+// SecurityHubHubV2 manages AWS::SecurityHub::HubV2 through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: account-wide Security Hub enablement. This kind changes shared account, region or organization state
+// (or carries credential material); it is provided for completeness and should not be used from application
+// namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC. The AWS::...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -2138,9 +2139,9 @@ type SecurityHubOrganizationConfigurationStatus struct {
 }
 
 // SecurityHubOrganizationConfiguration manages AWS::SecurityHub::OrganizationConfiguration through the AWS Cloud
-// Control API. The AWS::SecurityHub::OrganizationConfiguration resource represents the configuration of your
-// organization in Security Hub. Only the Security Hub administrator account can create Organization
-// Configuration resource in each region and can opt-in to Central Configuration onl...
+// Control API. CAUTION, DESTRUCTIVE SCOPE: organization-wide Security Hub configuration. This kind changes
+// shared account, region or organization state (or carries credential material); it is provided for completeness
+// and should not be used from application namespaces. Restrict it with A...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

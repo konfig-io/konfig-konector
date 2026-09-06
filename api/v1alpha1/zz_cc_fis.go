@@ -276,7 +276,9 @@ type FISTargetAccountConfigurationStatus struct {
 }
 
 // FISTargetAccountConfiguration manages AWS::FIS::TargetAccountConfiguration through the AWS Cloud Control API.
-// Resource schema for AWS::FIS::TargetAccountConfiguration
+// CAUTION, DESTRUCTIVE SCOPE: fault injection into another account. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedName...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

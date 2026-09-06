@@ -667,7 +667,9 @@ type Route53ResolverResolverConfigStatus struct {
 }
 
 // Route53ResolverResolverConfig manages AWS::Route53Resolver::ResolverConfig through the AWS Cloud Control API.
-// Resource schema for AWS::Route53Resolver::ResolverConfig.
+// CAUTION, DESTRUCTIVE SCOPE: per-VPC resolver setting; changes DNS for every workload in the VPC. This kind
+// changes shared account, region or organization state (or carries credential material); it is provided for
+// completeness and should not be used from application namespaces. Restrict ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -739,7 +741,9 @@ type Route53ResolverResolverDNSSECConfigStatus struct {
 }
 
 // Route53ResolverResolverDNSSECConfig manages AWS::Route53Resolver::ResolverDNSSECConfig through the AWS Cloud
-// Control API. Resource schema for AWS::Route53Resolver::ResolverDNSSECConfig.
+// Control API. CAUTION, DESTRUCTIVE SCOPE: per-VPC DNSSEC validation; misconfiguration breaks DNS for the VPC.
+// This kind changes shared account, region or organization state (or carries credential material); it is
+// provided for completeness and should not be used from application namespaces...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

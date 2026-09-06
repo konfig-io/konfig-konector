@@ -56,8 +56,10 @@ type ObservabilityAdminOrganizationCentralizationRuleStatus struct {
 }
 
 // ObservabilityAdminOrganizationCentralizationRule manages
-// AWS::ObservabilityAdmin::OrganizationCentralizationRule through the AWS Cloud Control API. Resource schema for
-// AWS:ObservabilityAdmin:OrganizationCentralizationRule
+// AWS::ObservabilityAdmin::OrganizationCentralizationRule through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: organization-wide telemetry rule. This kind changes shared account, region or organization
+// state (or carries credential material); it is provided for completeness and should not be used from
+// application namespaces. Restri...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -269,8 +271,9 @@ type ObservabilityAdminOrganizationTelemetryRuleStatus struct {
 }
 
 // ObservabilityAdminOrganizationTelemetryRule manages AWS::ObservabilityAdmin::OrganizationTelemetryRule through
-// the AWS Cloud Control API. The AWS::ObservabilityAdmin::OrganizationTelemetryRule resource defines a
-// CloudWatch Observability Admin Organization Telemetry Rule.
+// the AWS Cloud Control API. CAUTION, DESTRUCTIVE SCOPE: organization-wide telemetry rule. This kind changes
+// shared account, region or organization state (or carries credential material); it is provided for completeness
+// and should not be used from application namespaces. Restrict it with...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -895,8 +898,9 @@ type ObservabilityAdminTelemetryRuleStatus struct {
 }
 
 // ObservabilityAdminTelemetryRule manages AWS::ObservabilityAdmin::TelemetryRule through the AWS Cloud Control
-// API. The AWS::ObservabilityAdmin::TelemetryRule resource defines a CloudWatch Observability Admin Telemetry
-// Rule.
+// API. CAUTION, DESTRUCTIVE SCOPE: account-wide telemetry rule. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNamespace...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

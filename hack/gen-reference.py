@@ -79,7 +79,7 @@ def load_crds():
     cc_service = {}
     if os.path.exists(CC_KINDS):
         for m in json.load(open(CC_KINDS)):
-            cc_service[m["kind"]] = (m["service"], m["typeName"])
+            cc_service[m["kind"]] = (m["service"], m["typeName"], m.get("caution"))
     files = [(f, False) for f in sorted(glob.glob(os.path.join(CRDS, "*.yaml")))]
     files += [(f, True) for f in sorted(glob.glob(os.path.join(CC_CRDS, "*.yaml")))]
     for f, generated in files:
@@ -97,9 +97,10 @@ def load_crds():
                 "generated": generated,
             }
             if generated and kind in cc_service:
-                svc, tn = cc_service[kind]
+                svc, tn, caution = cc_service[kind]
                 entry["cc_service"] = CC_SERVICE_ALIAS.get(svc, svc)
                 entry["cfn_type"] = tn
+                entry["caution"] = caution
             crds.append(entry)
     return crds
 
@@ -428,6 +429,11 @@ def render_service_page(service, label, kinds_data):
             badge = (f'<span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" '
                      f'title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">'
                      f'CLOUD CONTROL · {html.escape(crd.get("cfn_type", ""))}</span>')
+            if crd.get("caution"):
+                badge += (f' <span class="resource-badge" style="background:rgba(248,113,113,.18);color:#f87171" '
+                          f'title="{html.escape(crd["caution"])}">⚠ DESTRUCTIVE SCOPE</span>')
+                desc = ("Caution, destructive scope: " + crd["caution"] + ". Provided for completeness; do not use from application "
+                        "namespaces. Restrict with AWSProvider.allowedNamespaces and RBAC. ") + desc
         else:
             badge = '<span class="resource-badge">GA</span>'
         parts.append(f"""
@@ -461,6 +467,7 @@ def render_index(services):
             f'<div><div class="doc-name">{html.escape(label)}</div>'
             f'<div class="doc-count">{n} kind{"s" if n != 1 else ""}</div></div></a>'
         )
+    cautions = sum(1 for kinds in services.values() for k in kinds if k["crd"].get("caution"))
     parts = [PAGE_HEAD.format(title="API Reference", meta=f"API reference for all {total} konfig-konector resource kinds.")]
     parts.append(f"""    <div class="breadcrumb">
       <span class="breadcrumb-current">docs</span>
@@ -471,6 +478,21 @@ def render_index(services):
     <code>aws.konfig.io/v1alpha1</code> API group. Every page is generated from the operator's CRD
     schemas; every kind has a full-options example in the
     <a href="https://github.com/konfig-io/konfig-konector/tree/main/examples">examples/</a> directory.</p>
+
+    <div class="code-wrap" style="margin-top:24px;padding:16px 20px;border-left:3px solid #f87171;">
+      <p class="resource-desc" style="margin:0 0 8px 0;"><strong>Coverage policy.</strong>
+      <span class="resource-badge">GA</span> kinds have hand-written controllers.
+      <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)">CLOUD CONTROL</span> kinds are
+      generated from the CloudFormation schema registry and reconciled through the AWS Cloud Control API; install them per
+      service bundle from <code>config/crd/cloudcontrol/</code>.
+      <span class="resource-badge" style="background:rgba(248,113,113,.18);color:#f87171">⚠ DESTRUCTIVE SCOPE</span> marks
+      {cautions} kinds that change account-, region- or organization-wide state (or must carry credential material in their
+      spec). They exist for completeness and should not be used from application namespaces; restrict them with
+      <code>AWSProvider.allowedNamespaces</code> and RBAC.</p>
+      <p class="resource-desc" style="margin:0;"><strong>Deliberately excluded.</strong> Billing, Invoicing, Cost and Usage Reports,
+      BCM Data Exports, Budget actions and payment connectors are not generated: automating account finances from a cluster is a
+      liability, not a platform capability. They remain reachable through the generic <code>CloudControlResource</code>.</p>
+    </div>
 
     <div class="docs-grid" style="margin-top:32px;">
 {chr(10).join(cards)}

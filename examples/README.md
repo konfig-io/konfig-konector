@@ -27,11 +27,9 @@ scenarios live at the top level of this directory.
 - [AWS Config](configservice/) — 10 kinds
 - [Backup](backup/) — 10 kinds
 - [Batch](batch/) — 7 kinds
-- [BCMDATAEXPORTS](bcmdataexports/) — 1 kinds
 - [BEDROCK](bedrock/) — 22 kinds
-- [BEDROCKAGENTCORE](bedrockagentcore/) — 26 kinds
-- [BILLING](billing/) — 1 kinds
-- [Budgets](budgets/) — 2 kinds
+- [BEDROCKAGENTCORE](bedrockagentcore/) — 23 kinds
+- [Budgets](budgets/) — 1 kinds
 - [CASSANDRA](cassandra/) — 3 kinds
 - [CHATBOT](chatbot/) — 3 kinds
 - [Cloud Control API](cloudcontrol/) — 1 kinds
@@ -56,7 +54,6 @@ scenarios live at the top level of this directory.
 - [COMPUTEOPTIMIZER](computeoptimizer/) — 1 kinds
 - [Control Tower](controltower/) — 3 kinds
 - [Cost Explorer](costexplorer/) — 3 kinds
-- [CUR](cur/) — 1 kinds
 - [Data Firehose](firehose/) — 1 kinds
 - [DATASYNC](datasync/) — 13 kinds
 - [DATAZONE](datazone/) — 17 kinds
@@ -93,7 +90,6 @@ scenarios live at the top level of this directory.
 - [Inspector](inspector2/) — 6 kinds
 - [INSPECTOR](inspector/) — 3 kinds
 - [INTERNETMONITOR](internetmonitor/) — 1 kinds
-- [INVOICING](invoicing/) — 2 kinds
 - [KAFKACONNECT](kafkaconnect/) — 3 kinds
 - [Kinesis](kinesis/) — 3 kinds
 - [KINESISANALYTICSV2](kinesisanalyticsv2/) — 1 kinds

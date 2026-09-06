@@ -44,8 +44,10 @@ type ACMAccountStatus struct {
 	AccountId string `json:"accountId,omitempty" cfn:"AccountId"`
 }
 
-// ACMAccount manages AWS::CertificateManager::Account through the AWS Cloud Control API. Resource schema for
-// AWS::CertificateManager::Account.
+// ACMAccount manages AWS::CertificateManager::Account through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: account-wide ACM settings singleton. This kind changes shared account, region or organization state (or
+// carries credential material); it is provided for completeness and should not be used from application
+// namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC. Resourc...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

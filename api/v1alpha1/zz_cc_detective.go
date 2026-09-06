@@ -181,7 +181,9 @@ type DetectiveOrganizationAdminStatus struct {
 }
 
 // DetectiveOrganizationAdmin manages AWS::Detective::OrganizationAdmin through the AWS Cloud Control API.
-// Resource schema for AWS::Detective::OrganizationAdmin
+// CAUTION, DESTRUCTIVE SCOPE: organization-wide delegated administrator. This kind changes shared account,
+// region or organization state (or carries credential material); it is provided for completeness and should not
+// be used from application namespaces. Restrict it with AWSProvider.allowedNames...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

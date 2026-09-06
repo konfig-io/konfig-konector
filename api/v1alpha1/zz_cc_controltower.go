@@ -64,7 +64,9 @@ type ControlTowerEnabledBaselineStatus struct {
 }
 
 // ControlTowerEnabledBaseline manages AWS::ControlTower::EnabledBaseline through the AWS Cloud Control API.
-// Definition of AWS::ControlTower::EnabledBaseline Resource Type
+// CAUTION, DESTRUCTIVE SCOPE: organization-wide baseline applied to enrolled OUs. This kind changes shared
+// account, region or organization state (or carries credential material); it is provided for completeness and
+// should not be used from application namespaces. Restrict it with AWSProvider.a...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -159,8 +161,10 @@ type ControlTowerLandingZoneStatus struct {
 	DriftStatus string `json:"driftStatus,omitempty" cfn:"DriftStatus"`
 }
 
-// ControlTowerLandingZone manages AWS::ControlTower::LandingZone through the AWS Cloud Control API. Definition
-// of AWS::ControlTower::LandingZone Resource Type
+// ControlTowerLandingZone manages AWS::ControlTower::LandingZone through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: organization-wide landing zone; changes cascade to all enrolled accounts. This kind changes
+// shared account, region or organization state (or carries credential material); it is provided for completeness
+// and should not be used from application namespaces. Restrict it with...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

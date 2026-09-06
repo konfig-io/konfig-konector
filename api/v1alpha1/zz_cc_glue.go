@@ -552,7 +552,9 @@ type GlueDataCatalogEncryptionSettingsStatus struct {
 }
 
 // GlueDataCatalogEncryptionSettings manages AWS::Glue::DataCatalogEncryptionSettings through the AWS Cloud
-// Control API. Resource Type definition for AWS::Glue::DataCatalogEncryptionSettings
+// Control API. CAUTION, DESTRUCTIVE SCOPE: account-wide Glue Data Catalog encryption settings. This kind changes
+// shared account, region or organization state (or carries credential material); it is provided for completeness
+// and should not be used from application namespaces. Restrict it with A...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

@@ -330,8 +330,10 @@ type CodeBuildSourceCredentialStatus struct {
 	Arn string `json:"arn,omitempty" cfn:"Arn"`
 }
 
-// CodeBuildSourceCredential manages AWS::CodeBuild::SourceCredential through the AWS Cloud Control API. Resource
-// Type definition for AWS::CodeBuild::SourceCredential
+// CodeBuildSourceCredential manages AWS::CodeBuild::SourceCredential through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: spec must contain a source token in plain text. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNa...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

@@ -5533,7 +5533,9 @@ type EC2SnapshotBlockPublicAccessStatus struct {
 }
 
 // EC2SnapshotBlockPublicAccess manages AWS::EC2::SnapshotBlockPublicAccess through the AWS Cloud Control API.
-// Resource Type definition for AWS::EC2::SnapshotBlockPublicAccess
+// CAUTION, DESTRUCTIVE SCOPE: account-wide EBS snapshot public access setting. This kind changes shared account,
+// region or organization state (or carries credential material); it is provided for completeness and should not
+// be used from application namespaces. Restrict it with AWSProvider.al...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -7587,7 +7589,9 @@ type EC2VPCBlockPublicAccessExclusionStatus struct {
 }
 
 // EC2VPCBlockPublicAccessExclusion manages AWS::EC2::VPCBlockPublicAccessExclusion through the AWS Cloud Control
-// API. Resource Type definition for AWS::EC2::VPCBlockPublicAccessExclusion.
+// API. CAUTION, DESTRUCTIVE SCOPE: modifies the account-wide VPC public access posture. This kind changes shared
+// account, region or organization state (or carries credential material); it is provided for completeness and
+// should not be used from application namespaces. Restrict it with AW...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -7651,7 +7655,9 @@ type EC2VPCBlockPublicAccessOptionsStatus struct {
 }
 
 // EC2VPCBlockPublicAccessOptions manages AWS::EC2::VPCBlockPublicAccessOptions through the AWS Cloud Control
-// API. Resource Type definition for AWS::EC2::VPCBlockPublicAccessOptions
+// API. CAUTION, DESTRUCTIVE SCOPE: account-wide VPC public access setting; can cut internet access for every
+// VPC. This kind changes shared account, region or organization state (or carries credential material); it is
+// provided for completeness and should not be used from application namespace...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

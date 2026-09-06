@@ -339,9 +339,10 @@ type MacieSessionStatus struct {
 	AutomatedDiscoveryStatus string `json:"automatedDiscoveryStatus,omitempty" cfn:"AutomatedDiscoveryStatus"`
 }
 
-// MacieSession manages AWS::Macie::Session through the AWS Cloud Control API. The AWS::Macie::Session resource
-// specifies a new Amazon Macie session. A session is an object that represents the Amazon Macie service. A
-// session is required for Amazon Macie to become operational.
+// MacieSession manages AWS::Macie::Session through the AWS Cloud Control API. CAUTION, DESTRUCTIVE SCOPE:
+// account-wide Macie enablement. This kind changes shared account, region or organization state (or carries
+// credential material); it is provided for completeness and should not be used from application namespaces.
+// Restrict it with AWSProvider.allowedNamespaces and RBAC. The AWS::Macie::Session ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

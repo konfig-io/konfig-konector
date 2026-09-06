@@ -482,8 +482,10 @@ type GuardDutyMasterStatus struct {
 	CloudControlStatus `json:",inline"`
 }
 
-// GuardDutyMaster manages AWS::GuardDuty::Master through the AWS Cloud Control API. GuardDuty Master resource
-// schema
+// GuardDutyMaster manages AWS::GuardDuty::Master through the AWS Cloud Control API. CAUTION, DESTRUCTIVE SCOPE:
+// account-wide GuardDuty administrator relationship. This kind changes shared account, region or organization
+// state (or carries credential material); it is provided for completeness and should not be used from
+// application namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

@@ -78,8 +78,10 @@ type OrganizationsOrganizationStatus struct {
 	RootId string `json:"rootId,omitempty" cfn:"RootId"`
 }
 
-// OrganizationsOrganization manages AWS::Organizations::Organization through the AWS Cloud Control API. Resource
-// schema for AWS::Organizations::Organization
+// OrganizationsOrganization manages AWS::Organizations::Organization through the AWS Cloud Control API. CAUTION,
+// DESTRUCTIVE SCOPE: organization-wide: creating or deleting this affects every member account. This kind
+// changes shared account, region or organization state (or carries credential material); it is provided for
+// completeness and should not be used from application namespaces. Restrict it...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -146,9 +148,10 @@ type OrganizationsResourcePolicyStatus struct {
 	Arn string `json:"arn,omitempty" cfn:"Arn"`
 }
 
-// OrganizationsResourcePolicy manages AWS::Organizations::ResourcePolicy through the AWS Cloud Control API. You
-// can use AWS::Organizations::ResourcePolicy to delegate policy management for AWS Organizations to specified
-// member accounts to perform policy actions that are by default available only to the management account.
+// OrganizationsResourcePolicy manages AWS::Organizations::ResourcePolicy through the AWS Cloud Control API.
+// CAUTION, DESTRUCTIVE SCOPE: organization-wide resource policy. This kind changes shared account, region or
+// organization state (or carries credential material); it is provided for completeness and should not be used
+// from application namespaces. Restrict it with AWSProvider.allowedNamespaces ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

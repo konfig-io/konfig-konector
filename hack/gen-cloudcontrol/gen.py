@@ -35,13 +35,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SERVICES = set("""
 ACMPCA APS ARCZonalShift AccessAnalyzer AccountAccess AmazonMQ Amplify ApiGateway ApiGatewayV2 AppConfig AppFlow
 AppRunner AppSync ApplicationAutoScaling ApplicationInsights ApplicationSignals Athena AuditManager AutoScaling
-BCMDataExports Backup Batch Bedrock BedrockAgentCore Billing Budgets CE CUR Cassandra CertificateManager Chatbot
+Backup Batch Bedrock BedrockAgentCore Budgets CE Cassandra CertificateManager Chatbot
 CloudFormation CloudFront CloudHSM CloudTrail CloudWatch CodeArtifact CodeBuild CodeCommit CodeConnections
 CodeDeploy CodeGuruProfiler CodeGuruReviewer CodePipeline CodeStarConnections CodeStarNotifications Cognito
 ComputeOptimizer Config ControlTower DAX DMS DataSync DataZone Detective DirectConnect DocDB DynamoDB EC2 ECR ECS
 EFS EKS EMR EMRContainers EMRServerless ElastiCache ElasticBeanstalk ElasticLoadBalancing ElasticLoadBalancingV2
 EventSchemas Events Evidently FIS FMS FSx GlobalAccelerator Glue Grafana GuardDuty IAM IdentityStore ImageBuilder
-Inspector InspectorV2 InternetMonitor Invoicing KMS KafkaConnect Kinesis KinesisAnalyticsV2 KinesisFirehose
+Inspector InspectorV2 InternetMonitor KMS KafkaConnect Kinesis KinesisAnalyticsV2 KinesisFirehose
 LakeFormation Lambda LicenseManager Logs MSK MWAA Macie MemoryDB Neptune NetworkFirewall NetworkFlowMonitor
 NetworkManager Notifications NotificationsContacts OSIS Oam ObservabilityAdmin OpenSearch OpenSearchServerless
 OpenSearchService Organizations Pipes RAM RDS RUM Rbin Redshift RedshiftServerless ResilienceHub ResilienceHubV2
@@ -58,6 +58,60 @@ SERVICE_PREFIX = {
     "CertificateManager": "ACM", "KinesisFirehose": "Firehose", "OpenSearchService": "OpenSearch",
     "StepFunctions": "SFN", "ServiceDiscovery": "CloudMap", "AmazonMQ": "MQ", "Events": "EventBridge",
     "Logs": "Logs", "SSO": "SSOAdmin", "APS": "Prometheus", "Oam": "OAM",
+}
+
+# Types deliberately not generated. Billing, invoicing, cost reports and
+# budget actions are outside an EKS platform team's remit and automating them
+# from a cluster is a liability; they stay reachable through the generic
+# CloudControlResource for anyone who insists.
+EXCLUDE = set("""
+AWS::Budgets::BudgetsAction AWS::Billing::BillingView AWS::CUR::ReportDefinition AWS::BCMDataExports::Export
+AWS::Invoicing::InvoiceUnit AWS::Invoicing::ProcurementPortalPreference AWS::BedrockAgentCore::PaymentConnector
+AWS::BedrockAgentCore::PaymentCredentialProvider AWS::BedrockAgentCore::PaymentManager
+""".split())
+
+# Types that are generated but carry a destructive-scope warning: account-,
+# region- or organization-wide singletons whose reconciliation affects every
+# workload in the account, or kinds whose spec must contain credential
+# material. The reason lands in the CRD description, the reference site
+# badge, and kinds.json.
+CAUTION = {
+    "AWS::Organizations::Organization": "organization-wide: creating or deleting this affects every member account",
+    "AWS::Organizations::ResourcePolicy": "organization-wide resource policy",
+    "AWS::ControlTower::LandingZone": "organization-wide landing zone; changes cascade to all enrolled accounts",
+    "AWS::SSO::Instance": "account-wide IAM Identity Center instance",
+    "AWS::SSO::InstanceAccessControlAttributeConfiguration": "account-wide Identity Center attribute configuration",
+    "AWS::ApiGateway::Account": "account-wide API Gateway settings singleton",
+    "AWS::CertificateManager::Account": "account-wide ACM settings singleton",
+    "AWS::Logs::AccountPolicy": "account-wide CloudWatch Logs policy applied to every log group",
+    "AWS::EC2::SnapshotBlockPublicAccess": "account-wide EBS snapshot public access setting",
+    "AWS::EC2::VPCBlockPublicAccessOptions": "account-wide VPC public access setting; can cut internet access for every VPC",
+    "AWS::EC2::VPCBlockPublicAccessExclusion": "modifies the account-wide VPC public access posture",
+    "AWS::Route53Resolver::ResolverConfig": "per-VPC resolver setting; changes DNS for every workload in the VPC",
+    "AWS::Route53Resolver::ResolverDNSSECConfig": "per-VPC DNSSEC validation; misconfiguration breaks DNS for the VPC",
+    "AWS::Glue::DataCatalogEncryptionSettings": "account-wide Glue Data Catalog encryption settings",
+    "AWS::SecurityHub::OrganizationConfiguration": "organization-wide Security Hub configuration",
+    "AWS::SecurityHub::DelegatedAdmin": "organization-wide delegated administrator",
+    "AWS::SecurityHub::HubV2": "account-wide Security Hub enablement",
+    "AWS::SecurityHub::AggregatorV2": "account-wide finding aggregation",
+    "AWS::SecurityHub::FindingAggregator": "account-wide finding aggregation",
+    "AWS::Detective::OrganizationAdmin": "organization-wide delegated administrator",
+    "AWS::GuardDuty::Master": "account-wide GuardDuty administrator relationship",
+    "AWS::Macie::Session": "account-wide Macie enablement",
+    "AWS::XRay::TransactionSearchConfig": "account-wide X-Ray setting",
+    "AWS::ResourceExplorer2::DefaultViewAssociation": "account-wide default view",
+    "AWS::ObservabilityAdmin::OrganizationCentralizationRule": "organization-wide telemetry rule",
+    "AWS::ObservabilityAdmin::OrganizationTelemetryRule": "organization-wide telemetry rule",
+    "AWS::ObservabilityAdmin::TelemetryRule": "account-wide telemetry rule",
+    "AWS::Config::OrganizationConformancePack": "organization-wide conformance pack deployed to all accounts",
+    "AWS::ControlTower::EnabledBaseline": "organization-wide baseline applied to enrolled OUs",
+    "AWS::FIS::TargetAccountConfiguration": "fault injection into another account",
+    "AWS::IAM::ServerCertificate": "spec must contain the private key in plain text; prefer ACM",
+    "AWS::CodeBuild::SourceCredential": "spec must contain a source token in plain text",
+    "AWS::ApiGateway::ApiKey": "API key value is credential material",
+    "AWS::Transfer::HostKey": "spec must contain the SSH host private key in plain text",
+    "AWS::BedrockAgentCore::ApiKeyCredentialProvider": "spec must contain an API key in plain text",
+    "AWS::BedrockAgentCore::OAuth2CredentialProvider": "spec must contain an OAuth client secret in plain text",
 }
 
 # CloudFormation types already covered by hand-written native kinds. Kept
@@ -352,7 +406,10 @@ class KindGen:
             (status_fields if is_ro else spec_fields).append(block)
         k = self.kind
         desc = re.sub(r"\s+", " ", s.get("description", "")).strip()
-        head = comment("%s manages %s through the AWS Cloud Control API. %s" % (k, s["typeName"], desc))
+        warn = ""
+        if s["typeName"] in CAUTION:
+            warn = " CAUTION, DESTRUCTIVE SCOPE: %s. This kind changes shared account, region or organization state (or carries credential material); it is provided for completeness and should not be used from application namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC." % CAUTION[s["typeName"]]
+        head = comment("%s manages %s through the AWS Cloud Control API.%s %s" % (k, s["typeName"], warn, desc))
         out = []
         out.append("// %sSpec is the desired state of %s.\ntype %sSpec struct {\n%s\n}\n" % (k, s["typeName"], k, "\n\n".join(spec_fields)))
         out.append("// %sStatus is the observed state of %s.\ntype %sStatus struct {\n\tCloudControlStatus `json:\",inline\"`\n%s\n}\n" % (
@@ -400,7 +457,7 @@ def main():
     native_kinds = set()
     for f in glob.glob(os.path.join(ROOT, "api/v1alpha1/*_types.go")):
         native_kinds |= set(re.findall(r"SchemeBuilder\.Register\(&(\w+)\{\}", open(f).read()))
-    by_service, manifest, skipped = {}, [], {"native": 0, "nohandlers": 0, "outofscope": 0, "collision": 0}
+    by_service, manifest, skipped = {}, [], {"native": 0, "nohandlers": 0, "outofscope": 0, "collision": 0, "excluded": 0}
     for path in sorted(glob.glob(os.path.join(SCHEMA_DIR, "aws-*.json"))):
         try:
             s = json.load(open(path))
@@ -420,13 +477,19 @@ def main():
         if tn in NATIVE:
             skipped["native"] += 1
             continue
+        if tn in EXCLUDE:
+            skipped["excluded"] += 1
+            continue
         kind = kind_name(tn)
         if kind in native_kinds:
             skipped["collision"] += 1
             print("collision with native kind, skipping:", tn, "->", kind, file=sys.stderr)
             continue
         by_service.setdefault(service, []).append((kind, s))
-        manifest.append({"kind": kind, "typeName": tn, "service": service.lower(), "list": "list" in h})
+        entry = {"kind": kind, "typeName": tn, "service": service.lower(), "list": "list" in h}
+        if tn in CAUTION:
+            entry["caution"] = CAUTION[tn]
+        manifest.append(entry)
 
     # reserve every type name in the package before emitting nested structs
     for f in glob.glob(os.path.join(ROOT, "api/v1alpha1/*.go")):

@@ -45,11 +45,10 @@ type ApiGatewayAccountStatus struct {
 	Id string `json:"id,omitempty" cfn:"Id"`
 }
 
-// ApiGatewayAccount manages AWS::ApiGateway::Account through the AWS Cloud Control API. The
-// “AWS::ApiGateway::Account“ resource specifies the IAM role that Amazon API Gateway uses to write API logs to
-// Amazon CloudWatch Logs. To avoid overwriting other roles, you should only have one
-// “AWS::ApiGateway::Account“ resource per region per account. When you delete a stack containing this
-// resource, A...
+// ApiGatewayAccount manages AWS::ApiGateway::Account through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: account-wide API Gateway settings singleton. This kind changes shared account, region or organization
+// state (or carries credential material); it is provided for completeness and should not be used from
+// application namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC. ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
@@ -130,10 +129,10 @@ type ApiGatewayApiKeyStatus struct {
 	APIKeyId string `json:"apiKeyId,omitempty" cfn:"APIKeyId"`
 }
 
-// ApiGatewayApiKey manages AWS::ApiGateway::ApiKey through the AWS Cloud Control API. The
-// “AWS::ApiGateway::ApiKey“ resource creates a unique key that you can distribute to clients who are executing
-// API Gateway “Method“ resources that require an API key. To specify which API key clients must use, map the
-// API key with the “RestApi“ and “Stage“ resources that include the methods that requir...
+// ApiGatewayApiKey manages AWS::ApiGateway::ApiKey through the AWS Cloud Control API. CAUTION, DESTRUCTIVE
+// SCOPE: API key value is credential material. This kind changes shared account, region or organization state
+// (or carries credential material); it is provided for completeness and should not be used from application
+// namespaces. Restrict it with AWSProvider.allowedNamespaces and RBAC. The “AWS...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

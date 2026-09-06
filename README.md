@@ -29,11 +29,13 @@ Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
 List every kind with `konfig-export --list`, browse the generated API reference
 at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
 full-options examples in [`examples/`](examples/) — one per kind, generated from
-the CRD schemas (`make gen-reference`). On top of those, **828 typed kinds are
+the CRD schemas (`make gen-reference`). On top of those, **819 typed kinds are
 generated from the CloudFormation schema registry** and reconciled through the
 AWS Cloud Control API, installed per service bundle from
 [`config/crd/cloudcontrol/`](config/crd/cloudcontrol/) (see
-[docs/cloudcontrol-kinds.md](docs/cloudcontrol-kinds.md)). Anything else can be
+[docs/cloudcontrol-kinds.md](docs/cloudcontrol-kinds.md)). Billing, invoicing and
+cost-report kinds are deliberately excluded, and account- or organization-wide
+settings are generated but flagged as destructive scope. Anything else can be
 managed through the generic `CloudControlResource`. Coverage is measured
 against the Terraform AWS provider in
 [`docs/terraform-parity.md`](docs/terraform-parity.md) (`make parity`). A few

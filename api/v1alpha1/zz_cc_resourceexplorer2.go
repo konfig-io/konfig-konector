@@ -46,7 +46,9 @@ type ResourceExplorer2DefaultViewAssociationStatus struct {
 }
 
 // ResourceExplorer2DefaultViewAssociation manages AWS::ResourceExplorer2::DefaultViewAssociation through the AWS
-// Cloud Control API. Definition of AWS::ResourceExplorer2::DefaultViewAssociation Resource Type
+// Cloud Control API. CAUTION, DESTRUCTIVE SCOPE: account-wide default view. This kind changes shared account,
+// region or organization state (or carries credential material); it is provided for completeness and should not
+// be used from application namespaces. Restrict it with AWSProvider.al...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"

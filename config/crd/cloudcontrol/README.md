@@ -21,11 +21,8 @@
 | autoscaling | 4 | `kubectl apply -f config/crd/cloudcontrol/autoscaling.yaml` |
 | backup | 7 | `kubectl apply -f config/crd/cloudcontrol/backup.yaml` |
 | batch | 4 | `kubectl apply -f config/crd/cloudcontrol/batch.yaml` |
-| bcmdataexports | 1 | `kubectl apply -f config/crd/cloudcontrol/bcmdataexports.yaml` |
 | bedrock | 22 | `kubectl apply -f config/crd/cloudcontrol/bedrock.yaml` |
-| bedrockagentcore | 26 | `kubectl apply -f config/crd/cloudcontrol/bedrockagentcore.yaml` |
-| billing | 1 | `kubectl apply -f config/crd/cloudcontrol/billing.yaml` |
-| budgets | 1 | `kubectl apply -f config/crd/cloudcontrol/budgets.yaml` |
+| bedrockagentcore | 23 | `kubectl apply -f config/crd/cloudcontrol/bedrockagentcore.yaml` |
 | cassandra | 3 | `kubectl apply -f config/crd/cloudcontrol/cassandra.yaml` |
 | ce | 1 | `kubectl apply -f config/crd/cloudcontrol/ce.yaml` |
 | certificatemanager | 4 | `kubectl apply -f config/crd/cloudcontrol/certificatemanager.yaml` |
@@ -48,7 +45,6 @@
 | computeoptimizer | 1 | `kubectl apply -f config/crd/cloudcontrol/computeoptimizer.yaml` |
 | config | 7 | `kubectl apply -f config/crd/cloudcontrol/config.yaml` |
 | controltower | 2 | `kubectl apply -f config/crd/cloudcontrol/controltower.yaml` |
-| cur | 1 | `kubectl apply -f config/crd/cloudcontrol/cur.yaml` |
 | datasync | 13 | `kubectl apply -f config/crd/cloudcontrol/datasync.yaml` |
 | datazone | 17 | `kubectl apply -f config/crd/cloudcontrol/datazone.yaml` |
 | dax | 1 | `kubectl apply -f config/crd/cloudcontrol/dax.yaml` |
@@ -82,7 +78,6 @@
 | inspector | 3 | `kubectl apply -f config/crd/cloudcontrol/inspector.yaml` |
 | inspectorv2 | 5 | `kubectl apply -f config/crd/cloudcontrol/inspectorv2.yaml` |
 | internetmonitor | 1 | `kubectl apply -f config/crd/cloudcontrol/internetmonitor.yaml` |
-| invoicing | 2 | `kubectl apply -f config/crd/cloudcontrol/invoicing.yaml` |
 | kafkaconnect | 3 | `kubectl apply -f config/crd/cloudcontrol/kafkaconnect.yaml` |
 | kinesis | 1 | `kubectl apply -f config/crd/cloudcontrol/kinesis.yaml` |
 | kinesisanalyticsv2 | 1 | `kubectl apply -f config/crd/cloudcontrol/kinesisanalyticsv2.yaml` |

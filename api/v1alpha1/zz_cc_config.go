@@ -448,7 +448,9 @@ type ConfigOrganizationConformancePackStatus struct {
 }
 
 // ConfigOrganizationConformancePack manages AWS::Config::OrganizationConformancePack through the AWS Cloud
-// Control API. Resource Type definition for AWS::Config::OrganizationConformancePack.
+// Control API. CAUTION, DESTRUCTIVE SCOPE: organization-wide conformance pack deployed to all accounts. This
+// kind changes shared account, region or organization state (or carries credential material); it is provided for
+// completeness and should not be used from application namespaces. Restrict ...
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Identifier",type="string",JSONPath=".status.identifier"
