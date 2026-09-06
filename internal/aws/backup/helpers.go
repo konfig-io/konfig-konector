@@ -19,6 +19,7 @@ package backup
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/aws/smithy-go"
 )
@@ -31,7 +32,15 @@ func IsNotFound(err error) bool {
 	}
 	var apiErr smithy.APIError
 	if errors.As(err, &apiErr) {
-		return apiErr.ErrorCode() == "ResourceNotFoundException"
+		if apiErr.ErrorCode() == "ResourceNotFoundException" {
+			return true
+		}
+		// AWS Backup answers DescribeBackupVault for a vault that does not exist
+		// with AccessDeniedException "Insufficient privileges to perform this
+		// action" rather than a not-found error.
+		if apiErr.ErrorCode() == "AccessDeniedException" && strings.Contains(apiErr.ErrorMessage(), "Insufficient privileges") {
+			return true
+		}
 	}
 	return false
 }

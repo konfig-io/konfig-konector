@@ -137,6 +137,10 @@ func (m *KMS) GenerateRandom(ctx context.Context, params *svc.GenerateRandomInpu
 	return m.base.GenerateRandom(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *KMS) GetKeyLastUsage(ctx context.Context, params *svc.GetKeyLastUsageInput, optFns ...func(*svc.Options)) (*svc.GetKeyLastUsageOutput, error) {
+	return m.base.GetKeyLastUsage(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *KMS) GetKeyPolicy(ctx context.Context, params *svc.GetKeyPolicyInput, optFns ...func(*svc.Options)) (*svc.GetKeyPolicyOutput, error) {
 	return m.base.GetKeyPolicy(ctx, params, m.opts(ctx, optFns)...)
 }

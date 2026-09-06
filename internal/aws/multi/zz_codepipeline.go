@@ -109,6 +109,10 @@ func (m *CodePipeline) ListActionTypes(ctx context.Context, params *svc.ListActi
 	return m.base.ListActionTypes(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CodePipeline) ListDeployActionExecutionTargets(ctx context.Context, params *svc.ListDeployActionExecutionTargetsInput, optFns ...func(*svc.Options)) (*svc.ListDeployActionExecutionTargetsOutput, error) {
+	return m.base.ListDeployActionExecutionTargets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CodePipeline) ListPipelineExecutions(ctx context.Context, params *svc.ListPipelineExecutionsInput, optFns ...func(*svc.Options)) (*svc.ListPipelineExecutionsOutput, error) {
 	return m.base.ListPipelineExecutions(ctx, params, m.opts(ctx, optFns)...)
 }

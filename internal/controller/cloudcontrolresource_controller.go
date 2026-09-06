@@ -94,6 +94,10 @@ func (r *CloudControlResourceReconciler) Reconcile(ctx context.Context, req ctrl
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileResource(ctx, obj); err != nil {
@@ -184,7 +188,7 @@ func (r *CloudControlResourceReconciler) reconcileResource(ctx context.Context, 
 		out, err := r.CCClient.CreateResource(ctx, &awscc.CreateResourceInput{
 			TypeName:      aws.String(obj.Spec.TypeName),
 			DesiredState:  aws.String(string(desired)),
-			ClientToken:   aws.String(clientToken(obj)),
+			ClientToken:   aws.String(clientToken(obj, "create")),
 			RoleArn:       optString(obj.Spec.RoleARN),
 			TypeVersionId: optString(obj.Spec.TypeVersionID),
 		})
@@ -203,7 +207,7 @@ func (r *CloudControlResourceReconciler) reconcileResource(ctx context.Context, 
 	if patch != nil {
 		out, err := r.CCClient.UpdateResource(ctx, &awscc.UpdateResourceInput{
 			TypeName: aws.String(obj.Spec.TypeName), Identifier: aws.String(obj.Status.Identifier),
-			PatchDocument: aws.String(string(patch)), ClientToken: aws.String(clientToken(obj)),
+			PatchDocument: aws.String(string(patch)), ClientToken: aws.String(clientToken(obj, "update-"+cchelper.ShortHash(patch))),
 			RoleArn: optString(obj.Spec.RoleARN), TypeVersionId: optString(obj.Spec.TypeVersionID),
 		})
 		if err != nil {
@@ -266,7 +270,7 @@ func (r *CloudControlResourceReconciler) deleteResource(ctx context.Context, obj
 	}
 	out, err := r.CCClient.DeleteResource(ctx, &awscc.DeleteResourceInput{
 		TypeName: aws.String(obj.Spec.TypeName), Identifier: aws.String(obj.Status.Identifier),
-		ClientToken: aws.String(clientToken(obj) + "-del"), RoleArn: optString(obj.Spec.RoleARN), TypeVersionId: optString(obj.Spec.TypeVersionID),
+		ClientToken: aws.String(clientToken(obj, "delete")), RoleArn: optString(obj.Spec.RoleARN), TypeVersionId: optString(obj.Spec.TypeVersionID),
 	})
 	if cchelper.IsNotFound(err) {
 		return true, nil
@@ -288,12 +292,8 @@ func (r *CloudControlResourceReconciler) deleteResource(ctx context.Context, obj
 
 // clientToken derives an idempotency token from the object's UID and
 // generation so a crashed create is not repeated by the retry.
-func clientToken(obj *awsv1alpha1.CloudControlResource) string {
-	t := fmt.Sprintf("%s-%d", obj.UID, obj.Generation)
-	if len(t) > 64 {
-		t = t[len(t)-64:]
-	}
-	return t
+func clientToken(obj *awsv1alpha1.CloudControlResource, op string) string {
+	return ccClientToken(obj, op)
 }
 
 func optString(s string) *string {

@@ -95,7 +95,7 @@ func TestECSServiceReconcile(t *testing.T) {
 
 	newSvc := func(mutate ...func(*awsv1alpha1.ECSService)) *awsv1alpha1.ECSService {
 		svc := &awsv1alpha1.ECSService{
-			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Generation: 1},
+			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}, Generation: 1},
 			Spec: awsv1alpha1.ECSServiceSpec{
 				ClusterName:       "prod-cluster",
 				ServiceName:       "web-svc",
@@ -284,7 +284,7 @@ func TestECSServiceReconcile(t *testing.T) {
 	t.Run("ClusterRef without status ARN yields requeueDependency, no error", func(t *testing.T) {
 		s := vpcTestScheme(t)
 		cluster := &awsv1alpha1.ECSCluster{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-cluster", Namespace: nn.Namespace},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-cluster", Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}},
 			// Status.ClusterARN intentionally empty: not yet synced to AWS.
 		}
 		svc := newSvc(func(svc *awsv1alpha1.ECSService) {

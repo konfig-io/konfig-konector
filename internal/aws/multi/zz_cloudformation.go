@@ -61,12 +61,20 @@ func (m *CloudFormation) CreateChangeSet(ctx context.Context, params *svc.Create
 	return m.base.CreateChangeSet(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) CreateGeneratedTemplate(ctx context.Context, params *svc.CreateGeneratedTemplateInput, optFns ...func(*svc.Options)) (*svc.CreateGeneratedTemplateOutput, error) {
+	return m.base.CreateGeneratedTemplate(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) CreateStack(ctx context.Context, params *svc.CreateStackInput, optFns ...func(*svc.Options)) (*svc.CreateStackOutput, error) {
 	return m.base.CreateStack(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) CreateStackInstances(ctx context.Context, params *svc.CreateStackInstancesInput, optFns ...func(*svc.Options)) (*svc.CreateStackInstancesOutput, error) {
 	return m.base.CreateStackInstances(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) CreateStackRefactor(ctx context.Context, params *svc.CreateStackRefactorInput, optFns ...func(*svc.Options)) (*svc.CreateStackRefactorOutput, error) {
+	return m.base.CreateStackRefactor(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) CreateStackSet(ctx context.Context, params *svc.CreateStackSetInput, optFns ...func(*svc.Options)) (*svc.CreateStackSetOutput, error) {
@@ -83,6 +91,10 @@ func (m *CloudFormation) DeactivateType(ctx context.Context, params *svc.Deactiv
 
 func (m *CloudFormation) DeleteChangeSet(ctx context.Context, params *svc.DeleteChangeSetInput, optFns ...func(*svc.Options)) (*svc.DeleteChangeSetOutput, error) {
 	return m.base.DeleteChangeSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) DeleteGeneratedTemplate(ctx context.Context, params *svc.DeleteGeneratedTemplateInput, optFns ...func(*svc.Options)) (*svc.DeleteGeneratedTemplateOutput, error) {
+	return m.base.DeleteGeneratedTemplate(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) DeleteStack(ctx context.Context, params *svc.DeleteStackInput, optFns ...func(*svc.Options)) (*svc.DeleteStackOutput, error) {
@@ -113,12 +125,24 @@ func (m *CloudFormation) DescribeChangeSetHooks(ctx context.Context, params *svc
 	return m.base.DescribeChangeSetHooks(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) DescribeEvents(ctx context.Context, params *svc.DescribeEventsInput, optFns ...func(*svc.Options)) (*svc.DescribeEventsOutput, error) {
+	return m.base.DescribeEvents(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) DescribeGeneratedTemplate(ctx context.Context, params *svc.DescribeGeneratedTemplateInput, optFns ...func(*svc.Options)) (*svc.DescribeGeneratedTemplateOutput, error) {
+	return m.base.DescribeGeneratedTemplate(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) DescribeOrganizationsAccess(ctx context.Context, params *svc.DescribeOrganizationsAccessInput, optFns ...func(*svc.Options)) (*svc.DescribeOrganizationsAccessOutput, error) {
 	return m.base.DescribeOrganizationsAccess(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) DescribePublisher(ctx context.Context, params *svc.DescribePublisherInput, optFns ...func(*svc.Options)) (*svc.DescribePublisherOutput, error) {
 	return m.base.DescribePublisher(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) DescribeResourceScan(ctx context.Context, params *svc.DescribeResourceScanInput, optFns ...func(*svc.Options)) (*svc.DescribeResourceScanOutput, error) {
+	return m.base.DescribeResourceScan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) DescribeStackDriftDetectionStatus(ctx context.Context, params *svc.DescribeStackDriftDetectionStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeStackDriftDetectionStatusOutput, error) {
@@ -131,6 +155,10 @@ func (m *CloudFormation) DescribeStackEvents(ctx context.Context, params *svc.De
 
 func (m *CloudFormation) DescribeStackInstance(ctx context.Context, params *svc.DescribeStackInstanceInput, optFns ...func(*svc.Options)) (*svc.DescribeStackInstanceOutput, error) {
 	return m.base.DescribeStackInstance(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) DescribeStackRefactor(ctx context.Context, params *svc.DescribeStackRefactorInput, optFns ...func(*svc.Options)) (*svc.DescribeStackRefactorOutput, error) {
+	return m.base.DescribeStackRefactor(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) DescribeStackResource(ctx context.Context, params *svc.DescribeStackResourceInput, optFns ...func(*svc.Options)) (*svc.DescribeStackResourceOutput, error) {
@@ -185,6 +213,18 @@ func (m *CloudFormation) ExecuteChangeSet(ctx context.Context, params *svc.Execu
 	return m.base.ExecuteChangeSet(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) ExecuteStackRefactor(ctx context.Context, params *svc.ExecuteStackRefactorInput, optFns ...func(*svc.Options)) (*svc.ExecuteStackRefactorOutput, error) {
+	return m.base.ExecuteStackRefactor(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) GetGeneratedTemplate(ctx context.Context, params *svc.GetGeneratedTemplateInput, optFns ...func(*svc.Options)) (*svc.GetGeneratedTemplateOutput, error) {
+	return m.base.GetGeneratedTemplate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) GetHookResult(ctx context.Context, params *svc.GetHookResultInput, optFns ...func(*svc.Options)) (*svc.GetHookResultOutput, error) {
+	return m.base.GetHookResult(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) GetStackPolicy(ctx context.Context, params *svc.GetStackPolicyInput, optFns ...func(*svc.Options)) (*svc.GetStackPolicyOutput, error) {
 	return m.base.GetStackPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -209,8 +249,28 @@ func (m *CloudFormation) ListExports(ctx context.Context, params *svc.ListExport
 	return m.base.ListExports(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) ListGeneratedTemplates(ctx context.Context, params *svc.ListGeneratedTemplatesInput, optFns ...func(*svc.Options)) (*svc.ListGeneratedTemplatesOutput, error) {
+	return m.base.ListGeneratedTemplates(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListHookResults(ctx context.Context, params *svc.ListHookResultsInput, optFns ...func(*svc.Options)) (*svc.ListHookResultsOutput, error) {
+	return m.base.ListHookResults(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) ListImports(ctx context.Context, params *svc.ListImportsInput, optFns ...func(*svc.Options)) (*svc.ListImportsOutput, error) {
 	return m.base.ListImports(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListResourceScanRelatedResources(ctx context.Context, params *svc.ListResourceScanRelatedResourcesInput, optFns ...func(*svc.Options)) (*svc.ListResourceScanRelatedResourcesOutput, error) {
+	return m.base.ListResourceScanRelatedResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListResourceScanResources(ctx context.Context, params *svc.ListResourceScanResourcesInput, optFns ...func(*svc.Options)) (*svc.ListResourceScanResourcesOutput, error) {
+	return m.base.ListResourceScanResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListResourceScans(ctx context.Context, params *svc.ListResourceScansInput, optFns ...func(*svc.Options)) (*svc.ListResourceScansOutput, error) {
+	return m.base.ListResourceScans(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) ListStackInstanceResourceDrifts(ctx context.Context, params *svc.ListStackInstanceResourceDriftsInput, optFns ...func(*svc.Options)) (*svc.ListStackInstanceResourceDriftsOutput, error) {
@@ -221,8 +281,20 @@ func (m *CloudFormation) ListStackInstances(ctx context.Context, params *svc.Lis
 	return m.base.ListStackInstances(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) ListStackRefactorActions(ctx context.Context, params *svc.ListStackRefactorActionsInput, optFns ...func(*svc.Options)) (*svc.ListStackRefactorActionsOutput, error) {
+	return m.base.ListStackRefactorActions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListStackRefactors(ctx context.Context, params *svc.ListStackRefactorsInput, optFns ...func(*svc.Options)) (*svc.ListStackRefactorsOutput, error) {
+	return m.base.ListStackRefactors(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) ListStackResources(ctx context.Context, params *svc.ListStackResourcesInput, optFns ...func(*svc.Options)) (*svc.ListStackResourcesOutput, error) {
 	return m.base.ListStackResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) ListStackSetAutoDeploymentTargets(ctx context.Context, params *svc.ListStackSetAutoDeploymentTargetsInput, optFns ...func(*svc.Options)) (*svc.ListStackSetAutoDeploymentTargetsOutput, error) {
+	return m.base.ListStackSetAutoDeploymentTargets(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) ListStackSetOperationResults(ctx context.Context, params *svc.ListStackSetOperationResultsInput, optFns ...func(*svc.Options)) (*svc.ListStackSetOperationResultsOutput, error) {
@@ -289,12 +361,20 @@ func (m *CloudFormation) SignalResource(ctx context.Context, params *svc.SignalR
 	return m.base.SignalResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFormation) StartResourceScan(ctx context.Context, params *svc.StartResourceScanInput, optFns ...func(*svc.Options)) (*svc.StartResourceScanOutput, error) {
+	return m.base.StartResourceScan(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFormation) StopStackSetOperation(ctx context.Context, params *svc.StopStackSetOperationInput, optFns ...func(*svc.Options)) (*svc.StopStackSetOperationOutput, error) {
 	return m.base.StopStackSetOperation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) TestType(ctx context.Context, params *svc.TestTypeInput, optFns ...func(*svc.Options)) (*svc.TestTypeOutput, error) {
 	return m.base.TestType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFormation) UpdateGeneratedTemplate(ctx context.Context, params *svc.UpdateGeneratedTemplateInput, optFns ...func(*svc.Options)) (*svc.UpdateGeneratedTemplateOutput, error) {
+	return m.base.UpdateGeneratedTemplate(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFormation) UpdateStack(ctx context.Context, params *svc.UpdateStackInput, optFns ...func(*svc.Options)) (*svc.UpdateStackOutput, error) {

@@ -89,7 +89,7 @@ func (f *fakeCloudMapNamespaceAPI) ListNamespaces(_ context.Context, _ *awssd.Li
 
 func cloudMapNamespaceCR(mutate ...func(*awsv1alpha1.CloudMapNamespace)) *awsv1alpha1.CloudMapNamespace {
 	ns := &awsv1alpha1.CloudMapNamespace{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-namespace", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.CloudMapNamespaceSpec{
 			Name:   "example.local",
 			Type:   "PRIVATE_DNS",

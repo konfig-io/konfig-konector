@@ -105,8 +105,9 @@ const (
 func newTestIAMPolicy(mutators ...func(*awsv1alpha1.IAMPolicy)) *awsv1alpha1.IAMPolicy {
 	p := &awsv1alpha1.IAMPolicy{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-policy",
-			Namespace: "default",
+			Name:       "test-policy",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.IAMPolicySpec{
 			PolicyName:     "my-policy",

@@ -82,6 +82,10 @@ func (r *IAMGroupPolicyAttachmentReconciler) Reconcile(ctx context.Context, req 
 		if err := r.Update(ctx, att); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileAttachment(ctx, att); err != nil {

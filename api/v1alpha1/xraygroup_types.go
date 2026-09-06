@@ -46,9 +46,11 @@ type XRayGroupSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="groupName is immutable"
 	GroupName string `json:"groupName"`
 
-	// FilterExpression defines criteria by which to group traces.
+	// FilterExpression defines criteria by which to group traces. AWS requires
+	// one, e.g. service("api") or fault = true.
+	// +kubebuilder:validation:MinLength=1
 	// +optional
-	FilterExpression string `json:"filterExpression,omitempty"`
+	FilterExpression string `json:"filterExpression"`
 
 	// InsightsConfiguration configures insights and insight notifications.
 	// +optional

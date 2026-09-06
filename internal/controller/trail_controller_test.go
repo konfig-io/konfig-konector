@@ -139,8 +139,9 @@ const (
 func trailCR(mutate ...func(*awsv1alpha1.Trail)) *awsv1alpha1.Trail {
 	tr := &awsv1alpha1.Trail{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-trail",
-			Namespace: "default",
+			Name:       "my-trail",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.TrailSpec{
 			TrailName:    "my-trail",

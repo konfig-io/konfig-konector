@@ -37,12 +37,24 @@ func (m *ECS) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*svc
 	return append(out, optFns...)
 }
 
+func (m *ECS) ContinueServiceDeployment(ctx context.Context, params *svc.ContinueServiceDeploymentInput, optFns ...func(*svc.Options)) (*svc.ContinueServiceDeploymentOutput, error) {
+	return m.base.ContinueServiceDeployment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECS) CreateCapacityProvider(ctx context.Context, params *svc.CreateCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityProviderOutput, error) {
 	return m.base.CreateCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) CreateCluster(ctx context.Context, params *svc.CreateClusterInput, optFns ...func(*svc.Options)) (*svc.CreateClusterOutput, error) {
 	return m.base.CreateCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) CreateDaemon(ctx context.Context, params *svc.CreateDaemonInput, optFns ...func(*svc.Options)) (*svc.CreateDaemonOutput, error) {
+	return m.base.CreateDaemon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) CreateExpressGatewayService(ctx context.Context, params *svc.CreateExpressGatewayServiceInput, optFns ...func(*svc.Options)) (*svc.CreateExpressGatewayServiceOutput, error) {
+	return m.base.CreateExpressGatewayService(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) CreateService(ctx context.Context, params *svc.CreateServiceInput, optFns ...func(*svc.Options)) (*svc.CreateServiceOutput, error) {
@@ -67,6 +79,18 @@ func (m *ECS) DeleteCapacityProvider(ctx context.Context, params *svc.DeleteCapa
 
 func (m *ECS) DeleteCluster(ctx context.Context, params *svc.DeleteClusterInput, optFns ...func(*svc.Options)) (*svc.DeleteClusterOutput, error) {
 	return m.base.DeleteCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DeleteDaemon(ctx context.Context, params *svc.DeleteDaemonInput, optFns ...func(*svc.Options)) (*svc.DeleteDaemonOutput, error) {
+	return m.base.DeleteDaemon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DeleteDaemonTaskDefinition(ctx context.Context, params *svc.DeleteDaemonTaskDefinitionInput, optFns ...func(*svc.Options)) (*svc.DeleteDaemonTaskDefinitionOutput, error) {
+	return m.base.DeleteDaemonTaskDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DeleteExpressGatewayService(ctx context.Context, params *svc.DeleteExpressGatewayServiceInput, optFns ...func(*svc.Options)) (*svc.DeleteExpressGatewayServiceOutput, error) {
+	return m.base.DeleteExpressGatewayService(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) DeleteService(ctx context.Context, params *svc.DeleteServiceInput, optFns ...func(*svc.Options)) (*svc.DeleteServiceOutput, error) {
@@ -99,6 +123,34 @@ func (m *ECS) DescribeClusters(ctx context.Context, params *svc.DescribeClusters
 
 func (m *ECS) DescribeContainerInstances(ctx context.Context, params *svc.DescribeContainerInstancesInput, optFns ...func(*svc.Options)) (*svc.DescribeContainerInstancesOutput, error) {
 	return m.base.DescribeContainerInstances(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeDaemon(ctx context.Context, params *svc.DescribeDaemonInput, optFns ...func(*svc.Options)) (*svc.DescribeDaemonOutput, error) {
+	return m.base.DescribeDaemon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeDaemonDeployments(ctx context.Context, params *svc.DescribeDaemonDeploymentsInput, optFns ...func(*svc.Options)) (*svc.DescribeDaemonDeploymentsOutput, error) {
+	return m.base.DescribeDaemonDeployments(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeDaemonRevisions(ctx context.Context, params *svc.DescribeDaemonRevisionsInput, optFns ...func(*svc.Options)) (*svc.DescribeDaemonRevisionsOutput, error) {
+	return m.base.DescribeDaemonRevisions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeDaemonTaskDefinition(ctx context.Context, params *svc.DescribeDaemonTaskDefinitionInput, optFns ...func(*svc.Options)) (*svc.DescribeDaemonTaskDefinitionOutput, error) {
+	return m.base.DescribeDaemonTaskDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeExpressGatewayService(ctx context.Context, params *svc.DescribeExpressGatewayServiceInput, optFns ...func(*svc.Options)) (*svc.DescribeExpressGatewayServiceOutput, error) {
+	return m.base.DescribeExpressGatewayService(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeServiceDeployments(ctx context.Context, params *svc.DescribeServiceDeploymentsInput, optFns ...func(*svc.Options)) (*svc.DescribeServiceDeploymentsOutput, error) {
+	return m.base.DescribeServiceDeployments(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) DescribeServiceRevisions(ctx context.Context, params *svc.DescribeServiceRevisionsInput, optFns ...func(*svc.Options)) (*svc.DescribeServiceRevisionsOutput, error) {
+	return m.base.DescribeServiceRevisions(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) DescribeServices(ctx context.Context, params *svc.DescribeServicesInput, optFns ...func(*svc.Options)) (*svc.DescribeServicesOutput, error) {
@@ -145,6 +197,22 @@ func (m *ECS) ListContainerInstances(ctx context.Context, params *svc.ListContai
 	return m.base.ListContainerInstances(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECS) ListDaemonDeployments(ctx context.Context, params *svc.ListDaemonDeploymentsInput, optFns ...func(*svc.Options)) (*svc.ListDaemonDeploymentsOutput, error) {
+	return m.base.ListDaemonDeployments(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) ListDaemonTaskDefinitions(ctx context.Context, params *svc.ListDaemonTaskDefinitionsInput, optFns ...func(*svc.Options)) (*svc.ListDaemonTaskDefinitionsOutput, error) {
+	return m.base.ListDaemonTaskDefinitions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) ListDaemons(ctx context.Context, params *svc.ListDaemonsInput, optFns ...func(*svc.Options)) (*svc.ListDaemonsOutput, error) {
+	return m.base.ListDaemons(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) ListServiceDeployments(ctx context.Context, params *svc.ListServiceDeploymentsInput, optFns ...func(*svc.Options)) (*svc.ListServiceDeploymentsOutput, error) {
+	return m.base.ListServiceDeployments(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECS) ListServices(ctx context.Context, params *svc.ListServicesInput, optFns ...func(*svc.Options)) (*svc.ListServicesOutput, error) {
 	return m.base.ListServices(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -189,6 +257,10 @@ func (m *ECS) RegisterContainerInstance(ctx context.Context, params *svc.Registe
 	return m.base.RegisterContainerInstance(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECS) RegisterDaemonTaskDefinition(ctx context.Context, params *svc.RegisterDaemonTaskDefinitionInput, optFns ...func(*svc.Options)) (*svc.RegisterDaemonTaskDefinitionOutput, error) {
+	return m.base.RegisterDaemonTaskDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECS) RegisterTaskDefinition(ctx context.Context, params *svc.RegisterTaskDefinitionInput, optFns ...func(*svc.Options)) (*svc.RegisterTaskDefinitionOutput, error) {
 	return m.base.RegisterTaskDefinition(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -199,6 +271,10 @@ func (m *ECS) RunTask(ctx context.Context, params *svc.RunTaskInput, optFns ...f
 
 func (m *ECS) StartTask(ctx context.Context, params *svc.StartTaskInput, optFns ...func(*svc.Options)) (*svc.StartTaskOutput, error) {
 	return m.base.StartTask(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) StopServiceDeployment(ctx context.Context, params *svc.StopServiceDeploymentInput, optFns ...func(*svc.Options)) (*svc.StopServiceDeploymentOutput, error) {
+	return m.base.StopServiceDeployment(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) StopTask(ctx context.Context, params *svc.StopTaskInput, optFns ...func(*svc.Options)) (*svc.StopTaskOutput, error) {
@@ -243,6 +319,14 @@ func (m *ECS) UpdateContainerAgent(ctx context.Context, params *svc.UpdateContai
 
 func (m *ECS) UpdateContainerInstancesState(ctx context.Context, params *svc.UpdateContainerInstancesStateInput, optFns ...func(*svc.Options)) (*svc.UpdateContainerInstancesStateOutput, error) {
 	return m.base.UpdateContainerInstancesState(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) UpdateDaemon(ctx context.Context, params *svc.UpdateDaemonInput, optFns ...func(*svc.Options)) (*svc.UpdateDaemonOutput, error) {
+	return m.base.UpdateDaemon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECS) UpdateExpressGatewayService(ctx context.Context, params *svc.UpdateExpressGatewayServiceInput, optFns ...func(*svc.Options)) (*svc.UpdateExpressGatewayServiceOutput, error) {
+	return m.base.UpdateExpressGatewayService(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECS) UpdateService(ctx context.Context, params *svc.UpdateServiceInput, optFns ...func(*svc.Options)) (*svc.UpdateServiceOutput, error) {

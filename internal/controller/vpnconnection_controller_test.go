@@ -298,7 +298,7 @@ func TestCustomerGatewayReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-cgw", Namespace: "default"}}
 	cgwCR := func(mutate ...func(*awsv1alpha1.CustomerGateway)) *awsv1alpha1.CustomerGateway {
 		c := &awsv1alpha1.CustomerGateway{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-cgw", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-cgw", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.CustomerGatewaySpec{
 				BGPASN:    65000,
 				IPAddress: "203.0.113.10",
@@ -400,7 +400,7 @@ func TestVPNGatewayReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-vgw", Namespace: "default"}}
 	vgwCR := func(mutate ...func(*awsv1alpha1.VPNGateway)) *awsv1alpha1.VPNGateway {
 		v := &awsv1alpha1.VPNGateway{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-vgw", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-vgw", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.VPNGatewaySpec{
 				Type:   "ipsec.1",
 				VPCRef: &awsv1alpha1.VPCResourceRef{ID: "vpc-123"},
@@ -524,7 +524,7 @@ func TestVPNConnectionReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-vpn", Namespace: "default"}}
 	vpnCR := func(mutate ...func(*awsv1alpha1.VPNConnection)) *awsv1alpha1.VPNConnection {
 		v := &awsv1alpha1.VPNConnection{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-vpn", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-vpn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.VPNConnectionSpec{
 				CustomerGatewayRef: awsv1alpha1.CustomerGatewayRef{ID: "cgw-123"},
 				VPNGatewayRef:      &awsv1alpha1.VPNGatewayRef{ID: "vgw-123"},
@@ -542,7 +542,7 @@ func TestVPNConnectionReconcile(t *testing.T) {
 		ctx := context.Background()
 		scheme := newVPNScheme(t)
 		secret := &corev1.Secret{
-			ObjectMeta: metav1.ObjectMeta{Name: "vpn-psk", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "vpn-psk", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Data:       map[string][]byte{"psk": []byte("super-secret-key")},
 		}
 		obj := vpnCR(func(v *awsv1alpha1.VPNConnection) {
@@ -718,7 +718,7 @@ func TestVPNConnectionReconcile(t *testing.T) {
 			v.Spec.CustomerGatewayRef = awsv1alpha1.CustomerGatewayRef{Name: "my-cgw"}
 		})
 		cgw := &awsv1alpha1.CustomerGateway{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-cgw", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-cgw", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec:       awsv1alpha1.CustomerGatewaySpec{BGPASN: 65000, IPAddress: "203.0.113.10"},
 		}
 		c := newVPNFakeClient(scheme, obj, cgw)
@@ -741,7 +741,7 @@ func TestVPNConnectionRouteReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-route", Namespace: "default"}}
 	routeCR := func(mutate ...func(*awsv1alpha1.VPNConnectionRoute)) *awsv1alpha1.VPNConnectionRoute {
 		rt := &awsv1alpha1.VPNConnectionRoute{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-route", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-route", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.VPNConnectionRouteSpec{
 				VPNConnectionRef:     awsv1alpha1.VPNConnectionRef{ID: "vpn-123"},
 				DestinationCIDRBlock: "10.100.0.0/16",
@@ -836,7 +836,7 @@ func TestManagedPrefixListReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-pl", Namespace: "default"}}
 	plCR := func(mutate ...func(*awsv1alpha1.ManagedPrefixList)) *awsv1alpha1.ManagedPrefixList {
 		pl := &awsv1alpha1.ManagedPrefixList{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-pl", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-pl", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.ManagedPrefixListSpec{
 				Name:          "my-pl",
 				AddressFamily: "IPv4",
@@ -1004,7 +1004,7 @@ func TestCapacityReservationReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-cr", Namespace: "default"}}
 	crCR := func(mutate ...func(*awsv1alpha1.CapacityReservation)) *awsv1alpha1.CapacityReservation {
 		cr := &awsv1alpha1.CapacityReservation{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-cr", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-cr", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.CapacityReservationSpec{
 				InstanceType:     "m5.large",
 				InstancePlatform: "Linux/UNIX",

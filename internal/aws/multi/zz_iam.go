@@ -37,6 +37,14 @@ func (m *IAM) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*svc
 	return append(out, optFns...)
 }
 
+func (m *IAM) AcceptDelegationRequest(ctx context.Context, params *svc.AcceptDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.AcceptDelegationRequestOutput, error) {
+	return m.base.AcceptDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) AcquireRole(ctx context.Context, params *svc.AcquireRoleInput, optFns ...func(*svc.Options)) (*svc.AcquireRoleOutput, error) {
+	return m.base.AcquireRole(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) AddClientIDToOpenIDConnectProvider(ctx context.Context, params *svc.AddClientIDToOpenIDConnectProviderInput, optFns ...func(*svc.Options)) (*svc.AddClientIDToOpenIDConnectProviderOutput, error) {
 	return m.base.AddClientIDToOpenIDConnectProvider(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -47,6 +55,10 @@ func (m *IAM) AddRoleToInstanceProfile(ctx context.Context, params *svc.AddRoleT
 
 func (m *IAM) AddUserToGroup(ctx context.Context, params *svc.AddUserToGroupInput, optFns ...func(*svc.Options)) (*svc.AddUserToGroupOutput, error) {
 	return m.base.AddUserToGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) AssociateDelegationRequest(ctx context.Context, params *svc.AssociateDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.AssociateDelegationRequestOutput, error) {
+	return m.base.AssociateDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) AttachGroupPolicy(ctx context.Context, params *svc.AttachGroupPolicyInput, optFns ...func(*svc.Options)) (*svc.AttachGroupPolicyOutput, error) {
@@ -71,6 +83,10 @@ func (m *IAM) CreateAccessKey(ctx context.Context, params *svc.CreateAccessKeyIn
 
 func (m *IAM) CreateAccountAlias(ctx context.Context, params *svc.CreateAccountAliasInput, optFns ...func(*svc.Options)) (*svc.CreateAccountAliasOutput, error) {
 	return m.base.CreateAccountAlias(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) CreateDelegationRequest(ctx context.Context, params *svc.CreateDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.CreateDelegationRequestOutput, error) {
+	return m.base.CreateDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) CreateGroup(ctx context.Context, params *svc.CreateGroupInput, optFns ...func(*svc.Options)) (*svc.CreateGroupOutput, error) {
@@ -237,6 +253,10 @@ func (m *IAM) DisableOrganizationsRootSessions(ctx context.Context, params *svc.
 	return m.base.DisableOrganizationsRootSessions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) DisableOutboundWebIdentityFederation(ctx context.Context, params *svc.DisableOutboundWebIdentityFederationInput, optFns ...func(*svc.Options)) (*svc.DisableOutboundWebIdentityFederationOutput, error) {
+	return m.base.DisableOutboundWebIdentityFederation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) EnableMFADevice(ctx context.Context, params *svc.EnableMFADeviceInput, optFns ...func(*svc.Options)) (*svc.EnableMFADeviceOutput, error) {
 	return m.base.EnableMFADevice(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -247,6 +267,10 @@ func (m *IAM) EnableOrganizationsRootCredentialsManagement(ctx context.Context, 
 
 func (m *IAM) EnableOrganizationsRootSessions(ctx context.Context, params *svc.EnableOrganizationsRootSessionsInput, optFns ...func(*svc.Options)) (*svc.EnableOrganizationsRootSessionsOutput, error) {
 	return m.base.EnableOrganizationsRootSessions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) EnableOutboundWebIdentityFederation(ctx context.Context, params *svc.EnableOutboundWebIdentityFederationInput, optFns ...func(*svc.Options)) (*svc.EnableOutboundWebIdentityFederationOutput, error) {
+	return m.base.EnableOutboundWebIdentityFederation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) GenerateCredentialReport(ctx context.Context, params *svc.GenerateCredentialReportInput, optFns ...func(*svc.Options)) (*svc.GenerateCredentialReportOutput, error) {
@@ -273,6 +297,10 @@ func (m *IAM) GetAccountPasswordPolicy(ctx context.Context, params *svc.GetAccou
 	return m.base.GetAccountPasswordPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) GetAccountProperties(ctx context.Context, params *svc.GetAccountPropertiesInput, optFns ...func(*svc.Options)) (*svc.GetAccountPropertiesOutput, error) {
+	return m.base.GetAccountProperties(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) GetAccountSummary(ctx context.Context, params *svc.GetAccountSummaryInput, optFns ...func(*svc.Options)) (*svc.GetAccountSummaryOutput, error) {
 	return m.base.GetAccountSummary(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -289,12 +317,20 @@ func (m *IAM) GetCredentialReport(ctx context.Context, params *svc.GetCredential
 	return m.base.GetCredentialReport(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) GetDelegationRequest(ctx context.Context, params *svc.GetDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.GetDelegationRequestOutput, error) {
+	return m.base.GetDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) GetGroup(ctx context.Context, params *svc.GetGroupInput, optFns ...func(*svc.Options)) (*svc.GetGroupOutput, error) {
 	return m.base.GetGroup(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) GetGroupPolicy(ctx context.Context, params *svc.GetGroupPolicyInput, optFns ...func(*svc.Options)) (*svc.GetGroupPolicyOutput, error) {
 	return m.base.GetGroupPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) GetHumanReadableSummary(ctx context.Context, params *svc.GetHumanReadableSummaryInput, optFns ...func(*svc.Options)) (*svc.GetHumanReadableSummaryOutput, error) {
+	return m.base.GetHumanReadableSummary(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) GetInstanceProfile(ctx context.Context, params *svc.GetInstanceProfileInput, optFns ...func(*svc.Options)) (*svc.GetInstanceProfileOutput, error) {
@@ -317,6 +353,10 @@ func (m *IAM) GetOrganizationsAccessReport(ctx context.Context, params *svc.GetO
 	return m.base.GetOrganizationsAccessReport(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) GetOutboundWebIdentityFederationInfo(ctx context.Context, params *svc.GetOutboundWebIdentityFederationInfoInput, optFns ...func(*svc.Options)) (*svc.GetOutboundWebIdentityFederationInfoOutput, error) {
+	return m.base.GetOutboundWebIdentityFederationInfo(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) GetPolicy(ctx context.Context, params *svc.GetPolicyInput, optFns ...func(*svc.Options)) (*svc.GetPolicyOutput, error) {
 	return m.base.GetPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -331,6 +371,10 @@ func (m *IAM) GetRole(ctx context.Context, params *svc.GetRoleInput, optFns ...f
 
 func (m *IAM) GetRolePolicy(ctx context.Context, params *svc.GetRolePolicyInput, optFns ...func(*svc.Options)) (*svc.GetRolePolicyOutput, error) {
 	return m.base.GetRolePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) GetRoleTemplateVersion(ctx context.Context, params *svc.GetRoleTemplateVersionInput, optFns ...func(*svc.Options)) (*svc.GetRoleTemplateVersionOutput, error) {
+	return m.base.GetRoleTemplateVersion(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) GetSAMLProvider(ctx context.Context, params *svc.GetSAMLProviderInput, optFns ...func(*svc.Options)) (*svc.GetSAMLProviderOutput, error) {
@@ -383,6 +427,10 @@ func (m *IAM) ListAttachedRolePolicies(ctx context.Context, params *svc.ListAtta
 
 func (m *IAM) ListAttachedUserPolicies(ctx context.Context, params *svc.ListAttachedUserPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListAttachedUserPoliciesOutput, error) {
 	return m.base.ListAttachedUserPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) ListDelegationRequests(ctx context.Context, params *svc.ListDelegationRequestsInput, optFns ...func(*svc.Options)) (*svc.ListDelegationRequestsOutput, error) {
+	return m.base.ListDelegationRequests(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) ListEntitiesForPolicy(ctx context.Context, params *svc.ListEntitiesForPolicyInput, optFns ...func(*svc.Options)) (*svc.ListEntitiesForPolicyOutput, error) {
@@ -505,6 +553,10 @@ func (m *IAM) ListVirtualMFADevices(ctx context.Context, params *svc.ListVirtual
 	return m.base.ListVirtualMFADevices(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) PutAccountProperties(ctx context.Context, params *svc.PutAccountPropertiesInput, optFns ...func(*svc.Options)) (*svc.PutAccountPropertiesOutput, error) {
+	return m.base.PutAccountProperties(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) PutGroupPolicy(ctx context.Context, params *svc.PutGroupPolicyInput, optFns ...func(*svc.Options)) (*svc.PutGroupPolicyOutput, error) {
 	return m.base.PutGroupPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -525,6 +577,10 @@ func (m *IAM) PutUserPolicy(ctx context.Context, params *svc.PutUserPolicyInput,
 	return m.base.PutUserPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *IAM) RejectDelegationRequest(ctx context.Context, params *svc.RejectDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.RejectDelegationRequestOutput, error) {
+	return m.base.RejectDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *IAM) RemoveClientIDFromOpenIDConnectProvider(ctx context.Context, params *svc.RemoveClientIDFromOpenIDConnectProviderInput, optFns ...func(*svc.Options)) (*svc.RemoveClientIDFromOpenIDConnectProviderOutput, error) {
 	return m.base.RemoveClientIDFromOpenIDConnectProvider(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -543,6 +599,10 @@ func (m *IAM) ResetServiceSpecificCredential(ctx context.Context, params *svc.Re
 
 func (m *IAM) ResyncMFADevice(ctx context.Context, params *svc.ResyncMFADeviceInput, optFns ...func(*svc.Options)) (*svc.ResyncMFADeviceOutput, error) {
 	return m.base.ResyncMFADevice(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) SendDelegationToken(ctx context.Context, params *svc.SendDelegationTokenInput, optFns ...func(*svc.Options)) (*svc.SendDelegationTokenOutput, error) {
+	return m.base.SendDelegationToken(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) SetDefaultPolicyVersion(ctx context.Context, params *svc.SetDefaultPolicyVersionInput, optFns ...func(*svc.Options)) (*svc.SetDefaultPolicyVersionOutput, error) {
@@ -635,6 +695,10 @@ func (m *IAM) UpdateAccountPasswordPolicy(ctx context.Context, params *svc.Updat
 
 func (m *IAM) UpdateAssumeRolePolicy(ctx context.Context, params *svc.UpdateAssumeRolePolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateAssumeRolePolicyOutput, error) {
 	return m.base.UpdateAssumeRolePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *IAM) UpdateDelegationRequest(ctx context.Context, params *svc.UpdateDelegationRequestInput, optFns ...func(*svc.Options)) (*svc.UpdateDelegationRequestOutput, error) {
+	return m.base.UpdateDelegationRequest(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *IAM) UpdateGroup(ctx context.Context, params *svc.UpdateGroupInput, optFns ...func(*svc.Options)) (*svc.UpdateGroupOutput, error) {

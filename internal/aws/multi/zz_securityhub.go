@@ -61,6 +61,10 @@ func (m *SecurityHub) BatchGetAutomationRules(ctx context.Context, params *svc.B
 	return m.base.BatchGetAutomationRules(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) BatchGetConfigurationPolicyAssociations(ctx context.Context, params *svc.BatchGetConfigurationPolicyAssociationsInput, optFns ...func(*svc.Options)) (*svc.BatchGetConfigurationPolicyAssociationsOutput, error) {
+	return m.base.BatchGetConfigurationPolicyAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) BatchGetSecurityControls(ctx context.Context, params *svc.BatchGetSecurityControlsInput, optFns ...func(*svc.Options)) (*svc.BatchGetSecurityControlsOutput, error) {
 	return m.base.BatchGetSecurityControls(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -81,6 +85,10 @@ func (m *SecurityHub) BatchUpdateFindings(ctx context.Context, params *svc.Batch
 	return m.base.BatchUpdateFindings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) BatchUpdateFindingsV2(ctx context.Context, params *svc.BatchUpdateFindingsV2Input, optFns ...func(*svc.Options)) (*svc.BatchUpdateFindingsV2Output, error) {
+	return m.base.BatchUpdateFindingsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) BatchUpdateStandardsControlAssociations(ctx context.Context, params *svc.BatchUpdateStandardsControlAssociationsInput, optFns ...func(*svc.Options)) (*svc.BatchUpdateStandardsControlAssociationsOutput, error) {
 	return m.base.BatchUpdateStandardsControlAssociations(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -89,8 +97,28 @@ func (m *SecurityHub) CreateActionTarget(ctx context.Context, params *svc.Create
 	return m.base.CreateActionTarget(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) CreateAggregatorV2(ctx context.Context, params *svc.CreateAggregatorV2Input, optFns ...func(*svc.Options)) (*svc.CreateAggregatorV2Output, error) {
+	return m.base.CreateAggregatorV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) CreateAutomationRule(ctx context.Context, params *svc.CreateAutomationRuleInput, optFns ...func(*svc.Options)) (*svc.CreateAutomationRuleOutput, error) {
 	return m.base.CreateAutomationRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) CreateAutomationRuleV2(ctx context.Context, params *svc.CreateAutomationRuleV2Input, optFns ...func(*svc.Options)) (*svc.CreateAutomationRuleV2Output, error) {
+	return m.base.CreateAutomationRuleV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) CreateConfigurationPolicy(ctx context.Context, params *svc.CreateConfigurationPolicyInput, optFns ...func(*svc.Options)) (*svc.CreateConfigurationPolicyOutput, error) {
+	return m.base.CreateConfigurationPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) CreateConnector(ctx context.Context, params *svc.CreateConnectorInput, optFns ...func(*svc.Options)) (*svc.CreateConnectorOutput, error) {
+	return m.base.CreateConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) CreateConnectorV2(ctx context.Context, params *svc.CreateConnectorV2Input, optFns ...func(*svc.Options)) (*svc.CreateConnectorV2Output, error) {
+	return m.base.CreateConnectorV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) CreateFindingAggregator(ctx context.Context, params *svc.CreateFindingAggregatorInput, optFns ...func(*svc.Options)) (*svc.CreateFindingAggregatorOutput, error) {
@@ -105,12 +133,36 @@ func (m *SecurityHub) CreateMembers(ctx context.Context, params *svc.CreateMembe
 	return m.base.CreateMembers(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) CreateTicketV2(ctx context.Context, params *svc.CreateTicketV2Input, optFns ...func(*svc.Options)) (*svc.CreateTicketV2Output, error) {
+	return m.base.CreateTicketV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) DeclineInvitations(ctx context.Context, params *svc.DeclineInvitationsInput, optFns ...func(*svc.Options)) (*svc.DeclineInvitationsOutput, error) {
 	return m.base.DeclineInvitations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) DeleteActionTarget(ctx context.Context, params *svc.DeleteActionTargetInput, optFns ...func(*svc.Options)) (*svc.DeleteActionTargetOutput, error) {
 	return m.base.DeleteActionTarget(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DeleteAggregatorV2(ctx context.Context, params *svc.DeleteAggregatorV2Input, optFns ...func(*svc.Options)) (*svc.DeleteAggregatorV2Output, error) {
+	return m.base.DeleteAggregatorV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DeleteAutomationRuleV2(ctx context.Context, params *svc.DeleteAutomationRuleV2Input, optFns ...func(*svc.Options)) (*svc.DeleteAutomationRuleV2Output, error) {
+	return m.base.DeleteAutomationRuleV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DeleteConfigurationPolicy(ctx context.Context, params *svc.DeleteConfigurationPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteConfigurationPolicyOutput, error) {
+	return m.base.DeleteConfigurationPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DeleteConnector(ctx context.Context, params *svc.DeleteConnectorInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectorOutput, error) {
+	return m.base.DeleteConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DeleteConnectorV2(ctx context.Context, params *svc.DeleteConnectorV2Input, optFns ...func(*svc.Options)) (*svc.DeleteConnectorV2Output, error) {
+	return m.base.DeleteConnectorV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) DeleteFindingAggregator(ctx context.Context, params *svc.DeleteFindingAggregatorInput, optFns ...func(*svc.Options)) (*svc.DeleteFindingAggregatorOutput, error) {
@@ -145,6 +197,14 @@ func (m *SecurityHub) DescribeProducts(ctx context.Context, params *svc.Describe
 	return m.base.DescribeProducts(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) DescribeProductsV2(ctx context.Context, params *svc.DescribeProductsV2Input, optFns ...func(*svc.Options)) (*svc.DescribeProductsV2Output, error) {
+	return m.base.DescribeProductsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DescribeSecurityHubV2(ctx context.Context, params *svc.DescribeSecurityHubV2Input, optFns ...func(*svc.Options)) (*svc.DescribeSecurityHubV2Output, error) {
+	return m.base.DescribeSecurityHubV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) DescribeStandards(ctx context.Context, params *svc.DescribeStandardsInput, optFns ...func(*svc.Options)) (*svc.DescribeStandardsOutput, error) {
 	return m.base.DescribeStandards(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -163,6 +223,14 @@ func (m *SecurityHub) DisableOrganizationAdminAccount(ctx context.Context, param
 
 func (m *SecurityHub) DisableSecurityHub(ctx context.Context, params *svc.DisableSecurityHubInput, optFns ...func(*svc.Options)) (*svc.DisableSecurityHubOutput, error) {
 	return m.base.DisableSecurityHub(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DisableSecurityHubFeatureV2(ctx context.Context, params *svc.DisableSecurityHubFeatureV2Input, optFns ...func(*svc.Options)) (*svc.DisableSecurityHubFeatureV2Output, error) {
+	return m.base.DisableSecurityHubFeatureV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) DisableSecurityHubV2(ctx context.Context, params *svc.DisableSecurityHubV2Input, optFns ...func(*svc.Options)) (*svc.DisableSecurityHubV2Output, error) {
+	return m.base.DisableSecurityHubV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) DisassociateFromAdministratorAccount(ctx context.Context, params *svc.DisassociateFromAdministratorAccountInput, optFns ...func(*svc.Options)) (*svc.DisassociateFromAdministratorAccountOutput, error) {
@@ -189,8 +257,44 @@ func (m *SecurityHub) EnableSecurityHub(ctx context.Context, params *svc.EnableS
 	return m.base.EnableSecurityHub(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) EnableSecurityHubFeatureV2(ctx context.Context, params *svc.EnableSecurityHubFeatureV2Input, optFns ...func(*svc.Options)) (*svc.EnableSecurityHubFeatureV2Output, error) {
+	return m.base.EnableSecurityHubFeatureV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) EnableSecurityHubV2(ctx context.Context, params *svc.EnableSecurityHubV2Input, optFns ...func(*svc.Options)) (*svc.EnableSecurityHubV2Output, error) {
+	return m.base.EnableSecurityHubV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GenerateRecommendedPolicyV2(ctx context.Context, params *svc.GenerateRecommendedPolicyV2Input, optFns ...func(*svc.Options)) (*svc.GenerateRecommendedPolicyV2Output, error) {
+	return m.base.GenerateRecommendedPolicyV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) GetAdministratorAccount(ctx context.Context, params *svc.GetAdministratorAccountInput, optFns ...func(*svc.Options)) (*svc.GetAdministratorAccountOutput, error) {
 	return m.base.GetAdministratorAccount(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetAggregatorV2(ctx context.Context, params *svc.GetAggregatorV2Input, optFns ...func(*svc.Options)) (*svc.GetAggregatorV2Output, error) {
+	return m.base.GetAggregatorV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetAutomationRuleV2(ctx context.Context, params *svc.GetAutomationRuleV2Input, optFns ...func(*svc.Options)) (*svc.GetAutomationRuleV2Output, error) {
+	return m.base.GetAutomationRuleV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetConfigurationPolicy(ctx context.Context, params *svc.GetConfigurationPolicyInput, optFns ...func(*svc.Options)) (*svc.GetConfigurationPolicyOutput, error) {
+	return m.base.GetConfigurationPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetConfigurationPolicyAssociation(ctx context.Context, params *svc.GetConfigurationPolicyAssociationInput, optFns ...func(*svc.Options)) (*svc.GetConfigurationPolicyAssociationOutput, error) {
+	return m.base.GetConfigurationPolicyAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetConnector(ctx context.Context, params *svc.GetConnectorInput, optFns ...func(*svc.Options)) (*svc.GetConnectorOutput, error) {
+	return m.base.GetConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetConnectorV2(ctx context.Context, params *svc.GetConnectorV2Input, optFns ...func(*svc.Options)) (*svc.GetConnectorV2Output, error) {
+	return m.base.GetConnectorV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) GetEnabledStandards(ctx context.Context, params *svc.GetEnabledStandardsInput, optFns ...func(*svc.Options)) (*svc.GetEnabledStandardsOutput, error) {
@@ -205,8 +309,20 @@ func (m *SecurityHub) GetFindingHistory(ctx context.Context, params *svc.GetFind
 	return m.base.GetFindingHistory(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) GetFindingStatisticsV2(ctx context.Context, params *svc.GetFindingStatisticsV2Input, optFns ...func(*svc.Options)) (*svc.GetFindingStatisticsV2Output, error) {
+	return m.base.GetFindingStatisticsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) GetFindings(ctx context.Context, params *svc.GetFindingsInput, optFns ...func(*svc.Options)) (*svc.GetFindingsOutput, error) {
 	return m.base.GetFindings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetFindingsTrendsV2(ctx context.Context, params *svc.GetFindingsTrendsV2Input, optFns ...func(*svc.Options)) (*svc.GetFindingsTrendsV2Output, error) {
+	return m.base.GetFindingsTrendsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetFindingsV2(ctx context.Context, params *svc.GetFindingsV2Input, optFns ...func(*svc.Options)) (*svc.GetFindingsV2Output, error) {
+	return m.base.GetFindingsV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) GetInsightResults(ctx context.Context, params *svc.GetInsightResultsInput, optFns ...func(*svc.Options)) (*svc.GetInsightResultsOutput, error) {
@@ -229,12 +345,56 @@ func (m *SecurityHub) GetMembers(ctx context.Context, params *svc.GetMembersInpu
 	return m.base.GetMembers(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) GetRecommendedPolicyV2(ctx context.Context, params *svc.GetRecommendedPolicyV2Input, optFns ...func(*svc.Options)) (*svc.GetRecommendedPolicyV2Output, error) {
+	return m.base.GetRecommendedPolicyV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetResourcesStatisticsV2(ctx context.Context, params *svc.GetResourcesStatisticsV2Input, optFns ...func(*svc.Options)) (*svc.GetResourcesStatisticsV2Output, error) {
+	return m.base.GetResourcesStatisticsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetResourcesTrendsV2(ctx context.Context, params *svc.GetResourcesTrendsV2Input, optFns ...func(*svc.Options)) (*svc.GetResourcesTrendsV2Output, error) {
+	return m.base.GetResourcesTrendsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetResourcesV2(ctx context.Context, params *svc.GetResourcesV2Input, optFns ...func(*svc.Options)) (*svc.GetResourcesV2Output, error) {
+	return m.base.GetResourcesV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) GetSecurityControlDefinition(ctx context.Context, params *svc.GetSecurityControlDefinitionInput, optFns ...func(*svc.Options)) (*svc.GetSecurityControlDefinitionOutput, error) {
+	return m.base.GetSecurityControlDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) InviteMembers(ctx context.Context, params *svc.InviteMembersInput, optFns ...func(*svc.Options)) (*svc.InviteMembersOutput, error) {
 	return m.base.InviteMembers(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) ListAggregatorsV2(ctx context.Context, params *svc.ListAggregatorsV2Input, optFns ...func(*svc.Options)) (*svc.ListAggregatorsV2Output, error) {
+	return m.base.ListAggregatorsV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) ListAutomationRules(ctx context.Context, params *svc.ListAutomationRulesInput, optFns ...func(*svc.Options)) (*svc.ListAutomationRulesOutput, error) {
 	return m.base.ListAutomationRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListAutomationRulesV2(ctx context.Context, params *svc.ListAutomationRulesV2Input, optFns ...func(*svc.Options)) (*svc.ListAutomationRulesV2Output, error) {
+	return m.base.ListAutomationRulesV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListConfigurationPolicies(ctx context.Context, params *svc.ListConfigurationPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListConfigurationPoliciesOutput, error) {
+	return m.base.ListConfigurationPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListConfigurationPolicyAssociations(ctx context.Context, params *svc.ListConfigurationPolicyAssociationsInput, optFns ...func(*svc.Options)) (*svc.ListConfigurationPolicyAssociationsOutput, error) {
+	return m.base.ListConfigurationPolicyAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListConnectors(ctx context.Context, params *svc.ListConnectorsInput, optFns ...func(*svc.Options)) (*svc.ListConnectorsOutput, error) {
+	return m.base.ListConnectors(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListConnectorsV2(ctx context.Context, params *svc.ListConnectorsV2Input, optFns ...func(*svc.Options)) (*svc.ListConnectorsV2Output, error) {
+	return m.base.ListConnectorsV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) ListEnabledProductsForImport(ctx context.Context, params *svc.ListEnabledProductsForImportInput, optFns ...func(*svc.Options)) (*svc.ListEnabledProductsForImportOutput, error) {
@@ -243,6 +403,10 @@ func (m *SecurityHub) ListEnabledProductsForImport(ctx context.Context, params *
 
 func (m *SecurityHub) ListFindingAggregators(ctx context.Context, params *svc.ListFindingAggregatorsInput, optFns ...func(*svc.Options)) (*svc.ListFindingAggregatorsOutput, error) {
 	return m.base.ListFindingAggregators(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) ListFreeTrialStatusesV2(ctx context.Context, params *svc.ListFreeTrialStatusesV2Input, optFns ...func(*svc.Options)) (*svc.ListFreeTrialStatusesV2Output, error) {
+	return m.base.ListFreeTrialStatusesV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) ListInvitations(ctx context.Context, params *svc.ListInvitationsInput, optFns ...func(*svc.Options)) (*svc.ListInvitationsOutput, error) {
@@ -269,6 +433,18 @@ func (m *SecurityHub) ListTagsForResource(ctx context.Context, params *svc.ListT
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SecurityHub) RegisterConnectorV2(ctx context.Context, params *svc.RegisterConnectorV2Input, optFns ...func(*svc.Options)) (*svc.RegisterConnectorV2Output, error) {
+	return m.base.RegisterConnectorV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) StartConfigurationPolicyAssociation(ctx context.Context, params *svc.StartConfigurationPolicyAssociationInput, optFns ...func(*svc.Options)) (*svc.StartConfigurationPolicyAssociationOutput, error) {
+	return m.base.StartConfigurationPolicyAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) StartConfigurationPolicyDisassociation(ctx context.Context, params *svc.StartConfigurationPolicyDisassociationInput, optFns ...func(*svc.Options)) (*svc.StartConfigurationPolicyDisassociationOutput, error) {
+	return m.base.StartConfigurationPolicyDisassociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SecurityHub) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -279,6 +455,26 @@ func (m *SecurityHub) UntagResource(ctx context.Context, params *svc.UntagResour
 
 func (m *SecurityHub) UpdateActionTarget(ctx context.Context, params *svc.UpdateActionTargetInput, optFns ...func(*svc.Options)) (*svc.UpdateActionTargetOutput, error) {
 	return m.base.UpdateActionTarget(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateAggregatorV2(ctx context.Context, params *svc.UpdateAggregatorV2Input, optFns ...func(*svc.Options)) (*svc.UpdateAggregatorV2Output, error) {
+	return m.base.UpdateAggregatorV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateAutomationRuleV2(ctx context.Context, params *svc.UpdateAutomationRuleV2Input, optFns ...func(*svc.Options)) (*svc.UpdateAutomationRuleV2Output, error) {
+	return m.base.UpdateAutomationRuleV2(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateConfigurationPolicy(ctx context.Context, params *svc.UpdateConfigurationPolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateConfigurationPolicyOutput, error) {
+	return m.base.UpdateConfigurationPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateConnector(ctx context.Context, params *svc.UpdateConnectorInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectorOutput, error) {
+	return m.base.UpdateConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateConnectorV2(ctx context.Context, params *svc.UpdateConnectorV2Input, optFns ...func(*svc.Options)) (*svc.UpdateConnectorV2Output, error) {
+	return m.base.UpdateConnectorV2(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) UpdateFindingAggregator(ctx context.Context, params *svc.UpdateFindingAggregatorInput, optFns ...func(*svc.Options)) (*svc.UpdateFindingAggregatorOutput, error) {
@@ -295,6 +491,10 @@ func (m *SecurityHub) UpdateInsight(ctx context.Context, params *svc.UpdateInsig
 
 func (m *SecurityHub) UpdateOrganizationConfiguration(ctx context.Context, params *svc.UpdateOrganizationConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateOrganizationConfigurationOutput, error) {
 	return m.base.UpdateOrganizationConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SecurityHub) UpdateSecurityControl(ctx context.Context, params *svc.UpdateSecurityControlInput, optFns ...func(*svc.Options)) (*svc.UpdateSecurityControlOutput, error) {
+	return m.base.UpdateSecurityControl(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SecurityHub) UpdateSecurityHubConfiguration(ctx context.Context, params *svc.UpdateSecurityHubConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateSecurityHubConfigurationOutput, error) {

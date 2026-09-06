@@ -117,7 +117,7 @@ func (f *fakeCodeArtifactDomain) DeleteDomain(_ context.Context, params *awscode
 
 func codeArtifactDomainCR(mutate ...func(*awsv1alpha1.CodeArtifactDomain)) *awsv1alpha1.CodeArtifactDomain {
 	d := &awsv1alpha1.CodeArtifactDomain{
-		ObjectMeta: metav1.ObjectMeta{Name: "corp", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "corp", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.CodeArtifactDomainSpec{DomainName: "corp"},
 	}
 	for _, m := range mutate {
@@ -241,7 +241,7 @@ func (f *fakeCodeArtifactRepo) DisassociateExternalConnection(_ context.Context,
 
 func codeArtifactRepoCR(mutate ...func(*awsv1alpha1.CodeArtifactRepository)) *awsv1alpha1.CodeArtifactRepository {
 	repo := &awsv1alpha1.CodeArtifactRepository{
-		ObjectMeta: metav1.ObjectMeta{Name: "npm", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "npm", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.CodeArtifactRepositorySpec{
 			RepositoryName:      "npm",
 			DomainRef:           awsv1alpha1.CodeArtifactDomainRef{DomainName: "corp"},
@@ -383,7 +383,7 @@ func (f *fakeXRayGroup) DeleteGroup(_ context.Context, params *awsxray.DeleteGro
 
 func xrayGroupCR(mutate ...func(*awsv1alpha1.XRayGroup)) *awsv1alpha1.XRayGroup {
 	g := &awsv1alpha1.XRayGroup{
-		ObjectMeta: metav1.ObjectMeta{Name: "api-traces", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "api-traces", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.XRayGroupSpec{
 			GroupName:        "api-traces",
 			FilterExpression: `service("api")`,
@@ -501,7 +501,7 @@ func (f *fakeXRaySamplingRule) DeleteSamplingRule(_ context.Context, params *aws
 
 func xraySamplingRuleCR(mutate ...func(*awsv1alpha1.XRaySamplingRule)) *awsv1alpha1.XRaySamplingRule {
 	rule := &awsv1alpha1.XRaySamplingRule{
-		ObjectMeta: metav1.ObjectMeta{Name: "api-sampling", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "api-sampling", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.XRaySamplingRuleSpec{
 			RuleName:      "api-sampling",
 			Priority:      100,
@@ -630,7 +630,7 @@ func (f *fakeAMPRuleNS) DeleteRuleGroupsNamespace(_ context.Context, params *aws
 
 func ruleNSCR(mutate ...func(*awsv1alpha1.PrometheusRuleGroupsNamespace)) *awsv1alpha1.PrometheusRuleGroupsNamespace {
 	ns := &awsv1alpha1.PrometheusRuleGroupsNamespace{
-		ObjectMeta: metav1.ObjectMeta{Name: "alerts", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "alerts", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.PrometheusRuleGroupsNamespaceSpec{
 			WorkspaceRef: awsv1alpha1.PrometheusWorkspaceRef{WorkspaceID: testAMPWorkspaceID},
 			Name:         "alerts",
@@ -746,7 +746,7 @@ func (f *fakeAMPAlertManager) DeleteAlertManagerDefinition(_ context.Context, pa
 
 func alertManagerCR(mutate ...func(*awsv1alpha1.PrometheusAlertManagerDefinition)) *awsv1alpha1.PrometheusAlertManagerDefinition {
 	def := &awsv1alpha1.PrometheusAlertManagerDefinition{
-		ObjectMeta: metav1.ObjectMeta{Name: "alertmanager", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "alertmanager", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.PrometheusAlertManagerDefinitionSpec{
 			WorkspaceRef: awsv1alpha1.PrometheusWorkspaceRef{WorkspaceID: testAMPWorkspaceID},
 			Definition:   "alertmanager_config: |\n  route:\n    receiver: default",
@@ -866,7 +866,7 @@ func (f *fakeGrafana) DeleteWorkspace(_ context.Context, params *awsgrafana.Dele
 
 func grafanaWorkspaceCR(mutate ...func(*awsv1alpha1.GrafanaWorkspace)) *awsv1alpha1.GrafanaWorkspace {
 	ws := &awsv1alpha1.GrafanaWorkspace{
-		ObjectMeta: metav1.ObjectMeta{Name: "dashboards", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "dashboards", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.GrafanaWorkspaceSpec{
 			WorkspaceName:           "dashboards",
 			AccountAccessType:       "CURRENT_ACCOUNT",
@@ -1001,7 +1001,7 @@ func (f *fakeCEMonitor) DeleteAnomalyMonitor(_ context.Context, params *awsce.De
 
 func ceMonitorCR(mutate ...func(*awsv1alpha1.CostAnomalyMonitor)) *awsv1alpha1.CostAnomalyMonitor {
 	m := &awsv1alpha1.CostAnomalyMonitor{
-		ObjectMeta: metav1.ObjectMeta{Name: "service-monitor", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "service-monitor", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.CostAnomalyMonitorSpec{
 			MonitorName:      "service-monitor",
 			MonitorType:      "DIMENSIONAL",
@@ -1130,7 +1130,7 @@ func (f *fakeCESubscription) DeleteAnomalySubscription(_ context.Context, params
 
 func ceSubscriptionCR(mutate ...func(*awsv1alpha1.CostAnomalySubscription)) *awsv1alpha1.CostAnomalySubscription {
 	s := &awsv1alpha1.CostAnomalySubscription{
-		ObjectMeta: metav1.ObjectMeta{Name: "cost-alerts", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "cost-alerts", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.CostAnomalySubscriptionSpec{
 			SubscriptionName: "cost-alerts",
 			MonitorRefs:      []awsv1alpha1.CostAnomalyMonitorRef{{ARN: testCEMonitorARN}},

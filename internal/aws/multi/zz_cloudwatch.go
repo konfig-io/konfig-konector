@@ -37,6 +37,14 @@ func (m *CloudWatch) opts(ctx context.Context, optFns []func(*svc.Options)) []fu
 	return append(out, optFns...)
 }
 
+func (m *CloudWatch) AssociateDatasetKmsKey(ctx context.Context, params *svc.AssociateDatasetKmsKeyInput, optFns ...func(*svc.Options)) (*svc.AssociateDatasetKmsKeyOutput, error) {
+	return m.base.AssociateDatasetKmsKey(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) DeleteAlarmMuteRule(ctx context.Context, params *svc.DeleteAlarmMuteRuleInput, optFns ...func(*svc.Options)) (*svc.DeleteAlarmMuteRuleOutput, error) {
+	return m.base.DeleteAlarmMuteRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) DeleteAlarms(ctx context.Context, params *svc.DeleteAlarmsInput, optFns ...func(*svc.Options)) (*svc.DeleteAlarmsOutput, error) {
 	return m.base.DeleteAlarms(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -55,6 +63,10 @@ func (m *CloudWatch) DeleteInsightRules(ctx context.Context, params *svc.DeleteI
 
 func (m *CloudWatch) DeleteMetricStream(ctx context.Context, params *svc.DeleteMetricStreamInput, optFns ...func(*svc.Options)) (*svc.DeleteMetricStreamOutput, error) {
 	return m.base.DeleteMetricStream(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) DescribeAlarmContributors(ctx context.Context, params *svc.DescribeAlarmContributorsInput, optFns ...func(*svc.Options)) (*svc.DescribeAlarmContributorsOutput, error) {
+	return m.base.DescribeAlarmContributors(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatch) DescribeAlarmHistory(ctx context.Context, params *svc.DescribeAlarmHistoryInput, optFns ...func(*svc.Options)) (*svc.DescribeAlarmHistoryOutput, error) {
@@ -85,6 +97,10 @@ func (m *CloudWatch) DisableInsightRules(ctx context.Context, params *svc.Disabl
 	return m.base.DisableInsightRules(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatch) DisassociateDatasetKmsKey(ctx context.Context, params *svc.DisassociateDatasetKmsKeyInput, optFns ...func(*svc.Options)) (*svc.DisassociateDatasetKmsKeyOutput, error) {
+	return m.base.DisassociateDatasetKmsKey(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) EnableAlarmActions(ctx context.Context, params *svc.EnableAlarmActionsInput, optFns ...func(*svc.Options)) (*svc.EnableAlarmActionsOutput, error) {
 	return m.base.EnableAlarmActions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -93,8 +109,16 @@ func (m *CloudWatch) EnableInsightRules(ctx context.Context, params *svc.EnableI
 	return m.base.EnableInsightRules(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatch) GetAlarmMuteRule(ctx context.Context, params *svc.GetAlarmMuteRuleInput, optFns ...func(*svc.Options)) (*svc.GetAlarmMuteRuleOutput, error) {
+	return m.base.GetAlarmMuteRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) GetDashboard(ctx context.Context, params *svc.GetDashboardInput, optFns ...func(*svc.Options)) (*svc.GetDashboardOutput, error) {
 	return m.base.GetDashboard(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) GetDataset(ctx context.Context, params *svc.GetDatasetInput, optFns ...func(*svc.Options)) (*svc.GetDatasetOutput, error) {
+	return m.base.GetDataset(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatch) GetInsightRuleReport(ctx context.Context, params *svc.GetInsightRuleReportInput, optFns ...func(*svc.Options)) (*svc.GetInsightRuleReportOutput, error) {
@@ -117,6 +141,14 @@ func (m *CloudWatch) GetMetricWidgetImage(ctx context.Context, params *svc.GetMe
 	return m.base.GetMetricWidgetImage(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatch) GetOTelEnrichment(ctx context.Context, params *svc.GetOTelEnrichmentInput, optFns ...func(*svc.Options)) (*svc.GetOTelEnrichmentOutput, error) {
+	return m.base.GetOTelEnrichment(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) ListAlarmMuteRules(ctx context.Context, params *svc.ListAlarmMuteRulesInput, optFns ...func(*svc.Options)) (*svc.ListAlarmMuteRulesOutput, error) {
+	return m.base.ListAlarmMuteRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) ListDashboards(ctx context.Context, params *svc.ListDashboardsInput, optFns ...func(*svc.Options)) (*svc.ListDashboardsOutput, error) {
 	return m.base.ListDashboards(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -137,6 +169,10 @@ func (m *CloudWatch) ListTagsForResource(ctx context.Context, params *svc.ListTa
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatch) PutAlarmMuteRule(ctx context.Context, params *svc.PutAlarmMuteRuleInput, optFns ...func(*svc.Options)) (*svc.PutAlarmMuteRuleOutput, error) {
+	return m.base.PutAlarmMuteRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) PutAnomalyDetector(ctx context.Context, params *svc.PutAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.PutAnomalyDetectorOutput, error) {
 	return m.base.PutAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -151,6 +187,10 @@ func (m *CloudWatch) PutDashboard(ctx context.Context, params *svc.PutDashboardI
 
 func (m *CloudWatch) PutInsightRule(ctx context.Context, params *svc.PutInsightRuleInput, optFns ...func(*svc.Options)) (*svc.PutInsightRuleOutput, error) {
 	return m.base.PutInsightRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) PutLogAlarm(ctx context.Context, params *svc.PutLogAlarmInput, optFns ...func(*svc.Options)) (*svc.PutLogAlarmOutput, error) {
+	return m.base.PutLogAlarm(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatch) PutManagedInsightRules(ctx context.Context, params *svc.PutManagedInsightRulesInput, optFns ...func(*svc.Options)) (*svc.PutManagedInsightRulesOutput, error) {
@@ -177,8 +217,16 @@ func (m *CloudWatch) StartMetricStreams(ctx context.Context, params *svc.StartMe
 	return m.base.StartMetricStreams(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatch) StartOTelEnrichment(ctx context.Context, params *svc.StartOTelEnrichmentInput, optFns ...func(*svc.Options)) (*svc.StartOTelEnrichmentOutput, error) {
+	return m.base.StartOTelEnrichment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatch) StopMetricStreams(ctx context.Context, params *svc.StopMetricStreamsInput, optFns ...func(*svc.Options)) (*svc.StopMetricStreamsOutput, error) {
 	return m.base.StopMetricStreams(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatch) StopOTelEnrichment(ctx context.Context, params *svc.StopOTelEnrichmentInput, optFns ...func(*svc.Options)) (*svc.StopOTelEnrichmentOutput, error) {
+	return m.base.StopOTelEnrichment(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatch) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {

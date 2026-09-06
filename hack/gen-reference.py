@@ -67,6 +67,46 @@ SERVICE_LABELS = {
     "sns": "SNS", "sqs": "SQS", "ssm": "SSM", "ssoadmin": "IAM Identity Center",
     "vpclattice": "VPC Lattice", "wafv2": "WAFv2", "xray": "X-Ray",
     "provider": "Multi-Account Provider", "cloudcontrol": "Cloud Control API",
+    "bedrock": "Bedrock", "bedrockagentcore": "Bedrock AgentCore", "datazone": "DataZone",
+    "networkmanager": "Network Manager", "sagemaker": "SageMaker", "ses": "SES", "s3": "S3",
+    "eventschemas": "EventBridge Schemas", "eventbridge": "EventBridge", "appconfig": "AppConfig",
+    "appsync": "AppSync", "datasync": "DataSync", "transfer": "Transfer Family", "fsx": "FSx",
+    "storagegateway": "Storage Gateway", "dms": "DMS", "docdb": "DocumentDB", "neptune": "Neptune",
+    "emr": "EMR", "emrcontainers": "EMR on EKS", "emrserverless": "EMR Serverless", "lakeformation": "Lake Formation",
+    "mwaa": "MWAA", "imagebuilder": "EC2 Image Builder", "elasticbeanstalk": "Elastic Beanstalk",
+    "globalaccelerator": "Global Accelerator", "directconnect": "Direct Connect", "route53profiles": "Route 53 Profiles",
+    "route53recoverycontrol": "Route 53 ARC Control", "route53recoveryreadiness": "Route 53 ARC Readiness",
+    "arczonalshift": "ARC Zonal Shift", "identitystore": "IAM Identity Store", "rolesanywhere": "IAM Roles Anywhere",
+    "accessanalyzer": "IAM Access Analyzer", "macie": "Macie", "detective": "Detective", "securitylake": "Security Lake",
+    "fms": "Firewall Manager", "verifiedpermissions": "Verified Permissions", "cloudhsm": "CloudHSM", "signer": "Signer",
+    "auditmanager": "Audit Manager", "ssmcontacts": "Incident Manager Contacts", "ssmincidents": "Incident Manager",
+    "ssmquicksetup": "SSM Quick Setup", "synthetics": "CloudWatch Synthetics", "rum": "CloudWatch RUM",
+    "evidently": "CloudWatch Evidently", "applicationinsights": "Application Insights", "applicationsignals": "Application Signals",
+    "internetmonitor": "Internet Monitor", "networkflowmonitor": "Network Flow Monitor", "observabilityadmin": "Observability Admin",
+    "oam": "CloudWatch OAM", "notifications": "User Notifications", "notificationscontacts": "Notification Contacts",
+    "chatbot": "Chatbot", "fis": "Fault Injection Service", "resiliencehub": "Resilience Hub", "resiliencehubv2": "Resilience Hub v2",
+    "resourcegroups": "Resource Groups", "resourceexplorer2": "Resource Explorer", "licensemanager": "License Manager",
+    "computeoptimizer": "Compute Optimizer", "rbin": "Recycle Bin", "cassandra": "Keyspaces", "timestream": "Timestream",
+    "kafkaconnect": "MSK Connect", "kinesisanalyticsv2": "Managed Flink", "osis": "OpenSearch Ingestion",
+    "redshiftserverless": "Redshift Serverless", "s3express": "S3 Express", "s3objectlambda": "S3 Object Lambda", "s3tables": "S3 Tables",
+    "codeconnections": "CodeConnections", "codestarconnections": "CodeStar Connections", "codestarnotifications": "CodeStar Notifications",
+    "codeguruprofiler": "CodeGuru Profiler", "codegurureviewer": "CodeGuru Reviewer", "amplify": "Amplify", "appflow": "AppFlow",
+    "cloudtrail": "CloudTrail", "inspectorv2": "Inspector", "inspector": "Inspector Classic", "elb": "Classic ELB",
+    "cloudformation": "CloudFormation", "servicecatalog": "Service Catalog", "ram": "RAM", "organizations": "Organizations",
+    "controltower": "Control Tower", "budgets": "Budgets", "ce": "Cost Explorer", "ssm": "Systems Manager", "sso": "IAM Identity Center",
+    "wafv2": "WAFv2", "shield": "Shield", "networkfirewall": "Network Firewall", "guardduty": "GuardDuty", "securityhub": "Security Hub",
+    "kms": "KMS", "secretsmanager": "Secrets Manager", "acm": "ACM", "acmpca": "ACM PCA", "cognito": "Cognito", "grafana": "Managed Grafana",
+    "amp": "Managed Prometheus", "xray": "X-Ray", "cloudwatch": "CloudWatch", "cloudwatchlogs": "CloudWatch Logs", "kinesis": "Kinesis",
+    "firehose": "Data Firehose", "kafka": "MSK", "mq": "Amazon MQ", "sqs": "SQS", "sns": "SNS", "pipes": "EventBridge Pipes",
+    "scheduler": "EventBridge Scheduler", "sfn": "Step Functions", "lambda": "Lambda", "ecs": "ECS", "eks": "EKS", "ecr": "ECR",
+    "ec2": "EC2 & VPC", "elbv2": "Elastic Load Balancing", "vpclattice": "VPC Lattice", "servicediscovery": "Cloud Map",
+    "efs": "EFS", "backup": "Backup", "dynamodb": "DynamoDB", "dax": "DAX", "elasticache": "ElastiCache", "memorydb": "MemoryDB",
+    "rds": "RDS & Aurora", "redshift": "Redshift", "opensearch": "OpenSearch", "opensearchserverless": "OpenSearch Serverless",
+    "glue": "Glue", "athena": "Athena", "batch": "Batch", "apprunner": "App Runner", "autoscaling": "Auto Scaling",
+    "appautoscaling": "Application Auto Scaling", "iam": "IAM", "route53": "Route 53", "route53resolver": "Route 53 Resolver",
+    "cloudfront": "CloudFront", "apigateway": "API Gateway", "apigatewayv2": "API Gateway v2", "codebuild": "CodeBuild",
+    "codecommit": "CodeCommit", "codedeploy": "CodeDeploy", "codepipeline": "CodePipeline", "codeartifact": "CodeArtifact",
+    "configservice": "AWS Config", "costexplorer": "Cost Explorer", "ssoadmin": "IAM Identity Center", "sesv2": "SES",
 }
 
 MAX_DEPTH = 5
@@ -111,7 +151,8 @@ def kind_to_service():
     for f in glob.glob(os.path.join(CONTROLLERS, "*_controller.go")):
         base = os.path.basename(f)[: -len("_controller.go")]
         src = open(f).read()
-        m = re.findall(r'"github\.com/[^"]+/internal/aws/([a-z0-9]+)"', src)
+        m = [x for x in re.findall(r'"github\.com/[^"]+/internal/aws/([a-z0-9]+)"', src)
+             if x not in ("multi", "provider", "cloudcontrol")]
         if not m:
             # some controllers use the AWS SDK client directly
             m = re.findall(r'"github\.com/aws/aws-sdk-go-v2/service/([a-z0-9]+)"', src)

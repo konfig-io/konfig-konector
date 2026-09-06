@@ -83,7 +83,7 @@ func TestAthenaWorkGroupReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-wg", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.AthenaWorkGroup)) *awsv1alpha1.AthenaWorkGroup {
 		wg := &awsv1alpha1.AthenaWorkGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-wg", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-wg", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.AthenaWorkGroupSpec{
 				Name:        "my-wg",
 				Description: "test workgroup",
@@ -215,7 +215,7 @@ func TestAthenaDataCatalogReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-catalog", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.AthenaDataCatalog)) *awsv1alpha1.AthenaDataCatalog {
 		dc := &awsv1alpha1.AthenaDataCatalog{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-catalog", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-catalog", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.AthenaDataCatalogSpec{
 				Name:       "my-catalog",
 				Type:       "LAMBDA",
@@ -326,7 +326,7 @@ func TestAthenaNamedQueryReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-query", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.AthenaNamedQuery)) *awsv1alpha1.AthenaNamedQuery {
 		nq := &awsv1alpha1.AthenaNamedQuery{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-query", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-query", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.AthenaNamedQuerySpec{
 				Name:        "my-query",
 				Database:    "analytics",

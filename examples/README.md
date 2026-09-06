@@ -5,161 +5,161 @@ schemas by `hack/gen-reference.py` (`make gen-reference`). Optional fields
 carry sample values — delete what you don't need. Hand-written end-to-end
 scenarios live at the top level of this directory.
 
-- [ACCESSANALYZER](accessanalyzer/) — 2 kinds
 - [ACCOUNTACCESS](accountaccess/) — 2 kinds
-- [ACM](acm/) — 5 kinds
+- [ACM](acm/) — 6 kinds
 - [ACM PCA](acmpca/) — 4 kinds
 - [Amazon MQ](mq/) — 2 kinds
-- [AMPLIFY](amplify/) — 4 kinds
+- [Amplify](amplify/) — 4 kinds
 - [API Gateway](apigateway/) — 22 kinds
 - [API Gateway v2](apigatewayv2/) — 15 kinds
 - [App Runner](apprunner/) — 5 kinds
-- [APPCONFIG](appconfig/) — 10 kinds
-- [APPFLOW](appflow/) — 3 kinds
+- [AppConfig](appconfig/) — 10 kinds
+- [AppFlow](appflow/) — 3 kinds
 - [Application Auto Scaling](applicationautoscaling/) — 2 kinds
-- [APPLICATIONINSIGHTS](applicationinsights/) — 1 kinds
-- [APPLICATIONSIGNALS](applicationsignals/) — 3 kinds
-- [APPSYNC](appsync/) — 10 kinds
-- [ARCZONALSHIFT](arczonalshift/) — 2 kinds
+- [Application Insights](applicationinsights/) — 1 kinds
+- [Application Signals](applicationsignals/) — 3 kinds
+- [AppSync](appsync/) — 10 kinds
+- [ARC Zonal Shift](arczonalshift/) — 2 kinds
 - [Athena](athena/) — 5 kinds
-- [AUDITMANAGER](auditmanager/) — 2 kinds
-- [Auto Scaling](autoscaling/) — 5 kinds
+- [Audit Manager](auditmanager/) — 2 kinds
+- [Auto Scaling](autoscaling/) — 6 kinds
 - [AWS Config](configservice/) — 10 kinds
 - [Backup](backup/) — 10 kinds
 - [Batch](batch/) — 7 kinds
-- [BEDROCK](bedrock/) — 22 kinds
-- [BEDROCKAGENTCORE](bedrockagentcore/) — 23 kinds
+- [Bedrock](bedrock/) — 22 kinds
+- [Bedrock AgentCore](bedrockagentcore/) — 23 kinds
 - [Budgets](budgets/) — 1 kinds
-- [CASSANDRA](cassandra/) — 3 kinds
-- [CHATBOT](chatbot/) — 3 kinds
+- [Chatbot](chatbot/) — 3 kinds
 - [Cloud Control API](cloudcontrol/) — 1 kinds
 - [Cloud Map](servicediscovery/) — 4 kinds
 - [CloudFormation](cloudformation/) — 16 kinds
 - [CloudFront](cloudfront/) — 19 kinds
-- [CLOUDHSM](cloudhsm/) — 1 kinds
+- [CloudHSM](cloudhsm/) — 1 kinds
 - [CloudTrail](cloudtrail/) — 5 kinds
 - [CloudWatch](cloudwatch/) — 8 kinds
+- [CloudWatch Evidently](evidently/) — 5 kinds
 - [CloudWatch Logs](cloudwatchlogs/) — 16 kinds
+- [CloudWatch OAM](oam/) — 2 kinds
+- [CloudWatch RUM](rum/) — 1 kinds
+- [CloudWatch Synthetics](synthetics/) — 2 kinds
 - [CodeArtifact](codeartifact/) — 3 kinds
-- [CodeBuild](codebuild/) — 3 kinds
+- [CodeBuild](codebuild/) — 4 kinds
 - [CodeCommit](codecommit/) — 1 kinds
-- [CODECONNECTIONS](codeconnections/) — 2 kinds
+- [CodeConnections](codeconnections/) — 2 kinds
 - [CodeDeploy](codedeploy/) — 3 kinds
-- [CODEGURUPROFILER](codeguruprofiler/) — 1 kinds
-- [CODEGURUREVIEWER](codegurureviewer/) — 1 kinds
+- [CodeGuru Profiler](codeguruprofiler/) — 1 kinds
+- [CodeGuru Reviewer](codegurureviewer/) — 1 kinds
 - [CodePipeline](codepipeline/) — 3 kinds
-- [CODESTARCONNECTIONS](codestarconnections/) — 3 kinds
-- [CODESTARNOTIFICATIONS](codestarnotifications/) — 1 kinds
+- [CodeStar Connections](codestarconnections/) — 3 kinds
+- [CodeStar Notifications](codestarnotifications/) — 1 kinds
 - [Cognito](cognito/) — 19 kinds
-- [COMPUTEOPTIMIZER](computeoptimizer/) — 1 kinds
+- [Compute Optimizer](computeoptimizer/) — 1 kinds
 - [Control Tower](controltower/) — 3 kinds
 - [Cost Explorer](costexplorer/) — 3 kinds
 - [Data Firehose](firehose/) — 1 kinds
-- [DATASYNC](datasync/) — 13 kinds
-- [DATAZONE](datazone/) — 17 kinds
+- [DataSync](datasync/) — 13 kinds
+- [DataZone](datazone/) — 17 kinds
 - [DAX](dax/) — 2 kinds
-- [DETECTIVE](detective/) — 3 kinds
-- [DIRECTCONNECT](directconnect/) — 7 kinds
+- [Detective](detective/) — 3 kinds
+- [Direct Connect](directconnect/) — 7 kinds
 - [DMS](dms/) — 10 kinds
-- [DOCDB](docdb/) — 4 kinds
+- [DocumentDB](docdb/) — 4 kinds
 - [DynamoDB](dynamodb/) — 4 kinds
 - [EC2 & VPC](ec2/) — 112 kinds
+- [EC2 Image Builder](imagebuilder/) — 8 kinds
 - [ECR](ecr/) — 11 kinds
 - [ECS](ecs/) — 10 kinds
 - [EFS](efs/) — 3 kinds
 - [EKS](eks/) — 9 kinds
+- [Elastic Beanstalk](elasticbeanstalk/) — 4 kinds
+- [Elastic Load Balancing](elbv2/) — 7 kinds
 - [ElastiCache](elasticache/) — 9 kinds
-- [ELASTICBEANSTALK](elasticbeanstalk/) — 4 kinds
 - [EMR](emr/) — 5 kinds
-- [EMRCONTAINERS](emrcontainers/) — 3 kinds
-- [EMRSERVERLESS](emrserverless/) — 1 kinds
+- [EMR on EKS](emrcontainers/) — 3 kinds
+- [EMR Serverless](emrserverless/) — 1 kinds
 - [EventBridge](eventbridge/) — 9 kinds
+- [EventBridge Pipes](pipes/) — 1 kinds
 - [EventBridge Scheduler](scheduler/) — 2 kinds
-- [EVENTSCHEMAS](eventschemas/) — 4 kinds
-- [EVIDENTLY](evidently/) — 5 kinds
-- [FIS](fis/) — 2 kinds
-- [FMS](fms/) — 3 kinds
-- [FSX](fsx/) — 3 kinds
-- [GLOBALACCELERATOR](globalaccelerator/) — 4 kinds
+- [EventBridge Schemas](eventschemas/) — 4 kinds
+- [Fault Injection Service](fis/) — 2 kinds
+- [Firewall Manager](fms/) — 3 kinds
+- [FSx](fsx/) — 3 kinds
+- [Global Accelerator](globalaccelerator/) — 4 kinds
 - [Glue](glue/) — 25 kinds
 - [GuardDuty](guardduty/) — 11 kinds
 - [IAM](iam/) — 16 kinds
+- [IAM Access Analyzer](accessanalyzer/) — 2 kinds
 - [IAM Identity Center](ssoadmin/) — 6 kinds
-- [IDENTITYSTORE](identitystore/) — 3 kinds
-- [IMAGEBUILDER](imagebuilder/) — 8 kinds
+- [IAM Identity Store](identitystore/) — 3 kinds
+- [IAM Roles Anywhere](rolesanywhere/) — 3 kinds
+- [Incident Manager](ssmincidents/) — 2 kinds
+- [Incident Manager Contacts](ssmcontacts/) — 4 kinds
 - [Inspector](inspector2/) — 6 kinds
-- [INSPECTOR](inspector/) — 3 kinds
-- [INTERNETMONITOR](internetmonitor/) — 1 kinds
-- [KAFKACONNECT](kafkaconnect/) — 3 kinds
+- [Inspector Classic](inspector/) — 3 kinds
+- [Internet Monitor](internetmonitor/) — 1 kinds
+- [Keyspaces](cassandra/) — 3 kinds
 - [Kinesis](kinesis/) — 3 kinds
-- [KINESISANALYTICSV2](kinesisanalyticsv2/) — 1 kinds
-- [KMS](kms/) — 4 kinds
-- [LAKEFORMATION](lakeformation/) — 4 kinds
+- [KMS](kms/) — 5 kinds
+- [Lake Formation](lakeformation/) — 4 kinds
 - [Lambda](lambda/) — 14 kinds
-- [LICENSEMANAGER](licensemanager/) — 3 kinds
-- [Load Balancing](elbv2/) — 7 kinds
-- [MACIE](macie/) — 4 kinds
+- [License Manager](licensemanager/) — 3 kinds
+- [Macie](macie/) — 4 kinds
+- [Managed Flink](kinesisanalyticsv2/) — 1 kinds
 - [Managed Grafana](grafana/) — 1 kinds
 - [Managed Prometheus](amp/) — 6 kinds
 - [MemoryDB](memorydb/) — 6 kinds
 - [MSK](kafka/) — 9 kinds
-- [MULTI](multi/) — 35 kinds
-- [Multi-Account Provider](provider/) — 1 kinds
+- [MSK Connect](kafkaconnect/) — 3 kinds
 - [MWAA](mwaa/) — 1 kinds
-- [NEPTUNE](neptune/) — 7 kinds
+- [Neptune](neptune/) — 7 kinds
 - [Network Firewall](networkfirewall/) — 6 kinds
-- [NETWORKFLOWMONITOR](networkflowmonitor/) — 1 kinds
-- [NETWORKMANAGER](networkmanager/) — 16 kinds
-- [NOTIFICATIONS](notifications/) — 7 kinds
-- [NOTIFICATIONSCONTACTS](notificationscontacts/) — 1 kinds
-- [OAM](oam/) — 2 kinds
-- [OBSERVABILITYADMIN](observabilityadmin/) — 6 kinds
-- [OpenSearch](opensearch/) — 2 kinds
-- [OpenSearch Serverless](opensearchserverless/) — 8 kinds
+- [Network Flow Monitor](networkflowmonitor/) — 1 kinds
+- [Network Manager](networkmanager/) — 16 kinds
+- [Notification Contacts](notificationscontacts/) — 1 kinds
+- [Observability Admin](observabilityadmin/) — 6 kinds
+- [OpenSearch](opensearch/) — 3 kinds
+- [OpenSearch Ingestion](osis/) — 1 kinds
+- [OpenSearch Serverless](opensearchserverless/) — 10 kinds
 - [Organizations](organizations/) — 6 kinds
-- [OSIS](osis/) — 1 kinds
 - [RAM](ram/) — 3 kinds
-- [RBIN](rbin/) — 1 kinds
-- [RDS & Aurora](rds/) — 10 kinds
+- [RDS & Aurora](rds/) — 17 kinds
+- [Recycle Bin](rbin/) — 1 kinds
 - [Redshift](redshift/) — 9 kinds
-- [REDSHIFTSERVERLESS](redshiftserverless/) — 3 kinds
-- [RESILIENCEHUB](resiliencehub/) — 2 kinds
-- [RESILIENCEHUBV2](resiliencehubv2/) — 5 kinds
-- [RESOURCEEXPLORER2](resourceexplorer2/) — 3 kinds
-- [RESOURCEGROUPS](resourcegroups/) — 2 kinds
-- [ROLESANYWHERE](rolesanywhere/) — 3 kinds
-- [Route 53](route53/) — 6 kinds
-- [Route 53 Resolver](route53resolver/) — 9 kinds
-- [ROUTE53PROFILES](route53profiles/) — 3 kinds
-- [ROUTE53RECOVERYCONTROL](route53recoverycontrol/) — 4 kinds
-- [ROUTE53RECOVERYREADINESS](route53recoveryreadiness/) — 4 kinds
-- [RUM](rum/) — 1 kinds
-- [S3](s3/) — 8 kinds
+- [Redshift Serverless](redshiftserverless/) — 3 kinds
+- [Resilience Hub](resiliencehub/) — 2 kinds
+- [Resilience Hub v2](resiliencehubv2/) — 5 kinds
+- [Resource Explorer](resourceexplorer2/) — 3 kinds
+- [Resource Groups](resourcegroups/) — 2 kinds
+- [Route 53](route53/) — 7 kinds
+- [Route 53 ARC Control](route53recoverycontrol/) — 4 kinds
+- [Route 53 ARC Readiness](route53recoveryreadiness/) — 4 kinds
+- [Route 53 Profiles](route53profiles/) — 3 kinds
+- [Route 53 Resolver](route53resolver/) — 11 kinds
+- [S3](s3/) — 13 kinds
 - [S3 Control](s3control/) — 1 kinds
-- [S3EXPRESS](s3express/) — 3 kinds
-- [S3OBJECTLAMBDA](s3objectlambda/) — 2 kinds
-- [S3TABLES](s3tables/) — 5 kinds
-- [SAGEMAKER](sagemaker/) — 40 kinds
-- [Secrets Manager](secretsmanager/) — 3 kinds
+- [S3 Express](s3express/) — 3 kinds
+- [S3 Object Lambda](s3objectlambda/) — 2 kinds
+- [S3 Tables](s3tables/) — 5 kinds
+- [SageMaker](sagemaker/) — 40 kinds
+- [Secrets Manager](secretsmanager/) — 4 kinds
 - [Security Hub](securityhub/) — 16 kinds
-- [SECURITYLAKE](securitylake/) — 4 kinds
+- [Security Lake](securitylake/) — 4 kinds
 - [Service Catalog](servicecatalog/) — 16 kinds
-- [SERVICECATALOGAPPREGISTRY](servicecatalogappregistry/) — 4 kinds
+- [SES](sesv2/) — 2 kinds
 - [SES](ses/) — 19 kinds
-- [Shield](shield/) — 3 kinds
-- [SIGNER](signer/) — 2 kinds
-- [SNS](sns/) — 2 kinds
+- [Shield](shield/) — 4 kinds
+- [Signer](signer/) — 2 kinds
+- [SNS](sns/) — 3 kinds
 - [SQS](sqs/) — 2 kinds
-- [SSM](ssm/) — 11 kinds
-- [SSMCONTACTS](ssmcontacts/) — 4 kinds
-- [SSMINCIDENTS](ssmincidents/) — 2 kinds
-- [SSMQUICKSETUP](ssmquicksetup/) — 2 kinds
-- [Step Functions](sfn/) — 2 kinds
-- [STORAGEGATEWAY](storagegateway/) — 1 kinds
-- [SYNTHETICS](synthetics/) — 2 kinds
-- [TIMESTREAM](timestream/) — 5 kinds
-- [TRANSFER](transfer/) — 9 kinds
-- [VERIFIEDPERMISSIONS](verifiedpermissions/) — 5 kinds
+- [SSM Quick Setup](ssmquicksetup/) — 2 kinds
+- [Step Functions](sfn/) — 4 kinds
+- [Storage Gateway](storagegateway/) — 1 kinds
+- [STS](sts/) — 1 kinds
+- [Systems Manager](ssm/) — 12 kinds
+- [Timestream](timestream/) — 5 kinds
+- [Transfer Family](transfer/) — 9 kinds
+- [User Notifications](notifications/) — 7 kinds
+- [Verified Permissions](verifiedpermissions/) — 5 kinds
 - [VPC Lattice](vpclattice/) — 14 kinds
-- [WAFv2](wafv2/) — 2 kinds
+- [WAFv2](wafv2/) — 6 kinds
 - [X-Ray](xray/) — 4 kinds

@@ -80,6 +80,10 @@ func (r *S3BucketReplicationReconciler) Reconcile(ctx context.Context, req ctrl.
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileReplication(ctx, obj); err != nil {
@@ -104,7 +108,7 @@ func (r *S3BucketReplicationReconciler) reconcileReplication(ctx context.Context
 			rr.ID = aws.String(rule.ID)
 		}
 		if rule.Prefix != "" {
-			rr.Filter = &s3types.ReplicationRuleFilterMemberPrefix{Value: rule.Prefix}
+			rr.Filter = &s3types.ReplicationRuleFilter{Prefix: aws.String(rule.Prefix)}
 		}
 		if rule.Priority != nil {
 			rr.Priority = rule.Priority

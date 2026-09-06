@@ -41,8 +41,48 @@ func (m *ACM) AddTagsToCertificate(ctx context.Context, params *svc.AddTagsToCer
 	return m.base.AddTagsToCertificate(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ACM) CreateAcmeDomainValidation(ctx context.Context, params *svc.CreateAcmeDomainValidationInput, optFns ...func(*svc.Options)) (*svc.CreateAcmeDomainValidationOutput, error) {
+	return m.base.CreateAcmeDomainValidation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) CreateAcmeEndpoint(ctx context.Context, params *svc.CreateAcmeEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateAcmeEndpointOutput, error) {
+	return m.base.CreateAcmeEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) CreateAcmeExternalAccountBinding(ctx context.Context, params *svc.CreateAcmeExternalAccountBindingInput, optFns ...func(*svc.Options)) (*svc.CreateAcmeExternalAccountBindingOutput, error) {
+	return m.base.CreateAcmeExternalAccountBinding(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DeleteAcmeDomainValidation(ctx context.Context, params *svc.DeleteAcmeDomainValidationInput, optFns ...func(*svc.Options)) (*svc.DeleteAcmeDomainValidationOutput, error) {
+	return m.base.DeleteAcmeDomainValidation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DeleteAcmeEndpoint(ctx context.Context, params *svc.DeleteAcmeEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteAcmeEndpointOutput, error) {
+	return m.base.DeleteAcmeEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DeleteAcmeExternalAccountBinding(ctx context.Context, params *svc.DeleteAcmeExternalAccountBindingInput, optFns ...func(*svc.Options)) (*svc.DeleteAcmeExternalAccountBindingOutput, error) {
+	return m.base.DeleteAcmeExternalAccountBinding(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ACM) DeleteCertificate(ctx context.Context, params *svc.DeleteCertificateInput, optFns ...func(*svc.Options)) (*svc.DeleteCertificateOutput, error) {
 	return m.base.DeleteCertificate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DescribeAcmeAccount(ctx context.Context, params *svc.DescribeAcmeAccountInput, optFns ...func(*svc.Options)) (*svc.DescribeAcmeAccountOutput, error) {
+	return m.base.DescribeAcmeAccount(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DescribeAcmeDomainValidation(ctx context.Context, params *svc.DescribeAcmeDomainValidationInput, optFns ...func(*svc.Options)) (*svc.DescribeAcmeDomainValidationOutput, error) {
+	return m.base.DescribeAcmeDomainValidation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DescribeAcmeEndpoint(ctx context.Context, params *svc.DescribeAcmeEndpointInput, optFns ...func(*svc.Options)) (*svc.DescribeAcmeEndpointOutput, error) {
+	return m.base.DescribeAcmeEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) DescribeAcmeExternalAccountBinding(ctx context.Context, params *svc.DescribeAcmeExternalAccountBindingInput, optFns ...func(*svc.Options)) (*svc.DescribeAcmeExternalAccountBindingOutput, error) {
+	return m.base.DescribeAcmeExternalAccountBinding(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ACM) DescribeCertificate(ctx context.Context, params *svc.DescribeCertificateInput, optFns ...func(*svc.Options)) (*svc.DescribeCertificateOutput, error) {
@@ -57,6 +97,10 @@ func (m *ACM) GetAccountConfiguration(ctx context.Context, params *svc.GetAccoun
 	return m.base.GetAccountConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ACM) GetAcmeExternalAccountBindingCredentials(ctx context.Context, params *svc.GetAcmeExternalAccountBindingCredentialsInput, optFns ...func(*svc.Options)) (*svc.GetAcmeExternalAccountBindingCredentialsOutput, error) {
+	return m.base.GetAcmeExternalAccountBindingCredentials(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ACM) GetCertificate(ctx context.Context, params *svc.GetCertificateInput, optFns ...func(*svc.Options)) (*svc.GetCertificateOutput, error) {
 	return m.base.GetCertificate(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -65,12 +109,36 @@ func (m *ACM) ImportCertificate(ctx context.Context, params *svc.ImportCertifica
 	return m.base.ImportCertificate(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ACM) ListAcmeAccounts(ctx context.Context, params *svc.ListAcmeAccountsInput, optFns ...func(*svc.Options)) (*svc.ListAcmeAccountsOutput, error) {
+	return m.base.ListAcmeAccounts(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) ListAcmeDomainValidations(ctx context.Context, params *svc.ListAcmeDomainValidationsInput, optFns ...func(*svc.Options)) (*svc.ListAcmeDomainValidationsOutput, error) {
+	return m.base.ListAcmeDomainValidations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) ListAcmeEndpoints(ctx context.Context, params *svc.ListAcmeEndpointsInput, optFns ...func(*svc.Options)) (*svc.ListAcmeEndpointsOutput, error) {
+	return m.base.ListAcmeEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) ListAcmeExternalAccountBindings(ctx context.Context, params *svc.ListAcmeExternalAccountBindingsInput, optFns ...func(*svc.Options)) (*svc.ListAcmeExternalAccountBindingsOutput, error) {
+	return m.base.ListAcmeExternalAccountBindings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) ListCertificateDomainValidations(ctx context.Context, params *svc.ListCertificateDomainValidationsInput, optFns ...func(*svc.Options)) (*svc.ListCertificateDomainValidationsOutput, error) {
+	return m.base.ListCertificateDomainValidations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ACM) ListCertificates(ctx context.Context, params *svc.ListCertificatesInput, optFns ...func(*svc.Options)) (*svc.ListCertificatesOutput, error) {
 	return m.base.ListCertificates(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ACM) ListTagsForCertificate(ctx context.Context, params *svc.ListTagsForCertificateInput, optFns ...func(*svc.Options)) (*svc.ListTagsForCertificateOutput, error) {
 	return m.base.ListTagsForCertificate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {
+	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ACM) PutAccountConfiguration(ctx context.Context, params *svc.PutAccountConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutAccountConfigurationOutput, error) {
@@ -93,8 +161,36 @@ func (m *ACM) ResendValidationEmail(ctx context.Context, params *svc.ResendValid
 	return m.base.ResendValidationEmail(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ACM) RevokeAcmeAccount(ctx context.Context, params *svc.RevokeAcmeAccountInput, optFns ...func(*svc.Options)) (*svc.RevokeAcmeAccountOutput, error) {
+	return m.base.RevokeAcmeAccount(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) RevokeAcmeExternalAccountBinding(ctx context.Context, params *svc.RevokeAcmeExternalAccountBindingInput, optFns ...func(*svc.Options)) (*svc.RevokeAcmeExternalAccountBindingOutput, error) {
+	return m.base.RevokeAcmeExternalAccountBinding(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ACM) RevokeCertificate(ctx context.Context, params *svc.RevokeCertificateInput, optFns ...func(*svc.Options)) (*svc.RevokeCertificateOutput, error) {
 	return m.base.RevokeCertificate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) SearchCertificates(ctx context.Context, params *svc.SearchCertificatesInput, optFns ...func(*svc.Options)) (*svc.SearchCertificatesOutput, error) {
+	return m.base.SearchCertificates(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
+	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) UntagResource(ctx context.Context, params *svc.UntagResourceInput, optFns ...func(*svc.Options)) (*svc.UntagResourceOutput, error) {
+	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) UpdateAcmeDomainValidation(ctx context.Context, params *svc.UpdateAcmeDomainValidationInput, optFns ...func(*svc.Options)) (*svc.UpdateAcmeDomainValidationOutput, error) {
+	return m.base.UpdateAcmeDomainValidation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ACM) UpdateAcmeEndpoint(ctx context.Context, params *svc.UpdateAcmeEndpointInput, optFns ...func(*svc.Options)) (*svc.UpdateAcmeEndpointOutput, error) {
+	return m.base.UpdateAcmeEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ACM) UpdateCertificateOptions(ctx context.Context, params *svc.UpdateCertificateOptionsInput, optFns ...func(*svc.Options)) (*svc.UpdateCertificateOptionsOutput, error) {

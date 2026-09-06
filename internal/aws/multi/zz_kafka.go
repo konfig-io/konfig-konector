@@ -45,6 +45,10 @@ func (m *Kafka) BatchDisassociateScramSecret(ctx context.Context, params *svc.Ba
 	return m.base.BatchDisassociateScramSecret(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) CreateChannel(ctx context.Context, params *svc.CreateChannelInput, optFns ...func(*svc.Options)) (*svc.CreateChannelOutput, error) {
+	return m.base.CreateChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) CreateCluster(ctx context.Context, params *svc.CreateClusterInput, optFns ...func(*svc.Options)) (*svc.CreateClusterOutput, error) {
 	return m.base.CreateCluster(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -61,8 +65,16 @@ func (m *Kafka) CreateReplicator(ctx context.Context, params *svc.CreateReplicat
 	return m.base.CreateReplicator(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) CreateTopic(ctx context.Context, params *svc.CreateTopicInput, optFns ...func(*svc.Options)) (*svc.CreateTopicOutput, error) {
+	return m.base.CreateTopic(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) CreateVpcConnection(ctx context.Context, params *svc.CreateVpcConnectionInput, optFns ...func(*svc.Options)) (*svc.CreateVpcConnectionOutput, error) {
 	return m.base.CreateVpcConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kafka) DeleteChannel(ctx context.Context, params *svc.DeleteChannelInput, optFns ...func(*svc.Options)) (*svc.DeleteChannelOutput, error) {
+	return m.base.DeleteChannel(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kafka) DeleteCluster(ctx context.Context, params *svc.DeleteClusterInput, optFns ...func(*svc.Options)) (*svc.DeleteClusterOutput, error) {
@@ -81,8 +93,16 @@ func (m *Kafka) DeleteReplicator(ctx context.Context, params *svc.DeleteReplicat
 	return m.base.DeleteReplicator(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) DeleteTopic(ctx context.Context, params *svc.DeleteTopicInput, optFns ...func(*svc.Options)) (*svc.DeleteTopicOutput, error) {
+	return m.base.DeleteTopic(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) DeleteVpcConnection(ctx context.Context, params *svc.DeleteVpcConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcConnectionOutput, error) {
 	return m.base.DeleteVpcConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kafka) DescribeChannel(ctx context.Context, params *svc.DescribeChannelInput, optFns ...func(*svc.Options)) (*svc.DescribeChannelOutput, error) {
+	return m.base.DescribeChannel(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kafka) DescribeCluster(ctx context.Context, params *svc.DescribeClusterInput, optFns ...func(*svc.Options)) (*svc.DescribeClusterOutput, error) {
@@ -113,6 +133,14 @@ func (m *Kafka) DescribeReplicator(ctx context.Context, params *svc.DescribeRepl
 	return m.base.DescribeReplicator(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) DescribeTopic(ctx context.Context, params *svc.DescribeTopicInput, optFns ...func(*svc.Options)) (*svc.DescribeTopicOutput, error) {
+	return m.base.DescribeTopic(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kafka) DescribeTopicPartitions(ctx context.Context, params *svc.DescribeTopicPartitionsInput, optFns ...func(*svc.Options)) (*svc.DescribeTopicPartitionsOutput, error) {
+	return m.base.DescribeTopicPartitions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) DescribeVpcConnection(ctx context.Context, params *svc.DescribeVpcConnectionInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcConnectionOutput, error) {
 	return m.base.DescribeVpcConnection(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -127,6 +155,10 @@ func (m *Kafka) GetClusterPolicy(ctx context.Context, params *svc.GetClusterPoli
 
 func (m *Kafka) GetCompatibleKafkaVersions(ctx context.Context, params *svc.GetCompatibleKafkaVersionsInput, optFns ...func(*svc.Options)) (*svc.GetCompatibleKafkaVersionsOutput, error) {
 	return m.base.GetCompatibleKafkaVersions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kafka) ListChannels(ctx context.Context, params *svc.ListChannelsInput, optFns ...func(*svc.Options)) (*svc.ListChannelsOutput, error) {
+	return m.base.ListChannels(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kafka) ListClientVpcConnections(ctx context.Context, params *svc.ListClientVpcConnectionsInput, optFns ...func(*svc.Options)) (*svc.ListClientVpcConnectionsOutput, error) {
@@ -177,6 +209,10 @@ func (m *Kafka) ListTagsForResource(ctx context.Context, params *svc.ListTagsFor
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) ListTopics(ctx context.Context, params *svc.ListTopicsInput, optFns ...func(*svc.Options)) (*svc.ListTopicsOutput, error) {
+	return m.base.ListTopics(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) ListVpcConnections(ctx context.Context, params *svc.ListVpcConnectionsInput, optFns ...func(*svc.Options)) (*svc.ListVpcConnectionsOutput, error) {
 	return m.base.ListVpcConnections(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -213,6 +249,10 @@ func (m *Kafka) UpdateBrokerType(ctx context.Context, params *svc.UpdateBrokerTy
 	return m.base.UpdateBrokerType(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) UpdateChannel(ctx context.Context, params *svc.UpdateChannelInput, optFns ...func(*svc.Options)) (*svc.UpdateChannelOutput, error) {
+	return m.base.UpdateChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) UpdateClusterConfiguration(ctx context.Context, params *svc.UpdateClusterConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateClusterConfigurationOutput, error) {
 	return m.base.UpdateClusterConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -233,6 +273,10 @@ func (m *Kafka) UpdateMonitoring(ctx context.Context, params *svc.UpdateMonitori
 	return m.base.UpdateMonitoring(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kafka) UpdateRebalancing(ctx context.Context, params *svc.UpdateRebalancingInput, optFns ...func(*svc.Options)) (*svc.UpdateRebalancingOutput, error) {
+	return m.base.UpdateRebalancing(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kafka) UpdateReplicationInfo(ctx context.Context, params *svc.UpdateReplicationInfoInput, optFns ...func(*svc.Options)) (*svc.UpdateReplicationInfoOutput, error) {
 	return m.base.UpdateReplicationInfo(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -243,4 +287,8 @@ func (m *Kafka) UpdateSecurity(ctx context.Context, params *svc.UpdateSecurityIn
 
 func (m *Kafka) UpdateStorage(ctx context.Context, params *svc.UpdateStorageInput, optFns ...func(*svc.Options)) (*svc.UpdateStorageOutput, error) {
 	return m.base.UpdateStorage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kafka) UpdateTopic(ctx context.Context, params *svc.UpdateTopicInput, optFns ...func(*svc.Options)) (*svc.UpdateTopicOutput, error) {
+	return m.base.UpdateTopic(ctx, params, m.opts(ctx, optFns)...)
 }

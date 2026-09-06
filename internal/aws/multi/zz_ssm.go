@@ -65,6 +65,10 @@ func (m *SSM) CreateAssociationBatch(ctx context.Context, params *svc.CreateAsso
 	return m.base.CreateAssociationBatch(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) CreateCloudConnector(ctx context.Context, params *svc.CreateCloudConnectorInput, optFns ...func(*svc.Options)) (*svc.CreateCloudConnectorOutput, error) {
+	return m.base.CreateCloudConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) CreateDocument(ctx context.Context, params *svc.CreateDocumentInput, optFns ...func(*svc.Options)) (*svc.CreateDocumentOutput, error) {
 	return m.base.CreateDocument(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -97,6 +101,10 @@ func (m *SSM) DeleteAssociation(ctx context.Context, params *svc.DeleteAssociati
 	return m.base.DeleteAssociation(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) DeleteCloudConnector(ctx context.Context, params *svc.DeleteCloudConnectorInput, optFns ...func(*svc.Options)) (*svc.DeleteCloudConnectorOutput, error) {
+	return m.base.DeleteCloudConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) DeleteDocument(ctx context.Context, params *svc.DeleteDocumentInput, optFns ...func(*svc.Options)) (*svc.DeleteDocumentOutput, error) {
 	return m.base.DeleteDocument(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -107,6 +115,10 @@ func (m *SSM) DeleteInventory(ctx context.Context, params *svc.DeleteInventoryIn
 
 func (m *SSM) DeleteMaintenanceWindow(ctx context.Context, params *svc.DeleteMaintenanceWindowInput, optFns ...func(*svc.Options)) (*svc.DeleteMaintenanceWindowOutput, error) {
 	return m.base.DeleteMaintenanceWindow(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) DeleteOpsItem(ctx context.Context, params *svc.DeleteOpsItemInput, optFns ...func(*svc.Options)) (*svc.DeleteOpsItemOutput, error) {
+	return m.base.DeleteOpsItem(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) DeleteOpsMetadata(ctx context.Context, params *svc.DeleteOpsMetadataInput, optFns ...func(*svc.Options)) (*svc.DeleteOpsMetadataOutput, error) {
@@ -213,6 +225,10 @@ func (m *SSM) DescribeInstancePatches(ctx context.Context, params *svc.DescribeI
 	return m.base.DescribeInstancePatches(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) DescribeInstanceProperties(ctx context.Context, params *svc.DescribeInstancePropertiesInput, optFns ...func(*svc.Options)) (*svc.DescribeInstancePropertiesOutput, error) {
+	return m.base.DescribeInstanceProperties(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) DescribeInventoryDeletions(ctx context.Context, params *svc.DescribeInventoryDeletionsInput, optFns ...func(*svc.Options)) (*svc.DescribeInventoryDeletionsOutput, error) {
 	return m.base.DescribeInventoryDeletions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -281,12 +297,20 @@ func (m *SSM) DisassociateOpsItemRelatedItem(ctx context.Context, params *svc.Di
 	return m.base.DisassociateOpsItemRelatedItem(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) GetAccessToken(ctx context.Context, params *svc.GetAccessTokenInput, optFns ...func(*svc.Options)) (*svc.GetAccessTokenOutput, error) {
+	return m.base.GetAccessToken(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) GetAutomationExecution(ctx context.Context, params *svc.GetAutomationExecutionInput, optFns ...func(*svc.Options)) (*svc.GetAutomationExecutionOutput, error) {
 	return m.base.GetAutomationExecution(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) GetCalendarState(ctx context.Context, params *svc.GetCalendarStateInput, optFns ...func(*svc.Options)) (*svc.GetCalendarStateOutput, error) {
 	return m.base.GetCalendarState(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) GetCloudConnector(ctx context.Context, params *svc.GetCloudConnectorInput, optFns ...func(*svc.Options)) (*svc.GetCloudConnectorOutput, error) {
+	return m.base.GetCloudConnector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) GetCommandInvocation(ctx context.Context, params *svc.GetCommandInvocationInput, optFns ...func(*svc.Options)) (*svc.GetCommandInvocationOutput, error) {
@@ -307,6 +331,10 @@ func (m *SSM) GetDeployablePatchSnapshotForInstance(ctx context.Context, params 
 
 func (m *SSM) GetDocument(ctx context.Context, params *svc.GetDocumentInput, optFns ...func(*svc.Options)) (*svc.GetDocumentOutput, error) {
 	return m.base.GetDocument(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) GetExecutionPreview(ctx context.Context, params *svc.GetExecutionPreviewInput, optFns ...func(*svc.Options)) (*svc.GetExecutionPreviewOutput, error) {
+	return m.base.GetExecutionPreview(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) GetInventory(ctx context.Context, params *svc.GetInventoryInput, optFns ...func(*svc.Options)) (*svc.GetInventoryOutput, error) {
@@ -393,6 +421,10 @@ func (m *SSM) ListAssociations(ctx context.Context, params *svc.ListAssociations
 	return m.base.ListAssociations(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) ListCloudConnectors(ctx context.Context, params *svc.ListCloudConnectorsInput, optFns ...func(*svc.Options)) (*svc.ListCloudConnectorsOutput, error) {
+	return m.base.ListCloudConnectors(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) ListCommandInvocations(ctx context.Context, params *svc.ListCommandInvocationsInput, optFns ...func(*svc.Options)) (*svc.ListCommandInvocationsOutput, error) {
 	return m.base.ListCommandInvocations(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -423,6 +455,14 @@ func (m *SSM) ListDocuments(ctx context.Context, params *svc.ListDocumentsInput,
 
 func (m *SSM) ListInventoryEntries(ctx context.Context, params *svc.ListInventoryEntriesInput, optFns ...func(*svc.Options)) (*svc.ListInventoryEntriesOutput, error) {
 	return m.base.ListInventoryEntries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) ListNodes(ctx context.Context, params *svc.ListNodesInput, optFns ...func(*svc.Options)) (*svc.ListNodesOutput, error) {
+	return m.base.ListNodes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) ListNodesSummary(ctx context.Context, params *svc.ListNodesSummaryInput, optFns ...func(*svc.Options)) (*svc.ListNodesSummaryOutput, error) {
+	return m.base.ListNodesSummary(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) ListOpsItemEvents(ctx context.Context, params *svc.ListOpsItemEventsInput, optFns ...func(*svc.Options)) (*svc.ListOpsItemEventsOutput, error) {
@@ -505,6 +545,10 @@ func (m *SSM) SendCommand(ctx context.Context, params *svc.SendCommandInput, opt
 	return m.base.SendCommand(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSM) StartAccessRequest(ctx context.Context, params *svc.StartAccessRequestInput, optFns ...func(*svc.Options)) (*svc.StartAccessRequestOutput, error) {
+	return m.base.StartAccessRequest(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSM) StartAssociationsOnce(ctx context.Context, params *svc.StartAssociationsOnceInput, optFns ...func(*svc.Options)) (*svc.StartAssociationsOnceOutput, error) {
 	return m.base.StartAssociationsOnce(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -515,6 +559,10 @@ func (m *SSM) StartAutomationExecution(ctx context.Context, params *svc.StartAut
 
 func (m *SSM) StartChangeRequestExecution(ctx context.Context, params *svc.StartChangeRequestExecutionInput, optFns ...func(*svc.Options)) (*svc.StartChangeRequestExecutionOutput, error) {
 	return m.base.StartChangeRequestExecution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) StartExecutionPreview(ctx context.Context, params *svc.StartExecutionPreviewInput, optFns ...func(*svc.Options)) (*svc.StartExecutionPreviewOutput, error) {
+	return m.base.StartExecutionPreview(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) StartSession(ctx context.Context, params *svc.StartSessionInput, optFns ...func(*svc.Options)) (*svc.StartSessionOutput, error) {
@@ -539,6 +587,10 @@ func (m *SSM) UpdateAssociation(ctx context.Context, params *svc.UpdateAssociati
 
 func (m *SSM) UpdateAssociationStatus(ctx context.Context, params *svc.UpdateAssociationStatusInput, optFns ...func(*svc.Options)) (*svc.UpdateAssociationStatusOutput, error) {
 	return m.base.UpdateAssociationStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) UpdateCloudConnector(ctx context.Context, params *svc.UpdateCloudConnectorInput, optFns ...func(*svc.Options)) (*svc.UpdateCloudConnectorOutput, error) {
+	return m.base.UpdateCloudConnector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSM) UpdateDocument(ctx context.Context, params *svc.UpdateDocumentInput, optFns ...func(*svc.Options)) (*svc.UpdateDocumentOutput, error) {
@@ -587,4 +639,8 @@ func (m *SSM) UpdateResourceDataSync(ctx context.Context, params *svc.UpdateReso
 
 func (m *SSM) UpdateServiceSetting(ctx context.Context, params *svc.UpdateServiceSettingInput, optFns ...func(*svc.Options)) (*svc.UpdateServiceSettingOutput, error) {
 	return m.base.UpdateServiceSetting(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSM) ValidateCloudConnector(ctx context.Context, params *svc.ValidateCloudConnectorInput, optFns ...func(*svc.Options)) (*svc.ValidateCloudConnectorOutput, error) {
+	return m.base.ValidateCloudConnector(ctx, params, m.opts(ctx, optFns)...)
 }

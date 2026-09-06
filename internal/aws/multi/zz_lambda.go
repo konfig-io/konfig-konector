@@ -45,8 +45,16 @@ func (m *Lambda) AddPermission(ctx context.Context, params *svc.AddPermissionInp
 	return m.base.AddPermission(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) CheckpointDurableExecution(ctx context.Context, params *svc.CheckpointDurableExecutionInput, optFns ...func(*svc.Options)) (*svc.CheckpointDurableExecutionOutput, error) {
+	return m.base.CheckpointDurableExecution(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) CreateAlias(ctx context.Context, params *svc.CreateAliasInput, optFns ...func(*svc.Options)) (*svc.CreateAliasOutput, error) {
 	return m.base.CreateAlias(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) CreateCapacityProvider(ctx context.Context, params *svc.CreateCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityProviderOutput, error) {
+	return m.base.CreateCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) CreateCodeSigningConfig(ctx context.Context, params *svc.CreateCodeSigningConfigInput, optFns ...func(*svc.Options)) (*svc.CreateCodeSigningConfigOutput, error) {
@@ -67,6 +75,10 @@ func (m *Lambda) CreateFunctionUrlConfig(ctx context.Context, params *svc.Create
 
 func (m *Lambda) DeleteAlias(ctx context.Context, params *svc.DeleteAliasInput, optFns ...func(*svc.Options)) (*svc.DeleteAliasOutput, error) {
 	return m.base.DeleteAlias(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) DeleteCapacityProvider(ctx context.Context, params *svc.DeleteCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.DeleteCapacityProviderOutput, error) {
+	return m.base.DeleteCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) DeleteCodeSigningConfig(ctx context.Context, params *svc.DeleteCodeSigningConfigInput, optFns ...func(*svc.Options)) (*svc.DeleteCodeSigningConfigOutput, error) {
@@ -105,6 +117,10 @@ func (m *Lambda) DeleteProvisionedConcurrencyConfig(ctx context.Context, params 
 	return m.base.DeleteProvisionedConcurrencyConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) DeleteResourcePolicy(ctx context.Context, params *svc.DeleteResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteResourcePolicyOutput, error) {
+	return m.base.DeleteResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) GetAccountSettings(ctx context.Context, params *svc.GetAccountSettingsInput, optFns ...func(*svc.Options)) (*svc.GetAccountSettingsOutput, error) {
 	return m.base.GetAccountSettings(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -113,8 +129,24 @@ func (m *Lambda) GetAlias(ctx context.Context, params *svc.GetAliasInput, optFns
 	return m.base.GetAlias(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) GetCapacityProvider(ctx context.Context, params *svc.GetCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.GetCapacityProviderOutput, error) {
+	return m.base.GetCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) GetCodeSigningConfig(ctx context.Context, params *svc.GetCodeSigningConfigInput, optFns ...func(*svc.Options)) (*svc.GetCodeSigningConfigOutput, error) {
 	return m.base.GetCodeSigningConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) GetDurableExecution(ctx context.Context, params *svc.GetDurableExecutionInput, optFns ...func(*svc.Options)) (*svc.GetDurableExecutionOutput, error) {
+	return m.base.GetDurableExecution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) GetDurableExecutionHistory(ctx context.Context, params *svc.GetDurableExecutionHistoryInput, optFns ...func(*svc.Options)) (*svc.GetDurableExecutionHistoryOutput, error) {
+	return m.base.GetDurableExecutionHistory(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) GetDurableExecutionState(ctx context.Context, params *svc.GetDurableExecutionStateInput, optFns ...func(*svc.Options)) (*svc.GetDurableExecutionStateOutput, error) {
+	return m.base.GetDurableExecutionState(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) GetEventSourceMapping(ctx context.Context, params *svc.GetEventSourceMappingInput, optFns ...func(*svc.Options)) (*svc.GetEventSourceMappingOutput, error) {
@@ -141,6 +173,14 @@ func (m *Lambda) GetFunctionEventInvokeConfig(ctx context.Context, params *svc.G
 	return m.base.GetFunctionEventInvokeConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) GetFunctionRecursionConfig(ctx context.Context, params *svc.GetFunctionRecursionConfigInput, optFns ...func(*svc.Options)) (*svc.GetFunctionRecursionConfigOutput, error) {
+	return m.base.GetFunctionRecursionConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) GetFunctionScalingConfig(ctx context.Context, params *svc.GetFunctionScalingConfigInput, optFns ...func(*svc.Options)) (*svc.GetFunctionScalingConfigOutput, error) {
+	return m.base.GetFunctionScalingConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) GetFunctionUrlConfig(ctx context.Context, params *svc.GetFunctionUrlConfigInput, optFns ...func(*svc.Options)) (*svc.GetFunctionUrlConfigOutput, error) {
 	return m.base.GetFunctionUrlConfig(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -165,6 +205,10 @@ func (m *Lambda) GetProvisionedConcurrencyConfig(ctx context.Context, params *sv
 	return m.base.GetProvisionedConcurrencyConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) GetResourcePolicy(ctx context.Context, params *svc.GetResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.GetResourcePolicyOutput, error) {
+	return m.base.GetResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) GetRuntimeManagementConfig(ctx context.Context, params *svc.GetRuntimeManagementConfigInput, optFns ...func(*svc.Options)) (*svc.GetRuntimeManagementConfigOutput, error) {
 	return m.base.GetRuntimeManagementConfig(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -185,8 +229,16 @@ func (m *Lambda) ListAliases(ctx context.Context, params *svc.ListAliasesInput, 
 	return m.base.ListAliases(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) ListCapacityProviders(ctx context.Context, params *svc.ListCapacityProvidersInput, optFns ...func(*svc.Options)) (*svc.ListCapacityProvidersOutput, error) {
+	return m.base.ListCapacityProviders(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) ListCodeSigningConfigs(ctx context.Context, params *svc.ListCodeSigningConfigsInput, optFns ...func(*svc.Options)) (*svc.ListCodeSigningConfigsOutput, error) {
 	return m.base.ListCodeSigningConfigs(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) ListDurableExecutionsByFunction(ctx context.Context, params *svc.ListDurableExecutionsByFunctionInput, optFns ...func(*svc.Options)) (*svc.ListDurableExecutionsByFunctionOutput, error) {
+	return m.base.ListDurableExecutionsByFunction(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) ListEventSourceMappings(ctx context.Context, params *svc.ListEventSourceMappingsInput, optFns ...func(*svc.Options)) (*svc.ListEventSourceMappingsOutput, error) {
@@ -199,6 +251,10 @@ func (m *Lambda) ListFunctionEventInvokeConfigs(ctx context.Context, params *svc
 
 func (m *Lambda) ListFunctionUrlConfigs(ctx context.Context, params *svc.ListFunctionUrlConfigsInput, optFns ...func(*svc.Options)) (*svc.ListFunctionUrlConfigsOutput, error) {
 	return m.base.ListFunctionUrlConfigs(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) ListFunctionVersionsByCapacityProvider(ctx context.Context, params *svc.ListFunctionVersionsByCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.ListFunctionVersionsByCapacityProviderOutput, error) {
+	return m.base.ListFunctionVersionsByCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) ListFunctions(ctx context.Context, params *svc.ListFunctionsInput, optFns ...func(*svc.Options)) (*svc.ListFunctionsOutput, error) {
@@ -249,8 +305,20 @@ func (m *Lambda) PutFunctionEventInvokeConfig(ctx context.Context, params *svc.P
 	return m.base.PutFunctionEventInvokeConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) PutFunctionRecursionConfig(ctx context.Context, params *svc.PutFunctionRecursionConfigInput, optFns ...func(*svc.Options)) (*svc.PutFunctionRecursionConfigOutput, error) {
+	return m.base.PutFunctionRecursionConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) PutFunctionScalingConfig(ctx context.Context, params *svc.PutFunctionScalingConfigInput, optFns ...func(*svc.Options)) (*svc.PutFunctionScalingConfigOutput, error) {
+	return m.base.PutFunctionScalingConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) PutProvisionedConcurrencyConfig(ctx context.Context, params *svc.PutProvisionedConcurrencyConfigInput, optFns ...func(*svc.Options)) (*svc.PutProvisionedConcurrencyConfigOutput, error) {
 	return m.base.PutProvisionedConcurrencyConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) PutResourcePolicy(ctx context.Context, params *svc.PutResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.PutResourcePolicyOutput, error) {
+	return m.base.PutResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) PutRuntimeManagementConfig(ctx context.Context, params *svc.PutRuntimeManagementConfigInput, optFns ...func(*svc.Options)) (*svc.PutRuntimeManagementConfigOutput, error) {
@@ -265,6 +333,22 @@ func (m *Lambda) RemovePermission(ctx context.Context, params *svc.RemovePermiss
 	return m.base.RemovePermission(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Lambda) SendDurableExecutionCallbackFailure(ctx context.Context, params *svc.SendDurableExecutionCallbackFailureInput, optFns ...func(*svc.Options)) (*svc.SendDurableExecutionCallbackFailureOutput, error) {
+	return m.base.SendDurableExecutionCallbackFailure(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) SendDurableExecutionCallbackHeartbeat(ctx context.Context, params *svc.SendDurableExecutionCallbackHeartbeatInput, optFns ...func(*svc.Options)) (*svc.SendDurableExecutionCallbackHeartbeatOutput, error) {
+	return m.base.SendDurableExecutionCallbackHeartbeat(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) SendDurableExecutionCallbackSuccess(ctx context.Context, params *svc.SendDurableExecutionCallbackSuccessInput, optFns ...func(*svc.Options)) (*svc.SendDurableExecutionCallbackSuccessOutput, error) {
+	return m.base.SendDurableExecutionCallbackSuccess(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) StopDurableExecution(ctx context.Context, params *svc.StopDurableExecutionInput, optFns ...func(*svc.Options)) (*svc.StopDurableExecutionOutput, error) {
+	return m.base.StopDurableExecution(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Lambda) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -275,6 +359,10 @@ func (m *Lambda) UntagResource(ctx context.Context, params *svc.UntagResourceInp
 
 func (m *Lambda) UpdateAlias(ctx context.Context, params *svc.UpdateAliasInput, optFns ...func(*svc.Options)) (*svc.UpdateAliasOutput, error) {
 	return m.base.UpdateAlias(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Lambda) UpdateCapacityProvider(ctx context.Context, params *svc.UpdateCapacityProviderInput, optFns ...func(*svc.Options)) (*svc.UpdateCapacityProviderOutput, error) {
+	return m.base.UpdateCapacityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Lambda) UpdateCodeSigningConfig(ctx context.Context, params *svc.UpdateCodeSigningConfigInput, optFns ...func(*svc.Options)) (*svc.UpdateCodeSigningConfigOutput, error) {

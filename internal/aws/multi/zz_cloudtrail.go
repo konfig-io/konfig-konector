@@ -49,6 +49,10 @@ func (m *CloudTrail) CreateChannel(ctx context.Context, params *svc.CreateChanne
 	return m.base.CreateChannel(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudTrail) CreateDashboard(ctx context.Context, params *svc.CreateDashboardInput, optFns ...func(*svc.Options)) (*svc.CreateDashboardOutput, error) {
+	return m.base.CreateDashboard(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudTrail) CreateEventDataStore(ctx context.Context, params *svc.CreateEventDataStoreInput, optFns ...func(*svc.Options)) (*svc.CreateEventDataStoreOutput, error) {
 	return m.base.CreateEventDataStore(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -59,6 +63,10 @@ func (m *CloudTrail) CreateTrail(ctx context.Context, params *svc.CreateTrailInp
 
 func (m *CloudTrail) DeleteChannel(ctx context.Context, params *svc.DeleteChannelInput, optFns ...func(*svc.Options)) (*svc.DeleteChannelOutput, error) {
 	return m.base.DeleteChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) DeleteDashboard(ctx context.Context, params *svc.DeleteDashboardInput, optFns ...func(*svc.Options)) (*svc.DeleteDashboardOutput, error) {
+	return m.base.DeleteDashboard(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudTrail) DeleteEventDataStore(ctx context.Context, params *svc.DeleteEventDataStoreInput, optFns ...func(*svc.Options)) (*svc.DeleteEventDataStoreOutput, error) {
@@ -93,8 +101,20 @@ func (m *CloudTrail) EnableFederation(ctx context.Context, params *svc.EnableFed
 	return m.base.EnableFederation(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudTrail) GenerateQuery(ctx context.Context, params *svc.GenerateQueryInput, optFns ...func(*svc.Options)) (*svc.GenerateQueryOutput, error) {
+	return m.base.GenerateQuery(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudTrail) GetChannel(ctx context.Context, params *svc.GetChannelInput, optFns ...func(*svc.Options)) (*svc.GetChannelOutput, error) {
 	return m.base.GetChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) GetDashboard(ctx context.Context, params *svc.GetDashboardInput, optFns ...func(*svc.Options)) (*svc.GetDashboardOutput, error) {
+	return m.base.GetDashboard(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) GetEventConfiguration(ctx context.Context, params *svc.GetEventConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetEventConfigurationOutput, error) {
+	return m.base.GetEventConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudTrail) GetEventDataStore(ctx context.Context, params *svc.GetEventDataStoreInput, optFns ...func(*svc.Options)) (*svc.GetEventDataStoreOutput, error) {
@@ -133,6 +153,10 @@ func (m *CloudTrail) ListChannels(ctx context.Context, params *svc.ListChannelsI
 	return m.base.ListChannels(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudTrail) ListDashboards(ctx context.Context, params *svc.ListDashboardsInput, optFns ...func(*svc.Options)) (*svc.ListDashboardsOutput, error) {
+	return m.base.ListDashboards(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudTrail) ListEventDataStores(ctx context.Context, params *svc.ListEventDataStoresInput, optFns ...func(*svc.Options)) (*svc.ListEventDataStoresOutput, error) {
 	return m.base.ListEventDataStores(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -143,6 +167,10 @@ func (m *CloudTrail) ListImportFailures(ctx context.Context, params *svc.ListImp
 
 func (m *CloudTrail) ListImports(ctx context.Context, params *svc.ListImportsInput, optFns ...func(*svc.Options)) (*svc.ListImportsOutput, error) {
 	return m.base.ListImports(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) ListInsightsData(ctx context.Context, params *svc.ListInsightsDataInput, optFns ...func(*svc.Options)) (*svc.ListInsightsDataOutput, error) {
+	return m.base.ListInsightsData(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudTrail) ListInsightsMetricData(ctx context.Context, params *svc.ListInsightsMetricDataInput, optFns ...func(*svc.Options)) (*svc.ListInsightsMetricDataOutput, error) {
@@ -169,6 +197,10 @@ func (m *CloudTrail) LookupEvents(ctx context.Context, params *svc.LookupEventsI
 	return m.base.LookupEvents(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudTrail) PutEventConfiguration(ctx context.Context, params *svc.PutEventConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutEventConfigurationOutput, error) {
+	return m.base.PutEventConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudTrail) PutEventSelectors(ctx context.Context, params *svc.PutEventSelectorsInput, optFns ...func(*svc.Options)) (*svc.PutEventSelectorsOutput, error) {
 	return m.base.PutEventSelectors(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -191,6 +223,14 @@ func (m *CloudTrail) RemoveTags(ctx context.Context, params *svc.RemoveTagsInput
 
 func (m *CloudTrail) RestoreEventDataStore(ctx context.Context, params *svc.RestoreEventDataStoreInput, optFns ...func(*svc.Options)) (*svc.RestoreEventDataStoreOutput, error) {
 	return m.base.RestoreEventDataStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) SearchSampleQueries(ctx context.Context, params *svc.SearchSampleQueriesInput, optFns ...func(*svc.Options)) (*svc.SearchSampleQueriesOutput, error) {
+	return m.base.SearchSampleQueries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) StartDashboardRefresh(ctx context.Context, params *svc.StartDashboardRefreshInput, optFns ...func(*svc.Options)) (*svc.StartDashboardRefreshOutput, error) {
+	return m.base.StartDashboardRefresh(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudTrail) StartEventDataStoreIngestion(ctx context.Context, params *svc.StartEventDataStoreIngestionInput, optFns ...func(*svc.Options)) (*svc.StartEventDataStoreIngestionOutput, error) {
@@ -223,6 +263,10 @@ func (m *CloudTrail) StopLogging(ctx context.Context, params *svc.StopLoggingInp
 
 func (m *CloudTrail) UpdateChannel(ctx context.Context, params *svc.UpdateChannelInput, optFns ...func(*svc.Options)) (*svc.UpdateChannelOutput, error) {
 	return m.base.UpdateChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudTrail) UpdateDashboard(ctx context.Context, params *svc.UpdateDashboardInput, optFns ...func(*svc.Options)) (*svc.UpdateDashboardOutput, error) {
+	return m.base.UpdateDashboard(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudTrail) UpdateEventDataStore(ctx context.Context, params *svc.UpdateEventDataStoreInput, optFns ...func(*svc.Options)) (*svc.UpdateEventDataStoreOutput, error) {

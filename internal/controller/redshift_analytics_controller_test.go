@@ -77,7 +77,7 @@ func TestRedshiftSubnetGroupReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-sng", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.RedshiftSubnetGroup)) *awsv1alpha1.RedshiftSubnetGroup {
 		sg := &awsv1alpha1.RedshiftSubnetGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-sng", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-sng", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.RedshiftSubnetGroupSpec{
 				Name:        "my-sng",
 				Description: "test subnet group",
@@ -201,7 +201,7 @@ func TestRedshiftParameterGroupReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-pg", Namespace: "default"}}
 	newCR := func(mutate ...func(*awsv1alpha1.RedshiftParameterGroup)) *awsv1alpha1.RedshiftParameterGroup {
 		pg := &awsv1alpha1.RedshiftParameterGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-pg", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-pg", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.RedshiftParameterGroupSpec{
 				Name:        "my-pg",
 				Family:      "redshift-1.0",

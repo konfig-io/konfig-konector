@@ -141,6 +141,10 @@ func (m *RAM) ListResources(ctx context.Context, params *svc.ListResourcesInput,
 	return m.base.ListResources(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *RAM) ListSourceAssociations(ctx context.Context, params *svc.ListSourceAssociationsInput, optFns ...func(*svc.Options)) (*svc.ListSourceAssociationsOutput, error) {
+	return m.base.ListSourceAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *RAM) PromotePermissionCreatedFromPolicy(ctx context.Context, params *svc.PromotePermissionCreatedFromPolicyInput, optFns ...func(*svc.Options)) (*svc.PromotePermissionCreatedFromPolicyOutput, error) {
 	return m.base.PromotePermissionCreatedFromPolicy(ctx, params, m.opts(ctx, optFns)...)
 }

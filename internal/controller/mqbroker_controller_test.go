@@ -70,7 +70,7 @@ func (f *fakeMQBrokerAPI) ListBrokers(_ context.Context, _ *awsmq.ListBrokersInp
 
 func mqBrokerCR(mutate ...func(*awsv1alpha1.MQBroker)) *awsv1alpha1.MQBroker {
 	b := &awsv1alpha1.MQBroker{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-broker", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-broker", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.MQBrokerSpec{
 			BrokerName:       "my-broker",
 			EngineType:       "RABBITMQ",
@@ -116,7 +116,7 @@ func TestMQBrokerReconcile(t *testing.T) {
 			},
 		}
 		secret := &corev1.Secret{
-			ObjectMeta: metav1.ObjectMeta{Name: "broker-secret", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "broker-secret", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Data:       map[string][]byte{"password": []byte("s3cret-password")},
 		}
 		c := fake.NewClientBuilder().WithScheme(scheme).

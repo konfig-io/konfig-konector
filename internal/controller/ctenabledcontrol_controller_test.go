@@ -77,7 +77,7 @@ func (f *fakeControlTower) ListEnabledControls(_ context.Context, _ *awsct.ListE
 
 func ctControlCR(mutate ...func(*awsv1alpha1.CTEnabledControl)) *awsv1alpha1.CTEnabledControl {
 	ec := &awsv1alpha1.CTEnabledControl{
-		ObjectMeta: metav1.ObjectMeta{Name: "encrypted-volumes", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "encrypted-volumes", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.CTEnabledControlSpec{
 			ControlIdentifier: testControlID,
 			TargetIdentifier:  testTargetOUID,

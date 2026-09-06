@@ -128,7 +128,7 @@ func TestResourceShareInvitationWaitsWhenNoneSent(t *testing.T) {
 
 func TestResourceShareInvitationResolvesShareCR(t *testing.T) {
 	s := crossAccountScheme(t)
-	share := &awsv1alpha1.ResourceShare{ObjectMeta: metav1.ObjectMeta{Name: "tgw-share", Namespace: "hub"}}
+	share := &awsv1alpha1.ResourceShare{ObjectMeta: metav1.ObjectMeta{Name: "tgw-share", Namespace: "hub", Finalizers: []string{awsv1alpha1.FinalizerName}}}
 	share.Status.ARN = "arn:share"
 	obj := &awsv1alpha1.ResourceShareInvitation{
 		ObjectMeta: metav1.ObjectMeta{Name: "inv", Namespace: "spoke", Finalizers: []string{awsv1alpha1.FinalizerName}},
@@ -181,7 +181,7 @@ func (f *fakeR53Assoc) DisassociateVPCFromHostedZone(_ context.Context, in *awsr
 
 func TestHostedZoneVPCAssociationCrossAccountHandshake(t *testing.T) {
 	s := crossAccountScheme(t)
-	zone := &awsv1alpha1.HostedZone{ObjectMeta: metav1.ObjectMeta{Name: "internal", Namespace: "ns"}}
+	zone := &awsv1alpha1.HostedZone{ObjectMeta: metav1.ObjectMeta{Name: "internal", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}}}
 	zone.Status.HostedZoneID = "/hostedzone/Z123"
 	prov := &awsv1alpha1.AWSProvider{ObjectMeta: metav1.ObjectMeta{Name: "spoke"}, Spec: awsv1alpha1.AWSProviderSpec{Region: "eu-west-1"}}
 	obj := &awsv1alpha1.HostedZoneVPCAssociation{
@@ -313,7 +313,7 @@ func (f *fakeEC2Svc) CreateTags(context.Context, *awsec2.CreateTagsInput, ...fun
 
 func TestVPCEndpointServiceCreateAcceptsConnections(t *testing.T) {
 	s := crossAccountScheme(t)
-	lb := &awsv1alpha1.LoadBalancer{ObjectMeta: metav1.ObjectMeta{Name: "nlb", Namespace: "ns"}}
+	lb := &awsv1alpha1.LoadBalancer{ObjectMeta: metav1.ObjectMeta{Name: "nlb", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}}}
 	lb.Status.ARN = "arn:nlb"
 	obj := &awsv1alpha1.VPCEndpointService{
 		ObjectMeta: metav1.ObjectMeta{Name: "svc", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}},
@@ -350,7 +350,7 @@ func TestVPCEndpointServiceCreateAcceptsConnections(t *testing.T) {
 
 func TestVPCEndpointServiceDependencyNotReady(t *testing.T) {
 	s := crossAccountScheme(t)
-	lb := &awsv1alpha1.LoadBalancer{ObjectMeta: metav1.ObjectMeta{Name: "nlb", Namespace: "ns"}}
+	lb := &awsv1alpha1.LoadBalancer{ObjectMeta: metav1.ObjectMeta{Name: "nlb", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}}}
 	obj := &awsv1alpha1.VPCEndpointService{
 		ObjectMeta: metav1.ObjectMeta{Name: "svc", Namespace: "ns", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.VPCEndpointServiceSpec{NetworkLoadBalancerRefs: []awsv1alpha1.LoadBalancerRef{{Name: "nlb"}}},

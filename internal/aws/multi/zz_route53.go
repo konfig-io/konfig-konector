@@ -309,6 +309,10 @@ func (m *Route53) UpdateHostedZoneComment(ctx context.Context, params *svc.Updat
 	return m.base.UpdateHostedZoneComment(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Route53) UpdateHostedZoneFeatures(ctx context.Context, params *svc.UpdateHostedZoneFeaturesInput, optFns ...func(*svc.Options)) (*svc.UpdateHostedZoneFeaturesOutput, error) {
+	return m.base.UpdateHostedZoneFeatures(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Route53) UpdateTrafficPolicyComment(ctx context.Context, params *svc.UpdateTrafficPolicyCommentInput, optFns ...func(*svc.Options)) (*svc.UpdateTrafficPolicyCommentOutput, error) {
 	return m.base.UpdateTrafficPolicyComment(ctx, params, m.opts(ctx, optFns)...)
 }

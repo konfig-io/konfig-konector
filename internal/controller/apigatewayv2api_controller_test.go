@@ -126,8 +126,9 @@ const (
 func apiCR(mutate ...func(*awsv1alpha1.APIGatewayV2API)) *awsv1alpha1.APIGatewayV2API {
 	a := &awsv1alpha1.APIGatewayV2API{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-api",
-			Namespace: "default",
+			Name:       "my-api",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.APIGatewayV2APISpec{
 			Name:         "my-api",

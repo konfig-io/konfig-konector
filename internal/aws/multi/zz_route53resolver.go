@@ -53,6 +53,18 @@ func (m *Route53Resolver) AssociateResolverRule(ctx context.Context, params *svc
 	return m.base.AssociateResolverRule(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Route53Resolver) BatchCreateFirewallRule(ctx context.Context, params *svc.BatchCreateFirewallRuleInput, optFns ...func(*svc.Options)) (*svc.BatchCreateFirewallRuleOutput, error) {
+	return m.base.BatchCreateFirewallRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Route53Resolver) BatchDeleteFirewallRule(ctx context.Context, params *svc.BatchDeleteFirewallRuleInput, optFns ...func(*svc.Options)) (*svc.BatchDeleteFirewallRuleOutput, error) {
+	return m.base.BatchDeleteFirewallRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Route53Resolver) BatchUpdateFirewallRule(ctx context.Context, params *svc.BatchUpdateFirewallRuleInput, optFns ...func(*svc.Options)) (*svc.BatchUpdateFirewallRuleOutput, error) {
+	return m.base.BatchUpdateFirewallRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Route53Resolver) CreateFirewallDomainList(ctx context.Context, params *svc.CreateFirewallDomainListInput, optFns ...func(*svc.Options)) (*svc.CreateFirewallDomainListOutput, error) {
 	return m.base.CreateFirewallDomainList(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -207,6 +219,10 @@ func (m *Route53Resolver) ListFirewallRuleGroupAssociations(ctx context.Context,
 
 func (m *Route53Resolver) ListFirewallRuleGroups(ctx context.Context, params *svc.ListFirewallRuleGroupsInput, optFns ...func(*svc.Options)) (*svc.ListFirewallRuleGroupsOutput, error) {
 	return m.base.ListFirewallRuleGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Route53Resolver) ListFirewallRuleTypes(ctx context.Context, params *svc.ListFirewallRuleTypesInput, optFns ...func(*svc.Options)) (*svc.ListFirewallRuleTypesOutput, error) {
+	return m.base.ListFirewallRuleTypes(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Route53Resolver) ListFirewallRules(ctx context.Context, params *svc.ListFirewallRulesInput, optFns ...func(*svc.Options)) (*svc.ListFirewallRulesOutput, error) {

@@ -69,6 +69,22 @@ func (m *APIGatewayV2) CreateModel(ctx context.Context, params *svc.CreateModelI
 	return m.base.CreateModel(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *APIGatewayV2) CreatePortal(ctx context.Context, params *svc.CreatePortalInput, optFns ...func(*svc.Options)) (*svc.CreatePortalOutput, error) {
+	return m.base.CreatePortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) CreatePortalProduct(ctx context.Context, params *svc.CreatePortalProductInput, optFns ...func(*svc.Options)) (*svc.CreatePortalProductOutput, error) {
+	return m.base.CreatePortalProduct(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) CreateProductPage(ctx context.Context, params *svc.CreateProductPageInput, optFns ...func(*svc.Options)) (*svc.CreateProductPageOutput, error) {
+	return m.base.CreateProductPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) CreateProductRestEndpointPage(ctx context.Context, params *svc.CreateProductRestEndpointPageInput, optFns ...func(*svc.Options)) (*svc.CreateProductRestEndpointPageOutput, error) {
+	return m.base.CreateProductRestEndpointPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *APIGatewayV2) CreateRoute(ctx context.Context, params *svc.CreateRouteInput, optFns ...func(*svc.Options)) (*svc.CreateRouteOutput, error) {
 	return m.base.CreateRoute(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -129,6 +145,26 @@ func (m *APIGatewayV2) DeleteModel(ctx context.Context, params *svc.DeleteModelI
 	return m.base.DeleteModel(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *APIGatewayV2) DeletePortal(ctx context.Context, params *svc.DeletePortalInput, optFns ...func(*svc.Options)) (*svc.DeletePortalOutput, error) {
+	return m.base.DeletePortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) DeletePortalProduct(ctx context.Context, params *svc.DeletePortalProductInput, optFns ...func(*svc.Options)) (*svc.DeletePortalProductOutput, error) {
+	return m.base.DeletePortalProduct(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) DeletePortalProductSharingPolicy(ctx context.Context, params *svc.DeletePortalProductSharingPolicyInput, optFns ...func(*svc.Options)) (*svc.DeletePortalProductSharingPolicyOutput, error) {
+	return m.base.DeletePortalProductSharingPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) DeleteProductPage(ctx context.Context, params *svc.DeleteProductPageInput, optFns ...func(*svc.Options)) (*svc.DeleteProductPageOutput, error) {
+	return m.base.DeleteProductPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) DeleteProductRestEndpointPage(ctx context.Context, params *svc.DeleteProductRestEndpointPageInput, optFns ...func(*svc.Options)) (*svc.DeleteProductRestEndpointPageOutput, error) {
+	return m.base.DeleteProductRestEndpointPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *APIGatewayV2) DeleteRoute(ctx context.Context, params *svc.DeleteRouteInput, optFns ...func(*svc.Options)) (*svc.DeleteRouteOutput, error) {
 	return m.base.DeleteRoute(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -155,6 +191,10 @@ func (m *APIGatewayV2) DeleteStage(ctx context.Context, params *svc.DeleteStageI
 
 func (m *APIGatewayV2) DeleteVpcLink(ctx context.Context, params *svc.DeleteVpcLinkInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcLinkOutput, error) {
 	return m.base.DeleteVpcLink(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) DisablePortal(ctx context.Context, params *svc.DisablePortalInput, optFns ...func(*svc.Options)) (*svc.DisablePortalOutput, error) {
+	return m.base.DisablePortal(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *APIGatewayV2) ExportApi(ctx context.Context, params *svc.ExportApiInput, optFns ...func(*svc.Options)) (*svc.ExportApiOutput, error) {
@@ -229,6 +269,26 @@ func (m *APIGatewayV2) GetModels(ctx context.Context, params *svc.GetModelsInput
 	return m.base.GetModels(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *APIGatewayV2) GetPortal(ctx context.Context, params *svc.GetPortalInput, optFns ...func(*svc.Options)) (*svc.GetPortalOutput, error) {
+	return m.base.GetPortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) GetPortalProduct(ctx context.Context, params *svc.GetPortalProductInput, optFns ...func(*svc.Options)) (*svc.GetPortalProductOutput, error) {
+	return m.base.GetPortalProduct(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) GetPortalProductSharingPolicy(ctx context.Context, params *svc.GetPortalProductSharingPolicyInput, optFns ...func(*svc.Options)) (*svc.GetPortalProductSharingPolicyOutput, error) {
+	return m.base.GetPortalProductSharingPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) GetProductPage(ctx context.Context, params *svc.GetProductPageInput, optFns ...func(*svc.Options)) (*svc.GetProductPageOutput, error) {
+	return m.base.GetProductPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) GetProductRestEndpointPage(ctx context.Context, params *svc.GetProductRestEndpointPageInput, optFns ...func(*svc.Options)) (*svc.GetProductRestEndpointPageOutput, error) {
+	return m.base.GetProductRestEndpointPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *APIGatewayV2) GetRoute(ctx context.Context, params *svc.GetRouteInput, optFns ...func(*svc.Options)) (*svc.GetRouteOutput, error) {
 	return m.base.GetRoute(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -273,8 +333,36 @@ func (m *APIGatewayV2) ImportApi(ctx context.Context, params *svc.ImportApiInput
 	return m.base.ImportApi(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *APIGatewayV2) ListPortalProducts(ctx context.Context, params *svc.ListPortalProductsInput, optFns ...func(*svc.Options)) (*svc.ListPortalProductsOutput, error) {
+	return m.base.ListPortalProducts(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) ListPortals(ctx context.Context, params *svc.ListPortalsInput, optFns ...func(*svc.Options)) (*svc.ListPortalsOutput, error) {
+	return m.base.ListPortals(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) ListProductPages(ctx context.Context, params *svc.ListProductPagesInput, optFns ...func(*svc.Options)) (*svc.ListProductPagesOutput, error) {
+	return m.base.ListProductPages(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) ListProductRestEndpointPages(ctx context.Context, params *svc.ListProductRestEndpointPagesInput, optFns ...func(*svc.Options)) (*svc.ListProductRestEndpointPagesOutput, error) {
+	return m.base.ListProductRestEndpointPages(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *APIGatewayV2) ListRoutingRules(ctx context.Context, params *svc.ListRoutingRulesInput, optFns ...func(*svc.Options)) (*svc.ListRoutingRulesOutput, error) {
 	return m.base.ListRoutingRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) PreviewPortal(ctx context.Context, params *svc.PreviewPortalInput, optFns ...func(*svc.Options)) (*svc.PreviewPortalOutput, error) {
+	return m.base.PreviewPortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) PublishPortal(ctx context.Context, params *svc.PublishPortalInput, optFns ...func(*svc.Options)) (*svc.PublishPortalOutput, error) {
+	return m.base.PublishPortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) PutPortalProductSharingPolicy(ctx context.Context, params *svc.PutPortalProductSharingPolicyInput, optFns ...func(*svc.Options)) (*svc.PutPortalProductSharingPolicyOutput, error) {
+	return m.base.PutPortalProductSharingPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *APIGatewayV2) PutRoutingRule(ctx context.Context, params *svc.PutRoutingRuleInput, optFns ...func(*svc.Options)) (*svc.PutRoutingRuleOutput, error) {
@@ -327,6 +415,22 @@ func (m *APIGatewayV2) UpdateIntegrationResponse(ctx context.Context, params *sv
 
 func (m *APIGatewayV2) UpdateModel(ctx context.Context, params *svc.UpdateModelInput, optFns ...func(*svc.Options)) (*svc.UpdateModelOutput, error) {
 	return m.base.UpdateModel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) UpdatePortal(ctx context.Context, params *svc.UpdatePortalInput, optFns ...func(*svc.Options)) (*svc.UpdatePortalOutput, error) {
+	return m.base.UpdatePortal(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) UpdatePortalProduct(ctx context.Context, params *svc.UpdatePortalProductInput, optFns ...func(*svc.Options)) (*svc.UpdatePortalProductOutput, error) {
+	return m.base.UpdatePortalProduct(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) UpdateProductPage(ctx context.Context, params *svc.UpdateProductPageInput, optFns ...func(*svc.Options)) (*svc.UpdateProductPageOutput, error) {
+	return m.base.UpdateProductPage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *APIGatewayV2) UpdateProductRestEndpointPage(ctx context.Context, params *svc.UpdateProductRestEndpointPageInput, optFns ...func(*svc.Options)) (*svc.UpdateProductRestEndpointPageOutput, error) {
+	return m.base.UpdateProductRestEndpointPage(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *APIGatewayV2) UpdateRoute(ctx context.Context, params *svc.UpdateRouteInput, optFns ...func(*svc.Options)) (*svc.UpdateRouteOutput, error) {

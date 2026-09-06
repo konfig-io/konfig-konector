@@ -45,12 +45,24 @@ func (m *OpenSearch) AddDataSource(ctx context.Context, params *svc.AddDataSourc
 	return m.base.AddDataSource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) AddDirectQueryDataSource(ctx context.Context, params *svc.AddDirectQueryDataSourceInput, optFns ...func(*svc.Options)) (*svc.AddDirectQueryDataSourceOutput, error) {
+	return m.base.AddDirectQueryDataSource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) AddTags(ctx context.Context, params *svc.AddTagsInput, optFns ...func(*svc.Options)) (*svc.AddTagsOutput, error) {
 	return m.base.AddTags(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) AssociatePackage(ctx context.Context, params *svc.AssociatePackageInput, optFns ...func(*svc.Options)) (*svc.AssociatePackageOutput, error) {
 	return m.base.AssociatePackage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) AssociatePackages(ctx context.Context, params *svc.AssociatePackagesInput, optFns ...func(*svc.Options)) (*svc.AssociatePackagesOutput, error) {
+	return m.base.AssociatePackages(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) AttachDataSource(ctx context.Context, params *svc.AttachDataSourceInput, optFns ...func(*svc.Options)) (*svc.AttachDataSourceOutput, error) {
+	return m.base.AttachDataSource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) AuthorizeVpcEndpointAccess(ctx context.Context, params *svc.AuthorizeVpcEndpointAccessInput, optFns ...func(*svc.Options)) (*svc.AuthorizeVpcEndpointAccessOutput, error) {
@@ -65,8 +77,16 @@ func (m *OpenSearch) CancelServiceSoftwareUpdate(ctx context.Context, params *sv
 	return m.base.CancelServiceSoftwareUpdate(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) CreateApplication(ctx context.Context, params *svc.CreateApplicationInput, optFns ...func(*svc.Options)) (*svc.CreateApplicationOutput, error) {
+	return m.base.CreateApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) CreateDomain(ctx context.Context, params *svc.CreateDomainInput, optFns ...func(*svc.Options)) (*svc.CreateDomainOutput, error) {
 	return m.base.CreateDomain(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) CreateIndex(ctx context.Context, params *svc.CreateIndexInput, optFns ...func(*svc.Options)) (*svc.CreateIndexOutput, error) {
+	return m.base.CreateIndex(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) CreateOutboundConnection(ctx context.Context, params *svc.CreateOutboundConnectionInput, optFns ...func(*svc.Options)) (*svc.CreateOutboundConnectionOutput, error) {
@@ -81,8 +101,16 @@ func (m *OpenSearch) CreateVpcEndpoint(ctx context.Context, params *svc.CreateVp
 	return m.base.CreateVpcEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) DeleteApplication(ctx context.Context, params *svc.DeleteApplicationInput, optFns ...func(*svc.Options)) (*svc.DeleteApplicationOutput, error) {
+	return m.base.DeleteApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) DeleteDataSource(ctx context.Context, params *svc.DeleteDataSourceInput, optFns ...func(*svc.Options)) (*svc.DeleteDataSourceOutput, error) {
 	return m.base.DeleteDataSource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) DeleteDirectQueryDataSource(ctx context.Context, params *svc.DeleteDirectQueryDataSourceInput, optFns ...func(*svc.Options)) (*svc.DeleteDirectQueryDataSourceOutput, error) {
+	return m.base.DeleteDirectQueryDataSource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) DeleteDomain(ctx context.Context, params *svc.DeleteDomainInput, optFns ...func(*svc.Options)) (*svc.DeleteDomainOutput, error) {
@@ -91,6 +119,10 @@ func (m *OpenSearch) DeleteDomain(ctx context.Context, params *svc.DeleteDomainI
 
 func (m *OpenSearch) DeleteInboundConnection(ctx context.Context, params *svc.DeleteInboundConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteInboundConnectionOutput, error) {
 	return m.base.DeleteInboundConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) DeleteIndex(ctx context.Context, params *svc.DeleteIndexInput, optFns ...func(*svc.Options)) (*svc.DeleteIndexOutput, error) {
+	return m.base.DeleteIndex(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) DeleteOutboundConnection(ctx context.Context, params *svc.DeleteOutboundConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteOutboundConnectionOutput, error) {
@@ -103,6 +135,14 @@ func (m *OpenSearch) DeletePackage(ctx context.Context, params *svc.DeletePackag
 
 func (m *OpenSearch) DeleteVpcEndpoint(ctx context.Context, params *svc.DeleteVpcEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcEndpointOutput, error) {
 	return m.base.DeleteVpcEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) DeregisterCapability(ctx context.Context, params *svc.DeregisterCapabilityInput, optFns ...func(*svc.Options)) (*svc.DeregisterCapabilityOutput, error) {
+	return m.base.DeregisterCapability(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) DescribeDataSourceAttachment(ctx context.Context, params *svc.DescribeDataSourceAttachmentInput, optFns ...func(*svc.Options)) (*svc.DescribeDataSourceAttachmentOutput, error) {
+	return m.base.DescribeDataSourceAttachment(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) DescribeDomain(ctx context.Context, params *svc.DescribeDomainInput, optFns ...func(*svc.Options)) (*svc.DescribeDomainOutput, error) {
@@ -141,6 +181,10 @@ func (m *OpenSearch) DescribeInboundConnections(ctx context.Context, params *svc
 	return m.base.DescribeInboundConnections(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) DescribeInsightDetails(ctx context.Context, params *svc.DescribeInsightDetailsInput, optFns ...func(*svc.Options)) (*svc.DescribeInsightDetailsOutput, error) {
+	return m.base.DescribeInsightDetails(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) DescribeInstanceTypeLimits(ctx context.Context, params *svc.DescribeInstanceTypeLimitsInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceTypeLimitsOutput, error) {
 	return m.base.DescribeInstanceTypeLimits(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -165,8 +209,24 @@ func (m *OpenSearch) DescribeVpcEndpoints(ctx context.Context, params *svc.Descr
 	return m.base.DescribeVpcEndpoints(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) DetachDataSource(ctx context.Context, params *svc.DetachDataSourceInput, optFns ...func(*svc.Options)) (*svc.DetachDataSourceOutput, error) {
+	return m.base.DetachDataSource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) DissociatePackage(ctx context.Context, params *svc.DissociatePackageInput, optFns ...func(*svc.Options)) (*svc.DissociatePackageOutput, error) {
 	return m.base.DissociatePackage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) DissociatePackages(ctx context.Context, params *svc.DissociatePackagesInput, optFns ...func(*svc.Options)) (*svc.DissociatePackagesOutput, error) {
+	return m.base.DissociatePackages(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) GetApplication(ctx context.Context, params *svc.GetApplicationInput, optFns ...func(*svc.Options)) (*svc.GetApplicationOutput, error) {
+	return m.base.GetApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) GetCapability(ctx context.Context, params *svc.GetCapabilityInput, optFns ...func(*svc.Options)) (*svc.GetCapabilityOutput, error) {
+	return m.base.GetCapability(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) GetCompatibleVersions(ctx context.Context, params *svc.GetCompatibleVersionsInput, optFns ...func(*svc.Options)) (*svc.GetCompatibleVersionsOutput, error) {
@@ -177,8 +237,24 @@ func (m *OpenSearch) GetDataSource(ctx context.Context, params *svc.GetDataSourc
 	return m.base.GetDataSource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) GetDefaultApplicationSetting(ctx context.Context, params *svc.GetDefaultApplicationSettingInput, optFns ...func(*svc.Options)) (*svc.GetDefaultApplicationSettingOutput, error) {
+	return m.base.GetDefaultApplicationSetting(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) GetDirectQueryDataSource(ctx context.Context, params *svc.GetDirectQueryDataSourceInput, optFns ...func(*svc.Options)) (*svc.GetDirectQueryDataSourceOutput, error) {
+	return m.base.GetDirectQueryDataSource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) GetDomainMaintenanceStatus(ctx context.Context, params *svc.GetDomainMaintenanceStatusInput, optFns ...func(*svc.Options)) (*svc.GetDomainMaintenanceStatusOutput, error) {
 	return m.base.GetDomainMaintenanceStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) GetIndex(ctx context.Context, params *svc.GetIndexInput, optFns ...func(*svc.Options)) (*svc.GetIndexOutput, error) {
+	return m.base.GetIndex(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) GetMigration(ctx context.Context, params *svc.GetMigrationInput, optFns ...func(*svc.Options)) (*svc.GetMigrationOutput, error) {
+	return m.base.GetMigration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) GetPackageVersionHistory(ctx context.Context, params *svc.GetPackageVersionHistoryInput, optFns ...func(*svc.Options)) (*svc.GetPackageVersionHistoryOutput, error) {
@@ -193,8 +269,24 @@ func (m *OpenSearch) GetUpgradeStatus(ctx context.Context, params *svc.GetUpgrad
 	return m.base.GetUpgradeStatus(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) InsightFeedback(ctx context.Context, params *svc.InsightFeedbackInput, optFns ...func(*svc.Options)) (*svc.InsightFeedbackOutput, error) {
+	return m.base.InsightFeedback(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) ListApplications(ctx context.Context, params *svc.ListApplicationsInput, optFns ...func(*svc.Options)) (*svc.ListApplicationsOutput, error) {
+	return m.base.ListApplications(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) ListDataSourceAttachments(ctx context.Context, params *svc.ListDataSourceAttachmentsInput, optFns ...func(*svc.Options)) (*svc.ListDataSourceAttachmentsOutput, error) {
+	return m.base.ListDataSourceAttachments(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) ListDataSources(ctx context.Context, params *svc.ListDataSourcesInput, optFns ...func(*svc.Options)) (*svc.ListDataSourcesOutput, error) {
 	return m.base.ListDataSources(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) ListDirectQueryDataSources(ctx context.Context, params *svc.ListDirectQueryDataSourcesInput, optFns ...func(*svc.Options)) (*svc.ListDirectQueryDataSourcesOutput, error) {
+	return m.base.ListDirectQueryDataSources(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) ListDomainMaintenances(ctx context.Context, params *svc.ListDomainMaintenancesInput, optFns ...func(*svc.Options)) (*svc.ListDomainMaintenancesOutput, error) {
@@ -209,8 +301,16 @@ func (m *OpenSearch) ListDomainsForPackage(ctx context.Context, params *svc.List
 	return m.base.ListDomainsForPackage(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) ListInsights(ctx context.Context, params *svc.ListInsightsInput, optFns ...func(*svc.Options)) (*svc.ListInsightsOutput, error) {
+	return m.base.ListInsights(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) ListInstanceTypeDetails(ctx context.Context, params *svc.ListInstanceTypeDetailsInput, optFns ...func(*svc.Options)) (*svc.ListInstanceTypeDetailsOutput, error) {
 	return m.base.ListInstanceTypeDetails(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) ListMigrations(ctx context.Context, params *svc.ListMigrationsInput, optFns ...func(*svc.Options)) (*svc.ListMigrationsOutput, error) {
+	return m.base.ListMigrations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) ListPackagesForDomain(ctx context.Context, params *svc.ListPackagesForDomainInput, optFns ...func(*svc.Options)) (*svc.ListPackagesForDomainOutput, error) {
@@ -245,6 +345,14 @@ func (m *OpenSearch) PurchaseReservedInstanceOffering(ctx context.Context, param
 	return m.base.PurchaseReservedInstanceOffering(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) PutDefaultApplicationSetting(ctx context.Context, params *svc.PutDefaultApplicationSettingInput, optFns ...func(*svc.Options)) (*svc.PutDefaultApplicationSettingOutput, error) {
+	return m.base.PutDefaultApplicationSetting(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) RegisterCapability(ctx context.Context, params *svc.RegisterCapabilityInput, optFns ...func(*svc.Options)) (*svc.RegisterCapabilityOutput, error) {
+	return m.base.RegisterCapability(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) RejectInboundConnection(ctx context.Context, params *svc.RejectInboundConnectionInput, optFns ...func(*svc.Options)) (*svc.RejectInboundConnectionOutput, error) {
 	return m.base.RejectInboundConnection(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -257,24 +365,48 @@ func (m *OpenSearch) RevokeVpcEndpointAccess(ctx context.Context, params *svc.Re
 	return m.base.RevokeVpcEndpointAccess(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) RollbackServiceSoftwareUpdate(ctx context.Context, params *svc.RollbackServiceSoftwareUpdateInput, optFns ...func(*svc.Options)) (*svc.RollbackServiceSoftwareUpdateOutput, error) {
+	return m.base.RollbackServiceSoftwareUpdate(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) StartDomainMaintenance(ctx context.Context, params *svc.StartDomainMaintenanceInput, optFns ...func(*svc.Options)) (*svc.StartDomainMaintenanceOutput, error) {
 	return m.base.StartDomainMaintenance(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) StartMigration(ctx context.Context, params *svc.StartMigrationInput, optFns ...func(*svc.Options)) (*svc.StartMigrationOutput, error) {
+	return m.base.StartMigration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) StartServiceSoftwareUpdate(ctx context.Context, params *svc.StartServiceSoftwareUpdateInput, optFns ...func(*svc.Options)) (*svc.StartServiceSoftwareUpdateOutput, error) {
 	return m.base.StartServiceSoftwareUpdate(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) UpdateApplication(ctx context.Context, params *svc.UpdateApplicationInput, optFns ...func(*svc.Options)) (*svc.UpdateApplicationOutput, error) {
+	return m.base.UpdateApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) UpdateDataSource(ctx context.Context, params *svc.UpdateDataSourceInput, optFns ...func(*svc.Options)) (*svc.UpdateDataSourceOutput, error) {
 	return m.base.UpdateDataSource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) UpdateDirectQueryDataSource(ctx context.Context, params *svc.UpdateDirectQueryDataSourceInput, optFns ...func(*svc.Options)) (*svc.UpdateDirectQueryDataSourceOutput, error) {
+	return m.base.UpdateDirectQueryDataSource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) UpdateDomainConfig(ctx context.Context, params *svc.UpdateDomainConfigInput, optFns ...func(*svc.Options)) (*svc.UpdateDomainConfigOutput, error) {
 	return m.base.UpdateDomainConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearch) UpdateIndex(ctx context.Context, params *svc.UpdateIndexInput, optFns ...func(*svc.Options)) (*svc.UpdateIndexOutput, error) {
+	return m.base.UpdateIndex(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearch) UpdatePackage(ctx context.Context, params *svc.UpdatePackageInput, optFns ...func(*svc.Options)) (*svc.UpdatePackageOutput, error) {
 	return m.base.UpdatePackage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearch) UpdatePackageScope(ctx context.Context, params *svc.UpdatePackageScopeInput, optFns ...func(*svc.Options)) (*svc.UpdatePackageScopeOutput, error) {
+	return m.base.UpdatePackageScope(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearch) UpdateScheduledAction(ctx context.Context, params *svc.UpdateScheduledActionInput, optFns ...func(*svc.Options)) (*svc.UpdateScheduledActionOutput, error) {

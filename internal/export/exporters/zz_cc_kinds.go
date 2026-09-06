@@ -747,12 +747,6 @@ func init() {
 	registerCloudControlExporter("SecurityLakeSubscriber", "AWS::SecurityLake::Subscriber", "securitylake", func() cfn.CloudControlObject { return &awsv1alpha1.SecurityLakeSubscriber{} })
 	registerCloudControlExporter("SecurityLakeSubscriberNotification", "AWS::SecurityLake::SubscriberNotification", "securitylake", func() cfn.CloudControlObject { return &awsv1alpha1.SecurityLakeSubscriberNotification{} })
 	registerCloudControlExporter("ServiceCatalogAcceptedPortfolioShare", "AWS::ServiceCatalog::AcceptedPortfolioShare", "servicecatalog", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAcceptedPortfolioShare{} })
-	registerCloudControlExporter("ServiceCatalogAppRegistryApplication", "AWS::ServiceCatalogAppRegistry::Application", "servicecatalogappregistry", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryApplication{} })
-	registerCloudControlExporter("ServiceCatalogAppRegistryAttributeGroup", "AWS::ServiceCatalogAppRegistry::AttributeGroup", "servicecatalogappregistry", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryAttributeGroup{} })
-	registerCloudControlExporter("ServiceCatalogAppRegistryAttributeGroupAssociation", "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation", "servicecatalogappregistry", func() cfn.CloudControlObject {
-		return &awsv1alpha1.ServiceCatalogAppRegistryAttributeGroupAssociation{}
-	})
-	registerCloudControlExporter("ServiceCatalogAppRegistryResourceAssociation", "AWS::ServiceCatalogAppRegistry::ResourceAssociation", "servicecatalogappregistry", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryResourceAssociation{} })
 	registerCloudControlExporter("ServiceCatalogLaunchNotificationConstraint", "AWS::ServiceCatalog::LaunchNotificationConstraint", "servicecatalog", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogLaunchNotificationConstraint{} })
 	registerCloudControlExporter("ServiceCatalogLaunchRoleConstraint", "AWS::ServiceCatalog::LaunchRoleConstraint", "servicecatalog", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogLaunchRoleConstraint{} })
 	registerCloudControlExporter("ServiceCatalogLaunchTemplateConstraint", "AWS::ServiceCatalog::LaunchTemplateConstraint", "servicecatalog", func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogLaunchTemplateConstraint{} })

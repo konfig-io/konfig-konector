@@ -63,7 +63,7 @@ func (f *fakeMQConfigurationAPI) UpdateConfiguration(_ context.Context, params *
 
 func mqConfigurationCR(mutate ...func(*awsv1alpha1.MQConfiguration)) *awsv1alpha1.MQConfiguration {
 	cfg := &awsv1alpha1.MQConfiguration{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-config", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-config", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.MQConfigurationSpec{
 			Name:       "my-config",
 			EngineType: "ACTIVEMQ",

@@ -37,6 +37,10 @@ func (m *SESv2) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*s
 	return append(out, optFns...)
 }
 
+func (m *SESv2) AssociateEmailIdentityCertificate(ctx context.Context, params *svc.AssociateEmailIdentityCertificateInput, optFns ...func(*svc.Options)) (*svc.AssociateEmailIdentityCertificateOutput, error) {
+	return m.base.AssociateEmailIdentityCertificate(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) BatchGetMetricData(ctx context.Context, params *svc.BatchGetMetricDataInput, optFns ...func(*svc.Options)) (*svc.BatchGetMetricDataOutput, error) {
 	return m.base.BatchGetMetricData(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -93,6 +97,18 @@ func (m *SESv2) CreateImportJob(ctx context.Context, params *svc.CreateImportJob
 	return m.base.CreateImportJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) CreateMultiRegionEndpoint(ctx context.Context, params *svc.CreateMultiRegionEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateMultiRegionEndpointOutput, error) {
+	return m.base.CreateMultiRegionEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) CreateTenant(ctx context.Context, params *svc.CreateTenantInput, optFns ...func(*svc.Options)) (*svc.CreateTenantOutput, error) {
+	return m.base.CreateTenant(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) CreateTenantResourceAssociation(ctx context.Context, params *svc.CreateTenantResourceAssociationInput, optFns ...func(*svc.Options)) (*svc.CreateTenantResourceAssociationOutput, error) {
+	return m.base.CreateTenantResourceAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) DeleteConfigurationSet(ctx context.Context, params *svc.DeleteConfigurationSetInput, optFns ...func(*svc.Options)) (*svc.DeleteConfigurationSetOutput, error) {
 	return m.base.DeleteConfigurationSet(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -129,8 +145,24 @@ func (m *SESv2) DeleteEmailTemplate(ctx context.Context, params *svc.DeleteEmail
 	return m.base.DeleteEmailTemplate(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) DeleteMultiRegionEndpoint(ctx context.Context, params *svc.DeleteMultiRegionEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteMultiRegionEndpointOutput, error) {
+	return m.base.DeleteMultiRegionEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) DeleteSuppressedDestination(ctx context.Context, params *svc.DeleteSuppressedDestinationInput, optFns ...func(*svc.Options)) (*svc.DeleteSuppressedDestinationOutput, error) {
 	return m.base.DeleteSuppressedDestination(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) DeleteTenant(ctx context.Context, params *svc.DeleteTenantInput, optFns ...func(*svc.Options)) (*svc.DeleteTenantOutput, error) {
+	return m.base.DeleteTenant(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) DeleteTenantResourceAssociation(ctx context.Context, params *svc.DeleteTenantResourceAssociationInput, optFns ...func(*svc.Options)) (*svc.DeleteTenantResourceAssociationOutput, error) {
+	return m.base.DeleteTenantResourceAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) DisassociateEmailIdentityCertificate(ctx context.Context, params *svc.DisassociateEmailIdentityCertificateInput, optFns ...func(*svc.Options)) (*svc.DisassociateEmailIdentityCertificateOutput, error) {
+	return m.base.DisassociateEmailIdentityCertificate(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) GetAccount(ctx context.Context, params *svc.GetAccountInput, optFns ...func(*svc.Options)) (*svc.GetAccountOutput, error) {
@@ -189,6 +221,10 @@ func (m *SESv2) GetDomainStatisticsReport(ctx context.Context, params *svc.GetDo
 	return m.base.GetDomainStatisticsReport(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) GetEmailAddressInsights(ctx context.Context, params *svc.GetEmailAddressInsightsInput, optFns ...func(*svc.Options)) (*svc.GetEmailAddressInsightsOutput, error) {
+	return m.base.GetEmailAddressInsights(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) GetEmailIdentity(ctx context.Context, params *svc.GetEmailIdentityInput, optFns ...func(*svc.Options)) (*svc.GetEmailIdentityOutput, error) {
 	return m.base.GetEmailIdentity(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -213,8 +249,20 @@ func (m *SESv2) GetMessageInsights(ctx context.Context, params *svc.GetMessageIn
 	return m.base.GetMessageInsights(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) GetMultiRegionEndpoint(ctx context.Context, params *svc.GetMultiRegionEndpointInput, optFns ...func(*svc.Options)) (*svc.GetMultiRegionEndpointOutput, error) {
+	return m.base.GetMultiRegionEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) GetReputationEntity(ctx context.Context, params *svc.GetReputationEntityInput, optFns ...func(*svc.Options)) (*svc.GetReputationEntityOutput, error) {
+	return m.base.GetReputationEntity(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) GetSuppressedDestination(ctx context.Context, params *svc.GetSuppressedDestinationInput, optFns ...func(*svc.Options)) (*svc.GetSuppressedDestinationOutput, error) {
 	return m.base.GetSuppressedDestination(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) GetTenant(ctx context.Context, params *svc.GetTenantInput, optFns ...func(*svc.Options)) (*svc.GetTenantOutput, error) {
+	return m.base.GetTenant(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) ListConfigurationSets(ctx context.Context, params *svc.ListConfigurationSetsInput, optFns ...func(*svc.Options)) (*svc.ListConfigurationSetsOutput, error) {
@@ -249,6 +297,10 @@ func (m *SESv2) ListEmailIdentities(ctx context.Context, params *svc.ListEmailId
 	return m.base.ListEmailIdentities(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) ListEmailIdentityCertificates(ctx context.Context, params *svc.ListEmailIdentityCertificatesInput, optFns ...func(*svc.Options)) (*svc.ListEmailIdentityCertificatesOutput, error) {
+	return m.base.ListEmailIdentityCertificates(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) ListEmailTemplates(ctx context.Context, params *svc.ListEmailTemplatesInput, optFns ...func(*svc.Options)) (*svc.ListEmailTemplatesOutput, error) {
 	return m.base.ListEmailTemplates(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -261,8 +313,20 @@ func (m *SESv2) ListImportJobs(ctx context.Context, params *svc.ListImportJobsIn
 	return m.base.ListImportJobs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) ListMultiRegionEndpoints(ctx context.Context, params *svc.ListMultiRegionEndpointsInput, optFns ...func(*svc.Options)) (*svc.ListMultiRegionEndpointsOutput, error) {
+	return m.base.ListMultiRegionEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) ListRecommendations(ctx context.Context, params *svc.ListRecommendationsInput, optFns ...func(*svc.Options)) (*svc.ListRecommendationsOutput, error) {
 	return m.base.ListRecommendations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) ListReputationEntities(ctx context.Context, params *svc.ListReputationEntitiesInput, optFns ...func(*svc.Options)) (*svc.ListReputationEntitiesOutput, error) {
+	return m.base.ListReputationEntities(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) ListResourceTenants(ctx context.Context, params *svc.ListResourceTenantsInput, optFns ...func(*svc.Options)) (*svc.ListResourceTenantsOutput, error) {
+	return m.base.ListResourceTenants(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) ListSuppressedDestinations(ctx context.Context, params *svc.ListSuppressedDestinationsInput, optFns ...func(*svc.Options)) (*svc.ListSuppressedDestinationsOutput, error) {
@@ -273,12 +337,24 @@ func (m *SESv2) ListTagsForResource(ctx context.Context, params *svc.ListTagsFor
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) ListTenantResources(ctx context.Context, params *svc.ListTenantResourcesInput, optFns ...func(*svc.Options)) (*svc.ListTenantResourcesOutput, error) {
+	return m.base.ListTenantResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) ListTenants(ctx context.Context, params *svc.ListTenantsInput, optFns ...func(*svc.Options)) (*svc.ListTenantsOutput, error) {
+	return m.base.ListTenants(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) PutAccountDedicatedIpWarmupAttributes(ctx context.Context, params *svc.PutAccountDedicatedIpWarmupAttributesInput, optFns ...func(*svc.Options)) (*svc.PutAccountDedicatedIpWarmupAttributesOutput, error) {
 	return m.base.PutAccountDedicatedIpWarmupAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) PutAccountDetails(ctx context.Context, params *svc.PutAccountDetailsInput, optFns ...func(*svc.Options)) (*svc.PutAccountDetailsOutput, error) {
 	return m.base.PutAccountDetails(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) PutAccountPricingAttributes(ctx context.Context, params *svc.PutAccountPricingAttributesInput, optFns ...func(*svc.Options)) (*svc.PutAccountPricingAttributesOutput, error) {
+	return m.base.PutAccountPricingAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) PutAccountSendingAttributes(ctx context.Context, params *svc.PutAccountSendingAttributesInput, optFns ...func(*svc.Options)) (*svc.PutAccountSendingAttributesOutput, error) {
@@ -291,6 +367,10 @@ func (m *SESv2) PutAccountSuppressionAttributes(ctx context.Context, params *svc
 
 func (m *SESv2) PutAccountVdmAttributes(ctx context.Context, params *svc.PutAccountVdmAttributesInput, optFns ...func(*svc.Options)) (*svc.PutAccountVdmAttributesOutput, error) {
 	return m.base.PutAccountVdmAttributes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) PutConfigurationSetArchivingOptions(ctx context.Context, params *svc.PutConfigurationSetArchivingOptionsInput, optFns ...func(*svc.Options)) (*svc.PutConfigurationSetArchivingOptionsOutput, error) {
+	return m.base.PutConfigurationSetArchivingOptions(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SESv2) PutConfigurationSetDeliveryOptions(ctx context.Context, params *svc.PutConfigurationSetDeliveryOptionsInput, optFns ...func(*svc.Options)) (*svc.PutConfigurationSetDeliveryOptionsOutput, error) {
@@ -357,6 +437,10 @@ func (m *SESv2) PutSuppressedDestination(ctx context.Context, params *svc.PutSup
 	return m.base.PutSuppressedDestination(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) PutTenantSuppressionAttributes(ctx context.Context, params *svc.PutTenantSuppressionAttributesInput, optFns ...func(*svc.Options)) (*svc.PutTenantSuppressionAttributesOutput, error) {
+	return m.base.PutTenantSuppressionAttributes(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) SendBulkEmail(ctx context.Context, params *svc.SendBulkEmailInput, optFns ...func(*svc.Options)) (*svc.SendBulkEmailOutput, error) {
 	return m.base.SendBulkEmail(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -381,6 +465,10 @@ func (m *SESv2) UntagResource(ctx context.Context, params *svc.UntagResourceInpu
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SESv2) UpdateConfigurationSet(ctx context.Context, params *svc.UpdateConfigurationSetInput, optFns ...func(*svc.Options)) (*svc.UpdateConfigurationSetOutput, error) {
+	return m.base.UpdateConfigurationSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SESv2) UpdateConfigurationSetEventDestination(ctx context.Context, params *svc.UpdateConfigurationSetEventDestinationInput, optFns ...func(*svc.Options)) (*svc.UpdateConfigurationSetEventDestinationOutput, error) {
 	return m.base.UpdateConfigurationSetEventDestination(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -403,4 +491,12 @@ func (m *SESv2) UpdateEmailIdentityPolicy(ctx context.Context, params *svc.Updat
 
 func (m *SESv2) UpdateEmailTemplate(ctx context.Context, params *svc.UpdateEmailTemplateInput, optFns ...func(*svc.Options)) (*svc.UpdateEmailTemplateOutput, error) {
 	return m.base.UpdateEmailTemplate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) UpdateReputationEntityCustomerManagedStatus(ctx context.Context, params *svc.UpdateReputationEntityCustomerManagedStatusInput, optFns ...func(*svc.Options)) (*svc.UpdateReputationEntityCustomerManagedStatusOutput, error) {
+	return m.base.UpdateReputationEntityCustomerManagedStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SESv2) UpdateReputationEntityPolicy(ctx context.Context, params *svc.UpdateReputationEntityPolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateReputationEntityPolicyOutput, error) {
+	return m.base.UpdateReputationEntityPolicy(ctx, params, m.opts(ctx, optFns)...)
 }

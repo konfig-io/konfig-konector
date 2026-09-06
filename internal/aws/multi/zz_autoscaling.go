@@ -237,6 +237,10 @@ func (m *AutoScaling) GetPredictiveScalingForecast(ctx context.Context, params *
 	return m.base.GetPredictiveScalingForecast(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *AutoScaling) LaunchInstances(ctx context.Context, params *svc.LaunchInstancesInput, optFns ...func(*svc.Options)) (*svc.LaunchInstancesOutput, error) {
+	return m.base.LaunchInstances(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *AutoScaling) PutLifecycleHook(ctx context.Context, params *svc.PutLifecycleHookInput, optFns ...func(*svc.Options)) (*svc.PutLifecycleHookOutput, error) {
 	return m.base.PutLifecycleHook(ctx, params, m.opts(ctx, optFns)...)
 }

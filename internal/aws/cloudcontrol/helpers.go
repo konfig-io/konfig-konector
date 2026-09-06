@@ -18,6 +18,8 @@ limitations under the License.
 package cloudcontrol
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -26,6 +28,12 @@ import (
 
 	"github.com/aws/smithy-go"
 )
+
+// ShortHash returns the first 12 hex chars of the SHA-256 of b.
+func ShortHash(b []byte) string {
+	sum := sha256.Sum256(b)
+	return hex.EncodeToString(sum[:])[:12]
+}
 
 // IsNotFound reports whether err denotes a missing resource or request token.
 func IsNotFound(err error) bool {
@@ -92,8 +100,19 @@ func BuildPatch(liveJSON, desiredJSON []byte, removable []string) ([]byte, error
 }
 
 // normalize round-trips through JSON so numbers compare as float64 and
-// nested maps/slices compare structurally.
+// nested maps/slices compare structurally. Strings that themselves hold a
+// JSON document (policy documents, definitions) are compared by content, since
+// AWS reformats them on the way back.
 func normalize(v interface{}) interface{} {
+	if s, ok := v.(string); ok {
+		var doc interface{}
+		if len(s) > 1 && (s[0] == '{' || s[0] == '[') && json.Unmarshal([]byte(s), &doc) == nil {
+			// Policy documents come back in IAM's canonical form, where a
+			// single-element list ("Action": ["x"]) is stored as the scalar.
+			return collapseSingletons(doc)
+		}
+		return s
+	}
 	b, err := json.Marshal(v)
 	if err != nil {
 		return v
@@ -116,4 +135,28 @@ func escape(k string) string {
 		}
 	}
 	return string(out)
+}
+
+// collapseSingletons rewrites one-element arrays as their element, recursively,
+// so a desired policy written with lists compares equal to IAM's canonical
+// scalar form.
+func collapseSingletons(v interface{}) interface{} {
+	switch t := v.(type) {
+	case []interface{}:
+		if len(t) == 1 {
+			return collapseSingletons(t[0])
+		}
+		out := make([]interface{}, len(t))
+		for i := range t {
+			out[i] = collapseSingletons(t[i])
+		}
+		return out
+	case map[string]interface{}:
+		out := make(map[string]interface{}, len(t))
+		for k, val := range t {
+			out[k] = collapseSingletons(val)
+		}
+		return out
+	}
+	return v
 }

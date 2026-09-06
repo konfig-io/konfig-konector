@@ -49,6 +49,10 @@ func (m *CodeBuild) BatchGetBuilds(ctx context.Context, params *svc.BatchGetBuil
 	return m.base.BatchGetBuilds(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CodeBuild) BatchGetCommandExecutions(ctx context.Context, params *svc.BatchGetCommandExecutionsInput, optFns ...func(*svc.Options)) (*svc.BatchGetCommandExecutionsOutput, error) {
+	return m.base.BatchGetCommandExecutions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CodeBuild) BatchGetFleets(ctx context.Context, params *svc.BatchGetFleetsInput, optFns ...func(*svc.Options)) (*svc.BatchGetFleetsOutput, error) {
 	return m.base.BatchGetFleets(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -63,6 +67,10 @@ func (m *CodeBuild) BatchGetReportGroups(ctx context.Context, params *svc.BatchG
 
 func (m *CodeBuild) BatchGetReports(ctx context.Context, params *svc.BatchGetReportsInput, optFns ...func(*svc.Options)) (*svc.BatchGetReportsOutput, error) {
 	return m.base.BatchGetReports(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) BatchGetSandboxes(ctx context.Context, params *svc.BatchGetSandboxesInput, optFns ...func(*svc.Options)) (*svc.BatchGetSandboxesOutput, error) {
+	return m.base.BatchGetSandboxes(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CodeBuild) CreateFleet(ctx context.Context, params *svc.CreateFleetInput, optFns ...func(*svc.Options)) (*svc.CreateFleetOutput, error) {
@@ -153,6 +161,10 @@ func (m *CodeBuild) ListBuildsForProject(ctx context.Context, params *svc.ListBu
 	return m.base.ListBuildsForProject(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CodeBuild) ListCommandExecutionsForSandbox(ctx context.Context, params *svc.ListCommandExecutionsForSandboxInput, optFns ...func(*svc.Options)) (*svc.ListCommandExecutionsForSandboxOutput, error) {
+	return m.base.ListCommandExecutionsForSandbox(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CodeBuild) ListCuratedEnvironmentImages(ctx context.Context, params *svc.ListCuratedEnvironmentImagesInput, optFns ...func(*svc.Options)) (*svc.ListCuratedEnvironmentImagesOutput, error) {
 	return m.base.ListCuratedEnvironmentImages(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -175,6 +187,14 @@ func (m *CodeBuild) ListReports(ctx context.Context, params *svc.ListReportsInpu
 
 func (m *CodeBuild) ListReportsForReportGroup(ctx context.Context, params *svc.ListReportsForReportGroupInput, optFns ...func(*svc.Options)) (*svc.ListReportsForReportGroupOutput, error) {
 	return m.base.ListReportsForReportGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) ListSandboxes(ctx context.Context, params *svc.ListSandboxesInput, optFns ...func(*svc.Options)) (*svc.ListSandboxesOutput, error) {
+	return m.base.ListSandboxes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) ListSandboxesForProject(ctx context.Context, params *svc.ListSandboxesForProjectInput, optFns ...func(*svc.Options)) (*svc.ListSandboxesForProjectOutput, error) {
+	return m.base.ListSandboxesForProject(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CodeBuild) ListSharedProjects(ctx context.Context, params *svc.ListSharedProjectsInput, optFns ...func(*svc.Options)) (*svc.ListSharedProjectsOutput, error) {
@@ -209,12 +229,28 @@ func (m *CodeBuild) StartBuildBatch(ctx context.Context, params *svc.StartBuildB
 	return m.base.StartBuildBatch(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CodeBuild) StartCommandExecution(ctx context.Context, params *svc.StartCommandExecutionInput, optFns ...func(*svc.Options)) (*svc.StartCommandExecutionOutput, error) {
+	return m.base.StartCommandExecution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) StartSandbox(ctx context.Context, params *svc.StartSandboxInput, optFns ...func(*svc.Options)) (*svc.StartSandboxOutput, error) {
+	return m.base.StartSandbox(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) StartSandboxConnection(ctx context.Context, params *svc.StartSandboxConnectionInput, optFns ...func(*svc.Options)) (*svc.StartSandboxConnectionOutput, error) {
+	return m.base.StartSandboxConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CodeBuild) StopBuild(ctx context.Context, params *svc.StopBuildInput, optFns ...func(*svc.Options)) (*svc.StopBuildOutput, error) {
 	return m.base.StopBuild(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CodeBuild) StopBuildBatch(ctx context.Context, params *svc.StopBuildBatchInput, optFns ...func(*svc.Options)) (*svc.StopBuildBatchOutput, error) {
 	return m.base.StopBuildBatch(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CodeBuild) StopSandbox(ctx context.Context, params *svc.StopSandboxInput, optFns ...func(*svc.Options)) (*svc.StopSandboxOutput, error) {
+	return m.base.StopSandbox(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CodeBuild) UpdateFleet(ctx context.Context, params *svc.UpdateFleetInput, optFns ...func(*svc.Options)) (*svc.UpdateFleetOutput, error) {

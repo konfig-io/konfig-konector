@@ -103,7 +103,7 @@ func dbInstanceScheme(t *testing.T) *runtime.Scheme {
 
 func dbPasswordSecret() *corev1.Secret {
 	return &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{Name: "db-creds", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "db-creds", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Data:       map[string][]byte{"password": []byte(testDBPassword)},
 	}
 }
@@ -111,8 +111,9 @@ func dbPasswordSecret() *corev1.Secret {
 func dbInstanceCR(mutate ...func(*awsv1alpha1.DBInstance)) *awsv1alpha1.DBInstance {
 	db := &awsv1alpha1.DBInstance{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-db",
-			Namespace: "default",
+			Name:       "my-db",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.DBInstanceSpec{
 			DBInstanceIdentifier:  "my-db",

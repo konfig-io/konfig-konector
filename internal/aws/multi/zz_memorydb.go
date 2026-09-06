@@ -53,6 +53,10 @@ func (m *MemoryDB) CreateCluster(ctx context.Context, params *svc.CreateClusterI
 	return m.base.CreateCluster(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *MemoryDB) CreateMultiRegionCluster(ctx context.Context, params *svc.CreateMultiRegionClusterInput, optFns ...func(*svc.Options)) (*svc.CreateMultiRegionClusterOutput, error) {
+	return m.base.CreateMultiRegionCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *MemoryDB) CreateParameterGroup(ctx context.Context, params *svc.CreateParameterGroupInput, optFns ...func(*svc.Options)) (*svc.CreateParameterGroupOutput, error) {
 	return m.base.CreateParameterGroup(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -75,6 +79,10 @@ func (m *MemoryDB) DeleteACL(ctx context.Context, params *svc.DeleteACLInput, op
 
 func (m *MemoryDB) DeleteCluster(ctx context.Context, params *svc.DeleteClusterInput, optFns ...func(*svc.Options)) (*svc.DeleteClusterOutput, error) {
 	return m.base.DeleteCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *MemoryDB) DeleteMultiRegionCluster(ctx context.Context, params *svc.DeleteMultiRegionClusterInput, optFns ...func(*svc.Options)) (*svc.DeleteMultiRegionClusterOutput, error) {
+	return m.base.DeleteMultiRegionCluster(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *MemoryDB) DeleteParameterGroup(ctx context.Context, params *svc.DeleteParameterGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteParameterGroupOutput, error) {
@@ -107,6 +115,18 @@ func (m *MemoryDB) DescribeEngineVersions(ctx context.Context, params *svc.Descr
 
 func (m *MemoryDB) DescribeEvents(ctx context.Context, params *svc.DescribeEventsInput, optFns ...func(*svc.Options)) (*svc.DescribeEventsOutput, error) {
 	return m.base.DescribeEvents(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *MemoryDB) DescribeMultiRegionClusters(ctx context.Context, params *svc.DescribeMultiRegionClustersInput, optFns ...func(*svc.Options)) (*svc.DescribeMultiRegionClustersOutput, error) {
+	return m.base.DescribeMultiRegionClusters(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *MemoryDB) DescribeMultiRegionParameterGroups(ctx context.Context, params *svc.DescribeMultiRegionParameterGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribeMultiRegionParameterGroupsOutput, error) {
+	return m.base.DescribeMultiRegionParameterGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *MemoryDB) DescribeMultiRegionParameters(ctx context.Context, params *svc.DescribeMultiRegionParametersInput, optFns ...func(*svc.Options)) (*svc.DescribeMultiRegionParametersOutput, error) {
+	return m.base.DescribeMultiRegionParameters(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *MemoryDB) DescribeParameterGroups(ctx context.Context, params *svc.DescribeParameterGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribeParameterGroupsOutput, error) {
@@ -145,6 +165,10 @@ func (m *MemoryDB) FailoverShard(ctx context.Context, params *svc.FailoverShardI
 	return m.base.FailoverShard(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *MemoryDB) ListAllowedMultiRegionClusterUpdates(ctx context.Context, params *svc.ListAllowedMultiRegionClusterUpdatesInput, optFns ...func(*svc.Options)) (*svc.ListAllowedMultiRegionClusterUpdatesOutput, error) {
+	return m.base.ListAllowedMultiRegionClusterUpdates(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *MemoryDB) ListAllowedNodeTypeUpdates(ctx context.Context, params *svc.ListAllowedNodeTypeUpdatesInput, optFns ...func(*svc.Options)) (*svc.ListAllowedNodeTypeUpdatesOutput, error) {
 	return m.base.ListAllowedNodeTypeUpdates(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -175,6 +199,10 @@ func (m *MemoryDB) UpdateACL(ctx context.Context, params *svc.UpdateACLInput, op
 
 func (m *MemoryDB) UpdateCluster(ctx context.Context, params *svc.UpdateClusterInput, optFns ...func(*svc.Options)) (*svc.UpdateClusterOutput, error) {
 	return m.base.UpdateCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *MemoryDB) UpdateMultiRegionCluster(ctx context.Context, params *svc.UpdateMultiRegionClusterInput, optFns ...func(*svc.Options)) (*svc.UpdateMultiRegionClusterOutput, error) {
+	return m.base.UpdateMultiRegionCluster(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *MemoryDB) UpdateParameterGroup(ctx context.Context, params *svc.UpdateParameterGroupInput, optFns ...func(*svc.Options)) (*svc.UpdateParameterGroupOutput, error) {

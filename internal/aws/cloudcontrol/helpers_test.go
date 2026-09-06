@@ -21,3 +21,11 @@ func TestBuildPatch(t *testing.T) {
 		t.Fatalf("removable not honoured: %s", p)
 	}
 }
+
+func TestBuildPatchPolicyDocumentCanonicalForm(t *testing.T) {
+	live := []byte(`{"PolicyName":"p","PolicyDocument":"{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"xray:PutTraceSegments\",\"Resource\":\"*\"}]}"}`)
+	desired := []byte(`{"PolicyName":"p","PolicyDocument":"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": [\"xray:PutTraceSegments\"], \"Resource\": \"*\"}]}"}`)
+	if p, err := BuildPatch(live, desired, nil); err != nil || p != nil {
+		t.Fatalf("expected no drift for canonical-equivalent policy, got %s %v", p, err)
+	}
+}

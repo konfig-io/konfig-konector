@@ -41,6 +41,10 @@ func (m *AMP) CreateAlertManagerDefinition(ctx context.Context, params *svc.Crea
 	return m.base.CreateAlertManagerDefinition(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *AMP) CreateAnomalyDetector(ctx context.Context, params *svc.CreateAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.CreateAnomalyDetectorOutput, error) {
+	return m.base.CreateAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *AMP) CreateLoggingConfiguration(ctx context.Context, params *svc.CreateLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateLoggingConfigurationOutput, error) {
 	return m.base.CreateLoggingConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -65,6 +69,10 @@ func (m *AMP) DeleteAlertManagerDefinition(ctx context.Context, params *svc.Dele
 	return m.base.DeleteAlertManagerDefinition(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *AMP) DeleteAnomalyDetector(ctx context.Context, params *svc.DeleteAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.DeleteAnomalyDetectorOutput, error) {
+	return m.base.DeleteAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *AMP) DeleteLoggingConfiguration(ctx context.Context, params *svc.DeleteLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteLoggingConfigurationOutput, error) {
 	return m.base.DeleteLoggingConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -85,12 +93,20 @@ func (m *AMP) DeleteScraper(ctx context.Context, params *svc.DeleteScraperInput,
 	return m.base.DeleteScraper(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *AMP) DeleteScraperLoggingConfiguration(ctx context.Context, params *svc.DeleteScraperLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteScraperLoggingConfigurationOutput, error) {
+	return m.base.DeleteScraperLoggingConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *AMP) DeleteWorkspace(ctx context.Context, params *svc.DeleteWorkspaceInput, optFns ...func(*svc.Options)) (*svc.DeleteWorkspaceOutput, error) {
 	return m.base.DeleteWorkspace(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *AMP) DescribeAlertManagerDefinition(ctx context.Context, params *svc.DescribeAlertManagerDefinitionInput, optFns ...func(*svc.Options)) (*svc.DescribeAlertManagerDefinitionOutput, error) {
 	return m.base.DescribeAlertManagerDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *AMP) DescribeAnomalyDetector(ctx context.Context, params *svc.DescribeAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.DescribeAnomalyDetectorOutput, error) {
+	return m.base.DescribeAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *AMP) DescribeLoggingConfiguration(ctx context.Context, params *svc.DescribeLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.DescribeLoggingConfigurationOutput, error) {
@@ -113,6 +129,10 @@ func (m *AMP) DescribeScraper(ctx context.Context, params *svc.DescribeScraperIn
 	return m.base.DescribeScraper(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *AMP) DescribeScraperLoggingConfiguration(ctx context.Context, params *svc.DescribeScraperLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.DescribeScraperLoggingConfigurationOutput, error) {
+	return m.base.DescribeScraperLoggingConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *AMP) DescribeWorkspace(ctx context.Context, params *svc.DescribeWorkspaceInput, optFns ...func(*svc.Options)) (*svc.DescribeWorkspaceOutput, error) {
 	return m.base.DescribeWorkspace(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -123,6 +143,10 @@ func (m *AMP) DescribeWorkspaceConfiguration(ctx context.Context, params *svc.De
 
 func (m *AMP) GetDefaultScraperConfiguration(ctx context.Context, params *svc.GetDefaultScraperConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetDefaultScraperConfigurationOutput, error) {
 	return m.base.GetDefaultScraperConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *AMP) ListAnomalyDetectors(ctx context.Context, params *svc.ListAnomalyDetectorsInput, optFns ...func(*svc.Options)) (*svc.ListAnomalyDetectorsOutput, error) {
+	return m.base.ListAnomalyDetectors(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *AMP) ListRuleGroupsNamespaces(ctx context.Context, params *svc.ListRuleGroupsNamespacesInput, optFns ...func(*svc.Options)) (*svc.ListRuleGroupsNamespacesOutput, error) {
@@ -143,6 +167,10 @@ func (m *AMP) ListWorkspaces(ctx context.Context, params *svc.ListWorkspacesInpu
 
 func (m *AMP) PutAlertManagerDefinition(ctx context.Context, params *svc.PutAlertManagerDefinitionInput, optFns ...func(*svc.Options)) (*svc.PutAlertManagerDefinitionOutput, error) {
 	return m.base.PutAlertManagerDefinition(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *AMP) PutAnomalyDetector(ctx context.Context, params *svc.PutAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.PutAnomalyDetectorOutput, error) {
+	return m.base.PutAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *AMP) PutResourcePolicy(ctx context.Context, params *svc.PutResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.PutResourcePolicyOutput, error) {
@@ -171,6 +199,10 @@ func (m *AMP) UpdateQueryLoggingConfiguration(ctx context.Context, params *svc.U
 
 func (m *AMP) UpdateScraper(ctx context.Context, params *svc.UpdateScraperInput, optFns ...func(*svc.Options)) (*svc.UpdateScraperOutput, error) {
 	return m.base.UpdateScraper(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *AMP) UpdateScraperLoggingConfiguration(ctx context.Context, params *svc.UpdateScraperLoggingConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateScraperLoggingConfigurationOutput, error) {
+	return m.base.UpdateScraperLoggingConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *AMP) UpdateWorkspaceAlias(ctx context.Context, params *svc.UpdateWorkspaceAliasInput, optFns ...func(*svc.Options)) (*svc.UpdateWorkspaceAliasOutput, error) {

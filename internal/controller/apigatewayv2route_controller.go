@@ -90,6 +90,10 @@ func (r *APIGatewayV2RouteReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileRoute(ctx, obj); err != nil {

@@ -93,12 +93,24 @@ func (m *ECR) DeleteRepositoryPolicy(ctx context.Context, params *svc.DeleteRepo
 	return m.base.DeleteRepositoryPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECR) DeleteSigningConfiguration(ctx context.Context, params *svc.DeleteSigningConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteSigningConfigurationOutput, error) {
+	return m.base.DeleteSigningConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECR) DeregisterPullTimeUpdateExclusion(ctx context.Context, params *svc.DeregisterPullTimeUpdateExclusionInput, optFns ...func(*svc.Options)) (*svc.DeregisterPullTimeUpdateExclusionOutput, error) {
+	return m.base.DeregisterPullTimeUpdateExclusion(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECR) DescribeImageReplicationStatus(ctx context.Context, params *svc.DescribeImageReplicationStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeImageReplicationStatusOutput, error) {
 	return m.base.DescribeImageReplicationStatus(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECR) DescribeImageScanFindings(ctx context.Context, params *svc.DescribeImageScanFindingsInput, optFns ...func(*svc.Options)) (*svc.DescribeImageScanFindingsOutput, error) {
 	return m.base.DescribeImageScanFindings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECR) DescribeImageSigningStatus(ctx context.Context, params *svc.DescribeImageSigningStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeImageSigningStatusOutput, error) {
+	return m.base.DescribeImageSigningStatus(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECR) DescribeImages(ctx context.Context, params *svc.DescribeImagesInput, optFns ...func(*svc.Options)) (*svc.DescribeImagesOutput, error) {
@@ -153,12 +165,24 @@ func (m *ECR) GetRepositoryPolicy(ctx context.Context, params *svc.GetRepository
 	return m.base.GetRepositoryPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECR) GetSigningConfiguration(ctx context.Context, params *svc.GetSigningConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetSigningConfigurationOutput, error) {
+	return m.base.GetSigningConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECR) InitiateLayerUpload(ctx context.Context, params *svc.InitiateLayerUploadInput, optFns ...func(*svc.Options)) (*svc.InitiateLayerUploadOutput, error) {
 	return m.base.InitiateLayerUpload(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECR) ListImageReferrers(ctx context.Context, params *svc.ListImageReferrersInput, optFns ...func(*svc.Options)) (*svc.ListImageReferrersOutput, error) {
+	return m.base.ListImageReferrers(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECR) ListImages(ctx context.Context, params *svc.ListImagesInput, optFns ...func(*svc.Options)) (*svc.ListImagesOutput, error) {
 	return m.base.ListImages(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECR) ListPullTimeUpdateExclusions(ctx context.Context, params *svc.ListPullTimeUpdateExclusionsInput, optFns ...func(*svc.Options)) (*svc.ListPullTimeUpdateExclusionsOutput, error) {
+	return m.base.ListPullTimeUpdateExclusions(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECR) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {
@@ -197,6 +221,14 @@ func (m *ECR) PutReplicationConfiguration(ctx context.Context, params *svc.PutRe
 	return m.base.PutReplicationConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ECR) PutSigningConfiguration(ctx context.Context, params *svc.PutSigningConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutSigningConfigurationOutput, error) {
+	return m.base.PutSigningConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECR) RegisterPullTimeUpdateExclusion(ctx context.Context, params *svc.RegisterPullTimeUpdateExclusionInput, optFns ...func(*svc.Options)) (*svc.RegisterPullTimeUpdateExclusionOutput, error) {
+	return m.base.RegisterPullTimeUpdateExclusion(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ECR) SetRepositoryPolicy(ctx context.Context, params *svc.SetRepositoryPolicyInput, optFns ...func(*svc.Options)) (*svc.SetRepositoryPolicyOutput, error) {
 	return m.base.SetRepositoryPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -215,6 +247,10 @@ func (m *ECR) TagResource(ctx context.Context, params *svc.TagResourceInput, opt
 
 func (m *ECR) UntagResource(ctx context.Context, params *svc.UntagResourceInput, optFns ...func(*svc.Options)) (*svc.UntagResourceOutput, error) {
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ECR) UpdateImageStorageClass(ctx context.Context, params *svc.UpdateImageStorageClassInput, optFns ...func(*svc.Options)) (*svc.UpdateImageStorageClassOutput, error) {
+	return m.base.UpdateImageStorageClass(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ECR) UpdatePullThroughCacheRule(ctx context.Context, params *svc.UpdatePullThroughCacheRuleInput, optFns ...func(*svc.Options)) (*svc.UpdatePullThroughCacheRuleOutput, error) {

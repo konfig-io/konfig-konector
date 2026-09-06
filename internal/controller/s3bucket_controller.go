@@ -103,6 +103,10 @@ func (r *S3BucketReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, b); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileBucket(ctx, b); err != nil {
@@ -218,7 +222,7 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		for _, lr := range b.Spec.LifecycleRules {
 			rule := s3types.LifecycleRule{
 				Status: s3types.ExpirationStatus(lr.Status),
-				Filter: &s3types.LifecycleRuleFilterMemberPrefix{Value: lr.Prefix},
+				Filter: &s3types.LifecycleRuleFilter{Prefix: aws.String(lr.Prefix)},
 			}
 			if lr.ID != "" {
 				rule.ID = aws.String(lr.ID)

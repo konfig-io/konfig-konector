@@ -94,8 +94,9 @@ func eksClusterScheme(t *testing.T) *runtime.Scheme {
 func eksClusterCR(mutate ...func(*awsv1alpha1.EKSCluster)) *awsv1alpha1.EKSCluster {
 	cluster := &awsv1alpha1.EKSCluster{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-cluster",
-			Namespace: "default",
+			Name:       "my-cluster",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.EKSClusterSpec{
 			ClusterName: "my-cluster",

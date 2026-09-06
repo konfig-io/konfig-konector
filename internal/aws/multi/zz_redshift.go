@@ -125,6 +125,14 @@ func (m *Redshift) CreateHsmConfiguration(ctx context.Context, params *svc.Creat
 	return m.base.CreateHsmConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Redshift) CreateIntegration(ctx context.Context, params *svc.CreateIntegrationInput, optFns ...func(*svc.Options)) (*svc.CreateIntegrationOutput, error) {
+	return m.base.CreateIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) CreateQev2IdcApplication(ctx context.Context, params *svc.CreateQev2IdcApplicationInput, optFns ...func(*svc.Options)) (*svc.CreateQev2IdcApplicationOutput, error) {
+	return m.base.CreateQev2IdcApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Redshift) CreateRedshiftIdcApplication(ctx context.Context, params *svc.CreateRedshiftIdcApplicationInput, optFns ...func(*svc.Options)) (*svc.CreateRedshiftIdcApplicationOutput, error) {
 	return m.base.CreateRedshiftIdcApplication(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -197,8 +205,16 @@ func (m *Redshift) DeleteHsmConfiguration(ctx context.Context, params *svc.Delet
 	return m.base.DeleteHsmConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Redshift) DeleteIntegration(ctx context.Context, params *svc.DeleteIntegrationInput, optFns ...func(*svc.Options)) (*svc.DeleteIntegrationOutput, error) {
+	return m.base.DeleteIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Redshift) DeletePartner(ctx context.Context, params *svc.DeletePartnerInput, optFns ...func(*svc.Options)) (*svc.DeletePartnerOutput, error) {
 	return m.base.DeletePartner(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) DeleteQev2IdcApplication(ctx context.Context, params *svc.DeleteQev2IdcApplicationInput, optFns ...func(*svc.Options)) (*svc.DeleteQev2IdcApplicationOutput, error) {
+	return m.base.DeleteQev2IdcApplication(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Redshift) DeleteRedshiftIdcApplication(ctx context.Context, params *svc.DeleteRedshiftIdcApplicationInput, optFns ...func(*svc.Options)) (*svc.DeleteRedshiftIdcApplicationOutput, error) {
@@ -227,6 +243,10 @@ func (m *Redshift) DeleteTags(ctx context.Context, params *svc.DeleteTagsInput, 
 
 func (m *Redshift) DeleteUsageLimit(ctx context.Context, params *svc.DeleteUsageLimitInput, optFns ...func(*svc.Options)) (*svc.DeleteUsageLimitOutput, error) {
 	return m.base.DeleteUsageLimit(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) DeregisterNamespace(ctx context.Context, params *svc.DeregisterNamespaceInput, optFns ...func(*svc.Options)) (*svc.DeregisterNamespaceOutput, error) {
+	return m.base.DeregisterNamespace(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Redshift) DescribeAccountAttributes(ctx context.Context, params *svc.DescribeAccountAttributesInput, optFns ...func(*svc.Options)) (*svc.DescribeAccountAttributesOutput, error) {
@@ -325,6 +345,10 @@ func (m *Redshift) DescribeInboundIntegrations(ctx context.Context, params *svc.
 	return m.base.DescribeInboundIntegrations(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Redshift) DescribeIntegrations(ctx context.Context, params *svc.DescribeIntegrationsInput, optFns ...func(*svc.Options)) (*svc.DescribeIntegrationsOutput, error) {
+	return m.base.DescribeIntegrations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Redshift) DescribeLoggingStatus(ctx context.Context, params *svc.DescribeLoggingStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeLoggingStatusOutput, error) {
 	return m.base.DescribeLoggingStatus(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -339,6 +363,10 @@ func (m *Redshift) DescribeOrderableClusterOptions(ctx context.Context, params *
 
 func (m *Redshift) DescribePartners(ctx context.Context, params *svc.DescribePartnersInput, optFns ...func(*svc.Options)) (*svc.DescribePartnersOutput, error) {
 	return m.base.DescribePartners(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) DescribeQev2IdcApplications(ctx context.Context, params *svc.DescribeQev2IdcApplicationsInput, optFns ...func(*svc.Options)) (*svc.DescribeQev2IdcApplicationsOutput, error) {
+	return m.base.DescribeQev2IdcApplications(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Redshift) DescribeRedshiftIdcApplications(ctx context.Context, params *svc.DescribeRedshiftIdcApplicationsInput, optFns ...func(*svc.Options)) (*svc.DescribeRedshiftIdcApplicationsOutput, error) {
@@ -421,6 +449,10 @@ func (m *Redshift) GetClusterCredentialsWithIAM(ctx context.Context, params *svc
 	return m.base.GetClusterCredentialsWithIAM(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Redshift) GetIdentityCenterAuthToken(ctx context.Context, params *svc.GetIdentityCenterAuthTokenInput, optFns ...func(*svc.Options)) (*svc.GetIdentityCenterAuthTokenOutput, error) {
+	return m.base.GetIdentityCenterAuthToken(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Redshift) GetReservedNodeExchangeConfigurationOptions(ctx context.Context, params *svc.GetReservedNodeExchangeConfigurationOptionsInput, optFns ...func(*svc.Options)) (*svc.GetReservedNodeExchangeConfigurationOptionsOutput, error) {
 	return m.base.GetReservedNodeExchangeConfigurationOptions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -431,6 +463,10 @@ func (m *Redshift) GetReservedNodeExchangeOfferings(ctx context.Context, params 
 
 func (m *Redshift) GetResourcePolicy(ctx context.Context, params *svc.GetResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.GetResourcePolicyOutput, error) {
 	return m.base.GetResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) ListRecommendations(ctx context.Context, params *svc.ListRecommendationsInput, optFns ...func(*svc.Options)) (*svc.ListRecommendationsOutput, error) {
+	return m.base.ListRecommendations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Redshift) ModifyAquaConfiguration(ctx context.Context, params *svc.ModifyAquaConfigurationInput, optFns ...func(*svc.Options)) (*svc.ModifyAquaConfigurationOutput, error) {
@@ -485,6 +521,18 @@ func (m *Redshift) ModifyEventSubscription(ctx context.Context, params *svc.Modi
 	return m.base.ModifyEventSubscription(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Redshift) ModifyIntegration(ctx context.Context, params *svc.ModifyIntegrationInput, optFns ...func(*svc.Options)) (*svc.ModifyIntegrationOutput, error) {
+	return m.base.ModifyIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) ModifyLakehouseConfiguration(ctx context.Context, params *svc.ModifyLakehouseConfigurationInput, optFns ...func(*svc.Options)) (*svc.ModifyLakehouseConfigurationOutput, error) {
+	return m.base.ModifyLakehouseConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) ModifyQev2IdcApplication(ctx context.Context, params *svc.ModifyQev2IdcApplicationInput, optFns ...func(*svc.Options)) (*svc.ModifyQev2IdcApplicationOutput, error) {
+	return m.base.ModifyQev2IdcApplication(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Redshift) ModifyRedshiftIdcApplication(ctx context.Context, params *svc.ModifyRedshiftIdcApplicationInput, optFns ...func(*svc.Options)) (*svc.ModifyRedshiftIdcApplicationOutput, error) {
 	return m.base.ModifyRedshiftIdcApplication(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -519,6 +567,10 @@ func (m *Redshift) PutResourcePolicy(ctx context.Context, params *svc.PutResourc
 
 func (m *Redshift) RebootCluster(ctx context.Context, params *svc.RebootClusterInput, optFns ...func(*svc.Options)) (*svc.RebootClusterOutput, error) {
 	return m.base.RebootCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Redshift) RegisterNamespace(ctx context.Context, params *svc.RegisterNamespaceInput, optFns ...func(*svc.Options)) (*svc.RegisterNamespaceOutput, error) {
+	return m.base.RegisterNamespace(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Redshift) RejectDataShare(ctx context.Context, params *svc.RejectDataShareInput, optFns ...func(*svc.Options)) (*svc.RejectDataShareOutput, error) {

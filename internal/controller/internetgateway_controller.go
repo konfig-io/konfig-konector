@@ -98,6 +98,10 @@ func (r *InternetGatewayReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err := r.Update(ctx, igw); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileIGW(ctx, igw); err != nil {
@@ -133,6 +137,23 @@ func (r *InternetGatewayReconciler) reconcileIGW(ctx context.Context, igw *awsv1
 	}
 
 	if igwID == "" {
+		// A VPC can have exactly one internet gateway: adopt the attached one.
+		found, err := r.EC2Client.DescribeInternetGateways(ctx, &awsec2.DescribeInternetGatewaysInput{
+			Filters: []types.Filter{{Name: aws.String("attachment.vpc-id"), Values: []string{vpcID}}},
+		})
+		if err != nil {
+			return fmt.Errorf("describe internet gateways by vpc: %w", err)
+		}
+		if len(found.InternetGateways) > 0 {
+			igwID = aws.ToString(found.InternetGateways[0].InternetGatewayId)
+			igw.Status.InternetGatewayID = igwID
+			if err := persistStatus(ctx, r.Client, igw); err != nil {
+				return fmt.Errorf("persist adopted internet gateway ID: %w", err)
+			}
+		}
+	}
+
+	if igwID == "" {
 		out, err := r.EC2Client.CreateInternetGateway(ctx, &awsec2.CreateInternetGatewayInput{
 			TagSpecifications: []types.TagSpecification{
 				{ResourceType: types.ResourceTypeInternetGateway, Tags: ec2helper.TagsFromMap(igw.Spec.Tags)},
@@ -160,6 +181,22 @@ func (r *InternetGatewayReconciler) reconcileIGW(ctx context.Context, igw *awsv1
 				attached = true
 				break
 			}
+		}
+	}
+	if !attached {
+		// If the VPC already has a different gateway attached (one created by an
+		// earlier reconcile whose status was lost), adopt it and remove ours.
+		if found, err := r.EC2Client.DescribeInternetGateways(ctx, &awsec2.DescribeInternetGatewaysInput{
+			Filters: []types.Filter{{Name: aws.String("attachment.vpc-id"), Values: []string{vpcID}}},
+		}); err == nil && len(found.InternetGateways) > 0 && aws.ToString(found.InternetGateways[0].InternetGatewayId) != igwID {
+			orphan := igwID
+			igwID = aws.ToString(found.InternetGateways[0].InternetGatewayId)
+			igw.Status.InternetGatewayID = igwID
+			if err := persistStatus(ctx, r.Client, igw); err != nil {
+				return fmt.Errorf("persist adopted internet gateway ID: %w", err)
+			}
+			_, _ = r.EC2Client.DeleteInternetGateway(ctx, &awsec2.DeleteInternetGatewayInput{InternetGatewayId: aws.String(orphan)})
+			attached = true
 		}
 	}
 	if !attached {

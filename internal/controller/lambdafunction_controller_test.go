@@ -110,8 +110,9 @@ func lambdaScheme(t *testing.T) *runtime.Scheme {
 func lambdaFnCR(mutate ...func(*awsv1alpha1.LambdaFunction)) *awsv1alpha1.LambdaFunction {
 	fn := &awsv1alpha1.LambdaFunction{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-fn",
-			Namespace: "default",
+			Name:       "my-fn",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.LambdaFunctionSpec{
 			FunctionName: "my-fn",

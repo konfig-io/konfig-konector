@@ -161,8 +161,16 @@ func (m *Athena) GetQueryRuntimeStatistics(ctx context.Context, params *svc.GetQ
 	return m.base.GetQueryRuntimeStatistics(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Athena) GetResourceDashboard(ctx context.Context, params *svc.GetResourceDashboardInput, optFns ...func(*svc.Options)) (*svc.GetResourceDashboardOutput, error) {
+	return m.base.GetResourceDashboard(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Athena) GetSession(ctx context.Context, params *svc.GetSessionInput, optFns ...func(*svc.Options)) (*svc.GetSessionOutput, error) {
 	return m.base.GetSession(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Athena) GetSessionEndpoint(ctx context.Context, params *svc.GetSessionEndpointInput, optFns ...func(*svc.Options)) (*svc.GetSessionEndpointOutput, error) {
+	return m.base.GetSessionEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Athena) GetSessionStatus(ctx context.Context, params *svc.GetSessionStatusInput, optFns ...func(*svc.Options)) (*svc.GetSessionStatusOutput, error) {

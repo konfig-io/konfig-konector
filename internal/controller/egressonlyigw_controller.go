@@ -83,6 +83,10 @@ func (r *EgressOnlyIGWReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err := r.Update(ctx, igw); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileEgressOnlyIGW(ctx, igw); err != nil {
@@ -124,6 +128,21 @@ func (r *EgressOnlyIGWReconciler) reconcileEgressOnlyIGW(ctx context.Context, ig
 			return r.setConditionEOIGW(ctx, igw, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "EgressOnlyIGW reconciled")
 		}
 		igw.Status.EgressOnlyIGWID = ""
+	}
+
+	// A VPC can have exactly one egress-only internet gateway: adopt it.
+	if existing, lerr := r.EC2Client.DescribeEgressOnlyInternetGateways(ctx, &awsec2.DescribeEgressOnlyInternetGatewaysInput{}); lerr == nil {
+		for _, g := range existing.EgressOnlyInternetGateways {
+			for _, a := range g.Attachments {
+				if aws.ToString(a.VpcId) == vpcID {
+					igw.Status.EgressOnlyIGWID = aws.ToString(g.EgressOnlyInternetGatewayId)
+					igw.Status.ObservedGeneration = igw.Generation
+					now := metav1.Now()
+					igw.Status.LastSyncTime = &now
+					return r.setConditionEOIGW(ctx, igw, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "EgressOnlyIGW adopted")
+				}
+			}
+		}
 	}
 
 	out, err := r.EC2Client.CreateEgressOnlyInternetGateway(ctx, &awsec2.CreateEgressOnlyInternetGatewayInput{

@@ -41,12 +41,20 @@ func (m *Kinesis) AddTagsToStream(ctx context.Context, params *svc.AddTagsToStre
 	return m.base.AddTagsToStream(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kinesis) CreateChannel(ctx context.Context, params *svc.CreateChannelInput, optFns ...func(*svc.Options)) (*svc.CreateChannelOutput, error) {
+	return m.base.CreateChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kinesis) CreateStream(ctx context.Context, params *svc.CreateStreamInput, optFns ...func(*svc.Options)) (*svc.CreateStreamOutput, error) {
 	return m.base.CreateStream(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kinesis) DecreaseStreamRetentionPeriod(ctx context.Context, params *svc.DecreaseStreamRetentionPeriodInput, optFns ...func(*svc.Options)) (*svc.DecreaseStreamRetentionPeriodOutput, error) {
 	return m.base.DecreaseStreamRetentionPeriod(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) DeleteChannel(ctx context.Context, params *svc.DeleteChannelInput, optFns ...func(*svc.Options)) (*svc.DeleteChannelOutput, error) {
+	return m.base.DeleteChannel(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kinesis) DeleteResourcePolicy(ctx context.Context, params *svc.DeleteResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteResourcePolicyOutput, error) {
@@ -59,6 +67,14 @@ func (m *Kinesis) DeleteStream(ctx context.Context, params *svc.DeleteStreamInpu
 
 func (m *Kinesis) DeregisterStreamConsumer(ctx context.Context, params *svc.DeregisterStreamConsumerInput, optFns ...func(*svc.Options)) (*svc.DeregisterStreamConsumerOutput, error) {
 	return m.base.DeregisterStreamConsumer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) DescribeAccountSettings(ctx context.Context, params *svc.DescribeAccountSettingsInput, optFns ...func(*svc.Options)) (*svc.DescribeAccountSettingsOutput, error) {
+	return m.base.DescribeAccountSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) DescribeChannel(ctx context.Context, params *svc.DescribeChannelInput, optFns ...func(*svc.Options)) (*svc.DescribeChannelOutput, error) {
+	return m.base.DescribeChannel(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kinesis) DescribeLimits(ctx context.Context, params *svc.DescribeLimitsInput, optFns ...func(*svc.Options)) (*svc.DescribeLimitsOutput, error) {
@@ -99,6 +115,10 @@ func (m *Kinesis) GetShardIterator(ctx context.Context, params *svc.GetShardIter
 
 func (m *Kinesis) IncreaseStreamRetentionPeriod(ctx context.Context, params *svc.IncreaseStreamRetentionPeriodInput, optFns ...func(*svc.Options)) (*svc.IncreaseStreamRetentionPeriodOutput, error) {
 	return m.base.IncreaseStreamRetentionPeriod(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) ListChannels(ctx context.Context, params *svc.ListChannelsInput, optFns ...func(*svc.Options)) (*svc.ListChannelsOutput, error) {
+	return m.base.ListChannels(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kinesis) ListShards(ctx context.Context, params *svc.ListShardsInput, optFns ...func(*svc.Options)) (*svc.ListShardsOutput, error) {
@@ -169,10 +189,26 @@ func (m *Kinesis) UntagResource(ctx context.Context, params *svc.UntagResourceIn
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Kinesis) UpdateAccountSettings(ctx context.Context, params *svc.UpdateAccountSettingsInput, optFns ...func(*svc.Options)) (*svc.UpdateAccountSettingsOutput, error) {
+	return m.base.UpdateAccountSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) UpdateChannel(ctx context.Context, params *svc.UpdateChannelInput, optFns ...func(*svc.Options)) (*svc.UpdateChannelOutput, error) {
+	return m.base.UpdateChannel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) UpdateMaxRecordSize(ctx context.Context, params *svc.UpdateMaxRecordSizeInput, optFns ...func(*svc.Options)) (*svc.UpdateMaxRecordSizeOutput, error) {
+	return m.base.UpdateMaxRecordSize(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Kinesis) UpdateShardCount(ctx context.Context, params *svc.UpdateShardCountInput, optFns ...func(*svc.Options)) (*svc.UpdateShardCountOutput, error) {
 	return m.base.UpdateShardCount(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Kinesis) UpdateStreamMode(ctx context.Context, params *svc.UpdateStreamModeInput, optFns ...func(*svc.Options)) (*svc.UpdateStreamModeOutput, error) {
 	return m.base.UpdateStreamMode(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Kinesis) UpdateStreamWarmThroughput(ctx context.Context, params *svc.UpdateStreamWarmThroughputInput, optFns ...func(*svc.Options)) (*svc.UpdateStreamWarmThroughputOutput, error) {
+	return m.base.UpdateStreamWarmThroughput(ctx, params, m.opts(ctx, optFns)...)
 }

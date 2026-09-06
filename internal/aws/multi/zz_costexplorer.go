@@ -81,8 +81,16 @@ func (m *CostExplorer) GetApproximateUsageRecords(ctx context.Context, params *s
 	return m.base.GetApproximateUsageRecords(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CostExplorer) GetCommitmentPurchaseAnalysis(ctx context.Context, params *svc.GetCommitmentPurchaseAnalysisInput, optFns ...func(*svc.Options)) (*svc.GetCommitmentPurchaseAnalysisOutput, error) {
+	return m.base.GetCommitmentPurchaseAnalysis(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CostExplorer) GetCostAndUsage(ctx context.Context, params *svc.GetCostAndUsageInput, optFns ...func(*svc.Options)) (*svc.GetCostAndUsageOutput, error) {
 	return m.base.GetCostAndUsage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CostExplorer) GetCostAndUsageComparisons(ctx context.Context, params *svc.GetCostAndUsageComparisonsInput, optFns ...func(*svc.Options)) (*svc.GetCostAndUsageComparisonsOutput, error) {
+	return m.base.GetCostAndUsageComparisons(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CostExplorer) GetCostAndUsageWithResources(ctx context.Context, params *svc.GetCostAndUsageWithResourcesInput, optFns ...func(*svc.Options)) (*svc.GetCostAndUsageWithResourcesOutput, error) {
@@ -91,6 +99,10 @@ func (m *CostExplorer) GetCostAndUsageWithResources(ctx context.Context, params 
 
 func (m *CostExplorer) GetCostCategories(ctx context.Context, params *svc.GetCostCategoriesInput, optFns ...func(*svc.Options)) (*svc.GetCostCategoriesOutput, error) {
 	return m.base.GetCostCategories(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CostExplorer) GetCostComparisonDrivers(ctx context.Context, params *svc.GetCostComparisonDriversInput, optFns ...func(*svc.Options)) (*svc.GetCostComparisonDriversOutput, error) {
+	return m.base.GetCostComparisonDrivers(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CostExplorer) GetCostForecast(ctx context.Context, params *svc.GetCostForecastInput, optFns ...func(*svc.Options)) (*svc.GetCostForecastOutput, error) {
@@ -145,6 +157,10 @@ func (m *CostExplorer) GetUsageForecast(ctx context.Context, params *svc.GetUsag
 	return m.base.GetUsageForecast(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CostExplorer) ListCommitmentPurchaseAnalyses(ctx context.Context, params *svc.ListCommitmentPurchaseAnalysesInput, optFns ...func(*svc.Options)) (*svc.ListCommitmentPurchaseAnalysesOutput, error) {
+	return m.base.ListCommitmentPurchaseAnalyses(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CostExplorer) ListCostAllocationTagBackfillHistory(ctx context.Context, params *svc.ListCostAllocationTagBackfillHistoryInput, optFns ...func(*svc.Options)) (*svc.ListCostAllocationTagBackfillHistoryOutput, error) {
 	return m.base.ListCostAllocationTagBackfillHistory(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -157,6 +173,10 @@ func (m *CostExplorer) ListCostCategoryDefinitions(ctx context.Context, params *
 	return m.base.ListCostCategoryDefinitions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CostExplorer) ListCostCategoryResourceAssociations(ctx context.Context, params *svc.ListCostCategoryResourceAssociationsInput, optFns ...func(*svc.Options)) (*svc.ListCostCategoryResourceAssociationsOutput, error) {
+	return m.base.ListCostCategoryResourceAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CostExplorer) ListSavingsPlansPurchaseRecommendationGeneration(ctx context.Context, params *svc.ListSavingsPlansPurchaseRecommendationGenerationInput, optFns ...func(*svc.Options)) (*svc.ListSavingsPlansPurchaseRecommendationGenerationOutput, error) {
 	return m.base.ListSavingsPlansPurchaseRecommendationGeneration(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -167,6 +187,10 @@ func (m *CostExplorer) ListTagsForResource(ctx context.Context, params *svc.List
 
 func (m *CostExplorer) ProvideAnomalyFeedback(ctx context.Context, params *svc.ProvideAnomalyFeedbackInput, optFns ...func(*svc.Options)) (*svc.ProvideAnomalyFeedbackOutput, error) {
 	return m.base.ProvideAnomalyFeedback(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CostExplorer) StartCommitmentPurchaseAnalysis(ctx context.Context, params *svc.StartCommitmentPurchaseAnalysisInput, optFns ...func(*svc.Options)) (*svc.StartCommitmentPurchaseAnalysisOutput, error) {
+	return m.base.StartCommitmentPurchaseAnalysis(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CostExplorer) StartCostAllocationTagBackfill(ctx context.Context, params *svc.StartCostAllocationTagBackfillInput, optFns ...func(*svc.Options)) (*svc.StartCostAllocationTagBackfillOutput, error) {

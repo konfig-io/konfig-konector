@@ -101,6 +101,10 @@ func (m *ELBv2) DescribeAccountLimits(ctx context.Context, params *svc.DescribeA
 	return m.base.DescribeAccountLimits(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ELBv2) DescribeCapacityReservation(ctx context.Context, params *svc.DescribeCapacityReservationInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationOutput, error) {
+	return m.base.DescribeCapacityReservation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ELBv2) DescribeListenerAttributes(ctx context.Context, params *svc.DescribeListenerAttributesInput, optFns ...func(*svc.Options)) (*svc.DescribeListenerAttributesOutput, error) {
 	return m.base.DescribeListenerAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -167,6 +171,14 @@ func (m *ELBv2) GetTrustStoreCaCertificatesBundle(ctx context.Context, params *s
 
 func (m *ELBv2) GetTrustStoreRevocationContent(ctx context.Context, params *svc.GetTrustStoreRevocationContentInput, optFns ...func(*svc.Options)) (*svc.GetTrustStoreRevocationContentOutput, error) {
 	return m.base.GetTrustStoreRevocationContent(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ELBv2) ModifyCapacityReservation(ctx context.Context, params *svc.ModifyCapacityReservationInput, optFns ...func(*svc.Options)) (*svc.ModifyCapacityReservationOutput, error) {
+	return m.base.ModifyCapacityReservation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ELBv2) ModifyIpPools(ctx context.Context, params *svc.ModifyIpPoolsInput, optFns ...func(*svc.Options)) (*svc.ModifyIpPoolsOutput, error) {
+	return m.base.ModifyIpPools(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ELBv2) ModifyListener(ctx context.Context, params *svc.ModifyListenerInput, optFns ...func(*svc.Options)) (*svc.ModifyListenerOutput, error) {

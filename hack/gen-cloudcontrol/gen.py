@@ -48,7 +48,7 @@ OpenSearchService Organizations Pipes RAM RDS RUM Rbin Redshift RedshiftServerle
 ResourceExplorer2 ResourceGroups RolesAnywhere Route53 Route53Profiles Route53RecoveryControl
 Route53RecoveryReadiness Route53Resolver S3 S3Express S3ObjectLambda S3Tables SES SNS SQS SSM SSMContacts
 SSMIncidents SSMQuickSetup SSO SageMaker Scheduler SecretsManager SecurityHub SecurityLake ServiceCatalog
-ServiceCatalogAppRegistry ServiceDiscovery Shield Signer StepFunctions StorageGateway Synthetics Timestream
+ServiceDiscovery Shield Signer StepFunctions StorageGateway Synthetics Timestream
 Transfer VerifiedPermissions VpcLattice WAFv2 XRay
 """.split())
 
@@ -60,6 +60,8 @@ SERVICE_PREFIX = {
     "Logs": "Logs", "SSO": "SSOAdmin", "APS": "Prometheus", "Oam": "OAM",
 }
 
+# ServiceCatalogAppRegistry is in AWS maintenance mode (creates are rejected)
+# and is therefore not in SERVICES.
 # Types deliberately not generated. Billing, invoicing, cost reports and
 # budget actions are outside an EKS platform team's remit and automating them
 # from a cluster is a liability; they stay reachable through the generic

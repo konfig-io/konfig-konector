@@ -159,8 +159,9 @@ const testTrustPolicy = `{"Version":"2012-10-17","Statement":[{"Effect":"Allow",
 func newTestIAMRole(mutators ...func(*awsv1alpha1.IAMRole)) *awsv1alpha1.IAMRole {
 	r := &awsv1alpha1.IAMRole{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-role",
-			Namespace: "default",
+			Name:       "test-role",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.IAMRoleSpec{
 			RoleName:                 "my-role",

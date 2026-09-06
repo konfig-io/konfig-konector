@@ -89,6 +89,10 @@ func (m *MQ) DescribeConfigurationRevision(ctx context.Context, params *svc.Desc
 	return m.base.DescribeConfigurationRevision(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *MQ) DescribeSharedResources(ctx context.Context, params *svc.DescribeSharedResourcesInput, optFns ...func(*svc.Options)) (*svc.DescribeSharedResourcesOutput, error) {
+	return m.base.DescribeSharedResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *MQ) DescribeUser(ctx context.Context, params *svc.DescribeUserInput, optFns ...func(*svc.Options)) (*svc.DescribeUserOutput, error) {
 	return m.base.DescribeUser(ctx, params, m.opts(ctx, optFns)...)
 }

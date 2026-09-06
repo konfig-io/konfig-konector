@@ -150,8 +150,9 @@ const (
 func permissionSetCR(mutate ...func(*awsv1alpha1.PermissionSet)) *awsv1alpha1.PermissionSet {
 	ps := &awsv1alpha1.PermissionSet{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "admin-access",
-			Namespace: "default",
+			Name:       "admin-access",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.PermissionSetSpec{
 			InstanceArn:     testSSOInstanceARN,

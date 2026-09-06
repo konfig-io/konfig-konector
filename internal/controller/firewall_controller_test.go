@@ -214,7 +214,7 @@ const (
 
 func firewallCR(mutate ...func(*awsv1alpha1.Firewall)) *awsv1alpha1.Firewall {
 	fw := &awsv1alpha1.Firewall{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-firewall", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-firewall", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.FirewallSpec{
 			Name:              "my-firewall",
 			FirewallPolicyRef: awsv1alpha1.FirewallPolicyRef{ARN: testFWPolicyARN},
@@ -450,7 +450,7 @@ func TestFirewallReconcile(t *testing.T) {
 					fw.Spec.FirewallPolicyRef = awsv1alpha1.FirewallPolicyRef{Name: "my-policy"}
 				}),
 				&awsv1alpha1.FirewallPolicy{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.FirewallPolicySpec{Name: "my-policy"},
 				},
 			},
@@ -475,7 +475,7 @@ func TestFirewallReconcile(t *testing.T) {
 					fw.Spec.FirewallPolicyRef = awsv1alpha1.FirewallPolicyRef{Name: "my-policy"}
 				}),
 				&awsv1alpha1.FirewallPolicy{
-					ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default"},
+					ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 					Spec:       awsv1alpha1.FirewallPolicySpec{Name: "my-policy"},
 					Status:     awsv1alpha1.FirewallPolicyStatus{ARN: testFWPolicyARN},
 				},
@@ -532,7 +532,7 @@ func TestFirewallRuleGroupReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-rg", Namespace: "default"}}
 	rgCR := func(mutate ...func(*awsv1alpha1.FirewallRuleGroup)) *awsv1alpha1.FirewallRuleGroup {
 		rg := &awsv1alpha1.FirewallRuleGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-rg", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-rg", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.FirewallRuleGroupSpec{
 				Name:        "my-rg",
 				Type:        "STATEFUL",
@@ -642,7 +642,7 @@ func TestFirewallPolicyReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-policy", Namespace: "default"}}
 	polCR := func(mutate ...func(*awsv1alpha1.FirewallPolicy)) *awsv1alpha1.FirewallPolicy {
 		p := &awsv1alpha1.FirewallPolicy{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-policy", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.FirewallPolicySpec{
 				Name:                            "my-policy",
 				StatelessDefaultActions:         []string{"aws:forward_to_sfe"},

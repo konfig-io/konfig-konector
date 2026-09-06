@@ -49,6 +49,14 @@ func (m *GuardDuty) ArchiveFindings(ctx context.Context, params *svc.ArchiveFind
 	return m.base.ArchiveFindings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) CreateCustomDetectionRuleAssociation(ctx context.Context, params *svc.CreateCustomDetectionRuleAssociationInput, optFns ...func(*svc.Options)) (*svc.CreateCustomDetectionRuleAssociationOutput, error) {
+	return m.base.CreateCustomDetectionRuleAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) CreateCustomDetectionRuleOrgConfiguration(ctx context.Context, params *svc.CreateCustomDetectionRuleOrgConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateCustomDetectionRuleOrgConfigurationOutput, error) {
+	return m.base.CreateCustomDetectionRuleOrgConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) CreateDetector(ctx context.Context, params *svc.CreateDetectorInput, optFns ...func(*svc.Options)) (*svc.CreateDetectorOutput, error) {
 	return m.base.CreateDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -59,6 +67,14 @@ func (m *GuardDuty) CreateFilter(ctx context.Context, params *svc.CreateFilterIn
 
 func (m *GuardDuty) CreateIPSet(ctx context.Context, params *svc.CreateIPSetInput, optFns ...func(*svc.Options)) (*svc.CreateIPSetOutput, error) {
 	return m.base.CreateIPSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) CreateInvestigation(ctx context.Context, params *svc.CreateInvestigationInput, optFns ...func(*svc.Options)) (*svc.CreateInvestigationOutput, error) {
+	return m.base.CreateInvestigation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) CreateMalwareProtectionPlan(ctx context.Context, params *svc.CreateMalwareProtectionPlanInput, optFns ...func(*svc.Options)) (*svc.CreateMalwareProtectionPlanOutput, error) {
+	return m.base.CreateMalwareProtectionPlan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) CreateMembers(ctx context.Context, params *svc.CreateMembersInput, optFns ...func(*svc.Options)) (*svc.CreateMembersOutput, error) {
@@ -73,12 +89,28 @@ func (m *GuardDuty) CreateSampleFindings(ctx context.Context, params *svc.Create
 	return m.base.CreateSampleFindings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) CreateThreatEntitySet(ctx context.Context, params *svc.CreateThreatEntitySetInput, optFns ...func(*svc.Options)) (*svc.CreateThreatEntitySetOutput, error) {
+	return m.base.CreateThreatEntitySet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) CreateThreatIntelSet(ctx context.Context, params *svc.CreateThreatIntelSetInput, optFns ...func(*svc.Options)) (*svc.CreateThreatIntelSetOutput, error) {
 	return m.base.CreateThreatIntelSet(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) CreateTrustedEntitySet(ctx context.Context, params *svc.CreateTrustedEntitySetInput, optFns ...func(*svc.Options)) (*svc.CreateTrustedEntitySetOutput, error) {
+	return m.base.CreateTrustedEntitySet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) DeclineInvitations(ctx context.Context, params *svc.DeclineInvitationsInput, optFns ...func(*svc.Options)) (*svc.DeclineInvitationsOutput, error) {
 	return m.base.DeclineInvitations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) DeleteCustomDetectionRuleAssociation(ctx context.Context, params *svc.DeleteCustomDetectionRuleAssociationInput, optFns ...func(*svc.Options)) (*svc.DeleteCustomDetectionRuleAssociationOutput, error) {
+	return m.base.DeleteCustomDetectionRuleAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) DeleteCustomDetectionRuleOrgConfiguration(ctx context.Context, params *svc.DeleteCustomDetectionRuleOrgConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteCustomDetectionRuleOrgConfigurationOutput, error) {
+	return m.base.DeleteCustomDetectionRuleOrgConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) DeleteDetector(ctx context.Context, params *svc.DeleteDetectorInput, optFns ...func(*svc.Options)) (*svc.DeleteDetectorOutput, error) {
@@ -97,6 +129,10 @@ func (m *GuardDuty) DeleteInvitations(ctx context.Context, params *svc.DeleteInv
 	return m.base.DeleteInvitations(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) DeleteMalwareProtectionPlan(ctx context.Context, params *svc.DeleteMalwareProtectionPlanInput, optFns ...func(*svc.Options)) (*svc.DeleteMalwareProtectionPlanOutput, error) {
+	return m.base.DeleteMalwareProtectionPlan(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) DeleteMembers(ctx context.Context, params *svc.DeleteMembersInput, optFns ...func(*svc.Options)) (*svc.DeleteMembersOutput, error) {
 	return m.base.DeleteMembers(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -105,8 +141,16 @@ func (m *GuardDuty) DeletePublishingDestination(ctx context.Context, params *svc
 	return m.base.DeletePublishingDestination(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) DeleteThreatEntitySet(ctx context.Context, params *svc.DeleteThreatEntitySetInput, optFns ...func(*svc.Options)) (*svc.DeleteThreatEntitySetOutput, error) {
+	return m.base.DeleteThreatEntitySet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) DeleteThreatIntelSet(ctx context.Context, params *svc.DeleteThreatIntelSetInput, optFns ...func(*svc.Options)) (*svc.DeleteThreatIntelSetOutput, error) {
 	return m.base.DeleteThreatIntelSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) DeleteTrustedEntitySet(ctx context.Context, params *svc.DeleteTrustedEntitySetInput, optFns ...func(*svc.Options)) (*svc.DeleteTrustedEntitySetOutput, error) {
+	return m.base.DeleteTrustedEntitySet(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) DescribeMalwareScans(ctx context.Context, params *svc.DescribeMalwareScansInput, optFns ...func(*svc.Options)) (*svc.DescribeMalwareScansOutput, error) {
@@ -149,6 +193,18 @@ func (m *GuardDuty) GetCoverageStatistics(ctx context.Context, params *svc.GetCo
 	return m.base.GetCoverageStatistics(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) GetCustomDetectionRule(ctx context.Context, params *svc.GetCustomDetectionRuleInput, optFns ...func(*svc.Options)) (*svc.GetCustomDetectionRuleOutput, error) {
+	return m.base.GetCustomDetectionRule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) GetCustomDetectionRuleAssociation(ctx context.Context, params *svc.GetCustomDetectionRuleAssociationInput, optFns ...func(*svc.Options)) (*svc.GetCustomDetectionRuleAssociationOutput, error) {
+	return m.base.GetCustomDetectionRuleAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) GetCustomDetectionRuleOrgConfiguration(ctx context.Context, params *svc.GetCustomDetectionRuleOrgConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetCustomDetectionRuleOrgConfigurationOutput, error) {
+	return m.base.GetCustomDetectionRuleOrgConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) GetDetector(ctx context.Context, params *svc.GetDetectorInput, optFns ...func(*svc.Options)) (*svc.GetDetectorOutput, error) {
 	return m.base.GetDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -169,8 +225,20 @@ func (m *GuardDuty) GetIPSet(ctx context.Context, params *svc.GetIPSetInput, opt
 	return m.base.GetIPSet(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) GetInvestigation(ctx context.Context, params *svc.GetInvestigationInput, optFns ...func(*svc.Options)) (*svc.GetInvestigationOutput, error) {
+	return m.base.GetInvestigation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) GetInvitationsCount(ctx context.Context, params *svc.GetInvitationsCountInput, optFns ...func(*svc.Options)) (*svc.GetInvitationsCountOutput, error) {
 	return m.base.GetInvitationsCount(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) GetMalwareProtectionPlan(ctx context.Context, params *svc.GetMalwareProtectionPlanInput, optFns ...func(*svc.Options)) (*svc.GetMalwareProtectionPlanOutput, error) {
+	return m.base.GetMalwareProtectionPlan(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) GetMalwareScan(ctx context.Context, params *svc.GetMalwareScanInput, optFns ...func(*svc.Options)) (*svc.GetMalwareScanOutput, error) {
+	return m.base.GetMalwareScan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) GetMalwareScanSettings(ctx context.Context, params *svc.GetMalwareScanSettingsInput, optFns ...func(*svc.Options)) (*svc.GetMalwareScanSettingsOutput, error) {
@@ -197,8 +265,16 @@ func (m *GuardDuty) GetRemainingFreeTrialDays(ctx context.Context, params *svc.G
 	return m.base.GetRemainingFreeTrialDays(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) GetThreatEntitySet(ctx context.Context, params *svc.GetThreatEntitySetInput, optFns ...func(*svc.Options)) (*svc.GetThreatEntitySetOutput, error) {
+	return m.base.GetThreatEntitySet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) GetThreatIntelSet(ctx context.Context, params *svc.GetThreatIntelSetInput, optFns ...func(*svc.Options)) (*svc.GetThreatIntelSetOutput, error) {
 	return m.base.GetThreatIntelSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) GetTrustedEntitySet(ctx context.Context, params *svc.GetTrustedEntitySetInput, optFns ...func(*svc.Options)) (*svc.GetTrustedEntitySetOutput, error) {
+	return m.base.GetTrustedEntitySet(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) GetUsageStatistics(ctx context.Context, params *svc.GetUsageStatisticsInput, optFns ...func(*svc.Options)) (*svc.GetUsageStatisticsOutput, error) {
@@ -211,6 +287,18 @@ func (m *GuardDuty) InviteMembers(ctx context.Context, params *svc.InviteMembers
 
 func (m *GuardDuty) ListCoverage(ctx context.Context, params *svc.ListCoverageInput, optFns ...func(*svc.Options)) (*svc.ListCoverageOutput, error) {
 	return m.base.ListCoverage(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListCustomDetectionRuleAssociations(ctx context.Context, params *svc.ListCustomDetectionRuleAssociationsInput, optFns ...func(*svc.Options)) (*svc.ListCustomDetectionRuleAssociationsOutput, error) {
+	return m.base.ListCustomDetectionRuleAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListCustomDetectionRuleOrgConfigurations(ctx context.Context, params *svc.ListCustomDetectionRuleOrgConfigurationsInput, optFns ...func(*svc.Options)) (*svc.ListCustomDetectionRuleOrgConfigurationsOutput, error) {
+	return m.base.ListCustomDetectionRuleOrgConfigurations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListCustomDetectionRules(ctx context.Context, params *svc.ListCustomDetectionRulesInput, optFns ...func(*svc.Options)) (*svc.ListCustomDetectionRulesOutput, error) {
+	return m.base.ListCustomDetectionRules(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) ListDetectors(ctx context.Context, params *svc.ListDetectorsInput, optFns ...func(*svc.Options)) (*svc.ListDetectorsOutput, error) {
@@ -229,8 +317,20 @@ func (m *GuardDuty) ListIPSets(ctx context.Context, params *svc.ListIPSetsInput,
 	return m.base.ListIPSets(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) ListInvestigations(ctx context.Context, params *svc.ListInvestigationsInput, optFns ...func(*svc.Options)) (*svc.ListInvestigationsOutput, error) {
+	return m.base.ListInvestigations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) ListInvitations(ctx context.Context, params *svc.ListInvitationsInput, optFns ...func(*svc.Options)) (*svc.ListInvitationsOutput, error) {
 	return m.base.ListInvitations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListMalwareProtectionPlans(ctx context.Context, params *svc.ListMalwareProtectionPlansInput, optFns ...func(*svc.Options)) (*svc.ListMalwareProtectionPlansOutput, error) {
+	return m.base.ListMalwareProtectionPlans(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListMalwareScans(ctx context.Context, params *svc.ListMalwareScansInput, optFns ...func(*svc.Options)) (*svc.ListMalwareScansOutput, error) {
+	return m.base.ListMalwareScans(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) ListMembers(ctx context.Context, params *svc.ListMembersInput, optFns ...func(*svc.Options)) (*svc.ListMembersOutput, error) {
@@ -249,8 +349,20 @@ func (m *GuardDuty) ListTagsForResource(ctx context.Context, params *svc.ListTag
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) ListThreatEntitySets(ctx context.Context, params *svc.ListThreatEntitySetsInput, optFns ...func(*svc.Options)) (*svc.ListThreatEntitySetsOutput, error) {
+	return m.base.ListThreatEntitySets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) ListThreatIntelSets(ctx context.Context, params *svc.ListThreatIntelSetsInput, optFns ...func(*svc.Options)) (*svc.ListThreatIntelSetsOutput, error) {
 	return m.base.ListThreatIntelSets(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) ListTrustedEntitySets(ctx context.Context, params *svc.ListTrustedEntitySetsInput, optFns ...func(*svc.Options)) (*svc.ListTrustedEntitySetsOutput, error) {
+	return m.base.ListTrustedEntitySets(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) SendObjectMalwareScan(ctx context.Context, params *svc.SendObjectMalwareScanInput, optFns ...func(*svc.Options)) (*svc.SendObjectMalwareScanOutput, error) {
+	return m.base.SendObjectMalwareScan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) StartMalwareScan(ctx context.Context, params *svc.StartMalwareScanInput, optFns ...func(*svc.Options)) (*svc.StartMalwareScanOutput, error) {
@@ -277,6 +389,14 @@ func (m *GuardDuty) UntagResource(ctx context.Context, params *svc.UntagResource
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) UpdateCustomDetectionRuleAssociation(ctx context.Context, params *svc.UpdateCustomDetectionRuleAssociationInput, optFns ...func(*svc.Options)) (*svc.UpdateCustomDetectionRuleAssociationOutput, error) {
+	return m.base.UpdateCustomDetectionRuleAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) UpdateCustomDetectionRuleOrgConfiguration(ctx context.Context, params *svc.UpdateCustomDetectionRuleOrgConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateCustomDetectionRuleOrgConfigurationOutput, error) {
+	return m.base.UpdateCustomDetectionRuleOrgConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) UpdateDetector(ctx context.Context, params *svc.UpdateDetectorInput, optFns ...func(*svc.Options)) (*svc.UpdateDetectorOutput, error) {
 	return m.base.UpdateDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -291,6 +411,10 @@ func (m *GuardDuty) UpdateFindingsFeedback(ctx context.Context, params *svc.Upda
 
 func (m *GuardDuty) UpdateIPSet(ctx context.Context, params *svc.UpdateIPSetInput, optFns ...func(*svc.Options)) (*svc.UpdateIPSetOutput, error) {
 	return m.base.UpdateIPSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) UpdateMalwareProtectionPlan(ctx context.Context, params *svc.UpdateMalwareProtectionPlanInput, optFns ...func(*svc.Options)) (*svc.UpdateMalwareProtectionPlanOutput, error) {
+	return m.base.UpdateMalwareProtectionPlan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *GuardDuty) UpdateMalwareScanSettings(ctx context.Context, params *svc.UpdateMalwareScanSettingsInput, optFns ...func(*svc.Options)) (*svc.UpdateMalwareScanSettingsOutput, error) {
@@ -309,6 +433,14 @@ func (m *GuardDuty) UpdatePublishingDestination(ctx context.Context, params *svc
 	return m.base.UpdatePublishingDestination(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *GuardDuty) UpdateThreatEntitySet(ctx context.Context, params *svc.UpdateThreatEntitySetInput, optFns ...func(*svc.Options)) (*svc.UpdateThreatEntitySetOutput, error) {
+	return m.base.UpdateThreatEntitySet(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *GuardDuty) UpdateThreatIntelSet(ctx context.Context, params *svc.UpdateThreatIntelSetInput, optFns ...func(*svc.Options)) (*svc.UpdateThreatIntelSetOutput, error) {
 	return m.base.UpdateThreatIntelSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *GuardDuty) UpdateTrustedEntitySet(ctx context.Context, params *svc.UpdateTrustedEntitySetInput, optFns ...func(*svc.Options)) (*svc.UpdateTrustedEntitySetOutput, error) {
+	return m.base.UpdateTrustedEntitySet(ctx, params, m.opts(ctx, optFns)...)
 }

@@ -75,7 +75,7 @@ func (f *fakeSCPortfolio) DescribePortfolio(_ context.Context, params *awssc.Des
 
 func scPortfolioCR(mutate ...func(*awsv1alpha1.SCPortfolio)) *awsv1alpha1.SCPortfolio {
 	pf := &awsv1alpha1.SCPortfolio{
-		ObjectMeta: metav1.ObjectMeta{Name: "platform", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "platform", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.SCPortfolioSpec{
 			DisplayName:  "Platform",
 			ProviderName: "platform-team",
@@ -215,7 +215,7 @@ func (f *fakeSCProduct) DescribeProductAsAdmin(_ context.Context, params *awssc.
 
 func scProductCR(mutate ...func(*awsv1alpha1.SCProduct)) *awsv1alpha1.SCProduct {
 	prod := &awsv1alpha1.SCProduct{
-		ObjectMeta: metav1.ObjectMeta{Name: "vpc-product", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "vpc-product", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.SCProductSpec{
 			Name:  "vpc-product",
 			Owner: "platform-team",
@@ -332,7 +332,7 @@ func (f *fakeSCAssociation) DisassociateProductFromPortfolio(_ context.Context, 
 
 func scAssociationCR(mutate ...func(*awsv1alpha1.SCPortfolioProductAssociation)) *awsv1alpha1.SCPortfolioProductAssociation {
 	assoc := &awsv1alpha1.SCPortfolioProductAssociation{
-		ObjectMeta: metav1.ObjectMeta{Name: "vpc-in-platform", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "vpc-in-platform", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.SCPortfolioProductAssociationSpec{
 			ProductRef:   awsv1alpha1.SCProductRef{ProductID: testProductID},
 			PortfolioRef: awsv1alpha1.SCPortfolioRef{PortfolioID: testPortfolioID},

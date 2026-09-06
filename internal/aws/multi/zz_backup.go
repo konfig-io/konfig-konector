@@ -37,8 +37,16 @@ func (m *Backup) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*
 	return append(out, optFns...)
 }
 
+func (m *Backup) AssociateBackupVaultMpaApprovalTeam(ctx context.Context, params *svc.AssociateBackupVaultMpaApprovalTeamInput, optFns ...func(*svc.Options)) (*svc.AssociateBackupVaultMpaApprovalTeamOutput, error) {
+	return m.base.AssociateBackupVaultMpaApprovalTeam(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) CancelLegalHold(ctx context.Context, params *svc.CancelLegalHoldInput, optFns ...func(*svc.Options)) (*svc.CancelLegalHoldOutput, error) {
 	return m.base.CancelLegalHold(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) CreateBackupAccessPoint(ctx context.Context, params *svc.CreateBackupAccessPointInput, optFns ...func(*svc.Options)) (*svc.CreateBackupAccessPointOutput, error) {
+	return m.base.CreateBackupAccessPoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) CreateBackupPlan(ctx context.Context, params *svc.CreateBackupPlanInput, optFns ...func(*svc.Options)) (*svc.CreateBackupPlanOutput, error) {
@@ -69,12 +77,24 @@ func (m *Backup) CreateReportPlan(ctx context.Context, params *svc.CreateReportP
 	return m.base.CreateReportPlan(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) CreateRestoreAccessBackupVault(ctx context.Context, params *svc.CreateRestoreAccessBackupVaultInput, optFns ...func(*svc.Options)) (*svc.CreateRestoreAccessBackupVaultOutput, error) {
+	return m.base.CreateRestoreAccessBackupVault(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) CreateRestoreTestingPlan(ctx context.Context, params *svc.CreateRestoreTestingPlanInput, optFns ...func(*svc.Options)) (*svc.CreateRestoreTestingPlanOutput, error) {
 	return m.base.CreateRestoreTestingPlan(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) CreateRestoreTestingSelection(ctx context.Context, params *svc.CreateRestoreTestingSelectionInput, optFns ...func(*svc.Options)) (*svc.CreateRestoreTestingSelectionOutput, error) {
 	return m.base.CreateRestoreTestingSelection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) CreateTieringConfiguration(ctx context.Context, params *svc.CreateTieringConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateTieringConfigurationOutput, error) {
+	return m.base.CreateTieringConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) DeleteBackupAccessPoint(ctx context.Context, params *svc.DeleteBackupAccessPointInput, optFns ...func(*svc.Options)) (*svc.DeleteBackupAccessPointOutput, error) {
+	return m.base.DeleteBackupAccessPoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) DeleteBackupPlan(ctx context.Context, params *svc.DeleteBackupPlanInput, optFns ...func(*svc.Options)) (*svc.DeleteBackupPlanOutput, error) {
@@ -121,6 +141,14 @@ func (m *Backup) DeleteRestoreTestingSelection(ctx context.Context, params *svc.
 	return m.base.DeleteRestoreTestingSelection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) DeleteTieringConfiguration(ctx context.Context, params *svc.DeleteTieringConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteTieringConfigurationOutput, error) {
+	return m.base.DeleteTieringConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) DescribeBackupAccessPoint(ctx context.Context, params *svc.DescribeBackupAccessPointInput, optFns ...func(*svc.Options)) (*svc.DescribeBackupAccessPointOutput, error) {
+	return m.base.DescribeBackupAccessPoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) DescribeBackupJob(ctx context.Context, params *svc.DescribeBackupJobInput, optFns ...func(*svc.Options)) (*svc.DescribeBackupJobOutput, error) {
 	return m.base.DescribeBackupJob(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -165,6 +193,14 @@ func (m *Backup) DescribeRestoreJob(ctx context.Context, params *svc.DescribeRes
 	return m.base.DescribeRestoreJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) DescribeScanJob(ctx context.Context, params *svc.DescribeScanJobInput, optFns ...func(*svc.Options)) (*svc.DescribeScanJobOutput, error) {
+	return m.base.DescribeScanJob(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) DisassociateBackupVaultMpaApprovalTeam(ctx context.Context, params *svc.DisassociateBackupVaultMpaApprovalTeamInput, optFns ...func(*svc.Options)) (*svc.DisassociateBackupVaultMpaApprovalTeamOutput, error) {
+	return m.base.DisassociateBackupVaultMpaApprovalTeam(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) DisassociateRecoveryPoint(ctx context.Context, params *svc.DisassociateRecoveryPointInput, optFns ...func(*svc.Options)) (*svc.DisassociateRecoveryPointOutput, error) {
 	return m.base.DisassociateRecoveryPoint(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -205,6 +241,14 @@ func (m *Backup) GetLegalHold(ctx context.Context, params *svc.GetLegalHoldInput
 	return m.base.GetLegalHold(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) GetPITRMalwareScanResults(ctx context.Context, params *svc.GetPITRMalwareScanResultsInput, optFns ...func(*svc.Options)) (*svc.GetPITRMalwareScanResultsOutput, error) {
+	return m.base.GetPITRMalwareScanResults(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) GetRecoveryPointIndexDetails(ctx context.Context, params *svc.GetRecoveryPointIndexDetailsInput, optFns ...func(*svc.Options)) (*svc.GetRecoveryPointIndexDetailsOutput, error) {
+	return m.base.GetRecoveryPointIndexDetails(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) GetRecoveryPointRestoreMetadata(ctx context.Context, params *svc.GetRecoveryPointRestoreMetadataInput, optFns ...func(*svc.Options)) (*svc.GetRecoveryPointRestoreMetadataOutput, error) {
 	return m.base.GetRecoveryPointRestoreMetadata(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -227,6 +271,22 @@ func (m *Backup) GetRestoreTestingSelection(ctx context.Context, params *svc.Get
 
 func (m *Backup) GetSupportedResourceTypes(ctx context.Context, params *svc.GetSupportedResourceTypesInput, optFns ...func(*svc.Options)) (*svc.GetSupportedResourceTypesOutput, error) {
 	return m.base.GetSupportedResourceTypes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) GetTieringConfiguration(ctx context.Context, params *svc.GetTieringConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetTieringConfigurationOutput, error) {
+	return m.base.GetTieringConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) ListBackupAccessPoints(ctx context.Context, params *svc.ListBackupAccessPointsInput, optFns ...func(*svc.Options)) (*svc.ListBackupAccessPointsOutput, error) {
+	return m.base.ListBackupAccessPoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) ListBackupAccessPointsByRecoveryPoint(ctx context.Context, params *svc.ListBackupAccessPointsByRecoveryPointInput, optFns ...func(*svc.Options)) (*svc.ListBackupAccessPointsByRecoveryPointOutput, error) {
+	return m.base.ListBackupAccessPointsByRecoveryPoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) ListBackupAccessPointsByResource(ctx context.Context, params *svc.ListBackupAccessPointsByResourceInput, optFns ...func(*svc.Options)) (*svc.ListBackupAccessPointsByResourceOutput, error) {
+	return m.base.ListBackupAccessPointsByResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) ListBackupJobSummaries(ctx context.Context, params *svc.ListBackupJobSummariesInput, optFns ...func(*svc.Options)) (*svc.ListBackupJobSummariesOutput, error) {
@@ -269,6 +329,10 @@ func (m *Backup) ListFrameworks(ctx context.Context, params *svc.ListFrameworksI
 	return m.base.ListFrameworks(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) ListIndexedRecoveryPoints(ctx context.Context, params *svc.ListIndexedRecoveryPointsInput, optFns ...func(*svc.Options)) (*svc.ListIndexedRecoveryPointsOutput, error) {
+	return m.base.ListIndexedRecoveryPoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) ListLegalHolds(ctx context.Context, params *svc.ListLegalHoldsInput, optFns ...func(*svc.Options)) (*svc.ListLegalHoldsOutput, error) {
 	return m.base.ListLegalHolds(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -301,6 +365,10 @@ func (m *Backup) ListReportPlans(ctx context.Context, params *svc.ListReportPlan
 	return m.base.ListReportPlans(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) ListRestoreAccessBackupVaults(ctx context.Context, params *svc.ListRestoreAccessBackupVaultsInput, optFns ...func(*svc.Options)) (*svc.ListRestoreAccessBackupVaultsOutput, error) {
+	return m.base.ListRestoreAccessBackupVaults(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) ListRestoreJobSummaries(ctx context.Context, params *svc.ListRestoreJobSummariesInput, optFns ...func(*svc.Options)) (*svc.ListRestoreJobSummariesOutput, error) {
 	return m.base.ListRestoreJobSummaries(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -321,8 +389,20 @@ func (m *Backup) ListRestoreTestingSelections(ctx context.Context, params *svc.L
 	return m.base.ListRestoreTestingSelections(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) ListScanJobSummaries(ctx context.Context, params *svc.ListScanJobSummariesInput, optFns ...func(*svc.Options)) (*svc.ListScanJobSummariesOutput, error) {
+	return m.base.ListScanJobSummaries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) ListScanJobs(ctx context.Context, params *svc.ListScanJobsInput, optFns ...func(*svc.Options)) (*svc.ListScanJobsOutput, error) {
+	return m.base.ListScanJobs(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) ListTags(ctx context.Context, params *svc.ListTagsInput, optFns ...func(*svc.Options)) (*svc.ListTagsOutput, error) {
 	return m.base.ListTags(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) ListTieringConfigurations(ctx context.Context, params *svc.ListTieringConfigurationsInput, optFns ...func(*svc.Options)) (*svc.ListTieringConfigurationsOutput, error) {
+	return m.base.ListTieringConfigurations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) PutBackupVaultAccessPolicy(ctx context.Context, params *svc.PutBackupVaultAccessPolicyInput, optFns ...func(*svc.Options)) (*svc.PutBackupVaultAccessPolicyOutput, error) {
@@ -341,6 +421,10 @@ func (m *Backup) PutRestoreValidationResult(ctx context.Context, params *svc.Put
 	return m.base.PutRestoreValidationResult(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) RevokeRestoreAccessBackupVault(ctx context.Context, params *svc.RevokeRestoreAccessBackupVaultInput, optFns ...func(*svc.Options)) (*svc.RevokeRestoreAccessBackupVaultOutput, error) {
+	return m.base.RevokeRestoreAccessBackupVault(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) StartBackupJob(ctx context.Context, params *svc.StartBackupJobInput, optFns ...func(*svc.Options)) (*svc.StartBackupJobOutput, error) {
 	return m.base.StartBackupJob(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -355,6 +439,10 @@ func (m *Backup) StartReportJob(ctx context.Context, params *svc.StartReportJobI
 
 func (m *Backup) StartRestoreJob(ctx context.Context, params *svc.StartRestoreJobInput, optFns ...func(*svc.Options)) (*svc.StartRestoreJobOutput, error) {
 	return m.base.StartRestoreJob(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) StartScanJob(ctx context.Context, params *svc.StartScanJobInput, optFns ...func(*svc.Options)) (*svc.StartScanJobOutput, error) {
+	return m.base.StartScanJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Backup) StopBackupJob(ctx context.Context, params *svc.StopBackupJobInput, optFns ...func(*svc.Options)) (*svc.StopBackupJobOutput, error) {
@@ -381,6 +469,10 @@ func (m *Backup) UpdateGlobalSettings(ctx context.Context, params *svc.UpdateGlo
 	return m.base.UpdateGlobalSettings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Backup) UpdateRecoveryPointIndexSettings(ctx context.Context, params *svc.UpdateRecoveryPointIndexSettingsInput, optFns ...func(*svc.Options)) (*svc.UpdateRecoveryPointIndexSettingsOutput, error) {
+	return m.base.UpdateRecoveryPointIndexSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Backup) UpdateRecoveryPointLifecycle(ctx context.Context, params *svc.UpdateRecoveryPointLifecycleInput, optFns ...func(*svc.Options)) (*svc.UpdateRecoveryPointLifecycleOutput, error) {
 	return m.base.UpdateRecoveryPointLifecycle(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -399,4 +491,8 @@ func (m *Backup) UpdateRestoreTestingPlan(ctx context.Context, params *svc.Updat
 
 func (m *Backup) UpdateRestoreTestingSelection(ctx context.Context, params *svc.UpdateRestoreTestingSelectionInput, optFns ...func(*svc.Options)) (*svc.UpdateRestoreTestingSelectionOutput, error) {
 	return m.base.UpdateRestoreTestingSelection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Backup) UpdateTieringConfiguration(ctx context.Context, params *svc.UpdateTieringConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateTieringConfigurationOutput, error) {
+	return m.base.UpdateTieringConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }

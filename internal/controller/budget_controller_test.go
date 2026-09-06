@@ -98,6 +98,7 @@ func budgetCR(mutate ...func(*awsv1alpha1.Budget)) *awsv1alpha1.Budget {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "monthly-cost",
 			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 			Generation: 1,
 		},
 		Spec: awsv1alpha1.BudgetSpec{

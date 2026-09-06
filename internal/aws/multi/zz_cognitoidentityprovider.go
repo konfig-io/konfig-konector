@@ -41,6 +41,10 @@ func (m *Cognito) AddCustomAttributes(ctx context.Context, params *svc.AddCustom
 	return m.base.AddCustomAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) AddUserPoolClientSecret(ctx context.Context, params *svc.AddUserPoolClientSecretInput, optFns ...func(*svc.Options)) (*svc.AddUserPoolClientSecretOutput, error) {
+	return m.base.AddUserPoolClientSecret(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) AdminAddUserToGroup(ctx context.Context, params *svc.AdminAddUserToGroupInput, optFns ...func(*svc.Options)) (*svc.AdminAddUserToGroupOutput, error) {
 	return m.base.AdminAddUserToGroup(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -51,6 +55,10 @@ func (m *Cognito) AdminConfirmSignUp(ctx context.Context, params *svc.AdminConfi
 
 func (m *Cognito) AdminCreateUser(ctx context.Context, params *svc.AdminCreateUserInput, optFns ...func(*svc.Options)) (*svc.AdminCreateUserOutput, error) {
 	return m.base.AdminCreateUser(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) AdminDeleteSoftwareToken(ctx context.Context, params *svc.AdminDeleteSoftwareTokenInput, optFns ...func(*svc.Options)) (*svc.AdminDeleteSoftwareTokenOutput, error) {
+	return m.base.AdminDeleteSoftwareToken(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) AdminDeleteUser(ctx context.Context, params *svc.AdminDeleteUserInput, optFns ...func(*svc.Options)) (*svc.AdminDeleteUserOutput, error) {
@@ -83,6 +91,10 @@ func (m *Cognito) AdminGetDevice(ctx context.Context, params *svc.AdminGetDevice
 
 func (m *Cognito) AdminGetUser(ctx context.Context, params *svc.AdminGetUserInput, optFns ...func(*svc.Options)) (*svc.AdminGetUserOutput, error) {
 	return m.base.AdminGetUser(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) AdminGetUserAuthFactors(ctx context.Context, params *svc.AdminGetUserAuthFactorsInput, optFns ...func(*svc.Options)) (*svc.AdminGetUserAuthFactorsOutput, error) {
+	return m.base.AdminGetUserAuthFactors(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) AdminInitiateAuth(ctx context.Context, params *svc.AdminInitiateAuthInput, optFns ...func(*svc.Options)) (*svc.AdminInitiateAuthOutput, error) {
@@ -153,6 +165,10 @@ func (m *Cognito) ChangePassword(ctx context.Context, params *svc.ChangePassword
 	return m.base.ChangePassword(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) CompleteWebAuthnRegistration(ctx context.Context, params *svc.CompleteWebAuthnRegistrationInput, optFns ...func(*svc.Options)) (*svc.CompleteWebAuthnRegistrationOutput, error) {
+	return m.base.CompleteWebAuthnRegistration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) ConfirmDevice(ctx context.Context, params *svc.ConfirmDeviceInput, optFns ...func(*svc.Options)) (*svc.ConfirmDeviceOutput, error) {
 	return m.base.ConfirmDevice(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -173,8 +189,16 @@ func (m *Cognito) CreateIdentityProvider(ctx context.Context, params *svc.Create
 	return m.base.CreateIdentityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) CreateManagedLoginBranding(ctx context.Context, params *svc.CreateManagedLoginBrandingInput, optFns ...func(*svc.Options)) (*svc.CreateManagedLoginBrandingOutput, error) {
+	return m.base.CreateManagedLoginBranding(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) CreateResourceServer(ctx context.Context, params *svc.CreateResourceServerInput, optFns ...func(*svc.Options)) (*svc.CreateResourceServerOutput, error) {
 	return m.base.CreateResourceServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) CreateTerms(ctx context.Context, params *svc.CreateTermsInput, optFns ...func(*svc.Options)) (*svc.CreateTermsOutput, error) {
+	return m.base.CreateTerms(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) CreateUserImportJob(ctx context.Context, params *svc.CreateUserImportJobInput, optFns ...func(*svc.Options)) (*svc.CreateUserImportJobOutput, error) {
@@ -193,6 +217,10 @@ func (m *Cognito) CreateUserPoolDomain(ctx context.Context, params *svc.CreateUs
 	return m.base.CreateUserPoolDomain(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) CreateUserPoolReplica(ctx context.Context, params *svc.CreateUserPoolReplicaInput, optFns ...func(*svc.Options)) (*svc.CreateUserPoolReplicaOutput, error) {
+	return m.base.CreateUserPoolReplica(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) DeleteGroup(ctx context.Context, params *svc.DeleteGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteGroupOutput, error) {
 	return m.base.DeleteGroup(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -201,8 +229,16 @@ func (m *Cognito) DeleteIdentityProvider(ctx context.Context, params *svc.Delete
 	return m.base.DeleteIdentityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) DeleteManagedLoginBranding(ctx context.Context, params *svc.DeleteManagedLoginBrandingInput, optFns ...func(*svc.Options)) (*svc.DeleteManagedLoginBrandingOutput, error) {
+	return m.base.DeleteManagedLoginBranding(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) DeleteResourceServer(ctx context.Context, params *svc.DeleteResourceServerInput, optFns ...func(*svc.Options)) (*svc.DeleteResourceServerOutput, error) {
 	return m.base.DeleteResourceServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DeleteTerms(ctx context.Context, params *svc.DeleteTermsInput, optFns ...func(*svc.Options)) (*svc.DeleteTermsOutput, error) {
+	return m.base.DeleteTerms(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) DeleteUser(ctx context.Context, params *svc.DeleteUserInput, optFns ...func(*svc.Options)) (*svc.DeleteUserOutput, error) {
@@ -221,12 +257,32 @@ func (m *Cognito) DeleteUserPoolClient(ctx context.Context, params *svc.DeleteUs
 	return m.base.DeleteUserPoolClient(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) DeleteUserPoolClientSecret(ctx context.Context, params *svc.DeleteUserPoolClientSecretInput, optFns ...func(*svc.Options)) (*svc.DeleteUserPoolClientSecretOutput, error) {
+	return m.base.DeleteUserPoolClientSecret(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) DeleteUserPoolDomain(ctx context.Context, params *svc.DeleteUserPoolDomainInput, optFns ...func(*svc.Options)) (*svc.DeleteUserPoolDomainOutput, error) {
 	return m.base.DeleteUserPoolDomain(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) DeleteUserPoolReplica(ctx context.Context, params *svc.DeleteUserPoolReplicaInput, optFns ...func(*svc.Options)) (*svc.DeleteUserPoolReplicaOutput, error) {
+	return m.base.DeleteUserPoolReplica(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DeleteWebAuthnCredential(ctx context.Context, params *svc.DeleteWebAuthnCredentialInput, optFns ...func(*svc.Options)) (*svc.DeleteWebAuthnCredentialOutput, error) {
+	return m.base.DeleteWebAuthnCredential(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) DescribeIdentityProvider(ctx context.Context, params *svc.DescribeIdentityProviderInput, optFns ...func(*svc.Options)) (*svc.DescribeIdentityProviderOutput, error) {
 	return m.base.DescribeIdentityProvider(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DescribeManagedLoginBranding(ctx context.Context, params *svc.DescribeManagedLoginBrandingInput, optFns ...func(*svc.Options)) (*svc.DescribeManagedLoginBrandingOutput, error) {
+	return m.base.DescribeManagedLoginBranding(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DescribeManagedLoginBrandingByClient(ctx context.Context, params *svc.DescribeManagedLoginBrandingByClientInput, optFns ...func(*svc.Options)) (*svc.DescribeManagedLoginBrandingByClientOutput, error) {
+	return m.base.DescribeManagedLoginBrandingByClient(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) DescribeResourceServer(ctx context.Context, params *svc.DescribeResourceServerInput, optFns ...func(*svc.Options)) (*svc.DescribeResourceServerOutput, error) {
@@ -235,6 +291,14 @@ func (m *Cognito) DescribeResourceServer(ctx context.Context, params *svc.Descri
 
 func (m *Cognito) DescribeRiskConfiguration(ctx context.Context, params *svc.DescribeRiskConfigurationInput, optFns ...func(*svc.Options)) (*svc.DescribeRiskConfigurationOutput, error) {
 	return m.base.DescribeRiskConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DescribeTerms(ctx context.Context, params *svc.DescribeTermsInput, optFns ...func(*svc.Options)) (*svc.DescribeTermsOutput, error) {
+	return m.base.DescribeTerms(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) DescribeTermsByClient(ctx context.Context, params *svc.DescribeTermsByClientInput, optFns ...func(*svc.Options)) (*svc.DescribeTermsByClientOutput, error) {
+	return m.base.DescribeTermsByClient(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) DescribeUserImportJob(ctx context.Context, params *svc.DescribeUserImportJobInput, optFns ...func(*svc.Options)) (*svc.DescribeUserImportJobOutput, error) {
@@ -265,6 +329,10 @@ func (m *Cognito) GetCSVHeader(ctx context.Context, params *svc.GetCSVHeaderInpu
 	return m.base.GetCSVHeader(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) GetClientToken(ctx context.Context, params *svc.GetClientTokenInput, optFns ...func(*svc.Options)) (*svc.GetClientTokenOutput, error) {
+	return m.base.GetClientToken(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) GetDevice(ctx context.Context, params *svc.GetDeviceInput, optFns ...func(*svc.Options)) (*svc.GetDeviceOutput, error) {
 	return m.base.GetDevice(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -281,8 +349,16 @@ func (m *Cognito) GetLogDeliveryConfiguration(ctx context.Context, params *svc.G
 	return m.base.GetLogDeliveryConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) GetProvisionedLimit(ctx context.Context, params *svc.GetProvisionedLimitInput, optFns ...func(*svc.Options)) (*svc.GetProvisionedLimitOutput, error) {
+	return m.base.GetProvisionedLimit(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) GetSigningCertificate(ctx context.Context, params *svc.GetSigningCertificateInput, optFns ...func(*svc.Options)) (*svc.GetSigningCertificateOutput, error) {
 	return m.base.GetSigningCertificate(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) GetTokensFromRefreshToken(ctx context.Context, params *svc.GetTokensFromRefreshTokenInput, optFns ...func(*svc.Options)) (*svc.GetTokensFromRefreshTokenOutput, error) {
+	return m.base.GetTokensFromRefreshToken(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) GetUICustomization(ctx context.Context, params *svc.GetUICustomizationInput, optFns ...func(*svc.Options)) (*svc.GetUICustomizationOutput, error) {
@@ -295,6 +371,10 @@ func (m *Cognito) GetUser(ctx context.Context, params *svc.GetUserInput, optFns 
 
 func (m *Cognito) GetUserAttributeVerificationCode(ctx context.Context, params *svc.GetUserAttributeVerificationCodeInput, optFns ...func(*svc.Options)) (*svc.GetUserAttributeVerificationCodeOutput, error) {
 	return m.base.GetUserAttributeVerificationCode(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) GetUserAuthFactors(ctx context.Context, params *svc.GetUserAuthFactorsInput, optFns ...func(*svc.Options)) (*svc.GetUserAuthFactorsOutput, error) {
+	return m.base.GetUserAuthFactors(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) GetUserPoolMfaConfig(ctx context.Context, params *svc.GetUserPoolMfaConfigInput, optFns ...func(*svc.Options)) (*svc.GetUserPoolMfaConfigOutput, error) {
@@ -329,12 +409,24 @@ func (m *Cognito) ListTagsForResource(ctx context.Context, params *svc.ListTagsF
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) ListTerms(ctx context.Context, params *svc.ListTermsInput, optFns ...func(*svc.Options)) (*svc.ListTermsOutput, error) {
+	return m.base.ListTerms(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) ListUserImportJobs(ctx context.Context, params *svc.ListUserImportJobsInput, optFns ...func(*svc.Options)) (*svc.ListUserImportJobsOutput, error) {
 	return m.base.ListUserImportJobs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) ListUserPoolClientSecrets(ctx context.Context, params *svc.ListUserPoolClientSecretsInput, optFns ...func(*svc.Options)) (*svc.ListUserPoolClientSecretsOutput, error) {
+	return m.base.ListUserPoolClientSecrets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) ListUserPoolClients(ctx context.Context, params *svc.ListUserPoolClientsInput, optFns ...func(*svc.Options)) (*svc.ListUserPoolClientsOutput, error) {
 	return m.base.ListUserPoolClients(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) ListUserPoolReplicas(ctx context.Context, params *svc.ListUserPoolReplicasInput, optFns ...func(*svc.Options)) (*svc.ListUserPoolReplicasOutput, error) {
+	return m.base.ListUserPoolReplicas(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) ListUserPools(ctx context.Context, params *svc.ListUserPoolsInput, optFns ...func(*svc.Options)) (*svc.ListUserPoolsOutput, error) {
@@ -347,6 +439,10 @@ func (m *Cognito) ListUsers(ctx context.Context, params *svc.ListUsersInput, opt
 
 func (m *Cognito) ListUsersInGroup(ctx context.Context, params *svc.ListUsersInGroupInput, optFns ...func(*svc.Options)) (*svc.ListUsersInGroupOutput, error) {
 	return m.base.ListUsersInGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) ListWebAuthnCredentials(ctx context.Context, params *svc.ListWebAuthnCredentialsInput, optFns ...func(*svc.Options)) (*svc.ListWebAuthnCredentialsOutput, error) {
+	return m.base.ListWebAuthnCredentials(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) ResendConfirmationCode(ctx context.Context, params *svc.ResendConfirmationCodeInput, optFns ...func(*svc.Options)) (*svc.ResendConfirmationCodeOutput, error) {
@@ -393,6 +489,10 @@ func (m *Cognito) StartUserImportJob(ctx context.Context, params *svc.StartUserI
 	return m.base.StartUserImportJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) StartWebAuthnRegistration(ctx context.Context, params *svc.StartWebAuthnRegistrationInput, optFns ...func(*svc.Options)) (*svc.StartWebAuthnRegistrationOutput, error) {
+	return m.base.StartWebAuthnRegistration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) StopUserImportJob(ctx context.Context, params *svc.StopUserImportJobInput, optFns ...func(*svc.Options)) (*svc.StopUserImportJobOutput, error) {
 	return m.base.StopUserImportJob(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -421,8 +521,20 @@ func (m *Cognito) UpdateIdentityProvider(ctx context.Context, params *svc.Update
 	return m.base.UpdateIdentityProvider(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Cognito) UpdateManagedLoginBranding(ctx context.Context, params *svc.UpdateManagedLoginBrandingInput, optFns ...func(*svc.Options)) (*svc.UpdateManagedLoginBrandingOutput, error) {
+	return m.base.UpdateManagedLoginBranding(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) UpdateProvisionedLimit(ctx context.Context, params *svc.UpdateProvisionedLimitInput, optFns ...func(*svc.Options)) (*svc.UpdateProvisionedLimitOutput, error) {
+	return m.base.UpdateProvisionedLimit(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Cognito) UpdateResourceServer(ctx context.Context, params *svc.UpdateResourceServerInput, optFns ...func(*svc.Options)) (*svc.UpdateResourceServerOutput, error) {
 	return m.base.UpdateResourceServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) UpdateTerms(ctx context.Context, params *svc.UpdateTermsInput, optFns ...func(*svc.Options)) (*svc.UpdateTermsOutput, error) {
+	return m.base.UpdateTerms(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) UpdateUserAttributes(ctx context.Context, params *svc.UpdateUserAttributesInput, optFns ...func(*svc.Options)) (*svc.UpdateUserAttributesOutput, error) {
@@ -439,6 +551,10 @@ func (m *Cognito) UpdateUserPoolClient(ctx context.Context, params *svc.UpdateUs
 
 func (m *Cognito) UpdateUserPoolDomain(ctx context.Context, params *svc.UpdateUserPoolDomainInput, optFns ...func(*svc.Options)) (*svc.UpdateUserPoolDomainOutput, error) {
 	return m.base.UpdateUserPoolDomain(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Cognito) UpdateUserPoolReplica(ctx context.Context, params *svc.UpdateUserPoolReplicaInput, optFns ...func(*svc.Options)) (*svc.UpdateUserPoolReplicaOutput, error) {
+	return m.base.UpdateUserPoolReplica(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Cognito) VerifySoftwareToken(ctx context.Context, params *svc.VerifySoftwareTokenInput, optFns ...func(*svc.Options)) (*svc.VerifySoftwareTokenOutput, error) {

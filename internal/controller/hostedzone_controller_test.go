@@ -135,7 +135,7 @@ func emptyHZTagsFn(_ context.Context, params *awsroute53.ListTagsForResourceInpu
 
 func TestHostedZoneCreateHappyPath(t *testing.T) {
 	hz := &awsv1alpha1.HostedZone{
-		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", UID: "uid-1", Generation: 1},
+		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-1", Generation: 1},
 		Spec:       awsv1alpha1.HostedZoneSpec{Name: "example.com."},
 	}
 	k8s := newHZClient(t, hz)
@@ -185,7 +185,7 @@ func TestHostedZoneCreateHappyPath(t *testing.T) {
 
 func TestHostedZoneIDPersistedWhenTagSyncFails(t *testing.T) {
 	hz := &awsv1alpha1.HostedZone{
-		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", UID: "uid-1", Generation: 1},
+		ObjectMeta: metav1.ObjectMeta{Name: "zone1", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}, UID: "uid-1", Generation: 1},
 		Spec:       awsv1alpha1.HostedZoneSpec{Name: "example.com.", Tags: map[string]string{"env": "test"}},
 	}
 	k8s := newHZClient(t, hz)

@@ -49,6 +49,10 @@ func (m *EC2) AcceptReservedInstancesExchangeQuote(ctx context.Context, params *
 	return m.base.AcceptReservedInstancesExchangeQuote(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) AcceptTransitGatewayClientVpnAttachment(ctx context.Context, params *svc.AcceptTransitGatewayClientVpnAttachmentInput, optFns ...func(*svc.Options)) (*svc.AcceptTransitGatewayClientVpnAttachmentOutput, error) {
+	return m.base.AcceptTransitGatewayClientVpnAttachment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) AcceptTransitGatewayMulticastDomainAssociations(ctx context.Context, params *svc.AcceptTransitGatewayMulticastDomainAssociationsInput, optFns ...func(*svc.Options)) (*svc.AcceptTransitGatewayMulticastDomainAssociationsOutput, error) {
 	return m.base.AcceptTransitGatewayMulticastDomainAssociations(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -105,6 +109,10 @@ func (m *EC2) AssociateAddress(ctx context.Context, params *svc.AssociateAddress
 	return m.base.AssociateAddress(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) AssociateApplicationStatusCheck(ctx context.Context, params *svc.AssociateApplicationStatusCheckInput, optFns ...func(*svc.Options)) (*svc.AssociateApplicationStatusCheckOutput, error) {
+	return m.base.AssociateApplicationStatusCheck(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) AssociateCapacityReservationBillingOwner(ctx context.Context, params *svc.AssociateCapacityReservationBillingOwnerInput, optFns ...func(*svc.Options)) (*svc.AssociateCapacityReservationBillingOwnerOutput, error) {
 	return m.base.AssociateCapacityReservationBillingOwner(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -141,8 +149,16 @@ func (m *EC2) AssociateNatGatewayAddress(ctx context.Context, params *svc.Associ
 	return m.base.AssociateNatGatewayAddress(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) AssociateRouteServer(ctx context.Context, params *svc.AssociateRouteServerInput, optFns ...func(*svc.Options)) (*svc.AssociateRouteServerOutput, error) {
+	return m.base.AssociateRouteServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) AssociateRouteTable(ctx context.Context, params *svc.AssociateRouteTableInput, optFns ...func(*svc.Options)) (*svc.AssociateRouteTableOutput, error) {
 	return m.base.AssociateRouteTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) AssociateSecurityGroupVpc(ctx context.Context, params *svc.AssociateSecurityGroupVpcInput, optFns ...func(*svc.Options)) (*svc.AssociateSecurityGroupVpcOutput, error) {
+	return m.base.AssociateSecurityGroupVpc(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) AssociateSubnetCidrBlock(ctx context.Context, params *svc.AssociateSubnetCidrBlockInput, optFns ...func(*svc.Options)) (*svc.AssociateSubnetCidrBlockOutput, error) {
@@ -171,6 +187,10 @@ func (m *EC2) AssociateVpcCidrBlock(ctx context.Context, params *svc.AssociateVp
 
 func (m *EC2) AttachClassicLinkVpc(ctx context.Context, params *svc.AttachClassicLinkVpcInput, optFns ...func(*svc.Options)) (*svc.AttachClassicLinkVpcOutput, error) {
 	return m.base.AttachClassicLinkVpc(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) AttachImageWatermark(ctx context.Context, params *svc.AttachImageWatermarkInput, optFns ...func(*svc.Options)) (*svc.AttachImageWatermarkOutput, error) {
+	return m.base.AttachImageWatermark(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) AttachInternetGateway(ctx context.Context, params *svc.AttachInternetGatewayInput, optFns ...func(*svc.Options)) (*svc.AttachInternetGatewayOutput, error) {
@@ -205,6 +225,10 @@ func (m *EC2) AuthorizeSecurityGroupIngress(ctx context.Context, params *svc.Aut
 	return m.base.AuthorizeSecurityGroupIngress(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) BatchModifyIpamRoutingPolicyRegistrations(ctx context.Context, params *svc.BatchModifyIpamRoutingPolicyRegistrationsInput, optFns ...func(*svc.Options)) (*svc.BatchModifyIpamRoutingPolicyRegistrationsOutput, error) {
+	return m.base.BatchModifyIpamRoutingPolicyRegistrations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) BundleInstance(ctx context.Context, params *svc.BundleInstanceInput, optFns ...func(*svc.Options)) (*svc.BundleInstanceOutput, error) {
 	return m.base.BundleInstance(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -223,6 +247,10 @@ func (m *EC2) CancelCapacityReservationFleets(ctx context.Context, params *svc.C
 
 func (m *EC2) CancelConversionTask(ctx context.Context, params *svc.CancelConversionTaskInput, optFns ...func(*svc.Options)) (*svc.CancelConversionTaskOutput, error) {
 	return m.base.CancelConversionTask(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CancelDeclarativePoliciesReport(ctx context.Context, params *svc.CancelDeclarativePoliciesReportInput, optFns ...func(*svc.Options)) (*svc.CancelDeclarativePoliciesReportOutput, error) {
+	return m.base.CancelDeclarativePoliciesReport(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CancelExportTask(ctx context.Context, params *svc.CancelExportTaskInput, optFns ...func(*svc.Options)) (*svc.CancelExportTaskOutput, error) {
@@ -265,12 +293,28 @@ func (m *EC2) CopySnapshot(ctx context.Context, params *svc.CopySnapshotInput, o
 	return m.base.CopySnapshot(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CopyVolumes(ctx context.Context, params *svc.CopyVolumesInput, optFns ...func(*svc.Options)) (*svc.CopyVolumesOutput, error) {
+	return m.base.CopyVolumes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateApplicationStatusCheck(ctx context.Context, params *svc.CreateApplicationStatusCheckInput, optFns ...func(*svc.Options)) (*svc.CreateApplicationStatusCheckOutput, error) {
+	return m.base.CreateApplicationStatusCheck(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateCapacityManagerDataExport(ctx context.Context, params *svc.CreateCapacityManagerDataExportInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityManagerDataExportOutput, error) {
+	return m.base.CreateCapacityManagerDataExport(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateCapacityReservation(ctx context.Context, params *svc.CreateCapacityReservationInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityReservationOutput, error) {
 	return m.base.CreateCapacityReservation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateCapacityReservationBySplitting(ctx context.Context, params *svc.CreateCapacityReservationBySplittingInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityReservationBySplittingOutput, error) {
 	return m.base.CreateCapacityReservationBySplitting(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateCapacityReservationCancellationQuote(ctx context.Context, params *svc.CreateCapacityReservationCancellationQuoteInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityReservationCancellationQuoteOutput, error) {
+	return m.base.CreateCapacityReservationCancellationQuote(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateCapacityReservationFleet(ctx context.Context, params *svc.CreateCapacityReservationFleetInput, optFns ...func(*svc.Options)) (*svc.CreateCapacityReservationFleetOutput, error) {
@@ -309,6 +353,10 @@ func (m *EC2) CreateDefaultVpc(ctx context.Context, params *svc.CreateDefaultVpc
 	return m.base.CreateDefaultVpc(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateDelegateMacVolumeOwnershipTask(ctx context.Context, params *svc.CreateDelegateMacVolumeOwnershipTaskInput, optFns ...func(*svc.Options)) (*svc.CreateDelegateMacVolumeOwnershipTaskOutput, error) {
+	return m.base.CreateDelegateMacVolumeOwnershipTask(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateDhcpOptions(ctx context.Context, params *svc.CreateDhcpOptionsInput, optFns ...func(*svc.Options)) (*svc.CreateDhcpOptionsOutput, error) {
 	return m.base.CreateDhcpOptions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -333,6 +381,10 @@ func (m *EC2) CreateImage(ctx context.Context, params *svc.CreateImageInput, opt
 	return m.base.CreateImage(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateImageUsageReport(ctx context.Context, params *svc.CreateImageUsageReportInput, optFns ...func(*svc.Options)) (*svc.CreateImageUsageReportOutput, error) {
+	return m.base.CreateImageUsageReport(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateInstanceConnectEndpoint(ctx context.Context, params *svc.CreateInstanceConnectEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateInstanceConnectEndpointOutput, error) {
 	return m.base.CreateInstanceConnectEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -349,6 +401,10 @@ func (m *EC2) CreateInternetGateway(ctx context.Context, params *svc.CreateInter
 	return m.base.CreateInternetGateway(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateInterruptibleCapacityReservationAllocation(ctx context.Context, params *svc.CreateInterruptibleCapacityReservationAllocationInput, optFns ...func(*svc.Options)) (*svc.CreateInterruptibleCapacityReservationAllocationOutput, error) {
+	return m.base.CreateInterruptibleCapacityReservationAllocation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateIpam(ctx context.Context, params *svc.CreateIpamInput, optFns ...func(*svc.Options)) (*svc.CreateIpamOutput, error) {
 	return m.base.CreateIpam(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -357,12 +413,32 @@ func (m *EC2) CreateIpamExternalResourceVerificationToken(ctx context.Context, p
 	return m.base.CreateIpamExternalResourceVerificationToken(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateIpamInternetRegistryAssociation(ctx context.Context, params *svc.CreateIpamInternetRegistryAssociationInput, optFns ...func(*svc.Options)) (*svc.CreateIpamInternetRegistryAssociationOutput, error) {
+	return m.base.CreateIpamInternetRegistryAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateIpamPolicy(ctx context.Context, params *svc.CreateIpamPolicyInput, optFns ...func(*svc.Options)) (*svc.CreateIpamPolicyOutput, error) {
+	return m.base.CreateIpamPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateIpamPool(ctx context.Context, params *svc.CreateIpamPoolInput, optFns ...func(*svc.Options)) (*svc.CreateIpamPoolOutput, error) {
 	return m.base.CreateIpamPool(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateIpamPrefixListResolver(ctx context.Context, params *svc.CreateIpamPrefixListResolverInput, optFns ...func(*svc.Options)) (*svc.CreateIpamPrefixListResolverOutput, error) {
+	return m.base.CreateIpamPrefixListResolver(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateIpamPrefixListResolverTarget(ctx context.Context, params *svc.CreateIpamPrefixListResolverTargetInput, optFns ...func(*svc.Options)) (*svc.CreateIpamPrefixListResolverTargetOutput, error) {
+	return m.base.CreateIpamPrefixListResolverTarget(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateIpamResourceDiscovery(ctx context.Context, params *svc.CreateIpamResourceDiscoveryInput, optFns ...func(*svc.Options)) (*svc.CreateIpamResourceDiscoveryOutput, error) {
 	return m.base.CreateIpamResourceDiscovery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateIpamRoutingPolicyRegistration(ctx context.Context, params *svc.CreateIpamRoutingPolicyRegistrationInput, optFns ...func(*svc.Options)) (*svc.CreateIpamRoutingPolicyRegistrationOutput, error) {
+	return m.base.CreateIpamRoutingPolicyRegistration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateIpamScope(ctx context.Context, params *svc.CreateIpamScopeInput, optFns ...func(*svc.Options)) (*svc.CreateIpamScopeOutput, error) {
@@ -395,6 +471,18 @@ func (m *EC2) CreateLocalGatewayRouteTableVirtualInterfaceGroupAssociation(ctx c
 
 func (m *EC2) CreateLocalGatewayRouteTableVpcAssociation(ctx context.Context, params *svc.CreateLocalGatewayRouteTableVpcAssociationInput, optFns ...func(*svc.Options)) (*svc.CreateLocalGatewayRouteTableVpcAssociationOutput, error) {
 	return m.base.CreateLocalGatewayRouteTableVpcAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateLocalGatewayVirtualInterface(ctx context.Context, params *svc.CreateLocalGatewayVirtualInterfaceInput, optFns ...func(*svc.Options)) (*svc.CreateLocalGatewayVirtualInterfaceOutput, error) {
+	return m.base.CreateLocalGatewayVirtualInterface(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateLocalGatewayVirtualInterfaceGroup(ctx context.Context, params *svc.CreateLocalGatewayVirtualInterfaceGroupInput, optFns ...func(*svc.Options)) (*svc.CreateLocalGatewayVirtualInterfaceGroupOutput, error) {
+	return m.base.CreateLocalGatewayVirtualInterfaceGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateMacSystemIntegrityProtectionModificationTask(ctx context.Context, params *svc.CreateMacSystemIntegrityProtectionModificationTaskInput, optFns ...func(*svc.Options)) (*svc.CreateMacSystemIntegrityProtectionModificationTaskOutput, error) {
+	return m.base.CreateMacSystemIntegrityProtectionModificationTask(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateManagedPrefixList(ctx context.Context, params *svc.CreateManagedPrefixListInput, optFns ...func(*svc.Options)) (*svc.CreateManagedPrefixListOutput, error) {
@@ -453,8 +541,28 @@ func (m *EC2) CreateRoute(ctx context.Context, params *svc.CreateRouteInput, opt
 	return m.base.CreateRoute(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateRouteServer(ctx context.Context, params *svc.CreateRouteServerInput, optFns ...func(*svc.Options)) (*svc.CreateRouteServerOutput, error) {
+	return m.base.CreateRouteServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateRouteServerEndpoint(ctx context.Context, params *svc.CreateRouteServerEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateRouteServerEndpointOutput, error) {
+	return m.base.CreateRouteServerEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateRouteServerPeer(ctx context.Context, params *svc.CreateRouteServerPeerInput, optFns ...func(*svc.Options)) (*svc.CreateRouteServerPeerOutput, error) {
+	return m.base.CreateRouteServerPeer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateRouteTable(ctx context.Context, params *svc.CreateRouteTableInput, optFns ...func(*svc.Options)) (*svc.CreateRouteTableOutput, error) {
 	return m.base.CreateRouteTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateSecondaryNetwork(ctx context.Context, params *svc.CreateSecondaryNetworkInput, optFns ...func(*svc.Options)) (*svc.CreateSecondaryNetworkOutput, error) {
+	return m.base.CreateSecondaryNetwork(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateSecondarySubnet(ctx context.Context, params *svc.CreateSecondarySubnetInput, optFns ...func(*svc.Options)) (*svc.CreateSecondarySubnetOutput, error) {
+	return m.base.CreateSecondarySubnet(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateSecurityGroup(ctx context.Context, params *svc.CreateSecurityGroupInput, optFns ...func(*svc.Options)) (*svc.CreateSecurityGroupOutput, error) {
@@ -517,6 +625,14 @@ func (m *EC2) CreateTransitGatewayConnectPeer(ctx context.Context, params *svc.C
 	return m.base.CreateTransitGatewayConnectPeer(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateTransitGatewayMeteringPolicy(ctx context.Context, params *svc.CreateTransitGatewayMeteringPolicyInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayMeteringPolicyOutput, error) {
+	return m.base.CreateTransitGatewayMeteringPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateTransitGatewayMeteringPolicyEntry(ctx context.Context, params *svc.CreateTransitGatewayMeteringPolicyEntryInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayMeteringPolicyEntryOutput, error) {
+	return m.base.CreateTransitGatewayMeteringPolicyEntry(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateTransitGatewayMulticastDomain(ctx context.Context, params *svc.CreateTransitGatewayMulticastDomainInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayMulticastDomainOutput, error) {
 	return m.base.CreateTransitGatewayMulticastDomain(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -527,6 +643,10 @@ func (m *EC2) CreateTransitGatewayPeeringAttachment(ctx context.Context, params 
 
 func (m *EC2) CreateTransitGatewayPolicyTable(ctx context.Context, params *svc.CreateTransitGatewayPolicyTableInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayPolicyTableOutput, error) {
 	return m.base.CreateTransitGatewayPolicyTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateTransitGatewayPolicyTableEntry(ctx context.Context, params *svc.CreateTransitGatewayPolicyTableEntryInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayPolicyTableEntryOutput, error) {
+	return m.base.CreateTransitGatewayPolicyTableEntry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) CreateTransitGatewayPrefixListReference(ctx context.Context, params *svc.CreateTransitGatewayPrefixListReferenceInput, optFns ...func(*svc.Options)) (*svc.CreateTransitGatewayPrefixListReferenceOutput, error) {
@@ -573,6 +693,14 @@ func (m *EC2) CreateVpc(ctx context.Context, params *svc.CreateVpcInput, optFns 
 	return m.base.CreateVpc(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateVpcBlockPublicAccessExclusion(ctx context.Context, params *svc.CreateVpcBlockPublicAccessExclusionInput, optFns ...func(*svc.Options)) (*svc.CreateVpcBlockPublicAccessExclusionOutput, error) {
+	return m.base.CreateVpcBlockPublicAccessExclusion(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) CreateVpcEncryptionControl(ctx context.Context, params *svc.CreateVpcEncryptionControlInput, optFns ...func(*svc.Options)) (*svc.CreateVpcEncryptionControlOutput, error) {
+	return m.base.CreateVpcEncryptionControl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateVpcEndpoint(ctx context.Context, params *svc.CreateVpcEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateVpcEndpointOutput, error) {
 	return m.base.CreateVpcEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -589,6 +717,10 @@ func (m *EC2) CreateVpcPeeringConnection(ctx context.Context, params *svc.Create
 	return m.base.CreateVpcPeeringConnection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) CreateVpnConcentrator(ctx context.Context, params *svc.CreateVpnConcentratorInput, optFns ...func(*svc.Options)) (*svc.CreateVpnConcentratorOutput, error) {
+	return m.base.CreateVpnConcentrator(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) CreateVpnConnection(ctx context.Context, params *svc.CreateVpnConnectionInput, optFns ...func(*svc.Options)) (*svc.CreateVpnConnectionOutput, error) {
 	return m.base.CreateVpnConnection(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -599,6 +731,14 @@ func (m *EC2) CreateVpnConnectionRoute(ctx context.Context, params *svc.CreateVp
 
 func (m *EC2) CreateVpnGateway(ctx context.Context, params *svc.CreateVpnGatewayInput, optFns ...func(*svc.Options)) (*svc.CreateVpnGatewayOutput, error) {
 	return m.base.CreateVpnGateway(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteApplicationStatusCheck(ctx context.Context, params *svc.DeleteApplicationStatusCheckInput, optFns ...func(*svc.Options)) (*svc.DeleteApplicationStatusCheckOutput, error) {
+	return m.base.DeleteApplicationStatusCheck(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteCapacityManagerDataExport(ctx context.Context, params *svc.DeleteCapacityManagerDataExportInput, optFns ...func(*svc.Options)) (*svc.DeleteCapacityManagerDataExportOutput, error) {
+	return m.base.DeleteCapacityManagerDataExport(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteCarrierGateway(ctx context.Context, params *svc.DeleteCarrierGatewayInput, optFns ...func(*svc.Options)) (*svc.DeleteCarrierGatewayOutput, error) {
@@ -645,6 +785,10 @@ func (m *EC2) DeleteFpgaImage(ctx context.Context, params *svc.DeleteFpgaImageIn
 	return m.base.DeleteFpgaImage(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteImageUsageReport(ctx context.Context, params *svc.DeleteImageUsageReportInput, optFns ...func(*svc.Options)) (*svc.DeleteImageUsageReportOutput, error) {
+	return m.base.DeleteImageUsageReport(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteInstanceConnectEndpoint(ctx context.Context, params *svc.DeleteInstanceConnectEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteInstanceConnectEndpointOutput, error) {
 	return m.base.DeleteInstanceConnectEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -665,12 +809,32 @@ func (m *EC2) DeleteIpamExternalResourceVerificationToken(ctx context.Context, p
 	return m.base.DeleteIpamExternalResourceVerificationToken(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteIpamInternetRegistryAssociation(ctx context.Context, params *svc.DeleteIpamInternetRegistryAssociationInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamInternetRegistryAssociationOutput, error) {
+	return m.base.DeleteIpamInternetRegistryAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteIpamPolicy(ctx context.Context, params *svc.DeleteIpamPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamPolicyOutput, error) {
+	return m.base.DeleteIpamPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteIpamPool(ctx context.Context, params *svc.DeleteIpamPoolInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamPoolOutput, error) {
 	return m.base.DeleteIpamPool(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteIpamPrefixListResolver(ctx context.Context, params *svc.DeleteIpamPrefixListResolverInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamPrefixListResolverOutput, error) {
+	return m.base.DeleteIpamPrefixListResolver(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteIpamPrefixListResolverTarget(ctx context.Context, params *svc.DeleteIpamPrefixListResolverTargetInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamPrefixListResolverTargetOutput, error) {
+	return m.base.DeleteIpamPrefixListResolverTarget(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteIpamResourceDiscovery(ctx context.Context, params *svc.DeleteIpamResourceDiscoveryInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamResourceDiscoveryOutput, error) {
 	return m.base.DeleteIpamResourceDiscovery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteIpamRoutingPolicyRegistration(ctx context.Context, params *svc.DeleteIpamRoutingPolicyRegistrationInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamRoutingPolicyRegistrationOutput, error) {
+	return m.base.DeleteIpamRoutingPolicyRegistration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteIpamScope(ctx context.Context, params *svc.DeleteIpamScopeInput, optFns ...func(*svc.Options)) (*svc.DeleteIpamScopeOutput, error) {
@@ -703,6 +867,14 @@ func (m *EC2) DeleteLocalGatewayRouteTableVirtualInterfaceGroupAssociation(ctx c
 
 func (m *EC2) DeleteLocalGatewayRouteTableVpcAssociation(ctx context.Context, params *svc.DeleteLocalGatewayRouteTableVpcAssociationInput, optFns ...func(*svc.Options)) (*svc.DeleteLocalGatewayRouteTableVpcAssociationOutput, error) {
 	return m.base.DeleteLocalGatewayRouteTableVpcAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteLocalGatewayVirtualInterface(ctx context.Context, params *svc.DeleteLocalGatewayVirtualInterfaceInput, optFns ...func(*svc.Options)) (*svc.DeleteLocalGatewayVirtualInterfaceOutput, error) {
+	return m.base.DeleteLocalGatewayVirtualInterface(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteLocalGatewayVirtualInterfaceGroup(ctx context.Context, params *svc.DeleteLocalGatewayVirtualInterfaceGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteLocalGatewayVirtualInterfaceGroupOutput, error) {
+	return m.base.DeleteLocalGatewayVirtualInterfaceGroup(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteManagedPrefixList(ctx context.Context, params *svc.DeleteManagedPrefixListInput, optFns ...func(*svc.Options)) (*svc.DeleteManagedPrefixListOutput, error) {
@@ -761,8 +933,28 @@ func (m *EC2) DeleteRoute(ctx context.Context, params *svc.DeleteRouteInput, opt
 	return m.base.DeleteRoute(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteRouteServer(ctx context.Context, params *svc.DeleteRouteServerInput, optFns ...func(*svc.Options)) (*svc.DeleteRouteServerOutput, error) {
+	return m.base.DeleteRouteServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteRouteServerEndpoint(ctx context.Context, params *svc.DeleteRouteServerEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteRouteServerEndpointOutput, error) {
+	return m.base.DeleteRouteServerEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteRouteServerPeer(ctx context.Context, params *svc.DeleteRouteServerPeerInput, optFns ...func(*svc.Options)) (*svc.DeleteRouteServerPeerOutput, error) {
+	return m.base.DeleteRouteServerPeer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteRouteTable(ctx context.Context, params *svc.DeleteRouteTableInput, optFns ...func(*svc.Options)) (*svc.DeleteRouteTableOutput, error) {
 	return m.base.DeleteRouteTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteSecondaryNetwork(ctx context.Context, params *svc.DeleteSecondaryNetworkInput, optFns ...func(*svc.Options)) (*svc.DeleteSecondaryNetworkOutput, error) {
+	return m.base.DeleteSecondaryNetwork(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteSecondarySubnet(ctx context.Context, params *svc.DeleteSecondarySubnetInput, optFns ...func(*svc.Options)) (*svc.DeleteSecondarySubnetOutput, error) {
+	return m.base.DeleteSecondarySubnet(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteSecurityGroup(ctx context.Context, params *svc.DeleteSecurityGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteSecurityGroupOutput, error) {
@@ -809,12 +1001,24 @@ func (m *EC2) DeleteTransitGateway(ctx context.Context, params *svc.DeleteTransi
 	return m.base.DeleteTransitGateway(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteTransitGatewayClientVpnAttachment(ctx context.Context, params *svc.DeleteTransitGatewayClientVpnAttachmentInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayClientVpnAttachmentOutput, error) {
+	return m.base.DeleteTransitGatewayClientVpnAttachment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteTransitGatewayConnect(ctx context.Context, params *svc.DeleteTransitGatewayConnectInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayConnectOutput, error) {
 	return m.base.DeleteTransitGatewayConnect(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteTransitGatewayConnectPeer(ctx context.Context, params *svc.DeleteTransitGatewayConnectPeerInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayConnectPeerOutput, error) {
 	return m.base.DeleteTransitGatewayConnectPeer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteTransitGatewayMeteringPolicy(ctx context.Context, params *svc.DeleteTransitGatewayMeteringPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayMeteringPolicyOutput, error) {
+	return m.base.DeleteTransitGatewayMeteringPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteTransitGatewayMeteringPolicyEntry(ctx context.Context, params *svc.DeleteTransitGatewayMeteringPolicyEntryInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayMeteringPolicyEntryOutput, error) {
+	return m.base.DeleteTransitGatewayMeteringPolicyEntry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteTransitGatewayMulticastDomain(ctx context.Context, params *svc.DeleteTransitGatewayMulticastDomainInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayMulticastDomainOutput, error) {
@@ -827,6 +1031,10 @@ func (m *EC2) DeleteTransitGatewayPeeringAttachment(ctx context.Context, params 
 
 func (m *EC2) DeleteTransitGatewayPolicyTable(ctx context.Context, params *svc.DeleteTransitGatewayPolicyTableInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayPolicyTableOutput, error) {
 	return m.base.DeleteTransitGatewayPolicyTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteTransitGatewayPolicyTableEntry(ctx context.Context, params *svc.DeleteTransitGatewayPolicyTableEntryInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayPolicyTableEntryOutput, error) {
+	return m.base.DeleteTransitGatewayPolicyTableEntry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteTransitGatewayPrefixListReference(ctx context.Context, params *svc.DeleteTransitGatewayPrefixListReferenceInput, optFns ...func(*svc.Options)) (*svc.DeleteTransitGatewayPrefixListReferenceOutput, error) {
@@ -873,6 +1081,14 @@ func (m *EC2) DeleteVpc(ctx context.Context, params *svc.DeleteVpcInput, optFns 
 	return m.base.DeleteVpc(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DeleteVpcBlockPublicAccessExclusion(ctx context.Context, params *svc.DeleteVpcBlockPublicAccessExclusionInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcBlockPublicAccessExclusionOutput, error) {
+	return m.base.DeleteVpcBlockPublicAccessExclusion(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteVpcEncryptionControl(ctx context.Context, params *svc.DeleteVpcEncryptionControlInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcEncryptionControlOutput, error) {
+	return m.base.DeleteVpcEncryptionControl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DeleteVpcEndpointConnectionNotifications(ctx context.Context, params *svc.DeleteVpcEndpointConnectionNotificationsInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcEndpointConnectionNotificationsOutput, error) {
 	return m.base.DeleteVpcEndpointConnectionNotifications(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -887,6 +1103,10 @@ func (m *EC2) DeleteVpcEndpoints(ctx context.Context, params *svc.DeleteVpcEndpo
 
 func (m *EC2) DeleteVpcPeeringConnection(ctx context.Context, params *svc.DeleteVpcPeeringConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcPeeringConnectionOutput, error) {
 	return m.base.DeleteVpcPeeringConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DeleteVpnConcentrator(ctx context.Context, params *svc.DeleteVpnConcentratorInput, optFns ...func(*svc.Options)) (*svc.DeleteVpnConcentratorOutput, error) {
+	return m.base.DeleteVpnConcentrator(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DeleteVpnConnection(ctx context.Context, params *svc.DeleteVpnConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteVpnConnectionOutput, error) {
@@ -937,6 +1157,10 @@ func (m *EC2) DescribeAccountAttributes(ctx context.Context, params *svc.Describ
 	return m.base.DescribeAccountAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeAccountVpcEncryptionControl(ctx context.Context, params *svc.DescribeAccountVpcEncryptionControlInput, optFns ...func(*svc.Options)) (*svc.DescribeAccountVpcEncryptionControlOutput, error) {
+	return m.base.DescribeAccountVpcEncryptionControl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeAddressTransfers(ctx context.Context, params *svc.DescribeAddressTransfersInput, optFns ...func(*svc.Options)) (*svc.DescribeAddressTransfersOutput, error) {
 	return m.base.DescribeAddressTransfers(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -951,6 +1175,18 @@ func (m *EC2) DescribeAddressesAttribute(ctx context.Context, params *svc.Descri
 
 func (m *EC2) DescribeAggregateIdFormat(ctx context.Context, params *svc.DescribeAggregateIdFormatInput, optFns ...func(*svc.Options)) (*svc.DescribeAggregateIdFormatOutput, error) {
 	return m.base.DescribeAggregateIdFormat(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeApplicationStatus(ctx context.Context, params *svc.DescribeApplicationStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeApplicationStatusOutput, error) {
+	return m.base.DescribeApplicationStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeApplicationStatusCheckAssociations(ctx context.Context, params *svc.DescribeApplicationStatusCheckAssociationsInput, optFns ...func(*svc.Options)) (*svc.DescribeApplicationStatusCheckAssociationsOutput, error) {
+	return m.base.DescribeApplicationStatusCheckAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeApplicationStatusChecks(ctx context.Context, params *svc.DescribeApplicationStatusChecksInput, optFns ...func(*svc.Options)) (*svc.DescribeApplicationStatusChecksOutput, error) {
+	return m.base.DescribeApplicationStatusChecks(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeAvailabilityZones(ctx context.Context, params *svc.DescribeAvailabilityZonesInput, optFns ...func(*svc.Options)) (*svc.DescribeAvailabilityZonesOutput, error) {
@@ -969,16 +1205,44 @@ func (m *EC2) DescribeByoipCidrs(ctx context.Context, params *svc.DescribeByoipC
 	return m.base.DescribeByoipCidrs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeCapacityBlockExtensionHistory(ctx context.Context, params *svc.DescribeCapacityBlockExtensionHistoryInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityBlockExtensionHistoryOutput, error) {
+	return m.base.DescribeCapacityBlockExtensionHistory(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeCapacityBlockExtensionOfferings(ctx context.Context, params *svc.DescribeCapacityBlockExtensionOfferingsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityBlockExtensionOfferingsOutput, error) {
+	return m.base.DescribeCapacityBlockExtensionOfferings(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeCapacityBlockOfferings(ctx context.Context, params *svc.DescribeCapacityBlockOfferingsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityBlockOfferingsOutput, error) {
 	return m.base.DescribeCapacityBlockOfferings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeCapacityBlockStatus(ctx context.Context, params *svc.DescribeCapacityBlockStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityBlockStatusOutput, error) {
+	return m.base.DescribeCapacityBlockStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeCapacityBlocks(ctx context.Context, params *svc.DescribeCapacityBlocksInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityBlocksOutput, error) {
+	return m.base.DescribeCapacityBlocks(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeCapacityManagerDataExports(ctx context.Context, params *svc.DescribeCapacityManagerDataExportsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityManagerDataExportsOutput, error) {
+	return m.base.DescribeCapacityManagerDataExports(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeCapacityReservationBillingRequests(ctx context.Context, params *svc.DescribeCapacityReservationBillingRequestsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationBillingRequestsOutput, error) {
 	return m.base.DescribeCapacityReservationBillingRequests(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeCapacityReservationCancellationQuotes(ctx context.Context, params *svc.DescribeCapacityReservationCancellationQuotesInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationCancellationQuotesOutput, error) {
+	return m.base.DescribeCapacityReservationCancellationQuotes(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeCapacityReservationFleets(ctx context.Context, params *svc.DescribeCapacityReservationFleetsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationFleetsOutput, error) {
 	return m.base.DescribeCapacityReservationFleets(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeCapacityReservationTopology(ctx context.Context, params *svc.DescribeCapacityReservationTopologyInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationTopologyOutput, error) {
+	return m.base.DescribeCapacityReservationTopology(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeCapacityReservations(ctx context.Context, params *svc.DescribeCapacityReservationsInput, optFns ...func(*svc.Options)) (*svc.DescribeCapacityReservationsOutput, error) {
@@ -1023,6 +1287,10 @@ func (m *EC2) DescribeConversionTasks(ctx context.Context, params *svc.DescribeC
 
 func (m *EC2) DescribeCustomerGateways(ctx context.Context, params *svc.DescribeCustomerGatewaysInput, optFns ...func(*svc.Options)) (*svc.DescribeCustomerGatewaysOutput, error) {
 	return m.base.DescribeCustomerGateways(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeDeclarativePoliciesReports(ctx context.Context, params *svc.DescribeDeclarativePoliciesReportsInput, optFns ...func(*svc.Options)) (*svc.DescribeDeclarativePoliciesReportsOutput, error) {
+	return m.base.DescribeDeclarativePoliciesReports(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeDhcpOptions(ctx context.Context, params *svc.DescribeDhcpOptionsInput, optFns ...func(*svc.Options)) (*svc.DescribeDhcpOptionsOutput, error) {
@@ -1105,6 +1373,18 @@ func (m *EC2) DescribeImageAttribute(ctx context.Context, params *svc.DescribeIm
 	return m.base.DescribeImageAttribute(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeImageReferences(ctx context.Context, params *svc.DescribeImageReferencesInput, optFns ...func(*svc.Options)) (*svc.DescribeImageReferencesOutput, error) {
+	return m.base.DescribeImageReferences(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeImageUsageReportEntries(ctx context.Context, params *svc.DescribeImageUsageReportEntriesInput, optFns ...func(*svc.Options)) (*svc.DescribeImageUsageReportEntriesOutput, error) {
+	return m.base.DescribeImageUsageReportEntries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeImageUsageReports(ctx context.Context, params *svc.DescribeImageUsageReportsInput, optFns ...func(*svc.Options)) (*svc.DescribeImageUsageReportsOutput, error) {
+	return m.base.DescribeImageUsageReports(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeImages(ctx context.Context, params *svc.DescribeImagesInput, optFns ...func(*svc.Options)) (*svc.DescribeImagesOutput, error) {
 	return m.base.DescribeImages(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1135,6 +1415,18 @@ func (m *EC2) DescribeInstanceEventNotificationAttributes(ctx context.Context, p
 
 func (m *EC2) DescribeInstanceEventWindows(ctx context.Context, params *svc.DescribeInstanceEventWindowsInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceEventWindowsOutput, error) {
 	return m.base.DescribeInstanceEventWindows(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeInstanceImageMetadata(ctx context.Context, params *svc.DescribeInstanceImageMetadataInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceImageMetadataOutput, error) {
+	return m.base.DescribeInstanceImageMetadata(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeInstanceSqlHaHistoryStates(ctx context.Context, params *svc.DescribeInstanceSqlHaHistoryStatesInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceSqlHaHistoryStatesOutput, error) {
+	return m.base.DescribeInstanceSqlHaHistoryStates(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeInstanceSqlHaStates(ctx context.Context, params *svc.DescribeInstanceSqlHaStatesInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceSqlHaStatesOutput, error) {
+	return m.base.DescribeInstanceSqlHaStates(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeInstanceStatus(ctx context.Context, params *svc.DescribeInstanceStatusInput, optFns ...func(*svc.Options)) (*svc.DescribeInstanceStatusOutput, error) {
@@ -1169,8 +1461,28 @@ func (m *EC2) DescribeIpamExternalResourceVerificationTokens(ctx context.Context
 	return m.base.DescribeIpamExternalResourceVerificationTokens(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeIpamInternetRegistryAssociations(ctx context.Context, params *svc.DescribeIpamInternetRegistryAssociationsInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamInternetRegistryAssociationsOutput, error) {
+	return m.base.DescribeIpamInternetRegistryAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeIpamPolicies(ctx context.Context, params *svc.DescribeIpamPoliciesInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamPoliciesOutput, error) {
+	return m.base.DescribeIpamPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeIpamPoolAllocations(ctx context.Context, params *svc.DescribeIpamPoolAllocationsInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamPoolAllocationsOutput, error) {
+	return m.base.DescribeIpamPoolAllocations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeIpamPools(ctx context.Context, params *svc.DescribeIpamPoolsInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamPoolsOutput, error) {
 	return m.base.DescribeIpamPools(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeIpamPrefixListResolverTargets(ctx context.Context, params *svc.DescribeIpamPrefixListResolverTargetsInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamPrefixListResolverTargetsOutput, error) {
+	return m.base.DescribeIpamPrefixListResolverTargets(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeIpamPrefixListResolvers(ctx context.Context, params *svc.DescribeIpamPrefixListResolversInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamPrefixListResolversOutput, error) {
+	return m.base.DescribeIpamPrefixListResolvers(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeIpamResourceDiscoveries(ctx context.Context, params *svc.DescribeIpamResourceDiscoveriesInput, optFns ...func(*svc.Options)) (*svc.DescribeIpamResourceDiscoveriesOutput, error) {
@@ -1237,6 +1549,10 @@ func (m *EC2) DescribeMacHosts(ctx context.Context, params *svc.DescribeMacHosts
 	return m.base.DescribeMacHosts(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeMacModificationTasks(ctx context.Context, params *svc.DescribeMacModificationTasksInput, optFns ...func(*svc.Options)) (*svc.DescribeMacModificationTasksOutput, error) {
+	return m.base.DescribeMacModificationTasks(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeManagedPrefixLists(ctx context.Context, params *svc.DescribeManagedPrefixListsInput, optFns ...func(*svc.Options)) (*svc.DescribeManagedPrefixListsOutput, error) {
 	return m.base.DescribeManagedPrefixLists(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1281,6 +1597,10 @@ func (m *EC2) DescribeNetworkInterfaces(ctx context.Context, params *svc.Describ
 	return m.base.DescribeNetworkInterfaces(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeOutpostLags(ctx context.Context, params *svc.DescribeOutpostLagsInput, optFns ...func(*svc.Options)) (*svc.DescribeOutpostLagsOutput, error) {
+	return m.base.DescribeOutpostLags(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribePlacementGroups(ctx context.Context, params *svc.DescribePlacementGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribePlacementGroupsOutput, error) {
 	return m.base.DescribePlacementGroups(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1321,6 +1641,18 @@ func (m *EC2) DescribeReservedInstancesOfferings(ctx context.Context, params *sv
 	return m.base.DescribeReservedInstancesOfferings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeRouteServerEndpoints(ctx context.Context, params *svc.DescribeRouteServerEndpointsInput, optFns ...func(*svc.Options)) (*svc.DescribeRouteServerEndpointsOutput, error) {
+	return m.base.DescribeRouteServerEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeRouteServerPeers(ctx context.Context, params *svc.DescribeRouteServerPeersInput, optFns ...func(*svc.Options)) (*svc.DescribeRouteServerPeersOutput, error) {
+	return m.base.DescribeRouteServerPeers(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeRouteServers(ctx context.Context, params *svc.DescribeRouteServersInput, optFns ...func(*svc.Options)) (*svc.DescribeRouteServersOutput, error) {
+	return m.base.DescribeRouteServers(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeRouteTables(ctx context.Context, params *svc.DescribeRouteTablesInput, optFns ...func(*svc.Options)) (*svc.DescribeRouteTablesOutput, error) {
 	return m.base.DescribeRouteTables(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1333,6 +1665,18 @@ func (m *EC2) DescribeScheduledInstances(ctx context.Context, params *svc.Descri
 	return m.base.DescribeScheduledInstances(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeSecondaryInterfaces(ctx context.Context, params *svc.DescribeSecondaryInterfacesInput, optFns ...func(*svc.Options)) (*svc.DescribeSecondaryInterfacesOutput, error) {
+	return m.base.DescribeSecondaryInterfaces(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeSecondaryNetworks(ctx context.Context, params *svc.DescribeSecondaryNetworksInput, optFns ...func(*svc.Options)) (*svc.DescribeSecondaryNetworksOutput, error) {
+	return m.base.DescribeSecondaryNetworks(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeSecondarySubnets(ctx context.Context, params *svc.DescribeSecondarySubnetsInput, optFns ...func(*svc.Options)) (*svc.DescribeSecondarySubnetsOutput, error) {
+	return m.base.DescribeSecondarySubnets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeSecurityGroupReferences(ctx context.Context, params *svc.DescribeSecurityGroupReferencesInput, optFns ...func(*svc.Options)) (*svc.DescribeSecurityGroupReferencesOutput, error) {
 	return m.base.DescribeSecurityGroupReferences(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1341,8 +1685,16 @@ func (m *EC2) DescribeSecurityGroupRules(ctx context.Context, params *svc.Descri
 	return m.base.DescribeSecurityGroupRules(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeSecurityGroupVpcAssociations(ctx context.Context, params *svc.DescribeSecurityGroupVpcAssociationsInput, optFns ...func(*svc.Options)) (*svc.DescribeSecurityGroupVpcAssociationsOutput, error) {
+	return m.base.DescribeSecurityGroupVpcAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeSecurityGroups(ctx context.Context, params *svc.DescribeSecurityGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribeSecurityGroupsOutput, error) {
 	return m.base.DescribeSecurityGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeServiceLinkVirtualInterfaces(ctx context.Context, params *svc.DescribeServiceLinkVirtualInterfacesInput, optFns ...func(*svc.Options)) (*svc.DescribeServiceLinkVirtualInterfacesOutput, error) {
+	return m.base.DescribeServiceLinkVirtualInterfaces(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeSnapshotAttribute(ctx context.Context, params *svc.DescribeSnapshotAttributeInput, optFns ...func(*svc.Options)) (*svc.DescribeSnapshotAttributeOutput, error) {
@@ -1425,6 +1777,10 @@ func (m *EC2) DescribeTransitGatewayConnects(ctx context.Context, params *svc.De
 	return m.base.DescribeTransitGatewayConnects(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeTransitGatewayMeteringPolicies(ctx context.Context, params *svc.DescribeTransitGatewayMeteringPoliciesInput, optFns ...func(*svc.Options)) (*svc.DescribeTransitGatewayMeteringPoliciesOutput, error) {
+	return m.base.DescribeTransitGatewayMeteringPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeTransitGatewayMulticastDomains(ctx context.Context, params *svc.DescribeTransitGatewayMulticastDomainsInput, optFns ...func(*svc.Options)) (*svc.DescribeTransitGatewayMulticastDomainsOutput, error) {
 	return m.base.DescribeTransitGatewayMulticastDomains(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1497,12 +1853,28 @@ func (m *EC2) DescribeVpcAttribute(ctx context.Context, params *svc.DescribeVpcA
 	return m.base.DescribeVpcAttribute(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeVpcBlockPublicAccessExclusions(ctx context.Context, params *svc.DescribeVpcBlockPublicAccessExclusionsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcBlockPublicAccessExclusionsOutput, error) {
+	return m.base.DescribeVpcBlockPublicAccessExclusions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeVpcBlockPublicAccessOptions(ctx context.Context, params *svc.DescribeVpcBlockPublicAccessOptionsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcBlockPublicAccessOptionsOutput, error) {
+	return m.base.DescribeVpcBlockPublicAccessOptions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeVpcClassicLink(ctx context.Context, params *svc.DescribeVpcClassicLinkInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcClassicLinkOutput, error) {
 	return m.base.DescribeVpcClassicLink(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeVpcClassicLinkDnsSupport(ctx context.Context, params *svc.DescribeVpcClassicLinkDnsSupportInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcClassicLinkDnsSupportOutput, error) {
 	return m.base.DescribeVpcClassicLinkDnsSupport(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeVpcEncryptionControls(ctx context.Context, params *svc.DescribeVpcEncryptionControlsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcEncryptionControlsOutput, error) {
+	return m.base.DescribeVpcEncryptionControls(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DescribeVpcEndpointAssociations(ctx context.Context, params *svc.DescribeVpcEndpointAssociationsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcEndpointAssociationsOutput, error) {
+	return m.base.DescribeVpcEndpointAssociations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DescribeVpcEndpointConnectionNotifications(ctx context.Context, params *svc.DescribeVpcEndpointConnectionNotificationsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpcEndpointConnectionNotificationsOutput, error) {
@@ -1537,6 +1909,10 @@ func (m *EC2) DescribeVpcs(ctx context.Context, params *svc.DescribeVpcsInput, o
 	return m.base.DescribeVpcs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DescribeVpnConcentrators(ctx context.Context, params *svc.DescribeVpnConcentratorsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpnConcentratorsOutput, error) {
+	return m.base.DescribeVpnConcentrators(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DescribeVpnConnections(ctx context.Context, params *svc.DescribeVpnConnectionsInput, optFns ...func(*svc.Options)) (*svc.DescribeVpnConnectionsOutput, error) {
 	return m.base.DescribeVpnConnections(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1547,6 +1923,10 @@ func (m *EC2) DescribeVpnGateways(ctx context.Context, params *svc.DescribeVpnGa
 
 func (m *EC2) DetachClassicLinkVpc(ctx context.Context, params *svc.DetachClassicLinkVpcInput, optFns ...func(*svc.Options)) (*svc.DetachClassicLinkVpcOutput, error) {
 	return m.base.DetachClassicLinkVpc(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DetachImageWatermark(ctx context.Context, params *svc.DetachImageWatermarkInput, optFns ...func(*svc.Options)) (*svc.DetachImageWatermarkOutput, error) {
+	return m.base.DetachImageWatermark(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DetachInternetGateway(ctx context.Context, params *svc.DetachInternetGatewayInput, optFns ...func(*svc.Options)) (*svc.DetachInternetGatewayOutput, error) {
@@ -1573,8 +1953,20 @@ func (m *EC2) DisableAddressTransfer(ctx context.Context, params *svc.DisableAdd
 	return m.base.DisableAddressTransfer(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DisableAllowedImagesSettings(ctx context.Context, params *svc.DisableAllowedImagesSettingsInput, optFns ...func(*svc.Options)) (*svc.DisableAllowedImagesSettingsOutput, error) {
+	return m.base.DisableAllowedImagesSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisableApplicationStatusCheckSuppression(ctx context.Context, params *svc.DisableApplicationStatusCheckSuppressionInput, optFns ...func(*svc.Options)) (*svc.DisableApplicationStatusCheckSuppressionOutput, error) {
+	return m.base.DisableApplicationStatusCheckSuppression(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DisableAwsNetworkPerformanceMetricSubscription(ctx context.Context, params *svc.DisableAwsNetworkPerformanceMetricSubscriptionInput, optFns ...func(*svc.Options)) (*svc.DisableAwsNetworkPerformanceMetricSubscriptionOutput, error) {
 	return m.base.DisableAwsNetworkPerformanceMetricSubscription(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisableCapacityManager(ctx context.Context, params *svc.DisableCapacityManagerInput, optFns ...func(*svc.Options)) (*svc.DisableCapacityManagerOutput, error) {
+	return m.base.DisableCapacityManager(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DisableEbsEncryptionByDefault(ctx context.Context, params *svc.DisableEbsEncryptionByDefaultInput, optFns ...func(*svc.Options)) (*svc.DisableEbsEncryptionByDefaultOutput, error) {
@@ -1605,8 +1997,20 @@ func (m *EC2) DisableImageDeregistrationProtection(ctx context.Context, params *
 	return m.base.DisableImageDeregistrationProtection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DisableInstanceSqlHaStandbyDetections(ctx context.Context, params *svc.DisableInstanceSqlHaStandbyDetectionsInput, optFns ...func(*svc.Options)) (*svc.DisableInstanceSqlHaStandbyDetectionsOutput, error) {
+	return m.base.DisableInstanceSqlHaStandbyDetections(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DisableIpamOrganizationAdminAccount(ctx context.Context, params *svc.DisableIpamOrganizationAdminAccountInput, optFns ...func(*svc.Options)) (*svc.DisableIpamOrganizationAdminAccountOutput, error) {
 	return m.base.DisableIpamOrganizationAdminAccount(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisableIpamPolicy(ctx context.Context, params *svc.DisableIpamPolicyInput, optFns ...func(*svc.Options)) (*svc.DisableIpamPolicyOutput, error) {
+	return m.base.DisableIpamPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisableRouteServerPropagation(ctx context.Context, params *svc.DisableRouteServerPropagationInput, optFns ...func(*svc.Options)) (*svc.DisableRouteServerPropagationOutput, error) {
+	return m.base.DisableRouteServerPropagation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DisableSerialConsoleAccess(ctx context.Context, params *svc.DisableSerialConsoleAccessInput, optFns ...func(*svc.Options)) (*svc.DisableSerialConsoleAccessOutput, error) {
@@ -1635,6 +2039,10 @@ func (m *EC2) DisableVpcClassicLinkDnsSupport(ctx context.Context, params *svc.D
 
 func (m *EC2) DisassociateAddress(ctx context.Context, params *svc.DisassociateAddressInput, optFns ...func(*svc.Options)) (*svc.DisassociateAddressOutput, error) {
 	return m.base.DisassociateAddress(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisassociateApplicationStatusCheck(ctx context.Context, params *svc.DisassociateApplicationStatusCheckInput, optFns ...func(*svc.Options)) (*svc.DisassociateApplicationStatusCheckOutput, error) {
+	return m.base.DisassociateApplicationStatusCheck(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DisassociateCapacityReservationBillingOwner(ctx context.Context, params *svc.DisassociateCapacityReservationBillingOwnerInput, optFns ...func(*svc.Options)) (*svc.DisassociateCapacityReservationBillingOwnerOutput, error) {
@@ -1669,8 +2077,16 @@ func (m *EC2) DisassociateNatGatewayAddress(ctx context.Context, params *svc.Dis
 	return m.base.DisassociateNatGatewayAddress(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) DisassociateRouteServer(ctx context.Context, params *svc.DisassociateRouteServerInput, optFns ...func(*svc.Options)) (*svc.DisassociateRouteServerOutput, error) {
+	return m.base.DisassociateRouteServer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) DisassociateRouteTable(ctx context.Context, params *svc.DisassociateRouteTableInput, optFns ...func(*svc.Options)) (*svc.DisassociateRouteTableOutput, error) {
 	return m.base.DisassociateRouteTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) DisassociateSecurityGroupVpc(ctx context.Context, params *svc.DisassociateSecurityGroupVpcInput, optFns ...func(*svc.Options)) (*svc.DisassociateSecurityGroupVpcOutput, error) {
+	return m.base.DisassociateSecurityGroupVpc(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) DisassociateSubnetCidrBlock(ctx context.Context, params *svc.DisassociateSubnetCidrBlockInput, optFns ...func(*svc.Options)) (*svc.DisassociateSubnetCidrBlockOutput, error) {
@@ -1701,8 +2117,20 @@ func (m *EC2) EnableAddressTransfer(ctx context.Context, params *svc.EnableAddre
 	return m.base.EnableAddressTransfer(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) EnableAllowedImagesSettings(ctx context.Context, params *svc.EnableAllowedImagesSettingsInput, optFns ...func(*svc.Options)) (*svc.EnableAllowedImagesSettingsOutput, error) {
+	return m.base.EnableAllowedImagesSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) EnableApplicationStatusCheckSuppression(ctx context.Context, params *svc.EnableApplicationStatusCheckSuppressionInput, optFns ...func(*svc.Options)) (*svc.EnableApplicationStatusCheckSuppressionOutput, error) {
+	return m.base.EnableApplicationStatusCheckSuppression(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) EnableAwsNetworkPerformanceMetricSubscription(ctx context.Context, params *svc.EnableAwsNetworkPerformanceMetricSubscriptionInput, optFns ...func(*svc.Options)) (*svc.EnableAwsNetworkPerformanceMetricSubscriptionOutput, error) {
 	return m.base.EnableAwsNetworkPerformanceMetricSubscription(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) EnableCapacityManager(ctx context.Context, params *svc.EnableCapacityManagerInput, optFns ...func(*svc.Options)) (*svc.EnableCapacityManagerOutput, error) {
+	return m.base.EnableCapacityManager(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) EnableEbsEncryptionByDefault(ctx context.Context, params *svc.EnableEbsEncryptionByDefaultInput, optFns ...func(*svc.Options)) (*svc.EnableEbsEncryptionByDefaultOutput, error) {
@@ -1733,12 +2161,28 @@ func (m *EC2) EnableImageDeregistrationProtection(ctx context.Context, params *s
 	return m.base.EnableImageDeregistrationProtection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) EnableInstanceSqlHaStandbyDetections(ctx context.Context, params *svc.EnableInstanceSqlHaStandbyDetectionsInput, optFns ...func(*svc.Options)) (*svc.EnableInstanceSqlHaStandbyDetectionsOutput, error) {
+	return m.base.EnableInstanceSqlHaStandbyDetections(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) EnableIpamInternetRegistryAssociation(ctx context.Context, params *svc.EnableIpamInternetRegistryAssociationInput, optFns ...func(*svc.Options)) (*svc.EnableIpamInternetRegistryAssociationOutput, error) {
+	return m.base.EnableIpamInternetRegistryAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) EnableIpamOrganizationAdminAccount(ctx context.Context, params *svc.EnableIpamOrganizationAdminAccountInput, optFns ...func(*svc.Options)) (*svc.EnableIpamOrganizationAdminAccountOutput, error) {
 	return m.base.EnableIpamOrganizationAdminAccount(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) EnableIpamPolicy(ctx context.Context, params *svc.EnableIpamPolicyInput, optFns ...func(*svc.Options)) (*svc.EnableIpamPolicyOutput, error) {
+	return m.base.EnableIpamPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) EnableReachabilityAnalyzerOrganizationSharing(ctx context.Context, params *svc.EnableReachabilityAnalyzerOrganizationSharingInput, optFns ...func(*svc.Options)) (*svc.EnableReachabilityAnalyzerOrganizationSharingOutput, error) {
 	return m.base.EnableReachabilityAnalyzerOrganizationSharing(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) EnableRouteServerPropagation(ctx context.Context, params *svc.EnableRouteServerPropagationInput, optFns ...func(*svc.Options)) (*svc.EnableRouteServerPropagationOutput, error) {
+	return m.base.EnableRouteServerPropagation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) EnableSerialConsoleAccess(ctx context.Context, params *svc.EnableSerialConsoleAccessInput, optFns ...func(*svc.Options)) (*svc.EnableSerialConsoleAccessOutput, error) {
@@ -1785,6 +2229,18 @@ func (m *EC2) ExportTransitGatewayRoutes(ctx context.Context, params *svc.Export
 	return m.base.ExportTransitGatewayRoutes(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ExportVerifiedAccessInstanceClientConfiguration(ctx context.Context, params *svc.ExportVerifiedAccessInstanceClientConfigurationInput, optFns ...func(*svc.Options)) (*svc.ExportVerifiedAccessInstanceClientConfigurationOutput, error) {
+	return m.base.ExportVerifiedAccessInstanceClientConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetActiveVpnTunnelStatus(ctx context.Context, params *svc.GetActiveVpnTunnelStatusInput, optFns ...func(*svc.Options)) (*svc.GetActiveVpnTunnelStatusOutput, error) {
+	return m.base.GetActiveVpnTunnelStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetAllowedImagesSettings(ctx context.Context, params *svc.GetAllowedImagesSettingsInput, optFns ...func(*svc.Options)) (*svc.GetAllowedImagesSettingsOutput, error) {
+	return m.base.GetAllowedImagesSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetAssociatedEnclaveCertificateIamRoles(ctx context.Context, params *svc.GetAssociatedEnclaveCertificateIamRolesInput, optFns ...func(*svc.Options)) (*svc.GetAssociatedEnclaveCertificateIamRolesOutput, error) {
 	return m.base.GetAssociatedEnclaveCertificateIamRoles(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1795,6 +2251,22 @@ func (m *EC2) GetAssociatedIpv6PoolCidrs(ctx context.Context, params *svc.GetAss
 
 func (m *EC2) GetAwsNetworkPerformanceData(ctx context.Context, params *svc.GetAwsNetworkPerformanceDataInput, optFns ...func(*svc.Options)) (*svc.GetAwsNetworkPerformanceDataOutput, error) {
 	return m.base.GetAwsNetworkPerformanceData(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetCapacityManagerAttributes(ctx context.Context, params *svc.GetCapacityManagerAttributesInput, optFns ...func(*svc.Options)) (*svc.GetCapacityManagerAttributesOutput, error) {
+	return m.base.GetCapacityManagerAttributes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetCapacityManagerMetricData(ctx context.Context, params *svc.GetCapacityManagerMetricDataInput, optFns ...func(*svc.Options)) (*svc.GetCapacityManagerMetricDataOutput, error) {
+	return m.base.GetCapacityManagerMetricData(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetCapacityManagerMetricDimensions(ctx context.Context, params *svc.GetCapacityManagerMetricDimensionsInput, optFns ...func(*svc.Options)) (*svc.GetCapacityManagerMetricDimensionsOutput, error) {
+	return m.base.GetCapacityManagerMetricDimensions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetCapacityManagerMonitoredTagKeys(ctx context.Context, params *svc.GetCapacityManagerMonitoredTagKeysInput, optFns ...func(*svc.Options)) (*svc.GetCapacityManagerMonitoredTagKeysOutput, error) {
+	return m.base.GetCapacityManagerMonitoredTagKeys(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetCapacityReservationUsage(ctx context.Context, params *svc.GetCapacityReservationUsageInput, optFns ...func(*svc.Options)) (*svc.GetCapacityReservationUsageOutput, error) {
@@ -1813,6 +2285,10 @@ func (m *EC2) GetConsoleScreenshot(ctx context.Context, params *svc.GetConsoleSc
 	return m.base.GetConsoleScreenshot(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) GetDeclarativePoliciesReportSummary(ctx context.Context, params *svc.GetDeclarativePoliciesReportSummaryInput, optFns ...func(*svc.Options)) (*svc.GetDeclarativePoliciesReportSummaryOutput, error) {
+	return m.base.GetDeclarativePoliciesReportSummary(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetDefaultCreditSpecification(ctx context.Context, params *svc.GetDefaultCreditSpecificationInput, optFns ...func(*svc.Options)) (*svc.GetDefaultCreditSpecificationOutput, error) {
 	return m.base.GetDefaultCreditSpecification(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1825,6 +2301,10 @@ func (m *EC2) GetEbsEncryptionByDefault(ctx context.Context, params *svc.GetEbsE
 	return m.base.GetEbsEncryptionByDefault(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) GetEnabledIpamPolicy(ctx context.Context, params *svc.GetEnabledIpamPolicyInput, optFns ...func(*svc.Options)) (*svc.GetEnabledIpamPolicyOutput, error) {
+	return m.base.GetEnabledIpamPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetFlowLogsIntegrationTemplate(ctx context.Context, params *svc.GetFlowLogsIntegrationTemplateInput, optFns ...func(*svc.Options)) (*svc.GetFlowLogsIntegrationTemplateOutput, error) {
 	return m.base.GetFlowLogsIntegrationTemplate(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1835,6 +2315,10 @@ func (m *EC2) GetGroupsForCapacityReservation(ctx context.Context, params *svc.G
 
 func (m *EC2) GetHostReservationPurchasePreview(ctx context.Context, params *svc.GetHostReservationPurchasePreviewInput, optFns ...func(*svc.Options)) (*svc.GetHostReservationPurchasePreviewOutput, error) {
 	return m.base.GetHostReservationPurchasePreview(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetImageAncestry(ctx context.Context, params *svc.GetImageAncestryInput, optFns ...func(*svc.Options)) (*svc.GetImageAncestryOutput, error) {
+	return m.base.GetImageAncestry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetImageBlockPublicAccessState(ctx context.Context, params *svc.GetImageBlockPublicAccessStateInput, optFns ...func(*svc.Options)) (*svc.GetImageBlockPublicAccessStateOutput, error) {
@@ -1873,6 +2357,26 @@ func (m *EC2) GetIpamDiscoveredResourceCidrs(ctx context.Context, params *svc.Ge
 	return m.base.GetIpamDiscoveredResourceCidrs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) GetIpamDiscoveredRoutes(ctx context.Context, params *svc.GetIpamDiscoveredRoutesInput, optFns ...func(*svc.Options)) (*svc.GetIpamDiscoveredRoutesOutput, error) {
+	return m.base.GetIpamDiscoveredRoutes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamInternetRegistryAssociationAsns(ctx context.Context, params *svc.GetIpamInternetRegistryAssociationAsnsInput, optFns ...func(*svc.Options)) (*svc.GetIpamInternetRegistryAssociationAsnsOutput, error) {
+	return m.base.GetIpamInternetRegistryAssociationAsns(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamInternetRegistryAssociationCidrs(ctx context.Context, params *svc.GetIpamInternetRegistryAssociationCidrsInput, optFns ...func(*svc.Options)) (*svc.GetIpamInternetRegistryAssociationCidrsOutput, error) {
+	return m.base.GetIpamInternetRegistryAssociationCidrs(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamPolicyAllocationRules(ctx context.Context, params *svc.GetIpamPolicyAllocationRulesInput, optFns ...func(*svc.Options)) (*svc.GetIpamPolicyAllocationRulesOutput, error) {
+	return m.base.GetIpamPolicyAllocationRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamPolicyOrganizationTargets(ctx context.Context, params *svc.GetIpamPolicyOrganizationTargetsInput, optFns ...func(*svc.Options)) (*svc.GetIpamPolicyOrganizationTargetsOutput, error) {
+	return m.base.GetIpamPolicyOrganizationTargets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetIpamPoolAllocations(ctx context.Context, params *svc.GetIpamPoolAllocationsInput, optFns ...func(*svc.Options)) (*svc.GetIpamPoolAllocationsOutput, error) {
 	return m.base.GetIpamPoolAllocations(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -1881,8 +2385,36 @@ func (m *EC2) GetIpamPoolCidrs(ctx context.Context, params *svc.GetIpamPoolCidrs
 	return m.base.GetIpamPoolCidrs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) GetIpamPrefixListResolverRules(ctx context.Context, params *svc.GetIpamPrefixListResolverRulesInput, optFns ...func(*svc.Options)) (*svc.GetIpamPrefixListResolverRulesOutput, error) {
+	return m.base.GetIpamPrefixListResolverRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamPrefixListResolverVersionEntries(ctx context.Context, params *svc.GetIpamPrefixListResolverVersionEntriesInput, optFns ...func(*svc.Options)) (*svc.GetIpamPrefixListResolverVersionEntriesOutput, error) {
+	return m.base.GetIpamPrefixListResolverVersionEntries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamPrefixListResolverVersions(ctx context.Context, params *svc.GetIpamPrefixListResolverVersionsInput, optFns ...func(*svc.Options)) (*svc.GetIpamPrefixListResolverVersionsOutput, error) {
+	return m.base.GetIpamPrefixListResolverVersions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetIpamResourceCidrs(ctx context.Context, params *svc.GetIpamResourceCidrsInput, optFns ...func(*svc.Options)) (*svc.GetIpamResourceCidrsOutput, error) {
 	return m.base.GetIpamResourceCidrs(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamRouteOriginAuthorizations(ctx context.Context, params *svc.GetIpamRouteOriginAuthorizationsInput, optFns ...func(*svc.Options)) (*svc.GetIpamRouteOriginAuthorizationsOutput, error) {
+	return m.base.GetIpamRouteOriginAuthorizations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamRouteProtectionFindings(ctx context.Context, params *svc.GetIpamRouteProtectionFindingsInput, optFns ...func(*svc.Options)) (*svc.GetIpamRouteProtectionFindingsOutput, error) {
+	return m.base.GetIpamRouteProtectionFindings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamRoutingPolicyRegistrationDeltas(ctx context.Context, params *svc.GetIpamRoutingPolicyRegistrationDeltasInput, optFns ...func(*svc.Options)) (*svc.GetIpamRoutingPolicyRegistrationDeltasOutput, error) {
+	return m.base.GetIpamRoutingPolicyRegistrationDeltas(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetIpamRoutingPolicyRegistrations(ctx context.Context, params *svc.GetIpamRoutingPolicyRegistrationsInput, optFns ...func(*svc.Options)) (*svc.GetIpamRoutingPolicyRegistrationsOutput, error) {
+	return m.base.GetIpamRoutingPolicyRegistrations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetLaunchTemplateData(ctx context.Context, params *svc.GetLaunchTemplateDataInput, optFns ...func(*svc.Options)) (*svc.GetLaunchTemplateDataOutput, error) {
@@ -1895,6 +2427,10 @@ func (m *EC2) GetManagedPrefixListAssociations(ctx context.Context, params *svc.
 
 func (m *EC2) GetManagedPrefixListEntries(ctx context.Context, params *svc.GetManagedPrefixListEntriesInput, optFns ...func(*svc.Options)) (*svc.GetManagedPrefixListEntriesOutput, error) {
 	return m.base.GetManagedPrefixListEntries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetManagedResourceVisibility(ctx context.Context, params *svc.GetManagedResourceVisibilityInput, optFns ...func(*svc.Options)) (*svc.GetManagedResourceVisibilityOutput, error) {
+	return m.base.GetManagedResourceVisibility(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetNetworkInsightsAccessScopeAnalysisFindings(ctx context.Context, params *svc.GetNetworkInsightsAccessScopeAnalysisFindingsInput, optFns ...func(*svc.Options)) (*svc.GetNetworkInsightsAccessScopeAnalysisFindingsOutput, error) {
@@ -1911,6 +2447,18 @@ func (m *EC2) GetPasswordData(ctx context.Context, params *svc.GetPasswordDataIn
 
 func (m *EC2) GetReservedInstancesExchangeQuote(ctx context.Context, params *svc.GetReservedInstancesExchangeQuoteInput, optFns ...func(*svc.Options)) (*svc.GetReservedInstancesExchangeQuoteOutput, error) {
 	return m.base.GetReservedInstancesExchangeQuote(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetRouteServerAssociations(ctx context.Context, params *svc.GetRouteServerAssociationsInput, optFns ...func(*svc.Options)) (*svc.GetRouteServerAssociationsOutput, error) {
+	return m.base.GetRouteServerAssociations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetRouteServerPropagations(ctx context.Context, params *svc.GetRouteServerPropagationsInput, optFns ...func(*svc.Options)) (*svc.GetRouteServerPropagationsOutput, error) {
+	return m.base.GetRouteServerPropagations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetRouteServerRoutingDatabase(ctx context.Context, params *svc.GetRouteServerRoutingDatabaseInput, optFns ...func(*svc.Options)) (*svc.GetRouteServerRoutingDatabaseOutput, error) {
+	return m.base.GetRouteServerRoutingDatabase(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetSecurityGroupsForVpc(ctx context.Context, params *svc.GetSecurityGroupsForVpcInput, optFns ...func(*svc.Options)) (*svc.GetSecurityGroupsForVpcOutput, error) {
@@ -1935,6 +2483,10 @@ func (m *EC2) GetSubnetCidrReservations(ctx context.Context, params *svc.GetSubn
 
 func (m *EC2) GetTransitGatewayAttachmentPropagations(ctx context.Context, params *svc.GetTransitGatewayAttachmentPropagationsInput, optFns ...func(*svc.Options)) (*svc.GetTransitGatewayAttachmentPropagationsOutput, error) {
 	return m.base.GetTransitGatewayAttachmentPropagations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetTransitGatewayMeteringPolicyEntries(ctx context.Context, params *svc.GetTransitGatewayMeteringPolicyEntriesInput, optFns ...func(*svc.Options)) (*svc.GetTransitGatewayMeteringPolicyEntriesOutput, error) {
+	return m.base.GetTransitGatewayMeteringPolicyEntries(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetTransitGatewayMulticastDomainAssociations(ctx context.Context, params *svc.GetTransitGatewayMulticastDomainAssociationsInput, optFns ...func(*svc.Options)) (*svc.GetTransitGatewayMulticastDomainAssociationsOutput, error) {
@@ -1965,8 +2517,16 @@ func (m *EC2) GetVerifiedAccessEndpointPolicy(ctx context.Context, params *svc.G
 	return m.base.GetVerifiedAccessEndpointPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) GetVerifiedAccessEndpointTargets(ctx context.Context, params *svc.GetVerifiedAccessEndpointTargetsInput, optFns ...func(*svc.Options)) (*svc.GetVerifiedAccessEndpointTargetsOutput, error) {
+	return m.base.GetVerifiedAccessEndpointTargets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) GetVerifiedAccessGroupPolicy(ctx context.Context, params *svc.GetVerifiedAccessGroupPolicyInput, optFns ...func(*svc.Options)) (*svc.GetVerifiedAccessGroupPolicyOutput, error) {
 	return m.base.GetVerifiedAccessGroupPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) GetVpcResourcesBlockingEncryptionEnforcement(ctx context.Context, params *svc.GetVpcResourcesBlockingEncryptionEnforcementInput, optFns ...func(*svc.Options)) (*svc.GetVpcResourcesBlockingEncryptionEnforcementOutput, error) {
+	return m.base.GetVpcResourcesBlockingEncryptionEnforcement(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) GetVpnConnectionDeviceSampleConfiguration(ctx context.Context, params *svc.GetVpnConnectionDeviceSampleConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetVpnConnectionDeviceSampleConfigurationOutput, error) {
@@ -2013,12 +2573,24 @@ func (m *EC2) ListSnapshotsInRecycleBin(ctx context.Context, params *svc.ListSna
 	return m.base.ListSnapshotsInRecycleBin(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ListVolumesInRecycleBin(ctx context.Context, params *svc.ListVolumesInRecycleBinInput, optFns ...func(*svc.Options)) (*svc.ListVolumesInRecycleBinOutput, error) {
+	return m.base.ListVolumesInRecycleBin(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) LockSnapshot(ctx context.Context, params *svc.LockSnapshotInput, optFns ...func(*svc.Options)) (*svc.LockSnapshotOutput, error) {
 	return m.base.LockSnapshot(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyAccountVpcEncryptionControl(ctx context.Context, params *svc.ModifyAccountVpcEncryptionControlInput, optFns ...func(*svc.Options)) (*svc.ModifyAccountVpcEncryptionControlOutput, error) {
+	return m.base.ModifyAccountVpcEncryptionControl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyAddressAttribute(ctx context.Context, params *svc.ModifyAddressAttributeInput, optFns ...func(*svc.Options)) (*svc.ModifyAddressAttributeOutput, error) {
 	return m.base.ModifyAddressAttribute(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyApplicationStatusCheck(ctx context.Context, params *svc.ModifyApplicationStatusCheckInput, optFns ...func(*svc.Options)) (*svc.ModifyApplicationStatusCheckOutput, error) {
+	return m.base.ModifyApplicationStatusCheck(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyAvailabilityZoneGroup(ctx context.Context, params *svc.ModifyAvailabilityZoneGroupInput, optFns ...func(*svc.Options)) (*svc.ModifyAvailabilityZoneGroupOutput, error) {
@@ -2077,6 +2649,10 @@ func (m *EC2) ModifyInstanceCapacityReservationAttributes(ctx context.Context, p
 	return m.base.ModifyInstanceCapacityReservationAttributes(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyInstanceConnectEndpoint(ctx context.Context, params *svc.ModifyInstanceConnectEndpointInput, optFns ...func(*svc.Options)) (*svc.ModifyInstanceConnectEndpointOutput, error) {
+	return m.base.ModifyInstanceConnectEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyInstanceCpuOptions(ctx context.Context, params *svc.ModifyInstanceCpuOptionsInput, optFns ...func(*svc.Options)) (*svc.ModifyInstanceCpuOptionsOutput, error) {
 	return m.base.ModifyInstanceCpuOptions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2105,6 +2681,10 @@ func (m *EC2) ModifyInstanceMetadataOptions(ctx context.Context, params *svc.Mod
 	return m.base.ModifyInstanceMetadataOptions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyInstanceNetworkPerformanceOptions(ctx context.Context, params *svc.ModifyInstanceNetworkPerformanceOptionsInput, optFns ...func(*svc.Options)) (*svc.ModifyInstanceNetworkPerformanceOptionsOutput, error) {
+	return m.base.ModifyInstanceNetworkPerformanceOptions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyInstancePlacement(ctx context.Context, params *svc.ModifyInstancePlacementInput, optFns ...func(*svc.Options)) (*svc.ModifyInstancePlacementOutput, error) {
 	return m.base.ModifyInstancePlacement(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2113,8 +2693,24 @@ func (m *EC2) ModifyIpam(ctx context.Context, params *svc.ModifyIpamInput, optFn
 	return m.base.ModifyIpam(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyIpamPolicyAllocationRules(ctx context.Context, params *svc.ModifyIpamPolicyAllocationRulesInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamPolicyAllocationRulesOutput, error) {
+	return m.base.ModifyIpamPolicyAllocationRules(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyIpamPool(ctx context.Context, params *svc.ModifyIpamPoolInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamPoolOutput, error) {
 	return m.base.ModifyIpamPool(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyIpamPoolAllocation(ctx context.Context, params *svc.ModifyIpamPoolAllocationInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamPoolAllocationOutput, error) {
+	return m.base.ModifyIpamPoolAllocation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyIpamPrefixListResolver(ctx context.Context, params *svc.ModifyIpamPrefixListResolverInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamPrefixListResolverOutput, error) {
+	return m.base.ModifyIpamPrefixListResolver(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyIpamPrefixListResolverTarget(ctx context.Context, params *svc.ModifyIpamPrefixListResolverTargetInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamPrefixListResolverTargetOutput, error) {
+	return m.base.ModifyIpamPrefixListResolverTarget(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyIpamResourceCidr(ctx context.Context, params *svc.ModifyIpamResourceCidrInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamResourceCidrOutput, error) {
@@ -2123,6 +2719,10 @@ func (m *EC2) ModifyIpamResourceCidr(ctx context.Context, params *svc.ModifyIpam
 
 func (m *EC2) ModifyIpamResourceDiscovery(ctx context.Context, params *svc.ModifyIpamResourceDiscoveryInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamResourceDiscoveryOutput, error) {
 	return m.base.ModifyIpamResourceDiscovery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyIpamRoutingPolicyRegistration(ctx context.Context, params *svc.ModifyIpamRoutingPolicyRegistrationInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamRoutingPolicyRegistrationOutput, error) {
+	return m.base.ModifyIpamRoutingPolicyRegistration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyIpamScope(ctx context.Context, params *svc.ModifyIpamScopeInput, optFns ...func(*svc.Options)) (*svc.ModifyIpamScopeOutput, error) {
@@ -2141,6 +2741,10 @@ func (m *EC2) ModifyManagedPrefixList(ctx context.Context, params *svc.ModifyMan
 	return m.base.ModifyManagedPrefixList(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyManagedResourceVisibility(ctx context.Context, params *svc.ModifyManagedResourceVisibilityInput, optFns ...func(*svc.Options)) (*svc.ModifyManagedResourceVisibilityOutput, error) {
+	return m.base.ModifyManagedResourceVisibility(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyNetworkInterfaceAttribute(ctx context.Context, params *svc.ModifyNetworkInterfaceAttributeInput, optFns ...func(*svc.Options)) (*svc.ModifyNetworkInterfaceAttributeOutput, error) {
 	return m.base.ModifyNetworkInterfaceAttribute(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2149,8 +2753,16 @@ func (m *EC2) ModifyPrivateDnsNameOptions(ctx context.Context, params *svc.Modif
 	return m.base.ModifyPrivateDnsNameOptions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyPublicIpDnsNameOptions(ctx context.Context, params *svc.ModifyPublicIpDnsNameOptionsInput, optFns ...func(*svc.Options)) (*svc.ModifyPublicIpDnsNameOptionsOutput, error) {
+	return m.base.ModifyPublicIpDnsNameOptions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyReservedInstances(ctx context.Context, params *svc.ModifyReservedInstancesInput, optFns ...func(*svc.Options)) (*svc.ModifyReservedInstancesOutput, error) {
 	return m.base.ModifyReservedInstances(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyRouteServer(ctx context.Context, params *svc.ModifyRouteServerInput, optFns ...func(*svc.Options)) (*svc.ModifyRouteServerOutput, error) {
+	return m.base.ModifyRouteServer(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifySecurityGroupRules(ctx context.Context, params *svc.ModifySecurityGroupRulesInput, optFns ...func(*svc.Options)) (*svc.ModifySecurityGroupRulesOutput, error) {
@@ -2187,6 +2799,14 @@ func (m *EC2) ModifyTrafficMirrorSession(ctx context.Context, params *svc.Modify
 
 func (m *EC2) ModifyTransitGateway(ctx context.Context, params *svc.ModifyTransitGatewayInput, optFns ...func(*svc.Options)) (*svc.ModifyTransitGatewayOutput, error) {
 	return m.base.ModifyTransitGateway(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyTransitGatewayMeteringPolicy(ctx context.Context, params *svc.ModifyTransitGatewayMeteringPolicyInput, optFns ...func(*svc.Options)) (*svc.ModifyTransitGatewayMeteringPolicyOutput, error) {
+	return m.base.ModifyTransitGatewayMeteringPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyTransitGatewayPolicyTableEntry(ctx context.Context, params *svc.ModifyTransitGatewayPolicyTableEntryInput, optFns ...func(*svc.Options)) (*svc.ModifyTransitGatewayPolicyTableEntryOutput, error) {
+	return m.base.ModifyTransitGatewayPolicyTableEntry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyTransitGatewayPrefixListReference(ctx context.Context, params *svc.ModifyTransitGatewayPrefixListReferenceInput, optFns ...func(*svc.Options)) (*svc.ModifyTransitGatewayPrefixListReferenceOutput, error) {
@@ -2237,12 +2857,28 @@ func (m *EC2) ModifyVpcAttribute(ctx context.Context, params *svc.ModifyVpcAttri
 	return m.base.ModifyVpcAttribute(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) ModifyVpcBlockPublicAccessExclusion(ctx context.Context, params *svc.ModifyVpcBlockPublicAccessExclusionInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcBlockPublicAccessExclusionOutput, error) {
+	return m.base.ModifyVpcBlockPublicAccessExclusion(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyVpcBlockPublicAccessOptions(ctx context.Context, params *svc.ModifyVpcBlockPublicAccessOptionsInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcBlockPublicAccessOptionsOutput, error) {
+	return m.base.ModifyVpcBlockPublicAccessOptions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyVpcEncryptionControl(ctx context.Context, params *svc.ModifyVpcEncryptionControlInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcEncryptionControlOutput, error) {
+	return m.base.ModifyVpcEncryptionControl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) ModifyVpcEndpoint(ctx context.Context, params *svc.ModifyVpcEndpointInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcEndpointOutput, error) {
 	return m.base.ModifyVpcEndpoint(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyVpcEndpointConnectionNotification(ctx context.Context, params *svc.ModifyVpcEndpointConnectionNotificationInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcEndpointConnectionNotificationOutput, error) {
 	return m.base.ModifyVpcEndpointConnectionNotification(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ModifyVpcEndpointPayerResponsibility(ctx context.Context, params *svc.ModifyVpcEndpointPayerResponsibilityInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcEndpointPayerResponsibilityOutput, error) {
+	return m.base.ModifyVpcEndpointPayerResponsibility(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ModifyVpcEndpointServiceConfiguration(ctx context.Context, params *svc.ModifyVpcEndpointServiceConfigurationInput, optFns ...func(*svc.Options)) (*svc.ModifyVpcEndpointServiceConfigurationOutput, error) {
@@ -2317,6 +2953,10 @@ func (m *EC2) PurchaseCapacityBlock(ctx context.Context, params *svc.PurchaseCap
 	return m.base.PurchaseCapacityBlock(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) PurchaseCapacityBlockExtension(ctx context.Context, params *svc.PurchaseCapacityBlockExtensionInput, optFns ...func(*svc.Options)) (*svc.PurchaseCapacityBlockExtensionOutput, error) {
+	return m.base.PurchaseCapacityBlockExtension(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) PurchaseHostReservation(ctx context.Context, params *svc.PurchaseHostReservationInput, optFns ...func(*svc.Options)) (*svc.PurchaseHostReservationOutput, error) {
 	return m.base.PurchaseHostReservation(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2353,6 +2993,10 @@ func (m *EC2) RejectCapacityReservationBillingOwnership(ctx context.Context, par
 	return m.base.RejectCapacityReservationBillingOwnership(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) RejectTransitGatewayClientVpnAttachment(ctx context.Context, params *svc.RejectTransitGatewayClientVpnAttachmentInput, optFns ...func(*svc.Options)) (*svc.RejectTransitGatewayClientVpnAttachmentOutput, error) {
+	return m.base.RejectTransitGatewayClientVpnAttachment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) RejectTransitGatewayMulticastDomainAssociations(ctx context.Context, params *svc.RejectTransitGatewayMulticastDomainAssociationsInput, optFns ...func(*svc.Options)) (*svc.RejectTransitGatewayMulticastDomainAssociationsOutput, error) {
 	return m.base.RejectTransitGatewayMulticastDomainAssociations(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2387,6 +3031,14 @@ func (m *EC2) ReleaseIpamPoolAllocation(ctx context.Context, params *svc.Release
 
 func (m *EC2) ReplaceIamInstanceProfileAssociation(ctx context.Context, params *svc.ReplaceIamInstanceProfileAssociationInput, optFns ...func(*svc.Options)) (*svc.ReplaceIamInstanceProfileAssociationOutput, error) {
 	return m.base.ReplaceIamInstanceProfileAssociation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ReplaceImageCriteriaInAllowedImagesSettings(ctx context.Context, params *svc.ReplaceImageCriteriaInAllowedImagesSettingsInput, optFns ...func(*svc.Options)) (*svc.ReplaceImageCriteriaInAllowedImagesSettingsOutput, error) {
+	return m.base.ReplaceImageCriteriaInAllowedImagesSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ReplaceImageInstanceTypeSpecification(ctx context.Context, params *svc.ReplaceImageInstanceTypeSpecificationInput, optFns ...func(*svc.Options)) (*svc.ReplaceImageInstanceTypeSpecificationOutput, error) {
+	return m.base.ReplaceImageInstanceTypeSpecification(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) ReplaceNetworkAclAssociation(ctx context.Context, params *svc.ReplaceNetworkAclAssociationInput, optFns ...func(*svc.Options)) (*svc.ReplaceNetworkAclAssociationOutput, error) {
@@ -2473,6 +3125,10 @@ func (m *EC2) RestoreSnapshotTier(ctx context.Context, params *svc.RestoreSnapsh
 	return m.base.RestoreSnapshotTier(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) RestoreVolumeFromRecycleBin(ctx context.Context, params *svc.RestoreVolumeFromRecycleBinInput, optFns ...func(*svc.Options)) (*svc.RestoreVolumeFromRecycleBinOutput, error) {
+	return m.base.RestoreVolumeFromRecycleBin(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) RevokeClientVpnIngress(ctx context.Context, params *svc.RevokeClientVpnIngressInput, optFns ...func(*svc.Options)) (*svc.RevokeClientVpnIngressOutput, error) {
 	return m.base.RevokeClientVpnIngress(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -2507,6 +3163,10 @@ func (m *EC2) SearchTransitGatewayRoutes(ctx context.Context, params *svc.Search
 
 func (m *EC2) SendDiagnosticInterrupt(ctx context.Context, params *svc.SendDiagnosticInterruptInput, optFns ...func(*svc.Options)) (*svc.SendDiagnosticInterruptOutput, error) {
 	return m.base.SendDiagnosticInterrupt(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) StartDeclarativePoliciesReport(ctx context.Context, params *svc.StartDeclarativePoliciesReportInput, optFns ...func(*svc.Options)) (*svc.StartDeclarativePoliciesReportOutput, error) {
+	return m.base.StartDeclarativePoliciesReport(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) StartInstances(ctx context.Context, params *svc.StartInstancesInput, optFns ...func(*svc.Options)) (*svc.StartInstancesOutput, error) {
@@ -2557,12 +3217,28 @@ func (m *EC2) UnmonitorInstances(ctx context.Context, params *svc.UnmonitorInsta
 	return m.base.UnmonitorInstances(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EC2) UpdateCapacityManagerMonitoredTagKeys(ctx context.Context, params *svc.UpdateCapacityManagerMonitoredTagKeysInput, optFns ...func(*svc.Options)) (*svc.UpdateCapacityManagerMonitoredTagKeysOutput, error) {
+	return m.base.UpdateCapacityManagerMonitoredTagKeys(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) UpdateCapacityManagerOrganizationsAccess(ctx context.Context, params *svc.UpdateCapacityManagerOrganizationsAccessInput, optFns ...func(*svc.Options)) (*svc.UpdateCapacityManagerOrganizationsAccessOutput, error) {
+	return m.base.UpdateCapacityManagerOrganizationsAccess(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) UpdateInterruptibleCapacityReservationAllocation(ctx context.Context, params *svc.UpdateInterruptibleCapacityReservationAllocationInput, optFns ...func(*svc.Options)) (*svc.UpdateInterruptibleCapacityReservationAllocationOutput, error) {
+	return m.base.UpdateInterruptibleCapacityReservationAllocation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EC2) UpdateSecurityGroupRuleDescriptionsEgress(ctx context.Context, params *svc.UpdateSecurityGroupRuleDescriptionsEgressInput, optFns ...func(*svc.Options)) (*svc.UpdateSecurityGroupRuleDescriptionsEgressOutput, error) {
 	return m.base.UpdateSecurityGroupRuleDescriptionsEgress(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) UpdateSecurityGroupRuleDescriptionsIngress(ctx context.Context, params *svc.UpdateSecurityGroupRuleDescriptionsIngressInput, optFns ...func(*svc.Options)) (*svc.UpdateSecurityGroupRuleDescriptionsIngressOutput, error) {
 	return m.base.UpdateSecurityGroupRuleDescriptionsIngress(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EC2) ValidateSecurityGroupQuotasForInterface(ctx context.Context, params *svc.ValidateSecurityGroupQuotasForInterfaceInput, optFns ...func(*svc.Options)) (*svc.ValidateSecurityGroupQuotasForInterfaceOutput, error) {
+	return m.base.ValidateSecurityGroupQuotasForInterface(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EC2) WithdrawByoipCidr(ctx context.Context, params *svc.WithdrawByoipCidrInput, optFns ...func(*svc.Options)) (*svc.WithdrawByoipCidrOutput, error) {

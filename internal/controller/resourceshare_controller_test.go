@@ -83,7 +83,7 @@ func (f *fakeRAM) TagResource(_ context.Context, _ *awsram.TagResourceInput, _ .
 
 func resourceShareCR(mutate ...func(*awsv1alpha1.ResourceShare)) *awsv1alpha1.ResourceShare {
 	rs := &awsv1alpha1.ResourceShare{
-		ObjectMeta: metav1.ObjectMeta{Name: "tgw-share", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "tgw-share", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.ResourceShareSpec{
 			Name:         "tgw-share",
 			ResourceArns: []string{"arn:aws:ec2:us-east-1:123456789012:transit-gateway/tgw-123"},

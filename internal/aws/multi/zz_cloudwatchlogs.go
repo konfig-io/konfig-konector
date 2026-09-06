@@ -41,8 +41,16 @@ func (m *CloudWatchLogs) AssociateKmsKey(ctx context.Context, params *svc.Associ
 	return m.base.AssociateKmsKey(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) AssociateSourceToS3TableIntegration(ctx context.Context, params *svc.AssociateSourceToS3TableIntegrationInput, optFns ...func(*svc.Options)) (*svc.AssociateSourceToS3TableIntegrationOutput, error) {
+	return m.base.AssociateSourceToS3TableIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) CancelExportTask(ctx context.Context, params *svc.CancelExportTaskInput, optFns ...func(*svc.Options)) (*svc.CancelExportTaskOutput, error) {
 	return m.base.CancelExportTask(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) CancelImportTask(ctx context.Context, params *svc.CancelImportTaskInput, optFns ...func(*svc.Options)) (*svc.CancelImportTaskOutput, error) {
+	return m.base.CancelImportTask(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) CreateDelivery(ctx context.Context, params *svc.CreateDeliveryInput, optFns ...func(*svc.Options)) (*svc.CreateDeliveryOutput, error) {
@@ -51,6 +59,10 @@ func (m *CloudWatchLogs) CreateDelivery(ctx context.Context, params *svc.CreateD
 
 func (m *CloudWatchLogs) CreateExportTask(ctx context.Context, params *svc.CreateExportTaskInput, optFns ...func(*svc.Options)) (*svc.CreateExportTaskOutput, error) {
 	return m.base.CreateExportTask(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) CreateImportTask(ctx context.Context, params *svc.CreateImportTaskInput, optFns ...func(*svc.Options)) (*svc.CreateImportTaskOutput, error) {
+	return m.base.CreateImportTask(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) CreateLogAnomalyDetector(ctx context.Context, params *svc.CreateLogAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.CreateLogAnomalyDetectorOutput, error) {
@@ -63,6 +75,14 @@ func (m *CloudWatchLogs) CreateLogGroup(ctx context.Context, params *svc.CreateL
 
 func (m *CloudWatchLogs) CreateLogStream(ctx context.Context, params *svc.CreateLogStreamInput, optFns ...func(*svc.Options)) (*svc.CreateLogStreamOutput, error) {
 	return m.base.CreateLogStream(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) CreateLookupTable(ctx context.Context, params *svc.CreateLookupTableInput, optFns ...func(*svc.Options)) (*svc.CreateLookupTableOutput, error) {
+	return m.base.CreateLookupTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) CreateScheduledQuery(ctx context.Context, params *svc.CreateScheduledQueryInput, optFns ...func(*svc.Options)) (*svc.CreateScheduledQueryOutput, error) {
+	return m.base.CreateScheduledQuery(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) DeleteAccountPolicy(ctx context.Context, params *svc.DeleteAccountPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteAccountPolicyOutput, error) {
@@ -93,6 +113,14 @@ func (m *CloudWatchLogs) DeleteDestination(ctx context.Context, params *svc.Dele
 	return m.base.DeleteDestination(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) DeleteIndexPolicy(ctx context.Context, params *svc.DeleteIndexPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteIndexPolicyOutput, error) {
+	return m.base.DeleteIndexPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DeleteIntegration(ctx context.Context, params *svc.DeleteIntegrationInput, optFns ...func(*svc.Options)) (*svc.DeleteIntegrationOutput, error) {
+	return m.base.DeleteIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) DeleteLogAnomalyDetector(ctx context.Context, params *svc.DeleteLogAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.DeleteLogAnomalyDetectorOutput, error) {
 	return m.base.DeleteLogAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -103,6 +131,10 @@ func (m *CloudWatchLogs) DeleteLogGroup(ctx context.Context, params *svc.DeleteL
 
 func (m *CloudWatchLogs) DeleteLogStream(ctx context.Context, params *svc.DeleteLogStreamInput, optFns ...func(*svc.Options)) (*svc.DeleteLogStreamOutput, error) {
 	return m.base.DeleteLogStream(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DeleteLookupTable(ctx context.Context, params *svc.DeleteLookupTableInput, optFns ...func(*svc.Options)) (*svc.DeleteLookupTableOutput, error) {
+	return m.base.DeleteLookupTable(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) DeleteMetricFilter(ctx context.Context, params *svc.DeleteMetricFilterInput, optFns ...func(*svc.Options)) (*svc.DeleteMetricFilterOutput, error) {
@@ -121,12 +153,28 @@ func (m *CloudWatchLogs) DeleteRetentionPolicy(ctx context.Context, params *svc.
 	return m.base.DeleteRetentionPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) DeleteScheduledQuery(ctx context.Context, params *svc.DeleteScheduledQueryInput, optFns ...func(*svc.Options)) (*svc.DeleteScheduledQueryOutput, error) {
+	return m.base.DeleteScheduledQuery(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) DeleteSubscriptionFilter(ctx context.Context, params *svc.DeleteSubscriptionFilterInput, optFns ...func(*svc.Options)) (*svc.DeleteSubscriptionFilterOutput, error) {
 	return m.base.DeleteSubscriptionFilter(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) DeleteSyslogConfiguration(ctx context.Context, params *svc.DeleteSyslogConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteSyslogConfigurationOutput, error) {
+	return m.base.DeleteSyslogConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DeleteTransformer(ctx context.Context, params *svc.DeleteTransformerInput, optFns ...func(*svc.Options)) (*svc.DeleteTransformerOutput, error) {
+	return m.base.DeleteTransformer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) DescribeAccountPolicies(ctx context.Context, params *svc.DescribeAccountPoliciesInput, optFns ...func(*svc.Options)) (*svc.DescribeAccountPoliciesOutput, error) {
 	return m.base.DescribeAccountPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DescribeConfigurationTemplates(ctx context.Context, params *svc.DescribeConfigurationTemplatesInput, optFns ...func(*svc.Options)) (*svc.DescribeConfigurationTemplatesOutput, error) {
+	return m.base.DescribeConfigurationTemplates(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) DescribeDeliveries(ctx context.Context, params *svc.DescribeDeliveriesInput, optFns ...func(*svc.Options)) (*svc.DescribeDeliveriesOutput, error) {
@@ -149,12 +197,32 @@ func (m *CloudWatchLogs) DescribeExportTasks(ctx context.Context, params *svc.De
 	return m.base.DescribeExportTasks(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) DescribeFieldIndexes(ctx context.Context, params *svc.DescribeFieldIndexesInput, optFns ...func(*svc.Options)) (*svc.DescribeFieldIndexesOutput, error) {
+	return m.base.DescribeFieldIndexes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DescribeImportTaskBatches(ctx context.Context, params *svc.DescribeImportTaskBatchesInput, optFns ...func(*svc.Options)) (*svc.DescribeImportTaskBatchesOutput, error) {
+	return m.base.DescribeImportTaskBatches(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DescribeImportTasks(ctx context.Context, params *svc.DescribeImportTasksInput, optFns ...func(*svc.Options)) (*svc.DescribeImportTasksOutput, error) {
+	return m.base.DescribeImportTasks(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DescribeIndexPolicies(ctx context.Context, params *svc.DescribeIndexPoliciesInput, optFns ...func(*svc.Options)) (*svc.DescribeIndexPoliciesOutput, error) {
+	return m.base.DescribeIndexPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) DescribeLogGroups(ctx context.Context, params *svc.DescribeLogGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribeLogGroupsOutput, error) {
 	return m.base.DescribeLogGroups(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) DescribeLogStreams(ctx context.Context, params *svc.DescribeLogStreamsInput, optFns ...func(*svc.Options)) (*svc.DescribeLogStreamsOutput, error) {
 	return m.base.DescribeLogStreams(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) DescribeLookupTables(ctx context.Context, params *svc.DescribeLookupTablesInput, optFns ...func(*svc.Options)) (*svc.DescribeLookupTablesOutput, error) {
+	return m.base.DescribeLookupTables(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) DescribeMetricFilters(ctx context.Context, params *svc.DescribeMetricFiltersInput, optFns ...func(*svc.Options)) (*svc.DescribeMetricFiltersOutput, error) {
@@ -181,6 +249,10 @@ func (m *CloudWatchLogs) DisassociateKmsKey(ctx context.Context, params *svc.Dis
 	return m.base.DisassociateKmsKey(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) DisassociateSourceFromS3TableIntegration(ctx context.Context, params *svc.DisassociateSourceFromS3TableIntegrationInput, optFns ...func(*svc.Options)) (*svc.DisassociateSourceFromS3TableIntegrationOutput, error) {
+	return m.base.DisassociateSourceFromS3TableIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) FilterLogEvents(ctx context.Context, params *svc.FilterLogEventsInput, optFns ...func(*svc.Options)) (*svc.FilterLogEventsOutput, error) {
 	return m.base.FilterLogEvents(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -205,6 +277,10 @@ func (m *CloudWatchLogs) GetDeliverySource(ctx context.Context, params *svc.GetD
 	return m.base.GetDeliverySource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) GetIntegration(ctx context.Context, params *svc.GetIntegrationInput, optFns ...func(*svc.Options)) (*svc.GetIntegrationOutput, error) {
+	return m.base.GetIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) GetLogAnomalyDetector(ctx context.Context, params *svc.GetLogAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.GetLogAnomalyDetectorOutput, error) {
 	return m.base.GetLogAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -213,24 +289,80 @@ func (m *CloudWatchLogs) GetLogEvents(ctx context.Context, params *svc.GetLogEve
 	return m.base.GetLogEvents(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) GetLogFields(ctx context.Context, params *svc.GetLogFieldsInput, optFns ...func(*svc.Options)) (*svc.GetLogFieldsOutput, error) {
+	return m.base.GetLogFields(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) GetLogGroupFields(ctx context.Context, params *svc.GetLogGroupFieldsInput, optFns ...func(*svc.Options)) (*svc.GetLogGroupFieldsOutput, error) {
 	return m.base.GetLogGroupFields(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) GetLogObject(ctx context.Context, params *svc.GetLogObjectInput, optFns ...func(*svc.Options)) (*svc.GetLogObjectOutput, error) {
+	return m.base.GetLogObject(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) GetLogRecord(ctx context.Context, params *svc.GetLogRecordInput, optFns ...func(*svc.Options)) (*svc.GetLogRecordOutput, error) {
 	return m.base.GetLogRecord(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) GetLookupTable(ctx context.Context, params *svc.GetLookupTableInput, optFns ...func(*svc.Options)) (*svc.GetLookupTableOutput, error) {
+	return m.base.GetLookupTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) GetQueryResults(ctx context.Context, params *svc.GetQueryResultsInput, optFns ...func(*svc.Options)) (*svc.GetQueryResultsOutput, error) {
 	return m.base.GetQueryResults(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) GetScheduledQuery(ctx context.Context, params *svc.GetScheduledQueryInput, optFns ...func(*svc.Options)) (*svc.GetScheduledQueryOutput, error) {
+	return m.base.GetScheduledQuery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) GetScheduledQueryHistory(ctx context.Context, params *svc.GetScheduledQueryHistoryInput, optFns ...func(*svc.Options)) (*svc.GetScheduledQueryHistoryOutput, error) {
+	return m.base.GetScheduledQueryHistory(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) GetStorageTierPolicy(ctx context.Context, params *svc.GetStorageTierPolicyInput, optFns ...func(*svc.Options)) (*svc.GetStorageTierPolicyOutput, error) {
+	return m.base.GetStorageTierPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) GetTransformer(ctx context.Context, params *svc.GetTransformerInput, optFns ...func(*svc.Options)) (*svc.GetTransformerOutput, error) {
+	return m.base.GetTransformer(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListAggregateLogGroupSummaries(ctx context.Context, params *svc.ListAggregateLogGroupSummariesInput, optFns ...func(*svc.Options)) (*svc.ListAggregateLogGroupSummariesOutput, error) {
+	return m.base.ListAggregateLogGroupSummaries(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) ListAnomalies(ctx context.Context, params *svc.ListAnomaliesInput, optFns ...func(*svc.Options)) (*svc.ListAnomaliesOutput, error) {
 	return m.base.ListAnomalies(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) ListIntegrations(ctx context.Context, params *svc.ListIntegrationsInput, optFns ...func(*svc.Options)) (*svc.ListIntegrationsOutput, error) {
+	return m.base.ListIntegrations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) ListLogAnomalyDetectors(ctx context.Context, params *svc.ListLogAnomalyDetectorsInput, optFns ...func(*svc.Options)) (*svc.ListLogAnomalyDetectorsOutput, error) {
 	return m.base.ListLogAnomalyDetectors(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListLogGroups(ctx context.Context, params *svc.ListLogGroupsInput, optFns ...func(*svc.Options)) (*svc.ListLogGroupsOutput, error) {
+	return m.base.ListLogGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListLogGroupsForQuery(ctx context.Context, params *svc.ListLogGroupsForQueryInput, optFns ...func(*svc.Options)) (*svc.ListLogGroupsForQueryOutput, error) {
+	return m.base.ListLogGroupsForQuery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListScheduledQueries(ctx context.Context, params *svc.ListScheduledQueriesInput, optFns ...func(*svc.Options)) (*svc.ListScheduledQueriesOutput, error) {
+	return m.base.ListScheduledQueries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListSourcesForS3TableIntegration(ctx context.Context, params *svc.ListSourcesForS3TableIntegrationInput, optFns ...func(*svc.Options)) (*svc.ListSourcesForS3TableIntegrationOutput, error) {
+	return m.base.ListSourcesForS3TableIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) ListSyslogConfigurations(ctx context.Context, params *svc.ListSyslogConfigurationsInput, optFns ...func(*svc.Options)) (*svc.ListSyslogConfigurationsOutput, error) {
+	return m.base.ListSyslogConfigurations(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {
@@ -243,6 +375,10 @@ func (m *CloudWatchLogs) ListTagsLogGroup(ctx context.Context, params *svc.ListT
 
 func (m *CloudWatchLogs) PutAccountPolicy(ctx context.Context, params *svc.PutAccountPolicyInput, optFns ...func(*svc.Options)) (*svc.PutAccountPolicyOutput, error) {
 	return m.base.PutAccountPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) PutBearerTokenAuthentication(ctx context.Context, params *svc.PutBearerTokenAuthenticationInput, optFns ...func(*svc.Options)) (*svc.PutBearerTokenAuthenticationOutput, error) {
+	return m.base.PutBearerTokenAuthentication(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) PutDataProtectionPolicy(ctx context.Context, params *svc.PutDataProtectionPolicyInput, optFns ...func(*svc.Options)) (*svc.PutDataProtectionPolicyOutput, error) {
@@ -269,8 +405,20 @@ func (m *CloudWatchLogs) PutDestinationPolicy(ctx context.Context, params *svc.P
 	return m.base.PutDestinationPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) PutIndexPolicy(ctx context.Context, params *svc.PutIndexPolicyInput, optFns ...func(*svc.Options)) (*svc.PutIndexPolicyOutput, error) {
+	return m.base.PutIndexPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) PutIntegration(ctx context.Context, params *svc.PutIntegrationInput, optFns ...func(*svc.Options)) (*svc.PutIntegrationOutput, error) {
+	return m.base.PutIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) PutLogEvents(ctx context.Context, params *svc.PutLogEventsInput, optFns ...func(*svc.Options)) (*svc.PutLogEventsOutput, error) {
 	return m.base.PutLogEvents(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) PutLogGroupDeletionProtection(ctx context.Context, params *svc.PutLogGroupDeletionProtectionInput, optFns ...func(*svc.Options)) (*svc.PutLogGroupDeletionProtectionOutput, error) {
+	return m.base.PutLogGroupDeletionProtection(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) PutMetricFilter(ctx context.Context, params *svc.PutMetricFilterInput, optFns ...func(*svc.Options)) (*svc.PutMetricFilterOutput, error) {
@@ -289,8 +437,20 @@ func (m *CloudWatchLogs) PutRetentionPolicy(ctx context.Context, params *svc.Put
 	return m.base.PutRetentionPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) PutStorageTierPolicy(ctx context.Context, params *svc.PutStorageTierPolicyInput, optFns ...func(*svc.Options)) (*svc.PutStorageTierPolicyOutput, error) {
+	return m.base.PutStorageTierPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) PutSubscriptionFilter(ctx context.Context, params *svc.PutSubscriptionFilterInput, optFns ...func(*svc.Options)) (*svc.PutSubscriptionFilterOutput, error) {
 	return m.base.PutSubscriptionFilter(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) PutSyslogConfiguration(ctx context.Context, params *svc.PutSyslogConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutSyslogConfigurationOutput, error) {
+	return m.base.PutSyslogConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) PutTransformer(ctx context.Context, params *svc.PutTransformerInput, optFns ...func(*svc.Options)) (*svc.PutTransformerOutput, error) {
+	return m.base.PutTransformer(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudWatchLogs) StartLiveTail(ctx context.Context, params *svc.StartLiveTailInput, optFns ...func(*svc.Options)) (*svc.StartLiveTailOutput, error) {
@@ -317,6 +477,10 @@ func (m *CloudWatchLogs) TestMetricFilter(ctx context.Context, params *svc.TestM
 	return m.base.TestMetricFilter(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) TestTransformer(ctx context.Context, params *svc.TestTransformerInput, optFns ...func(*svc.Options)) (*svc.TestTransformerOutput, error) {
+	return m.base.TestTransformer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) UntagLogGroup(ctx context.Context, params *svc.UntagLogGroupInput, optFns ...func(*svc.Options)) (*svc.UntagLogGroupOutput, error) {
 	return m.base.UntagLogGroup(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -329,6 +493,18 @@ func (m *CloudWatchLogs) UpdateAnomaly(ctx context.Context, params *svc.UpdateAn
 	return m.base.UpdateAnomaly(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudWatchLogs) UpdateDeliveryConfiguration(ctx context.Context, params *svc.UpdateDeliveryConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateDeliveryConfigurationOutput, error) {
+	return m.base.UpdateDeliveryConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudWatchLogs) UpdateLogAnomalyDetector(ctx context.Context, params *svc.UpdateLogAnomalyDetectorInput, optFns ...func(*svc.Options)) (*svc.UpdateLogAnomalyDetectorOutput, error) {
 	return m.base.UpdateLogAnomalyDetector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) UpdateLookupTable(ctx context.Context, params *svc.UpdateLookupTableInput, optFns ...func(*svc.Options)) (*svc.UpdateLookupTableOutput, error) {
+	return m.base.UpdateLookupTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudWatchLogs) UpdateScheduledQuery(ctx context.Context, params *svc.UpdateScheduledQueryInput, optFns ...func(*svc.Options)) (*svc.UpdateScheduledQueryOutput, error) {
+	return m.base.UpdateScheduledQuery(ctx, params, m.opts(ctx, optFns)...)
 }

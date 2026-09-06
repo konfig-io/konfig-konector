@@ -99,6 +99,7 @@ func promWorkspaceCR(mutate ...func(*awsv1alpha1.PrometheusWorkspace)) *awsv1alp
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "metrics",
 			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 			Generation: 1,
 		},
 		Spec: awsv1alpha1.PrometheusWorkspaceSpec{

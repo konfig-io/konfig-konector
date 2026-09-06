@@ -43,6 +43,10 @@ func (m *OpenSearchServerless) BatchGetCollection(ctx context.Context, params *s
 	return m.base.BatchGetCollection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearchServerless) BatchGetCollectionGroup(ctx context.Context, params *svc.BatchGetCollectionGroupInput, optFns ...func(*svc.Options)) (*svc.BatchGetCollectionGroupOutput, error) {
+	return m.base.BatchGetCollectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearchServerless) BatchGetEffectiveLifecyclePolicy(ctx context.Context, params *svc.BatchGetEffectiveLifecyclePolicyInput, optFns ...func(*svc.Options)) (*svc.BatchGetEffectiveLifecyclePolicyOutput, error) {
 	return m.base.BatchGetEffectiveLifecyclePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -61,6 +65,14 @@ func (m *OpenSearchServerless) CreateAccessPolicy(ctx context.Context, params *s
 
 func (m *OpenSearchServerless) CreateCollection(ctx context.Context, params *svc.CreateCollectionInput, optFns ...func(*svc.Options)) (*svc.CreateCollectionOutput, error) {
 	return m.base.CreateCollection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) CreateCollectionGroup(ctx context.Context, params *svc.CreateCollectionGroupInput, optFns ...func(*svc.Options)) (*svc.CreateCollectionGroupOutput, error) {
+	return m.base.CreateCollectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) CreateIndex(ctx context.Context, params *svc.CreateIndexInput, optFns ...func(*svc.Options)) (*svc.CreateIndexOutput, error) {
+	return m.base.CreateIndex(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearchServerless) CreateLifecyclePolicy(ctx context.Context, params *svc.CreateLifecyclePolicyInput, optFns ...func(*svc.Options)) (*svc.CreateLifecyclePolicyOutput, error) {
@@ -87,6 +99,14 @@ func (m *OpenSearchServerless) DeleteCollection(ctx context.Context, params *svc
 	return m.base.DeleteCollection(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearchServerless) DeleteCollectionGroup(ctx context.Context, params *svc.DeleteCollectionGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteCollectionGroupOutput, error) {
+	return m.base.DeleteCollectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) DeleteIndex(ctx context.Context, params *svc.DeleteIndexInput, optFns ...func(*svc.Options)) (*svc.DeleteIndexOutput, error) {
+	return m.base.DeleteIndex(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearchServerless) DeleteLifecyclePolicy(ctx context.Context, params *svc.DeleteLifecyclePolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteLifecyclePolicyOutput, error) {
 	return m.base.DeleteLifecyclePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -111,6 +131,10 @@ func (m *OpenSearchServerless) GetAccountSettings(ctx context.Context, params *s
 	return m.base.GetAccountSettings(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *OpenSearchServerless) GetIndex(ctx context.Context, params *svc.GetIndexInput, optFns ...func(*svc.Options)) (*svc.GetIndexOutput, error) {
+	return m.base.GetIndex(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *OpenSearchServerless) GetPoliciesStats(ctx context.Context, params *svc.GetPoliciesStatsInput, optFns ...func(*svc.Options)) (*svc.GetPoliciesStatsOutput, error) {
 	return m.base.GetPoliciesStats(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -125,6 +149,10 @@ func (m *OpenSearchServerless) GetSecurityPolicy(ctx context.Context, params *sv
 
 func (m *OpenSearchServerless) ListAccessPolicies(ctx context.Context, params *svc.ListAccessPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListAccessPoliciesOutput, error) {
 	return m.base.ListAccessPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) ListCollectionGroups(ctx context.Context, params *svc.ListCollectionGroupsInput, optFns ...func(*svc.Options)) (*svc.ListCollectionGroupsOutput, error) {
+	return m.base.ListCollectionGroups(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearchServerless) ListCollections(ctx context.Context, params *svc.ListCollectionsInput, optFns ...func(*svc.Options)) (*svc.ListCollectionsOutput, error) {
@@ -169,6 +197,14 @@ func (m *OpenSearchServerless) UpdateAccountSettings(ctx context.Context, params
 
 func (m *OpenSearchServerless) UpdateCollection(ctx context.Context, params *svc.UpdateCollectionInput, optFns ...func(*svc.Options)) (*svc.UpdateCollectionOutput, error) {
 	return m.base.UpdateCollection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) UpdateCollectionGroup(ctx context.Context, params *svc.UpdateCollectionGroupInput, optFns ...func(*svc.Options)) (*svc.UpdateCollectionGroupOutput, error) {
+	return m.base.UpdateCollectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *OpenSearchServerless) UpdateIndex(ctx context.Context, params *svc.UpdateIndexInput, optFns ...func(*svc.Options)) (*svc.UpdateIndexOutput, error) {
+	return m.base.UpdateIndex(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *OpenSearchServerless) UpdateLifecyclePolicy(ctx context.Context, params *svc.UpdateLifecyclePolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateLifecyclePolicyOutput, error) {

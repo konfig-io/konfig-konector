@@ -81,6 +81,10 @@ func (r *CloudFrontCachePolicyReconciler) Reconcile(ctx context.Context, req ctr
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileCachePolicy(ctx, obj); err != nil {
@@ -95,6 +99,15 @@ func buildCachePolicyConfig(obj *awsv1alpha1.CloudFrontCachePolicy) *cftypes.Cac
 	cfg := &cftypes.CachePolicyConfig{
 		Name:   aws.String(obj.Spec.Name),
 		MinTTL: aws.Int64(obj.Spec.MinTTL),
+		// Required by UpdateCachePolicy (CreateCachePolicy tolerates its
+		// absence); the conservative default forwards nothing to the cache key.
+		ParametersInCacheKeyAndForwardedToOrigin: &cftypes.ParametersInCacheKeyAndForwardedToOrigin{
+			EnableAcceptEncodingGzip:   aws.Bool(false),
+			EnableAcceptEncodingBrotli: aws.Bool(false),
+			HeadersConfig:              &cftypes.CachePolicyHeadersConfig{HeaderBehavior: cftypes.CachePolicyHeaderBehaviorNone},
+			CookiesConfig:              &cftypes.CachePolicyCookiesConfig{CookieBehavior: cftypes.CachePolicyCookieBehaviorNone},
+			QueryStringsConfig:         &cftypes.CachePolicyQueryStringsConfig{QueryStringBehavior: cftypes.CachePolicyQueryStringBehaviorNone},
+		},
 	}
 	if obj.Spec.DefaultTTL != nil {
 		cfg.DefaultTTL = obj.Spec.DefaultTTL

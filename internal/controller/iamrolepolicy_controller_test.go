@@ -68,8 +68,9 @@ const testRoleARN = "arn:aws:iam::123456789012:role/my-role"
 func newTestIAMRolePolicy(mutators ...func(*awsv1alpha1.IAMRolePolicy)) *awsv1alpha1.IAMRolePolicy {
 	rp := &awsv1alpha1.IAMRolePolicy{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-rolepolicy",
-			Namespace: "default",
+			Name:       "test-rolepolicy",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.IAMRolePolicySpec{
 			RoleRef:        awsv1alpha1.RoleRef{Name: "test-role"},

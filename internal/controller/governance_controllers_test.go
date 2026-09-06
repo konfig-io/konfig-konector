@@ -129,7 +129,7 @@ func (f *fakeConfigRecorderAPI) StopConfigurationRecorder(_ context.Context, _ *
 
 func configRecorderCR(mutate ...func(*awsv1alpha1.ConfigRecorder)) *awsv1alpha1.ConfigRecorder {
 	cr := &awsv1alpha1.ConfigRecorder{
-		ObjectMeta: metav1.ObjectMeta{Name: "default", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "default", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.ConfigRecorderSpec{
 			RecorderName: "default",
 			RoleARN:      "arn:aws:iam::123456789012:role/config-role",
@@ -236,7 +236,7 @@ func (f *fakeConfigChannelAPI) DeleteDeliveryChannel(_ context.Context, _ *awsco
 
 func configChannelCR(mutate ...func(*awsv1alpha1.ConfigDeliveryChannel)) *awsv1alpha1.ConfigDeliveryChannel {
 	ch := &awsv1alpha1.ConfigDeliveryChannel{
-		ObjectMeta: metav1.ObjectMeta{Name: "default", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "default", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.ConfigDeliveryChannelSpec{
 			ChannelName:  "default",
 			S3BucketName: "config-bucket",
@@ -344,7 +344,7 @@ func (f *fakeConfigRuleAPI) DeleteConfigRule(_ context.Context, _ *awsconfigserv
 
 func configRuleCR(mutate ...func(*awsv1alpha1.ConfigRule)) *awsv1alpha1.ConfigRule {
 	rule := &awsv1alpha1.ConfigRule{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-rule", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-rule", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.ConfigRuleSpec{
 			RuleName:         "my-rule",
 			SourceOwner:      "AWS",
@@ -458,7 +458,7 @@ func (f *fakeBackupVaultAPI) TagResource(_ context.Context, _ *awsbackup.TagReso
 
 func backupVaultCR(mutate ...func(*awsv1alpha1.BackupVault)) *awsv1alpha1.BackupVault {
 	v := &awsv1alpha1.BackupVault{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-vault", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-vault", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.BackupVaultSpec{VaultName: "my-vault"},
 	}
 	for _, m := range mutate {
@@ -561,7 +561,7 @@ func (f *fakeBackupSelectionAPI) DeleteBackupSelection(_ context.Context, params
 
 func backupSelectionCR(mutate ...func(*awsv1alpha1.BackupSelection)) *awsv1alpha1.BackupSelection {
 	sel := &awsv1alpha1.BackupSelection{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-selection", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-selection", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.BackupSelectionSpec{
 			PlanRef:       "my-plan",
 			SelectionName: "my-selection",
@@ -698,7 +698,7 @@ func (f *fakeGuardDutyAPI) DeleteDetector(_ context.Context, params *awsguarddut
 
 func guardDutyCR(mutate ...func(*awsv1alpha1.GuardDutyDetector)) *awsv1alpha1.GuardDutyDetector {
 	det := &awsv1alpha1.GuardDutyDetector{
-		ObjectMeta: metav1.ObjectMeta{Name: "detector", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "detector", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.GuardDutyDetectorSpec{
 			FindingPublishingFrequency: "SIX_HOURS",
 		},
@@ -831,7 +831,7 @@ func (f *fakeSecurityHubAccountAPI) UpdateSecurityHubConfiguration(_ context.Con
 
 func securityHubAccountCR(mutate ...func(*awsv1alpha1.SecurityHubAccount)) *awsv1alpha1.SecurityHubAccount {
 	hub := &awsv1alpha1.SecurityHubAccount{
-		ObjectMeta: metav1.ObjectMeta{Name: "hub", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "hub", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.SecurityHubAccountSpec{
 			EnableDefaultStandards: aws.Bool(false),
 		},
@@ -948,7 +948,7 @@ func (f *fakeSecurityHubStandardAPI) BatchDisableStandards(_ context.Context, pa
 
 func securityHubStandardCR(mutate ...func(*awsv1alpha1.SecurityHubStandard)) *awsv1alpha1.SecurityHubStandard {
 	std := &awsv1alpha1.SecurityHubStandard{
-		ObjectMeta: metav1.ObjectMeta{Name: "fsbp", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "fsbp", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.SecurityHubStandardSpec{StandardsARN: testStandardsARN},
 	}
 	for _, m := range mutate {
@@ -1106,7 +1106,7 @@ func (f *fakeInspectorAPI) Disable(_ context.Context, params *awsinspector2.Disa
 
 func inspectorCR(mutate ...func(*awsv1alpha1.InspectorEnabler)) *awsv1alpha1.InspectorEnabler {
 	ins := &awsv1alpha1.InspectorEnabler{
-		ObjectMeta: metav1.ObjectMeta{Name: "inspector", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "inspector", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec:       awsv1alpha1.InspectorEnablerSpec{ResourceTypes: []awsv1alpha1.InspectorResourceType{"EC2", "ECR"}},
 	}
 	for _, m := range mutate {

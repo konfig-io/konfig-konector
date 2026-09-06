@@ -137,6 +137,10 @@ func (m *CodeCommit) GetBlob(ctx context.Context, params *svc.GetBlobInput, optF
 	return m.base.GetBlob(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CodeCommit) GetBlobDifferences(ctx context.Context, params *svc.GetBlobDifferencesInput, optFns ...func(*svc.Options)) (*svc.GetBlobDifferencesOutput, error) {
+	return m.base.GetBlobDifferences(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CodeCommit) GetBranch(ctx context.Context, params *svc.GetBranchInput, optFns ...func(*svc.Options)) (*svc.GetBranchOutput, error) {
 	return m.base.GetBranch(ctx, params, m.opts(ctx, optFns)...)
 }

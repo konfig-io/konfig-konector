@@ -104,6 +104,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 
+	ec2helper "github.com/konfig-io/konfig-konector/internal/aws/ec2"
 	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
 
@@ -226,7 +227,7 @@ func NewClients(ctx context.Context) (*Clients, error) {
 		IAM:                  multi.NewIAM(iam.NewFromConfig(cfg)),
 		Route53:              multi.NewRoute53(route53.NewFromConfig(cfg)),
 		EKS:                  multi.NewEKS(eks.NewFromConfig(cfg)),
-		EC2:                  multi.NewEC2(ec2.NewFromConfig(cfg)),
+		EC2:                  multi.NewEC2(ec2.NewFromConfig(cfg, func(o *ec2.Options) { o.APIOptions = append(o.APIOptions, ec2helper.StripEmptyTagSpecifications) })),
 		RDS:                  multi.NewRDS(rds.NewFromConfig(cfg)),
 		AutoScaling:          multi.NewAutoScaling(autoscaling.NewFromConfig(cfg)),
 		S3:                   multi.NewS3(s3.NewFromConfig(cfg)),

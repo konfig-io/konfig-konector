@@ -88,6 +88,10 @@ func (r *SSMMaintenanceWindowReconciler) Reconcile(ctx context.Context, req ctrl
 		if err := r.Update(ctx, mw); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileWindow(ctx, mw); err != nil {
@@ -108,7 +112,7 @@ func (r *SSMMaintenanceWindowReconciler) reconcileWindow(ctx context.Context, mw
 		input := &awsssm.CreateMaintenanceWindowInput{
 			Name:                     aws.String(mw.Spec.Name),
 			Schedule:                 aws.String(mw.Spec.Schedule),
-			Duration:                 mw.Spec.Duration,
+			Duration:                 aws.Int32(mw.Spec.Duration),
 			Cutoff:                   mw.Spec.Cutoff,
 			AllowUnassociatedTargets: mw.Spec.AllowUnassociatedTargets,
 		}

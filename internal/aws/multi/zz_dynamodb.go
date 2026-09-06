@@ -213,6 +213,10 @@ func (m *DynamoDB) Scan(ctx context.Context, params *svc.ScanInput, optFns ...fu
 	return m.base.Scan(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *DynamoDB) SearchVectors(ctx context.Context, params *svc.SearchVectorsInput, optFns ...func(*svc.Options)) (*svc.SearchVectorsOutput, error) {
+	return m.base.SearchVectors(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *DynamoDB) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }

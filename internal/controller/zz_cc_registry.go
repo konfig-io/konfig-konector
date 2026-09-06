@@ -798,12 +798,6 @@ func init() {
 		CloudControlKind{Kind: "SecurityLakeSubscriber", TypeName: "AWS::SecurityLake::Subscriber", New: func() cfn.CloudControlObject { return &awsv1alpha1.SecurityLakeSubscriber{} }},
 		CloudControlKind{Kind: "SecurityLakeSubscriberNotification", TypeName: "AWS::SecurityLake::SubscriberNotification", New: func() cfn.CloudControlObject { return &awsv1alpha1.SecurityLakeSubscriberNotification{} }},
 		CloudControlKind{Kind: "ServiceCatalogAcceptedPortfolioShare", TypeName: "AWS::ServiceCatalog::AcceptedPortfolioShare", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAcceptedPortfolioShare{} }},
-		CloudControlKind{Kind: "ServiceCatalogAppRegistryApplication", TypeName: "AWS::ServiceCatalogAppRegistry::Application", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryApplication{} }},
-		CloudControlKind{Kind: "ServiceCatalogAppRegistryAttributeGroup", TypeName: "AWS::ServiceCatalogAppRegistry::AttributeGroup", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryAttributeGroup{} }},
-		CloudControlKind{Kind: "ServiceCatalogAppRegistryAttributeGroupAssociation", TypeName: "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation", New: func() cfn.CloudControlObject {
-			return &awsv1alpha1.ServiceCatalogAppRegistryAttributeGroupAssociation{}
-		}},
-		CloudControlKind{Kind: "ServiceCatalogAppRegistryResourceAssociation", TypeName: "AWS::ServiceCatalogAppRegistry::ResourceAssociation", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogAppRegistryResourceAssociation{} }},
 		CloudControlKind{Kind: "ServiceCatalogCloudFormationProvisionedProduct", TypeName: "AWS::ServiceCatalog::CloudFormationProvisionedProduct", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogCloudFormationProvisionedProduct{} }},
 		CloudControlKind{Kind: "ServiceCatalogLaunchNotificationConstraint", TypeName: "AWS::ServiceCatalog::LaunchNotificationConstraint", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogLaunchNotificationConstraint{} }},
 		CloudControlKind{Kind: "ServiceCatalogLaunchRoleConstraint", TypeName: "AWS::ServiceCatalog::LaunchRoleConstraint", New: func() cfn.CloudControlObject { return &awsv1alpha1.ServiceCatalogLaunchRoleConstraint{} }},

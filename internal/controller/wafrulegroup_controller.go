@@ -81,6 +81,10 @@ func (r *WAFRuleGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileRuleGroup(ctx, obj); err != nil {
@@ -138,7 +142,7 @@ func (r *WAFRuleGroupReconciler) reconcileRuleGroup(ctx context.Context, obj *aw
 	input := &awswafv2.CreateRuleGroupInput{
 		Name:             aws.String(obj.Spec.Name),
 		Scope:            scope,
-		Capacity:         obj.Spec.Capacity,
+		Capacity:         aws.Int64(obj.Spec.Capacity),
 		VisibilityConfig: visibilityConfig,
 		Rules:            []waftypes.Rule{},
 	}

@@ -100,7 +100,7 @@ func redshiftScheme(t *testing.T) *runtime.Scheme {
 
 func redshiftPasswordSecret() *corev1.Secret {
 	return &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{Name: "redshift-creds", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "redshift-creds", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Data:       map[string][]byte{"password": []byte(testRedshiftPassword)},
 	}
 }
@@ -108,8 +108,9 @@ func redshiftPasswordSecret() *corev1.Secret {
 func redshiftClusterCR(mutate ...func(*awsv1alpha1.RedshiftCluster)) *awsv1alpha1.RedshiftCluster {
 	rc := &awsv1alpha1.RedshiftCluster{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-cluster",
-			Namespace: "default",
+			Name:       "my-cluster",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.RedshiftClusterSpec{
 			ClusterIdentifier:        "my-cluster",
@@ -371,7 +372,7 @@ func TestRedshiftClusterReconcile(t *testing.T) {
 			rc.Spec.ClusterSubnetGroupRef = "my-sng"
 		})
 		sng := &awsv1alpha1.RedshiftSubnetGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-sng", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-sng", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.RedshiftSubnetGroupSpec{
 				Name:        "my-sng",
 				Description: "test",

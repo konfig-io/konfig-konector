@@ -109,6 +109,10 @@ func (m *S3Control) DeleteAccessPointPolicyForObjectLambda(ctx context.Context, 
 	return m.base.DeleteAccessPointPolicyForObjectLambda(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3Control) DeleteAccessPointScope(ctx context.Context, params *svc.DeleteAccessPointScopeInput, optFns ...func(*svc.Options)) (*svc.DeleteAccessPointScopeOutput, error) {
+	return m.base.DeleteAccessPointScope(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3Control) DeleteBucket(ctx context.Context, params *svc.DeleteBucketInput, optFns ...func(*svc.Options)) (*svc.DeleteBucketOutput, error) {
 	return m.base.DeleteBucket(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -213,6 +217,10 @@ func (m *S3Control) GetAccessPointPolicyStatusForObjectLambda(ctx context.Contex
 	return m.base.GetAccessPointPolicyStatusForObjectLambda(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3Control) GetAccessPointScope(ctx context.Context, params *svc.GetAccessPointScopeInput, optFns ...func(*svc.Options)) (*svc.GetAccessPointScopeOutput, error) {
+	return m.base.GetAccessPointScope(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3Control) GetBucket(ctx context.Context, params *svc.GetBucketInput, optFns ...func(*svc.Options)) (*svc.GetBucketOutput, error) {
 	return m.base.GetBucket(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -293,8 +301,16 @@ func (m *S3Control) ListAccessPoints(ctx context.Context, params *svc.ListAccess
 	return m.base.ListAccessPoints(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3Control) ListAccessPointsForDirectoryBuckets(ctx context.Context, params *svc.ListAccessPointsForDirectoryBucketsInput, optFns ...func(*svc.Options)) (*svc.ListAccessPointsForDirectoryBucketsOutput, error) {
+	return m.base.ListAccessPointsForDirectoryBuckets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3Control) ListAccessPointsForObjectLambda(ctx context.Context, params *svc.ListAccessPointsForObjectLambdaInput, optFns ...func(*svc.Options)) (*svc.ListAccessPointsForObjectLambdaOutput, error) {
 	return m.base.ListAccessPointsForObjectLambda(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3Control) ListCallerAccessGrants(ctx context.Context, params *svc.ListCallerAccessGrantsInput, optFns ...func(*svc.Options)) (*svc.ListCallerAccessGrantsOutput, error) {
+	return m.base.ListCallerAccessGrants(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3Control) ListJobs(ctx context.Context, params *svc.ListJobsInput, optFns ...func(*svc.Options)) (*svc.ListJobsOutput, error) {
@@ -335,6 +351,10 @@ func (m *S3Control) PutAccessPointPolicy(ctx context.Context, params *svc.PutAcc
 
 func (m *S3Control) PutAccessPointPolicyForObjectLambda(ctx context.Context, params *svc.PutAccessPointPolicyForObjectLambdaInput, optFns ...func(*svc.Options)) (*svc.PutAccessPointPolicyForObjectLambdaOutput, error) {
 	return m.base.PutAccessPointPolicyForObjectLambda(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3Control) PutAccessPointScope(ctx context.Context, params *svc.PutAccessPointScopeInput, optFns ...func(*svc.Options)) (*svc.PutAccessPointScopeOutput, error) {
+	return m.base.PutAccessPointScope(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3Control) PutBucketLifecycleConfiguration(ctx context.Context, params *svc.PutBucketLifecycleConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutBucketLifecycleConfigurationOutput, error) {

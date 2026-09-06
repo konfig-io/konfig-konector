@@ -92,7 +92,7 @@ func (f *fakeOrgAccount) TagResource(_ context.Context, _ *awsorgs.TagResourceIn
 
 func orgAccountCR(mutate ...func(*awsv1alpha1.OrganizationsAccount)) *awsv1alpha1.OrganizationsAccount {
 	acct := &awsv1alpha1.OrganizationsAccount{
-		ObjectMeta: metav1.ObjectMeta{Name: "sandbox", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "sandbox", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.OrganizationsAccountSpec{
 			Email:       "sandbox@example.com",
 			AccountName: "sandbox",

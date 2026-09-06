@@ -37,6 +37,10 @@ func (m *EKS) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*svc
 	return append(out, optFns...)
 }
 
+func (m *EKS) ActivateCertificateAuthority(ctx context.Context, params *svc.ActivateCertificateAuthorityInput, optFns ...func(*svc.Options)) (*svc.ActivateCertificateAuthorityOutput, error) {
+	return m.base.ActivateCertificateAuthority(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EKS) AssociateAccessPolicy(ctx context.Context, params *svc.AssociateAccessPolicyInput, optFns ...func(*svc.Options)) (*svc.AssociateAccessPolicyOutput, error) {
 	return m.base.AssociateAccessPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -49,12 +53,24 @@ func (m *EKS) AssociateIdentityProviderConfig(ctx context.Context, params *svc.A
 	return m.base.AssociateIdentityProviderConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EKS) CancelUpdate(ctx context.Context, params *svc.CancelUpdateInput, optFns ...func(*svc.Options)) (*svc.CancelUpdateOutput, error) {
+	return m.base.CancelUpdate(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EKS) CreateAccessEntry(ctx context.Context, params *svc.CreateAccessEntryInput, optFns ...func(*svc.Options)) (*svc.CreateAccessEntryOutput, error) {
 	return m.base.CreateAccessEntry(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) CreateAddon(ctx context.Context, params *svc.CreateAddonInput, optFns ...func(*svc.Options)) (*svc.CreateAddonOutput, error) {
 	return m.base.CreateAddon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) CreateCapability(ctx context.Context, params *svc.CreateCapabilityInput, optFns ...func(*svc.Options)) (*svc.CreateCapabilityOutput, error) {
+	return m.base.CreateCapability(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) CreateCertificateAuthority(ctx context.Context, params *svc.CreateCertificateAuthorityInput, optFns ...func(*svc.Options)) (*svc.CreateCertificateAuthorityOutput, error) {
+	return m.base.CreateCertificateAuthority(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) CreateCluster(ctx context.Context, params *svc.CreateClusterInput, optFns ...func(*svc.Options)) (*svc.CreateClusterOutput, error) {
@@ -83,6 +99,14 @@ func (m *EKS) DeleteAccessEntry(ctx context.Context, params *svc.DeleteAccessEnt
 
 func (m *EKS) DeleteAddon(ctx context.Context, params *svc.DeleteAddonInput, optFns ...func(*svc.Options)) (*svc.DeleteAddonOutput, error) {
 	return m.base.DeleteAddon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) DeleteCapability(ctx context.Context, params *svc.DeleteCapabilityInput, optFns ...func(*svc.Options)) (*svc.DeleteCapabilityOutput, error) {
+	return m.base.DeleteCapability(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) DeleteCertificateAuthority(ctx context.Context, params *svc.DeleteCertificateAuthorityInput, optFns ...func(*svc.Options)) (*svc.DeleteCertificateAuthorityOutput, error) {
+	return m.base.DeleteCertificateAuthority(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) DeleteCluster(ctx context.Context, params *svc.DeleteClusterInput, optFns ...func(*svc.Options)) (*svc.DeleteClusterOutput, error) {
@@ -125,8 +149,20 @@ func (m *EKS) DescribeAddonVersions(ctx context.Context, params *svc.DescribeAdd
 	return m.base.DescribeAddonVersions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EKS) DescribeCapability(ctx context.Context, params *svc.DescribeCapabilityInput, optFns ...func(*svc.Options)) (*svc.DescribeCapabilityOutput, error) {
+	return m.base.DescribeCapability(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) DescribeCertificateAuthority(ctx context.Context, params *svc.DescribeCertificateAuthorityInput, optFns ...func(*svc.Options)) (*svc.DescribeCertificateAuthorityOutput, error) {
+	return m.base.DescribeCertificateAuthority(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EKS) DescribeCluster(ctx context.Context, params *svc.DescribeClusterInput, optFns ...func(*svc.Options)) (*svc.DescribeClusterOutput, error) {
 	return m.base.DescribeCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) DescribeClusterVersions(ctx context.Context, params *svc.DescribeClusterVersionsInput, optFns ...func(*svc.Options)) (*svc.DescribeClusterVersionsOutput, error) {
+	return m.base.DescribeClusterVersions(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) DescribeEksAnywhereSubscription(ctx context.Context, params *svc.DescribeEksAnywhereSubscriptionInput, optFns ...func(*svc.Options)) (*svc.DescribeEksAnywhereSubscriptionOutput, error) {
@@ -143,6 +179,10 @@ func (m *EKS) DescribeIdentityProviderConfig(ctx context.Context, params *svc.De
 
 func (m *EKS) DescribeInsight(ctx context.Context, params *svc.DescribeInsightInput, optFns ...func(*svc.Options)) (*svc.DescribeInsightOutput, error) {
 	return m.base.DescribeInsight(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) DescribeInsightsRefresh(ctx context.Context, params *svc.DescribeInsightsRefreshInput, optFns ...func(*svc.Options)) (*svc.DescribeInsightsRefreshOutput, error) {
+	return m.base.DescribeInsightsRefresh(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) DescribeNodegroup(ctx context.Context, params *svc.DescribeNodegroupInput, optFns ...func(*svc.Options)) (*svc.DescribeNodegroupOutput, error) {
@@ -179,6 +219,14 @@ func (m *EKS) ListAddons(ctx context.Context, params *svc.ListAddonsInput, optFn
 
 func (m *EKS) ListAssociatedAccessPolicies(ctx context.Context, params *svc.ListAssociatedAccessPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListAssociatedAccessPoliciesOutput, error) {
 	return m.base.ListAssociatedAccessPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) ListCapabilities(ctx context.Context, params *svc.ListCapabilitiesInput, optFns ...func(*svc.Options)) (*svc.ListCapabilitiesOutput, error) {
+	return m.base.ListCapabilities(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) ListCertificateAuthorities(ctx context.Context, params *svc.ListCertificateAuthoritiesInput, optFns ...func(*svc.Options)) (*svc.ListCertificateAuthoritiesOutput, error) {
+	return m.base.ListCertificateAuthorities(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) ListClusters(ctx context.Context, params *svc.ListClustersInput, optFns ...func(*svc.Options)) (*svc.ListClustersOutput, error) {
@@ -221,6 +269,10 @@ func (m *EKS) RegisterCluster(ctx context.Context, params *svc.RegisterClusterIn
 	return m.base.RegisterCluster(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *EKS) StartInsightsRefresh(ctx context.Context, params *svc.StartInsightsRefreshInput, optFns ...func(*svc.Options)) (*svc.StartInsightsRefreshOutput, error) {
+	return m.base.StartInsightsRefresh(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *EKS) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -235,6 +287,10 @@ func (m *EKS) UpdateAccessEntry(ctx context.Context, params *svc.UpdateAccessEnt
 
 func (m *EKS) UpdateAddon(ctx context.Context, params *svc.UpdateAddonInput, optFns ...func(*svc.Options)) (*svc.UpdateAddonOutput, error) {
 	return m.base.UpdateAddon(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *EKS) UpdateCapability(ctx context.Context, params *svc.UpdateCapabilityInput, optFns ...func(*svc.Options)) (*svc.UpdateCapabilityOutput, error) {
+	return m.base.UpdateCapability(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *EKS) UpdateClusterConfig(ctx context.Context, params *svc.UpdateClusterConfigInput, optFns ...func(*svc.Options)) (*svc.UpdateClusterConfigOutput, error) {

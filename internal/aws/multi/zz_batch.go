@@ -45,24 +45,48 @@ func (m *Batch) CreateComputeEnvironment(ctx context.Context, params *svc.Create
 	return m.base.CreateComputeEnvironment(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) CreateConsumableResource(ctx context.Context, params *svc.CreateConsumableResourceInput, optFns ...func(*svc.Options)) (*svc.CreateConsumableResourceOutput, error) {
+	return m.base.CreateConsumableResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) CreateJobQueue(ctx context.Context, params *svc.CreateJobQueueInput, optFns ...func(*svc.Options)) (*svc.CreateJobQueueOutput, error) {
 	return m.base.CreateJobQueue(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) CreateQuotaShare(ctx context.Context, params *svc.CreateQuotaShareInput, optFns ...func(*svc.Options)) (*svc.CreateQuotaShareOutput, error) {
+	return m.base.CreateQuotaShare(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) CreateSchedulingPolicy(ctx context.Context, params *svc.CreateSchedulingPolicyInput, optFns ...func(*svc.Options)) (*svc.CreateSchedulingPolicyOutput, error) {
 	return m.base.CreateSchedulingPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) CreateServiceEnvironment(ctx context.Context, params *svc.CreateServiceEnvironmentInput, optFns ...func(*svc.Options)) (*svc.CreateServiceEnvironmentOutput, error) {
+	return m.base.CreateServiceEnvironment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) DeleteComputeEnvironment(ctx context.Context, params *svc.DeleteComputeEnvironmentInput, optFns ...func(*svc.Options)) (*svc.DeleteComputeEnvironmentOutput, error) {
 	return m.base.DeleteComputeEnvironment(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) DeleteConsumableResource(ctx context.Context, params *svc.DeleteConsumableResourceInput, optFns ...func(*svc.Options)) (*svc.DeleteConsumableResourceOutput, error) {
+	return m.base.DeleteConsumableResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) DeleteJobQueue(ctx context.Context, params *svc.DeleteJobQueueInput, optFns ...func(*svc.Options)) (*svc.DeleteJobQueueOutput, error) {
 	return m.base.DeleteJobQueue(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) DeleteQuotaShare(ctx context.Context, params *svc.DeleteQuotaShareInput, optFns ...func(*svc.Options)) (*svc.DeleteQuotaShareOutput, error) {
+	return m.base.DeleteQuotaShare(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) DeleteSchedulingPolicy(ctx context.Context, params *svc.DeleteSchedulingPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteSchedulingPolicyOutput, error) {
 	return m.base.DeleteSchedulingPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) DeleteServiceEnvironment(ctx context.Context, params *svc.DeleteServiceEnvironmentInput, optFns ...func(*svc.Options)) (*svc.DeleteServiceEnvironmentOutput, error) {
+	return m.base.DeleteServiceEnvironment(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) DeregisterJobDefinition(ctx context.Context, params *svc.DeregisterJobDefinitionInput, optFns ...func(*svc.Options)) (*svc.DeregisterJobDefinitionOutput, error) {
@@ -71,6 +95,10 @@ func (m *Batch) DeregisterJobDefinition(ctx context.Context, params *svc.Deregis
 
 func (m *Batch) DescribeComputeEnvironments(ctx context.Context, params *svc.DescribeComputeEnvironmentsInput, optFns ...func(*svc.Options)) (*svc.DescribeComputeEnvironmentsOutput, error) {
 	return m.base.DescribeComputeEnvironments(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) DescribeConsumableResource(ctx context.Context, params *svc.DescribeConsumableResourceInput, optFns ...func(*svc.Options)) (*svc.DescribeConsumableResourceOutput, error) {
+	return m.base.DescribeConsumableResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) DescribeJobDefinitions(ctx context.Context, params *svc.DescribeJobDefinitionsInput, optFns ...func(*svc.Options)) (*svc.DescribeJobDefinitionsOutput, error) {
@@ -85,20 +113,48 @@ func (m *Batch) DescribeJobs(ctx context.Context, params *svc.DescribeJobsInput,
 	return m.base.DescribeJobs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) DescribeQuotaShare(ctx context.Context, params *svc.DescribeQuotaShareInput, optFns ...func(*svc.Options)) (*svc.DescribeQuotaShareOutput, error) {
+	return m.base.DescribeQuotaShare(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) DescribeSchedulingPolicies(ctx context.Context, params *svc.DescribeSchedulingPoliciesInput, optFns ...func(*svc.Options)) (*svc.DescribeSchedulingPoliciesOutput, error) {
 	return m.base.DescribeSchedulingPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) DescribeServiceEnvironments(ctx context.Context, params *svc.DescribeServiceEnvironmentsInput, optFns ...func(*svc.Options)) (*svc.DescribeServiceEnvironmentsOutput, error) {
+	return m.base.DescribeServiceEnvironments(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) DescribeServiceJob(ctx context.Context, params *svc.DescribeServiceJobInput, optFns ...func(*svc.Options)) (*svc.DescribeServiceJobOutput, error) {
+	return m.base.DescribeServiceJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) GetJobQueueSnapshot(ctx context.Context, params *svc.GetJobQueueSnapshotInput, optFns ...func(*svc.Options)) (*svc.GetJobQueueSnapshotOutput, error) {
 	return m.base.GetJobQueueSnapshot(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) ListConsumableResources(ctx context.Context, params *svc.ListConsumableResourcesInput, optFns ...func(*svc.Options)) (*svc.ListConsumableResourcesOutput, error) {
+	return m.base.ListConsumableResources(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) ListJobs(ctx context.Context, params *svc.ListJobsInput, optFns ...func(*svc.Options)) (*svc.ListJobsOutput, error) {
 	return m.base.ListJobs(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) ListJobsByConsumableResource(ctx context.Context, params *svc.ListJobsByConsumableResourceInput, optFns ...func(*svc.Options)) (*svc.ListJobsByConsumableResourceOutput, error) {
+	return m.base.ListJobsByConsumableResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) ListQuotaShares(ctx context.Context, params *svc.ListQuotaSharesInput, optFns ...func(*svc.Options)) (*svc.ListQuotaSharesOutput, error) {
+	return m.base.ListQuotaShares(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) ListSchedulingPolicies(ctx context.Context, params *svc.ListSchedulingPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListSchedulingPoliciesOutput, error) {
 	return m.base.ListSchedulingPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) ListServiceJobs(ctx context.Context, params *svc.ListServiceJobsInput, optFns ...func(*svc.Options)) (*svc.ListServiceJobsOutput, error) {
+	return m.base.ListServiceJobs(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {
@@ -113,12 +169,20 @@ func (m *Batch) SubmitJob(ctx context.Context, params *svc.SubmitJobInput, optFn
 	return m.base.SubmitJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) SubmitServiceJob(ctx context.Context, params *svc.SubmitServiceJobInput, optFns ...func(*svc.Options)) (*svc.SubmitServiceJobOutput, error) {
+	return m.base.SubmitServiceJob(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) TerminateJob(ctx context.Context, params *svc.TerminateJobInput, optFns ...func(*svc.Options)) (*svc.TerminateJobOutput, error) {
 	return m.base.TerminateJob(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) TerminateServiceJob(ctx context.Context, params *svc.TerminateServiceJobInput, optFns ...func(*svc.Options)) (*svc.TerminateServiceJobOutput, error) {
+	return m.base.TerminateServiceJob(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Batch) UntagResource(ctx context.Context, params *svc.UntagResourceInput, optFns ...func(*svc.Options)) (*svc.UntagResourceOutput, error) {
@@ -129,10 +193,26 @@ func (m *Batch) UpdateComputeEnvironment(ctx context.Context, params *svc.Update
 	return m.base.UpdateComputeEnvironment(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) UpdateConsumableResource(ctx context.Context, params *svc.UpdateConsumableResourceInput, optFns ...func(*svc.Options)) (*svc.UpdateConsumableResourceOutput, error) {
+	return m.base.UpdateConsumableResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) UpdateJobQueue(ctx context.Context, params *svc.UpdateJobQueueInput, optFns ...func(*svc.Options)) (*svc.UpdateJobQueueOutput, error) {
 	return m.base.UpdateJobQueue(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Batch) UpdateQuotaShare(ctx context.Context, params *svc.UpdateQuotaShareInput, optFns ...func(*svc.Options)) (*svc.UpdateQuotaShareOutput, error) {
+	return m.base.UpdateQuotaShare(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Batch) UpdateSchedulingPolicy(ctx context.Context, params *svc.UpdateSchedulingPolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateSchedulingPolicyOutput, error) {
 	return m.base.UpdateSchedulingPolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) UpdateServiceEnvironment(ctx context.Context, params *svc.UpdateServiceEnvironmentInput, optFns ...func(*svc.Options)) (*svc.UpdateServiceEnvironmentOutput, error) {
+	return m.base.UpdateServiceEnvironment(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Batch) UpdateServiceJob(ctx context.Context, params *svc.UpdateServiceJobInput, optFns ...func(*svc.Options)) (*svc.UpdateServiceJobOutput, error) {
+	return m.base.UpdateServiceJob(ctx, params, m.opts(ctx, optFns)...)
 }

@@ -88,6 +88,10 @@ func (r *ECRRepositoryReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err := r.Update(ctx, repo); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileECRRepository(ctx, repo); err != nil {
@@ -104,7 +108,9 @@ func (r *ECRRepositoryReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 }
 
 func (r *ECRRepositoryReconciler) reconcileECRRepository(ctx context.Context, repo *awsv1alpha1.ECRRepository) error {
-	if repo.Status.ARN != "" {
+	// Always look the repository up by name first so an existing one (or one
+	// created by a reconcile whose status persist failed) is adopted.
+	{
 		out, err := r.ECRClient.DescribeRepositories(ctx, &awsecr.DescribeRepositoriesInput{
 			RepositoryNames: []string{repo.Spec.RepositoryName},
 		})
@@ -112,6 +118,7 @@ func (r *ECRRepositoryReconciler) reconcileECRRepository(ctx context.Context, re
 			return fmt.Errorf("describe repository: %w", err)
 		}
 		if err == nil && len(out.Repositories) > 0 {
+			repo.Status.ARN = aws.ToString(out.Repositories[0].RepositoryArn)
 			repo.Status.RepositoryURI = aws.ToString(out.Repositories[0].RepositoryUri)
 			repo.Status.ObservedGeneration = repo.Generation
 			now := metav1.Now()

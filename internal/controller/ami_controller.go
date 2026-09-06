@@ -82,6 +82,10 @@ func (r *AMIReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		if err := r.Update(ctx, ami); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileAMI(ctx, ami); err != nil {

@@ -29,7 +29,7 @@ Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
 List every kind with `konfig-export --list`, browse the generated API reference
 at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
 full-options examples in [`examples/`](examples/) — one per kind, generated from
-the CRD schemas (`make gen-reference`). On top of those, **819 typed kinds are
+the CRD schemas (`make gen-reference`). On top of those, **815 typed kinds are
 generated from the CloudFormation schema registry** and reconciled through the
 AWS Cloud Control API, installed per service bundle from
 [`config/crd/cloudcontrol/`](config/crd/cloudcontrol/) (see
@@ -695,6 +695,23 @@ module "konfig_konector" {
 | `cluster_name` | EKS cluster name used |
 | `pod_identity_association_id` | EKS Pod Identity association ID |
 | `helm_install_command` | Pre-filled `helm install` command |
+
+## Local Development and Smoke Test
+
+`scripts/local-dev.sh` stands up everything on a laptop: a k3d (k3s) cluster with
+an in-cluster OCI registry, Argo CD with a health check for every konfig kind,
+the operator installed as an Argo Application, and `helm/konfig-smoke`, which
+creates one free-tier instance of 93 kinds against a real AWS account.
+
+```sh
+AWS_PROFILE=scratch ./scripts/local-dev.sh up      # cluster + Argo CD + operator
+./scripts/local-dev.sh smoke                       # 93 free-tier resources as an Argo app
+./scripts/local-dev.sh argo-ui                     # https://localhost:8443
+./scripts/local-dev.sh bundles ec2 logs iam        # install generated CRD bundles
+./scripts/local-dev.sh unsmoke                     # delete them all (in AWS too)
+```
+
+See [docs/argocd.md](docs/argocd.md) for the Argo CD settings this uses.
 
 ## Building from Source
 

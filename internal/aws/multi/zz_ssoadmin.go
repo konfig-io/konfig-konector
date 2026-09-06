@@ -37,6 +37,10 @@ func (m *SSOAdmin) opts(ctx context.Context, optFns []func(*svc.Options)) []func
 	return append(out, optFns...)
 }
 
+func (m *SSOAdmin) AddRegion(ctx context.Context, params *svc.AddRegionInput, optFns ...func(*svc.Options)) (*svc.AddRegionOutput, error) {
+	return m.base.AddRegion(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSOAdmin) AttachCustomerManagedPolicyReferenceToPermissionSet(ctx context.Context, params *svc.AttachCustomerManagedPolicyReferenceToPermissionSetInput, optFns ...func(*svc.Options)) (*svc.AttachCustomerManagedPolicyReferenceToPermissionSetOutput, error) {
 	return m.base.AttachCustomerManagedPolicyReferenceToPermissionSet(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -157,6 +161,10 @@ func (m *SSOAdmin) DescribePermissionSetProvisioningStatus(ctx context.Context, 
 	return m.base.DescribePermissionSetProvisioningStatus(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSOAdmin) DescribeRegion(ctx context.Context, params *svc.DescribeRegionInput, optFns ...func(*svc.Options)) (*svc.DescribeRegionOutput, error) {
+	return m.base.DescribeRegion(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSOAdmin) DescribeTrustedTokenIssuer(ctx context.Context, params *svc.DescribeTrustedTokenIssuerInput, optFns ...func(*svc.Options)) (*svc.DescribeTrustedTokenIssuerOutput, error) {
 	return m.base.DescribeTrustedTokenIssuer(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -269,6 +277,10 @@ func (m *SSOAdmin) ListPermissionSetsProvisionedToAccount(ctx context.Context, p
 	return m.base.ListPermissionSetsProvisionedToAccount(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *SSOAdmin) ListRegions(ctx context.Context, params *svc.ListRegionsInput, optFns ...func(*svc.Options)) (*svc.ListRegionsOutput, error) {
+	return m.base.ListRegions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *SSOAdmin) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -307,6 +319,10 @@ func (m *SSOAdmin) PutInlinePolicyToPermissionSet(ctx context.Context, params *s
 
 func (m *SSOAdmin) PutPermissionsBoundaryToPermissionSet(ctx context.Context, params *svc.PutPermissionsBoundaryToPermissionSetInput, optFns ...func(*svc.Options)) (*svc.PutPermissionsBoundaryToPermissionSetOutput, error) {
 	return m.base.PutPermissionsBoundaryToPermissionSet(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *SSOAdmin) RemoveRegion(ctx context.Context, params *svc.RemoveRegionInput, optFns ...func(*svc.Options)) (*svc.RemoveRegionOutput, error) {
+	return m.base.RemoveRegion(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *SSOAdmin) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {

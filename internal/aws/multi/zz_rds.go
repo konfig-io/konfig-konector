@@ -317,6 +317,10 @@ func (m *RDS) DescribeDBLogFiles(ctx context.Context, params *svc.DescribeDBLogF
 	return m.base.DescribeDBLogFiles(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *RDS) DescribeDBMajorEngineVersions(ctx context.Context, params *svc.DescribeDBMajorEngineVersionsInput, optFns ...func(*svc.Options)) (*svc.DescribeDBMajorEngineVersionsOutput, error) {
+	return m.base.DescribeDBMajorEngineVersions(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *RDS) DescribeDBParameterGroups(ctx context.Context, params *svc.DescribeDBParameterGroupsInput, optFns ...func(*svc.Options)) (*svc.DescribeDBParameterGroupsOutput, error) {
 	return m.base.DescribeDBParameterGroups(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -423,6 +427,10 @@ func (m *RDS) DescribeReservedDBInstances(ctx context.Context, params *svc.Descr
 
 func (m *RDS) DescribeReservedDBInstancesOfferings(ctx context.Context, params *svc.DescribeReservedDBInstancesOfferingsInput, optFns ...func(*svc.Options)) (*svc.DescribeReservedDBInstancesOfferingsOutput, error) {
 	return m.base.DescribeReservedDBInstancesOfferings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *RDS) DescribeServerlessV2PlatformVersions(ctx context.Context, params *svc.DescribeServerlessV2PlatformVersionsInput, optFns ...func(*svc.Options)) (*svc.DescribeServerlessV2PlatformVersionsOutput, error) {
+	return m.base.DescribeServerlessV2PlatformVersions(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *RDS) DescribeSourceRegions(ctx context.Context, params *svc.DescribeSourceRegionsInput, optFns ...func(*svc.Options)) (*svc.DescribeSourceRegionsOutput, error) {
@@ -539,6 +547,10 @@ func (m *RDS) ModifyEventSubscription(ctx context.Context, params *svc.ModifyEve
 
 func (m *RDS) ModifyGlobalCluster(ctx context.Context, params *svc.ModifyGlobalClusterInput, optFns ...func(*svc.Options)) (*svc.ModifyGlobalClusterOutput, error) {
 	return m.base.ModifyGlobalCluster(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *RDS) ModifyIntegration(ctx context.Context, params *svc.ModifyIntegrationInput, optFns ...func(*svc.Options)) (*svc.ModifyIntegrationOutput, error) {
+	return m.base.ModifyIntegration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *RDS) ModifyOptionGroup(ctx context.Context, params *svc.ModifyOptionGroupInput, optFns ...func(*svc.Options)) (*svc.ModifyOptionGroupOutput, error) {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ACM — konfig-konector Docs</title>
-  <meta name="description" content="API reference for ACMAccount, ACMAcmeDomainValidation, ACMAcmeEndpoint, ACMAcmeExternalAccountBinding, Certificate." />
+  <meta name="description" content="API reference for ACMAccount, ACMAcmeDomainValidation, ACMAcmeEndpoint, ACMAcmeExternalAccountBinding, Certificate, CertificateValidation." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">ACM</h1>
-    <p class="docs-page-subtitle">5 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">6 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -365,6 +365,56 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="certificatevalidation" class="resource-section">
+      <h2>CertificateValidation <a href="#certificatevalidation" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <p class="resource-desc">CertificateValidation polls the ACM certificate status until it is ISSUED.</p>
+      <p class="resource-desc"><code>kubectl get certificatevalidations</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/acm/certificatevalidation.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># CertificateValidation — ACM
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/acm.html#certificatevalidation
+apiVersion: aws.konfig.io/v1alpha1
+kind: CertificateValidation
+metadata:
+  name: example-certificatevalidation
+  namespace: default
+spec:
+  certificateRef:
+    name: example-certificate
+  providerRef:
+    name: example-certificatevalidation
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>certificateRef</code></td><td>object</td><td><span class="req">yes</span></td><td>CertificateRef references the Certificate CR to watch.</td></tr>
+<tr><td><code>certificateRef.name</code></td><td>string</td><td>—</td><td>Name of the resource in the same namespace.</td></tr>
+<tr><td><code>certificateRef.namespace</code></td><td>string</td><td>—</td><td>Namespace of the resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+<tr><td><code>validationStatus</code></td><td>string</td><td>—</td><td>ValidationStatus is the ACM certificate status (e.g.</td></tr>
 </tbody></table></div>
     </section>
   </main>

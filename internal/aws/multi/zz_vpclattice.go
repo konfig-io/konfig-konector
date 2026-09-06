@@ -93,6 +93,10 @@ func (m *VPCLattice) DeleteAuthPolicy(ctx context.Context, params *svc.DeleteAut
 	return m.base.DeleteAuthPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *VPCLattice) DeleteDomainVerification(ctx context.Context, params *svc.DeleteDomainVerificationInput, optFns ...func(*svc.Options)) (*svc.DeleteDomainVerificationOutput, error) {
+	return m.base.DeleteDomainVerification(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *VPCLattice) DeleteListener(ctx context.Context, params *svc.DeleteListenerInput, optFns ...func(*svc.Options)) (*svc.DeleteListenerOutput, error) {
 	return m.base.DeleteListener(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -153,6 +157,10 @@ func (m *VPCLattice) GetAuthPolicy(ctx context.Context, params *svc.GetAuthPolic
 	return m.base.GetAuthPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *VPCLattice) GetDomainVerification(ctx context.Context, params *svc.GetDomainVerificationInput, optFns ...func(*svc.Options)) (*svc.GetDomainVerificationOutput, error) {
+	return m.base.GetDomainVerification(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *VPCLattice) GetListener(ctx context.Context, params *svc.GetListenerInput, optFns ...func(*svc.Options)) (*svc.GetListenerOutput, error) {
 	return m.base.GetListener(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -199,6 +207,10 @@ func (m *VPCLattice) GetTargetGroup(ctx context.Context, params *svc.GetTargetGr
 
 func (m *VPCLattice) ListAccessLogSubscriptions(ctx context.Context, params *svc.ListAccessLogSubscriptionsInput, optFns ...func(*svc.Options)) (*svc.ListAccessLogSubscriptionsOutput, error) {
 	return m.base.ListAccessLogSubscriptions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *VPCLattice) ListDomainVerifications(ctx context.Context, params *svc.ListDomainVerificationsInput, optFns ...func(*svc.Options)) (*svc.ListDomainVerificationsOutput, error) {
+	return m.base.ListDomainVerifications(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *VPCLattice) ListListeners(ctx context.Context, params *svc.ListListenersInput, optFns ...func(*svc.Options)) (*svc.ListListenersOutput, error) {
@@ -267,6 +279,10 @@ func (m *VPCLattice) PutResourcePolicy(ctx context.Context, params *svc.PutResou
 
 func (m *VPCLattice) RegisterTargets(ctx context.Context, params *svc.RegisterTargetsInput, optFns ...func(*svc.Options)) (*svc.RegisterTargetsOutput, error) {
 	return m.base.RegisterTargets(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *VPCLattice) StartDomainVerification(ctx context.Context, params *svc.StartDomainVerificationInput, optFns ...func(*svc.Options)) (*svc.StartDomainVerificationOutput, error) {
+	return m.base.StartDomainVerification(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *VPCLattice) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {

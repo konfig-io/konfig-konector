@@ -91,8 +91,9 @@ const testTopicARN = "arn:aws:sns:us-east-1:123456789012:my-topic"
 func snsTopicCR(mutate ...func(*awsv1alpha1.SNSTopic)) *awsv1alpha1.SNSTopic {
 	tp := &awsv1alpha1.SNSTopic{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-topic",
-			Namespace: "default",
+			Name:       "my-topic",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.SNSTopicSpec{
 			TopicName: "my-topic",

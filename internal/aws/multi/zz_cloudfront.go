@@ -41,8 +41,20 @@ func (m *CloudFront) AssociateAlias(ctx context.Context, params *svc.AssociateAl
 	return m.base.AssociateAlias(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) AssociateDistributionTenantWebACL(ctx context.Context, params *svc.AssociateDistributionTenantWebACLInput, optFns ...func(*svc.Options)) (*svc.AssociateDistributionTenantWebACLOutput, error) {
+	return m.base.AssociateDistributionTenantWebACL(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) AssociateDistributionWebACL(ctx context.Context, params *svc.AssociateDistributionWebACLInput, optFns ...func(*svc.Options)) (*svc.AssociateDistributionWebACLOutput, error) {
+	return m.base.AssociateDistributionWebACL(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) CopyDistribution(ctx context.Context, params *svc.CopyDistributionInput, optFns ...func(*svc.Options)) (*svc.CopyDistributionOutput, error) {
 	return m.base.CopyDistribution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) CreateAnycastIpList(ctx context.Context, params *svc.CreateAnycastIpListInput, optFns ...func(*svc.Options)) (*svc.CreateAnycastIpListOutput, error) {
+	return m.base.CreateAnycastIpList(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) CreateCachePolicy(ctx context.Context, params *svc.CreateCachePolicyInput, optFns ...func(*svc.Options)) (*svc.CreateCachePolicyOutput, error) {
@@ -53,12 +65,24 @@ func (m *CloudFront) CreateCloudFrontOriginAccessIdentity(ctx context.Context, p
 	return m.base.CreateCloudFrontOriginAccessIdentity(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) CreateConnectionFunction(ctx context.Context, params *svc.CreateConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.CreateConnectionFunctionOutput, error) {
+	return m.base.CreateConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) CreateConnectionGroup(ctx context.Context, params *svc.CreateConnectionGroupInput, optFns ...func(*svc.Options)) (*svc.CreateConnectionGroupOutput, error) {
+	return m.base.CreateConnectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) CreateContinuousDeploymentPolicy(ctx context.Context, params *svc.CreateContinuousDeploymentPolicyInput, optFns ...func(*svc.Options)) (*svc.CreateContinuousDeploymentPolicyOutput, error) {
 	return m.base.CreateContinuousDeploymentPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) CreateDistribution(ctx context.Context, params *svc.CreateDistributionInput, optFns ...func(*svc.Options)) (*svc.CreateDistributionOutput, error) {
 	return m.base.CreateDistribution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) CreateDistributionTenant(ctx context.Context, params *svc.CreateDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.CreateDistributionTenantOutput, error) {
+	return m.base.CreateDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) CreateDistributionWithTags(ctx context.Context, params *svc.CreateDistributionWithTagsInput, optFns ...func(*svc.Options)) (*svc.CreateDistributionWithTagsOutput, error) {
@@ -79,6 +103,10 @@ func (m *CloudFront) CreateFunction(ctx context.Context, params *svc.CreateFunct
 
 func (m *CloudFront) CreateInvalidation(ctx context.Context, params *svc.CreateInvalidationInput, optFns ...func(*svc.Options)) (*svc.CreateInvalidationOutput, error) {
 	return m.base.CreateInvalidation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) CreateInvalidationForDistributionTenant(ctx context.Context, params *svc.CreateInvalidationForDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.CreateInvalidationForDistributionTenantOutput, error) {
+	return m.base.CreateInvalidationForDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) CreateKeyGroup(ctx context.Context, params *svc.CreateKeyGroupInput, optFns ...func(*svc.Options)) (*svc.CreateKeyGroupOutput, error) {
@@ -121,6 +149,18 @@ func (m *CloudFront) CreateStreamingDistributionWithTags(ctx context.Context, pa
 	return m.base.CreateStreamingDistributionWithTags(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) CreateTrustStore(ctx context.Context, params *svc.CreateTrustStoreInput, optFns ...func(*svc.Options)) (*svc.CreateTrustStoreOutput, error) {
+	return m.base.CreateTrustStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) CreateVpcOrigin(ctx context.Context, params *svc.CreateVpcOriginInput, optFns ...func(*svc.Options)) (*svc.CreateVpcOriginOutput, error) {
+	return m.base.CreateVpcOrigin(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DeleteAnycastIpList(ctx context.Context, params *svc.DeleteAnycastIpListInput, optFns ...func(*svc.Options)) (*svc.DeleteAnycastIpListOutput, error) {
+	return m.base.DeleteAnycastIpList(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) DeleteCachePolicy(ctx context.Context, params *svc.DeleteCachePolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteCachePolicyOutput, error) {
 	return m.base.DeleteCachePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -129,12 +169,24 @@ func (m *CloudFront) DeleteCloudFrontOriginAccessIdentity(ctx context.Context, p
 	return m.base.DeleteCloudFrontOriginAccessIdentity(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) DeleteConnectionFunction(ctx context.Context, params *svc.DeleteConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectionFunctionOutput, error) {
+	return m.base.DeleteConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DeleteConnectionGroup(ctx context.Context, params *svc.DeleteConnectionGroupInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectionGroupOutput, error) {
+	return m.base.DeleteConnectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) DeleteContinuousDeploymentPolicy(ctx context.Context, params *svc.DeleteContinuousDeploymentPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteContinuousDeploymentPolicyOutput, error) {
 	return m.base.DeleteContinuousDeploymentPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) DeleteDistribution(ctx context.Context, params *svc.DeleteDistributionInput, optFns ...func(*svc.Options)) (*svc.DeleteDistributionOutput, error) {
 	return m.base.DeleteDistribution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DeleteDistributionTenant(ctx context.Context, params *svc.DeleteDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.DeleteDistributionTenantOutput, error) {
+	return m.base.DeleteDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) DeleteFieldLevelEncryptionConfig(ctx context.Context, params *svc.DeleteFieldLevelEncryptionConfigInput, optFns ...func(*svc.Options)) (*svc.DeleteFieldLevelEncryptionConfigOutput, error) {
@@ -177,6 +229,10 @@ func (m *CloudFront) DeleteRealtimeLogConfig(ctx context.Context, params *svc.De
 	return m.base.DeleteRealtimeLogConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) DeleteResourcePolicy(ctx context.Context, params *svc.DeleteResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteResourcePolicyOutput, error) {
+	return m.base.DeleteResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) DeleteResponseHeadersPolicy(ctx context.Context, params *svc.DeleteResponseHeadersPolicyInput, optFns ...func(*svc.Options)) (*svc.DeleteResponseHeadersPolicyOutput, error) {
 	return m.base.DeleteResponseHeadersPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -185,12 +241,36 @@ func (m *CloudFront) DeleteStreamingDistribution(ctx context.Context, params *sv
 	return m.base.DeleteStreamingDistribution(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) DeleteTrustStore(ctx context.Context, params *svc.DeleteTrustStoreInput, optFns ...func(*svc.Options)) (*svc.DeleteTrustStoreOutput, error) {
+	return m.base.DeleteTrustStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DeleteVpcOrigin(ctx context.Context, params *svc.DeleteVpcOriginInput, optFns ...func(*svc.Options)) (*svc.DeleteVpcOriginOutput, error) {
+	return m.base.DeleteVpcOrigin(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DescribeConnectionFunction(ctx context.Context, params *svc.DescribeConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.DescribeConnectionFunctionOutput, error) {
+	return m.base.DescribeConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) DescribeFunction(ctx context.Context, params *svc.DescribeFunctionInput, optFns ...func(*svc.Options)) (*svc.DescribeFunctionOutput, error) {
 	return m.base.DescribeFunction(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) DescribeKeyValueStore(ctx context.Context, params *svc.DescribeKeyValueStoreInput, optFns ...func(*svc.Options)) (*svc.DescribeKeyValueStoreOutput, error) {
 	return m.base.DescribeKeyValueStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DisassociateDistributionTenantWebACL(ctx context.Context, params *svc.DisassociateDistributionTenantWebACLInput, optFns ...func(*svc.Options)) (*svc.DisassociateDistributionTenantWebACLOutput, error) {
+	return m.base.DisassociateDistributionTenantWebACL(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) DisassociateDistributionWebACL(ctx context.Context, params *svc.DisassociateDistributionWebACLInput, optFns ...func(*svc.Options)) (*svc.DisassociateDistributionWebACLOutput, error) {
+	return m.base.DisassociateDistributionWebACL(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetAnycastIpList(ctx context.Context, params *svc.GetAnycastIpListInput, optFns ...func(*svc.Options)) (*svc.GetAnycastIpListOutput, error) {
+	return m.base.GetAnycastIpList(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) GetCachePolicy(ctx context.Context, params *svc.GetCachePolicyInput, optFns ...func(*svc.Options)) (*svc.GetCachePolicyOutput, error) {
@@ -209,6 +289,18 @@ func (m *CloudFront) GetCloudFrontOriginAccessIdentityConfig(ctx context.Context
 	return m.base.GetCloudFrontOriginAccessIdentityConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) GetConnectionFunction(ctx context.Context, params *svc.GetConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.GetConnectionFunctionOutput, error) {
+	return m.base.GetConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetConnectionGroup(ctx context.Context, params *svc.GetConnectionGroupInput, optFns ...func(*svc.Options)) (*svc.GetConnectionGroupOutput, error) {
+	return m.base.GetConnectionGroup(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetConnectionGroupByRoutingEndpoint(ctx context.Context, params *svc.GetConnectionGroupByRoutingEndpointInput, optFns ...func(*svc.Options)) (*svc.GetConnectionGroupByRoutingEndpointOutput, error) {
+	return m.base.GetConnectionGroupByRoutingEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) GetContinuousDeploymentPolicy(ctx context.Context, params *svc.GetContinuousDeploymentPolicyInput, optFns ...func(*svc.Options)) (*svc.GetContinuousDeploymentPolicyOutput, error) {
 	return m.base.GetContinuousDeploymentPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -223,6 +315,14 @@ func (m *CloudFront) GetDistribution(ctx context.Context, params *svc.GetDistrib
 
 func (m *CloudFront) GetDistributionConfig(ctx context.Context, params *svc.GetDistributionConfigInput, optFns ...func(*svc.Options)) (*svc.GetDistributionConfigOutput, error) {
 	return m.base.GetDistributionConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetDistributionTenant(ctx context.Context, params *svc.GetDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.GetDistributionTenantOutput, error) {
+	return m.base.GetDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetDistributionTenantByDomain(ctx context.Context, params *svc.GetDistributionTenantByDomainInput, optFns ...func(*svc.Options)) (*svc.GetDistributionTenantByDomainOutput, error) {
+	return m.base.GetDistributionTenantByDomain(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) GetFieldLevelEncryption(ctx context.Context, params *svc.GetFieldLevelEncryptionInput, optFns ...func(*svc.Options)) (*svc.GetFieldLevelEncryptionOutput, error) {
@@ -249,12 +349,20 @@ func (m *CloudFront) GetInvalidation(ctx context.Context, params *svc.GetInvalid
 	return m.base.GetInvalidation(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) GetInvalidationForDistributionTenant(ctx context.Context, params *svc.GetInvalidationForDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.GetInvalidationForDistributionTenantOutput, error) {
+	return m.base.GetInvalidationForDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) GetKeyGroup(ctx context.Context, params *svc.GetKeyGroupInput, optFns ...func(*svc.Options)) (*svc.GetKeyGroupOutput, error) {
 	return m.base.GetKeyGroup(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) GetKeyGroupConfig(ctx context.Context, params *svc.GetKeyGroupConfigInput, optFns ...func(*svc.Options)) (*svc.GetKeyGroupConfigOutput, error) {
 	return m.base.GetKeyGroupConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetManagedCertificateDetails(ctx context.Context, params *svc.GetManagedCertificateDetailsInput, optFns ...func(*svc.Options)) (*svc.GetManagedCertificateDetailsOutput, error) {
+	return m.base.GetManagedCertificateDetails(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) GetMonitoringSubscription(ctx context.Context, params *svc.GetMonitoringSubscriptionInput, optFns ...func(*svc.Options)) (*svc.GetMonitoringSubscriptionOutput, error) {
@@ -289,6 +397,10 @@ func (m *CloudFront) GetRealtimeLogConfig(ctx context.Context, params *svc.GetRe
 	return m.base.GetRealtimeLogConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) GetResourcePolicy(ctx context.Context, params *svc.GetResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.GetResourcePolicyOutput, error) {
+	return m.base.GetResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) GetResponseHeadersPolicy(ctx context.Context, params *svc.GetResponseHeadersPolicyInput, optFns ...func(*svc.Options)) (*svc.GetResponseHeadersPolicyOutput, error) {
 	return m.base.GetResponseHeadersPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -305,6 +417,18 @@ func (m *CloudFront) GetStreamingDistributionConfig(ctx context.Context, params 
 	return m.base.GetStreamingDistributionConfig(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) GetTrustStore(ctx context.Context, params *svc.GetTrustStoreInput, optFns ...func(*svc.Options)) (*svc.GetTrustStoreOutput, error) {
+	return m.base.GetTrustStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) GetVpcOrigin(ctx context.Context, params *svc.GetVpcOriginInput, optFns ...func(*svc.Options)) (*svc.GetVpcOriginOutput, error) {
+	return m.base.GetVpcOrigin(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListAnycastIpLists(ctx context.Context, params *svc.ListAnycastIpListsInput, optFns ...func(*svc.Options)) (*svc.ListAnycastIpListsOutput, error) {
+	return m.base.ListAnycastIpLists(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) ListCachePolicies(ctx context.Context, params *svc.ListCachePoliciesInput, optFns ...func(*svc.Options)) (*svc.ListCachePoliciesOutput, error) {
 	return m.base.ListCachePolicies(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -317,16 +441,44 @@ func (m *CloudFront) ListConflictingAliases(ctx context.Context, params *svc.Lis
 	return m.base.ListConflictingAliases(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) ListConnectionFunctions(ctx context.Context, params *svc.ListConnectionFunctionsInput, optFns ...func(*svc.Options)) (*svc.ListConnectionFunctionsOutput, error) {
+	return m.base.ListConnectionFunctions(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListConnectionGroups(ctx context.Context, params *svc.ListConnectionGroupsInput, optFns ...func(*svc.Options)) (*svc.ListConnectionGroupsOutput, error) {
+	return m.base.ListConnectionGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) ListContinuousDeploymentPolicies(ctx context.Context, params *svc.ListContinuousDeploymentPoliciesInput, optFns ...func(*svc.Options)) (*svc.ListContinuousDeploymentPoliciesOutput, error) {
 	return m.base.ListContinuousDeploymentPolicies(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDistributionTenants(ctx context.Context, params *svc.ListDistributionTenantsInput, optFns ...func(*svc.Options)) (*svc.ListDistributionTenantsOutput, error) {
+	return m.base.ListDistributionTenants(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDistributionTenantsByCustomization(ctx context.Context, params *svc.ListDistributionTenantsByCustomizationInput, optFns ...func(*svc.Options)) (*svc.ListDistributionTenantsByCustomizationOutput, error) {
+	return m.base.ListDistributionTenantsByCustomization(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) ListDistributions(ctx context.Context, params *svc.ListDistributionsInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsOutput, error) {
 	return m.base.ListDistributions(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) ListDistributionsByAnycastIpListId(ctx context.Context, params *svc.ListDistributionsByAnycastIpListIdInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByAnycastIpListIdOutput, error) {
+	return m.base.ListDistributionsByAnycastIpListId(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) ListDistributionsByCachePolicyId(ctx context.Context, params *svc.ListDistributionsByCachePolicyIdInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByCachePolicyIdOutput, error) {
 	return m.base.ListDistributionsByCachePolicyId(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDistributionsByConnectionFunction(ctx context.Context, params *svc.ListDistributionsByConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByConnectionFunctionOutput, error) {
+	return m.base.ListDistributionsByConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDistributionsByConnectionMode(ctx context.Context, params *svc.ListDistributionsByConnectionModeInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByConnectionModeOutput, error) {
+	return m.base.ListDistributionsByConnectionMode(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) ListDistributionsByKeyGroup(ctx context.Context, params *svc.ListDistributionsByKeyGroupInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByKeyGroupOutput, error) {
@@ -337,6 +489,10 @@ func (m *CloudFront) ListDistributionsByOriginRequestPolicyId(ctx context.Contex
 	return m.base.ListDistributionsByOriginRequestPolicyId(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) ListDistributionsByOwnedResource(ctx context.Context, params *svc.ListDistributionsByOwnedResourceInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByOwnedResourceOutput, error) {
+	return m.base.ListDistributionsByOwnedResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) ListDistributionsByRealtimeLogConfig(ctx context.Context, params *svc.ListDistributionsByRealtimeLogConfigInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByRealtimeLogConfigOutput, error) {
 	return m.base.ListDistributionsByRealtimeLogConfig(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -345,8 +501,20 @@ func (m *CloudFront) ListDistributionsByResponseHeadersPolicyId(ctx context.Cont
 	return m.base.ListDistributionsByResponseHeadersPolicyId(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) ListDistributionsByTrustStore(ctx context.Context, params *svc.ListDistributionsByTrustStoreInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByTrustStoreOutput, error) {
+	return m.base.ListDistributionsByTrustStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDistributionsByVpcOriginId(ctx context.Context, params *svc.ListDistributionsByVpcOriginIdInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByVpcOriginIdOutput, error) {
+	return m.base.ListDistributionsByVpcOriginId(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) ListDistributionsByWebACLId(ctx context.Context, params *svc.ListDistributionsByWebACLIdInput, optFns ...func(*svc.Options)) (*svc.ListDistributionsByWebACLIdOutput, error) {
 	return m.base.ListDistributionsByWebACLId(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListDomainConflicts(ctx context.Context, params *svc.ListDomainConflictsInput, optFns ...func(*svc.Options)) (*svc.ListDomainConflictsOutput, error) {
+	return m.base.ListDomainConflicts(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) ListFieldLevelEncryptionConfigs(ctx context.Context, params *svc.ListFieldLevelEncryptionConfigsInput, optFns ...func(*svc.Options)) (*svc.ListFieldLevelEncryptionConfigsOutput, error) {
@@ -363,6 +531,10 @@ func (m *CloudFront) ListFunctions(ctx context.Context, params *svc.ListFunction
 
 func (m *CloudFront) ListInvalidations(ctx context.Context, params *svc.ListInvalidationsInput, optFns ...func(*svc.Options)) (*svc.ListInvalidationsOutput, error) {
 	return m.base.ListInvalidations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListInvalidationsForDistributionTenant(ctx context.Context, params *svc.ListInvalidationsForDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.ListInvalidationsForDistributionTenantOutput, error) {
+	return m.base.ListInvalidationsForDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) ListKeyGroups(ctx context.Context, params *svc.ListKeyGroupsInput, optFns ...func(*svc.Options)) (*svc.ListKeyGroupsOutput, error) {
@@ -401,12 +573,32 @@ func (m *CloudFront) ListTagsForResource(ctx context.Context, params *svc.ListTa
 	return m.base.ListTagsForResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) ListTrustStores(ctx context.Context, params *svc.ListTrustStoresInput, optFns ...func(*svc.Options)) (*svc.ListTrustStoresOutput, error) {
+	return m.base.ListTrustStores(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) ListVpcOrigins(ctx context.Context, params *svc.ListVpcOriginsInput, optFns ...func(*svc.Options)) (*svc.ListVpcOriginsOutput, error) {
+	return m.base.ListVpcOrigins(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) PublishConnectionFunction(ctx context.Context, params *svc.PublishConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.PublishConnectionFunctionOutput, error) {
+	return m.base.PublishConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) PublishFunction(ctx context.Context, params *svc.PublishFunctionInput, optFns ...func(*svc.Options)) (*svc.PublishFunctionOutput, error) {
 	return m.base.PublishFunction(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) PutResourcePolicy(ctx context.Context, params *svc.PutResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.PutResourcePolicyOutput, error) {
+	return m.base.PutResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) TagResource(ctx context.Context, params *svc.TagResourceInput, optFns ...func(*svc.Options)) (*svc.TagResourceOutput, error) {
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) TestConnectionFunction(ctx context.Context, params *svc.TestConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.TestConnectionFunctionOutput, error) {
+	return m.base.TestConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) TestFunction(ctx context.Context, params *svc.TestFunctionInput, optFns ...func(*svc.Options)) (*svc.TestFunctionOutput, error) {
@@ -417,12 +609,24 @@ func (m *CloudFront) UntagResource(ctx context.Context, params *svc.UntagResourc
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) UpdateAnycastIpList(ctx context.Context, params *svc.UpdateAnycastIpListInput, optFns ...func(*svc.Options)) (*svc.UpdateAnycastIpListOutput, error) {
+	return m.base.UpdateAnycastIpList(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) UpdateCachePolicy(ctx context.Context, params *svc.UpdateCachePolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateCachePolicyOutput, error) {
 	return m.base.UpdateCachePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) UpdateCloudFrontOriginAccessIdentity(ctx context.Context, params *svc.UpdateCloudFrontOriginAccessIdentityInput, optFns ...func(*svc.Options)) (*svc.UpdateCloudFrontOriginAccessIdentityOutput, error) {
 	return m.base.UpdateCloudFrontOriginAccessIdentity(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) UpdateConnectionFunction(ctx context.Context, params *svc.UpdateConnectionFunctionInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectionFunctionOutput, error) {
+	return m.base.UpdateConnectionFunction(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) UpdateConnectionGroup(ctx context.Context, params *svc.UpdateConnectionGroupInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectionGroupOutput, error) {
+	return m.base.UpdateConnectionGroup(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) UpdateContinuousDeploymentPolicy(ctx context.Context, params *svc.UpdateContinuousDeploymentPolicyInput, optFns ...func(*svc.Options)) (*svc.UpdateContinuousDeploymentPolicyOutput, error) {
@@ -433,8 +637,16 @@ func (m *CloudFront) UpdateDistribution(ctx context.Context, params *svc.UpdateD
 	return m.base.UpdateDistribution(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *CloudFront) UpdateDistributionTenant(ctx context.Context, params *svc.UpdateDistributionTenantInput, optFns ...func(*svc.Options)) (*svc.UpdateDistributionTenantOutput, error) {
+	return m.base.UpdateDistributionTenant(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *CloudFront) UpdateDistributionWithStagingConfig(ctx context.Context, params *svc.UpdateDistributionWithStagingConfigInput, optFns ...func(*svc.Options)) (*svc.UpdateDistributionWithStagingConfigOutput, error) {
 	return m.base.UpdateDistributionWithStagingConfig(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) UpdateDomainAssociation(ctx context.Context, params *svc.UpdateDomainAssociationInput, optFns ...func(*svc.Options)) (*svc.UpdateDomainAssociationOutput, error) {
+	return m.base.UpdateDomainAssociation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *CloudFront) UpdateFieldLevelEncryptionConfig(ctx context.Context, params *svc.UpdateFieldLevelEncryptionConfigInput, optFns ...func(*svc.Options)) (*svc.UpdateFieldLevelEncryptionConfigOutput, error) {
@@ -479,4 +691,16 @@ func (m *CloudFront) UpdateResponseHeadersPolicy(ctx context.Context, params *sv
 
 func (m *CloudFront) UpdateStreamingDistribution(ctx context.Context, params *svc.UpdateStreamingDistributionInput, optFns ...func(*svc.Options)) (*svc.UpdateStreamingDistributionOutput, error) {
 	return m.base.UpdateStreamingDistribution(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) UpdateTrustStore(ctx context.Context, params *svc.UpdateTrustStoreInput, optFns ...func(*svc.Options)) (*svc.UpdateTrustStoreOutput, error) {
+	return m.base.UpdateTrustStore(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) UpdateVpcOrigin(ctx context.Context, params *svc.UpdateVpcOriginInput, optFns ...func(*svc.Options)) (*svc.UpdateVpcOriginOutput, error) {
+	return m.base.UpdateVpcOrigin(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *CloudFront) VerifyDnsConfiguration(ctx context.Context, params *svc.VerifyDnsConfigurationInput, optFns ...func(*svc.Options)) (*svc.VerifyDnsConfigurationOutput, error) {
+	return m.base.VerifyDnsConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }

@@ -105,8 +105,9 @@ const (
 func orgPolicyCR(mutate ...func(*awsv1alpha1.OrganizationsPolicy)) *awsv1alpha1.OrganizationsPolicy {
 	pol := &awsv1alpha1.OrganizationsPolicy{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "deny-regions",
-			Namespace: "default",
+			Name:       "deny-regions",
+			Namespace:  "default",
+			Finalizers: []string{awsv1alpha1.FinalizerName},
 		},
 		Spec: awsv1alpha1.OrganizationsPolicySpec{
 			Name:        "deny-regions",

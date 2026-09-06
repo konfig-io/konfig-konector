@@ -37,6 +37,10 @@ func (m *ConfigService) opts(ctx context.Context, optFns []func(*svc.Options)) [
 	return append(out, optFns...)
 }
 
+func (m *ConfigService) AssociateResourceTypes(ctx context.Context, params *svc.AssociateResourceTypesInput, optFns ...func(*svc.Options)) (*svc.AssociateResourceTypesOutput, error) {
+	return m.base.AssociateResourceTypes(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) BatchGetAggregateResourceConfig(ctx context.Context, params *svc.BatchGetAggregateResourceConfigInput, optFns ...func(*svc.Options)) (*svc.BatchGetAggregateResourceConfigOutput, error) {
 	return m.base.BatchGetAggregateResourceConfig(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -63,6 +67,10 @@ func (m *ConfigService) DeleteConfigurationRecorder(ctx context.Context, params 
 
 func (m *ConfigService) DeleteConformancePack(ctx context.Context, params *svc.DeleteConformancePackInput, optFns ...func(*svc.Options)) (*svc.DeleteConformancePackOutput, error) {
 	return m.base.DeleteConformancePack(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ConfigService) DeleteConnector(ctx context.Context, params *svc.DeleteConnectorInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectorOutput, error) {
+	return m.base.DeleteConnector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ConfigService) DeleteDeliveryChannel(ctx context.Context, params *svc.DeleteDeliveryChannelInput, optFns ...func(*svc.Options)) (*svc.DeleteDeliveryChannelOutput, error) {
@@ -99,6 +107,10 @@ func (m *ConfigService) DeleteResourceConfig(ctx context.Context, params *svc.De
 
 func (m *ConfigService) DeleteRetentionConfiguration(ctx context.Context, params *svc.DeleteRetentionConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteRetentionConfigurationOutput, error) {
 	return m.base.DeleteRetentionConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ConfigService) DeleteServiceLinkedConfigurationRecorder(ctx context.Context, params *svc.DeleteServiceLinkedConfigurationRecorderInput, optFns ...func(*svc.Options)) (*svc.DeleteServiceLinkedConfigurationRecorderOutput, error) {
+	return m.base.DeleteServiceLinkedConfigurationRecorder(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ConfigService) DeleteStoredQuery(ctx context.Context, params *svc.DeleteStoredQueryInput, optFns ...func(*svc.Options)) (*svc.DeleteStoredQueryOutput, error) {
@@ -209,6 +221,10 @@ func (m *ConfigService) DescribeRetentionConfigurations(ctx context.Context, par
 	return m.base.DescribeRetentionConfigurations(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ConfigService) DisassociateResourceTypes(ctx context.Context, params *svc.DisassociateResourceTypesInput, optFns ...func(*svc.Options)) (*svc.DisassociateResourceTypesOutput, error) {
+	return m.base.DisassociateResourceTypes(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) GetAggregateComplianceDetailsByConfigRule(ctx context.Context, params *svc.GetAggregateComplianceDetailsByConfigRuleInput, optFns ...func(*svc.Options)) (*svc.GetAggregateComplianceDetailsByConfigRuleOutput, error) {
 	return m.base.GetAggregateComplianceDetailsByConfigRule(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -253,6 +269,10 @@ func (m *ConfigService) GetConformancePackComplianceSummary(ctx context.Context,
 	return m.base.GetConformancePackComplianceSummary(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ConfigService) GetConnector(ctx context.Context, params *svc.GetConnectorInput, optFns ...func(*svc.Options)) (*svc.GetConnectorOutput, error) {
+	return m.base.GetConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) GetCustomRulePolicy(ctx context.Context, params *svc.GetCustomRulePolicyInput, optFns ...func(*svc.Options)) (*svc.GetCustomRulePolicyOutput, error) {
 	return m.base.GetCustomRulePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -289,8 +309,16 @@ func (m *ConfigService) ListAggregateDiscoveredResources(ctx context.Context, pa
 	return m.base.ListAggregateDiscoveredResources(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ConfigService) ListConfigurationRecorders(ctx context.Context, params *svc.ListConfigurationRecordersInput, optFns ...func(*svc.Options)) (*svc.ListConfigurationRecordersOutput, error) {
+	return m.base.ListConfigurationRecorders(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) ListConformancePackComplianceScores(ctx context.Context, params *svc.ListConformancePackComplianceScoresInput, optFns ...func(*svc.Options)) (*svc.ListConformancePackComplianceScoresOutput, error) {
 	return m.base.ListConformancePackComplianceScores(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ConfigService) ListConnectors(ctx context.Context, params *svc.ListConnectorsInput, optFns ...func(*svc.Options)) (*svc.ListConnectorsOutput, error) {
+	return m.base.ListConnectors(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ConfigService) ListDiscoveredResources(ctx context.Context, params *svc.ListDiscoveredResourcesInput, optFns ...func(*svc.Options)) (*svc.ListDiscoveredResourcesOutput, error) {
@@ -329,6 +357,10 @@ func (m *ConfigService) PutConformancePack(ctx context.Context, params *svc.PutC
 	return m.base.PutConformancePack(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ConfigService) PutConnector(ctx context.Context, params *svc.PutConnectorInput, optFns ...func(*svc.Options)) (*svc.PutConnectorOutput, error) {
+	return m.base.PutConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) PutDeliveryChannel(ctx context.Context, params *svc.PutDeliveryChannelInput, optFns ...func(*svc.Options)) (*svc.PutDeliveryChannelOutput, error) {
 	return m.base.PutDeliveryChannel(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -365,8 +397,16 @@ func (m *ConfigService) PutRetentionConfiguration(ctx context.Context, params *s
 	return m.base.PutRetentionConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *ConfigService) PutServiceLinkedConfigurationRecorder(ctx context.Context, params *svc.PutServiceLinkedConfigurationRecorderInput, optFns ...func(*svc.Options)) (*svc.PutServiceLinkedConfigurationRecorderOutput, error) {
+	return m.base.PutServiceLinkedConfigurationRecorder(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *ConfigService) PutStoredQuery(ctx context.Context, params *svc.PutStoredQueryInput, optFns ...func(*svc.Options)) (*svc.PutStoredQueryOutput, error) {
 	return m.base.PutStoredQuery(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *ConfigService) PutThirdPartyServiceLinkedConfigurationRecorder(ctx context.Context, params *svc.PutThirdPartyServiceLinkedConfigurationRecorderInput, optFns ...func(*svc.Options)) (*svc.PutThirdPartyServiceLinkedConfigurationRecorderOutput, error) {
+	return m.base.PutThirdPartyServiceLinkedConfigurationRecorder(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *ConfigService) SelectAggregateResourceConfig(ctx context.Context, params *svc.SelectAggregateResourceConfigInput, optFns ...func(*svc.Options)) (*svc.SelectAggregateResourceConfigOutput, error) {

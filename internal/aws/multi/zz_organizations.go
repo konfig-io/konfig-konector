@@ -129,6 +129,10 @@ func (m *Organizations) DescribeResourcePolicy(ctx context.Context, params *svc.
 	return m.base.DescribeResourcePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Organizations) DescribeResponsibilityTransfer(ctx context.Context, params *svc.DescribeResponsibilityTransferInput, optFns ...func(*svc.Options)) (*svc.DescribeResponsibilityTransferOutput, error) {
+	return m.base.DescribeResponsibilityTransfer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Organizations) DetachPolicy(ctx context.Context, params *svc.DetachPolicyInput, optFns ...func(*svc.Options)) (*svc.DetachPolicyOutput, error) {
 	return m.base.DetachPolicy(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -157,6 +161,10 @@ func (m *Organizations) InviteAccountToOrganization(ctx context.Context, params 
 	return m.base.InviteAccountToOrganization(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Organizations) InviteOrganizationToTransferResponsibility(ctx context.Context, params *svc.InviteOrganizationToTransferResponsibilityInput, optFns ...func(*svc.Options)) (*svc.InviteOrganizationToTransferResponsibilityOutput, error) {
+	return m.base.InviteOrganizationToTransferResponsibility(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Organizations) LeaveOrganization(ctx context.Context, params *svc.LeaveOrganizationInput, optFns ...func(*svc.Options)) (*svc.LeaveOrganizationOutput, error) {
 	return m.base.LeaveOrganization(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -171,6 +179,10 @@ func (m *Organizations) ListAccounts(ctx context.Context, params *svc.ListAccoun
 
 func (m *Organizations) ListAccountsForParent(ctx context.Context, params *svc.ListAccountsForParentInput, optFns ...func(*svc.Options)) (*svc.ListAccountsForParentOutput, error) {
 	return m.base.ListAccountsForParent(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Organizations) ListAccountsWithInvalidEffectivePolicy(ctx context.Context, params *svc.ListAccountsWithInvalidEffectivePolicyInput, optFns ...func(*svc.Options)) (*svc.ListAccountsWithInvalidEffectivePolicyOutput, error) {
+	return m.base.ListAccountsWithInvalidEffectivePolicy(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Organizations) ListChildren(ctx context.Context, params *svc.ListChildrenInput, optFns ...func(*svc.Options)) (*svc.ListChildrenOutput, error) {
@@ -189,6 +201,10 @@ func (m *Organizations) ListDelegatedServicesForAccount(ctx context.Context, par
 	return m.base.ListDelegatedServicesForAccount(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Organizations) ListEffectivePolicyValidationErrors(ctx context.Context, params *svc.ListEffectivePolicyValidationErrorsInput, optFns ...func(*svc.Options)) (*svc.ListEffectivePolicyValidationErrorsOutput, error) {
+	return m.base.ListEffectivePolicyValidationErrors(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Organizations) ListHandshakesForAccount(ctx context.Context, params *svc.ListHandshakesForAccountInput, optFns ...func(*svc.Options)) (*svc.ListHandshakesForAccountOutput, error) {
 	return m.base.ListHandshakesForAccount(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -197,8 +213,16 @@ func (m *Organizations) ListHandshakesForOrganization(ctx context.Context, param
 	return m.base.ListHandshakesForOrganization(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Organizations) ListInboundResponsibilityTransfers(ctx context.Context, params *svc.ListInboundResponsibilityTransfersInput, optFns ...func(*svc.Options)) (*svc.ListInboundResponsibilityTransfersOutput, error) {
+	return m.base.ListInboundResponsibilityTransfers(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Organizations) ListOrganizationalUnitsForParent(ctx context.Context, params *svc.ListOrganizationalUnitsForParentInput, optFns ...func(*svc.Options)) (*svc.ListOrganizationalUnitsForParentOutput, error) {
 	return m.base.ListOrganizationalUnitsForParent(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Organizations) ListOutboundResponsibilityTransfers(ctx context.Context, params *svc.ListOutboundResponsibilityTransfersInput, optFns ...func(*svc.Options)) (*svc.ListOutboundResponsibilityTransfersOutput, error) {
+	return m.base.ListOutboundResponsibilityTransfers(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Organizations) ListParents(ctx context.Context, params *svc.ListParentsInput, optFns ...func(*svc.Options)) (*svc.ListParentsOutput, error) {
@@ -245,6 +269,10 @@ func (m *Organizations) TagResource(ctx context.Context, params *svc.TagResource
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Organizations) TerminateResponsibilityTransfer(ctx context.Context, params *svc.TerminateResponsibilityTransferInput, optFns ...func(*svc.Options)) (*svc.TerminateResponsibilityTransferOutput, error) {
+	return m.base.TerminateResponsibilityTransfer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Organizations) UntagResource(ctx context.Context, params *svc.UntagResourceInput, optFns ...func(*svc.Options)) (*svc.UntagResourceOutput, error) {
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -255,4 +283,8 @@ func (m *Organizations) UpdateOrganizationalUnit(ctx context.Context, params *sv
 
 func (m *Organizations) UpdatePolicy(ctx context.Context, params *svc.UpdatePolicyInput, optFns ...func(*svc.Options)) (*svc.UpdatePolicyOutput, error) {
 	return m.base.UpdatePolicy(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Organizations) UpdateResponsibilityTransfer(ctx context.Context, params *svc.UpdateResponsibilityTransferInput, optFns ...func(*svc.Options)) (*svc.UpdateResponsibilityTransferOutput, error) {
+	return m.base.UpdateResponsibilityTransfer(ctx, params, m.opts(ctx, optFns)...)
 }

@@ -37,6 +37,10 @@ func (m *Glue) opts(ctx context.Context, optFns []func(*svc.Options)) []func(*sv
 	return append(out, optFns...)
 }
 
+func (m *Glue) AssociateGlossaryTerms(ctx context.Context, params *svc.AssociateGlossaryTermsInput, optFns ...func(*svc.Options)) (*svc.AssociateGlossaryTermsOutput, error) {
+	return m.base.AssociateGlossaryTerms(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) BatchCreatePartition(ctx context.Context, params *svc.BatchCreatePartitionInput, optFns ...func(*svc.Options)) (*svc.BatchCreatePartitionOutput, error) {
 	return m.base.BatchCreatePartition(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -73,8 +77,16 @@ func (m *Glue) BatchGetDataQualityResult(ctx context.Context, params *svc.BatchG
 	return m.base.BatchGetDataQualityResult(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) BatchGetDataQualityRulesetEvaluationRun(ctx context.Context, params *svc.BatchGetDataQualityRulesetEvaluationRunInput, optFns ...func(*svc.Options)) (*svc.BatchGetDataQualityRulesetEvaluationRunOutput, error) {
+	return m.base.BatchGetDataQualityRulesetEvaluationRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) BatchGetDevEndpoints(ctx context.Context, params *svc.BatchGetDevEndpointsInput, optFns ...func(*svc.Options)) (*svc.BatchGetDevEndpointsOutput, error) {
 	return m.base.BatchGetDevEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) BatchGetIterableForms(ctx context.Context, params *svc.BatchGetIterableFormsInput, optFns ...func(*svc.Options)) (*svc.BatchGetIterableFormsOutput, error) {
+	return m.base.BatchGetIterableForms(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) BatchGetJobs(ctx context.Context, params *svc.BatchGetJobsInput, optFns ...func(*svc.Options)) (*svc.BatchGetJobsOutput, error) {
@@ -85,12 +97,20 @@ func (m *Glue) BatchGetPartition(ctx context.Context, params *svc.BatchGetPartit
 	return m.base.BatchGetPartition(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) BatchGetTableOptimizer(ctx context.Context, params *svc.BatchGetTableOptimizerInput, optFns ...func(*svc.Options)) (*svc.BatchGetTableOptimizerOutput, error) {
+	return m.base.BatchGetTableOptimizer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) BatchGetTriggers(ctx context.Context, params *svc.BatchGetTriggersInput, optFns ...func(*svc.Options)) (*svc.BatchGetTriggersOutput, error) {
 	return m.base.BatchGetTriggers(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) BatchGetWorkflows(ctx context.Context, params *svc.BatchGetWorkflowsInput, optFns ...func(*svc.Options)) (*svc.BatchGetWorkflowsOutput, error) {
 	return m.base.BatchGetWorkflows(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) BatchPutDataQualityStatisticAnnotation(ctx context.Context, params *svc.BatchPutDataQualityStatisticAnnotationInput, optFns ...func(*svc.Options)) (*svc.BatchPutDataQualityStatisticAnnotationOutput, error) {
+	return m.base.BatchPutDataQualityStatisticAnnotation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) BatchStopJobRun(ctx context.Context, params *svc.BatchStopJobRunInput, optFns ...func(*svc.Options)) (*svc.BatchStopJobRunOutput, error) {
@@ -125,8 +145,16 @@ func (m *Glue) CreateBlueprint(ctx context.Context, params *svc.CreateBlueprintI
 	return m.base.CreateBlueprint(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) CreateCatalog(ctx context.Context, params *svc.CreateCatalogInput, optFns ...func(*svc.Options)) (*svc.CreateCatalogOutput, error) {
+	return m.base.CreateCatalog(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) CreateClassifier(ctx context.Context, params *svc.CreateClassifierInput, optFns ...func(*svc.Options)) (*svc.CreateClassifierOutput, error) {
 	return m.base.CreateClassifier(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateColumnStatisticsTaskSettings(ctx context.Context, params *svc.CreateColumnStatisticsTaskSettingsInput, optFns ...func(*svc.Options)) (*svc.CreateColumnStatisticsTaskSettingsOutput, error) {
+	return m.base.CreateColumnStatisticsTaskSettings(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) CreateConnection(ctx context.Context, params *svc.CreateConnectionInput, optFns ...func(*svc.Options)) (*svc.CreateConnectionOutput, error) {
@@ -151,6 +179,30 @@ func (m *Glue) CreateDatabase(ctx context.Context, params *svc.CreateDatabaseInp
 
 func (m *Glue) CreateDevEndpoint(ctx context.Context, params *svc.CreateDevEndpointInput, optFns ...func(*svc.Options)) (*svc.CreateDevEndpointOutput, error) {
 	return m.base.CreateDevEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateGlossary(ctx context.Context, params *svc.CreateGlossaryInput, optFns ...func(*svc.Options)) (*svc.CreateGlossaryOutput, error) {
+	return m.base.CreateGlossary(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateGlossaryTerm(ctx context.Context, params *svc.CreateGlossaryTermInput, optFns ...func(*svc.Options)) (*svc.CreateGlossaryTermOutput, error) {
+	return m.base.CreateGlossaryTerm(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateGlueIdentityCenterConfiguration(ctx context.Context, params *svc.CreateGlueIdentityCenterConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateGlueIdentityCenterConfigurationOutput, error) {
+	return m.base.CreateGlueIdentityCenterConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateIntegration(ctx context.Context, params *svc.CreateIntegrationInput, optFns ...func(*svc.Options)) (*svc.CreateIntegrationOutput, error) {
+	return m.base.CreateIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateIntegrationResourceProperty(ctx context.Context, params *svc.CreateIntegrationResourcePropertyInput, optFns ...func(*svc.Options)) (*svc.CreateIntegrationResourcePropertyOutput, error) {
+	return m.base.CreateIntegrationResourceProperty(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateIntegrationTableProperties(ctx context.Context, params *svc.CreateIntegrationTablePropertiesInput, optFns ...func(*svc.Options)) (*svc.CreateIntegrationTablePropertiesOutput, error) {
+	return m.base.CreateIntegrationTableProperties(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) CreateJob(ctx context.Context, params *svc.CreateJobInput, optFns ...func(*svc.Options)) (*svc.CreateJobOutput, error) {
@@ -193,8 +245,16 @@ func (m *Glue) CreateTable(ctx context.Context, params *svc.CreateTableInput, op
 	return m.base.CreateTable(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) CreateTableOptimizer(ctx context.Context, params *svc.CreateTableOptimizerInput, optFns ...func(*svc.Options)) (*svc.CreateTableOptimizerOutput, error) {
+	return m.base.CreateTableOptimizer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) CreateTrigger(ctx context.Context, params *svc.CreateTriggerInput, optFns ...func(*svc.Options)) (*svc.CreateTriggerOutput, error) {
 	return m.base.CreateTrigger(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) CreateUsageProfile(ctx context.Context, params *svc.CreateUsageProfileInput, optFns ...func(*svc.Options)) (*svc.CreateUsageProfileOutput, error) {
+	return m.base.CreateUsageProfile(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) CreateUserDefinedFunction(ctx context.Context, params *svc.CreateUserDefinedFunctionInput, optFns ...func(*svc.Options)) (*svc.CreateUserDefinedFunctionOutput, error) {
@@ -205,8 +265,24 @@ func (m *Glue) CreateWorkflow(ctx context.Context, params *svc.CreateWorkflowInp
 	return m.base.CreateWorkflow(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) DeleteAsset(ctx context.Context, params *svc.DeleteAssetInput, optFns ...func(*svc.Options)) (*svc.DeleteAssetOutput, error) {
+	return m.base.DeleteAsset(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteAssetType(ctx context.Context, params *svc.DeleteAssetTypeInput, optFns ...func(*svc.Options)) (*svc.DeleteAssetTypeOutput, error) {
+	return m.base.DeleteAssetType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteAttachment(ctx context.Context, params *svc.DeleteAttachmentInput, optFns ...func(*svc.Options)) (*svc.DeleteAttachmentOutput, error) {
+	return m.base.DeleteAttachment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) DeleteBlueprint(ctx context.Context, params *svc.DeleteBlueprintInput, optFns ...func(*svc.Options)) (*svc.DeleteBlueprintOutput, error) {
 	return m.base.DeleteBlueprint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteCatalog(ctx context.Context, params *svc.DeleteCatalogInput, optFns ...func(*svc.Options)) (*svc.DeleteCatalogOutput, error) {
+	return m.base.DeleteCatalog(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) DeleteClassifier(ctx context.Context, params *svc.DeleteClassifierInput, optFns ...func(*svc.Options)) (*svc.DeleteClassifierOutput, error) {
@@ -221,8 +297,16 @@ func (m *Glue) DeleteColumnStatisticsForTable(ctx context.Context, params *svc.D
 	return m.base.DeleteColumnStatisticsForTable(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) DeleteColumnStatisticsTaskSettings(ctx context.Context, params *svc.DeleteColumnStatisticsTaskSettingsInput, optFns ...func(*svc.Options)) (*svc.DeleteColumnStatisticsTaskSettingsOutput, error) {
+	return m.base.DeleteColumnStatisticsTaskSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) DeleteConnection(ctx context.Context, params *svc.DeleteConnectionInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectionOutput, error) {
 	return m.base.DeleteConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteConnectionType(ctx context.Context, params *svc.DeleteConnectionTypeInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectionTypeOutput, error) {
+	return m.base.DeleteConnectionType(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) DeleteCrawler(ctx context.Context, params *svc.DeleteCrawlerInput, optFns ...func(*svc.Options)) (*svc.DeleteCrawlerOutput, error) {
@@ -243,6 +327,34 @@ func (m *Glue) DeleteDatabase(ctx context.Context, params *svc.DeleteDatabaseInp
 
 func (m *Glue) DeleteDevEndpoint(ctx context.Context, params *svc.DeleteDevEndpointInput, optFns ...func(*svc.Options)) (*svc.DeleteDevEndpointOutput, error) {
 	return m.base.DeleteDevEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteFormType(ctx context.Context, params *svc.DeleteFormTypeInput, optFns ...func(*svc.Options)) (*svc.DeleteFormTypeOutput, error) {
+	return m.base.DeleteFormType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteGlossary(ctx context.Context, params *svc.DeleteGlossaryInput, optFns ...func(*svc.Options)) (*svc.DeleteGlossaryOutput, error) {
+	return m.base.DeleteGlossary(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteGlossaryTerm(ctx context.Context, params *svc.DeleteGlossaryTermInput, optFns ...func(*svc.Options)) (*svc.DeleteGlossaryTermOutput, error) {
+	return m.base.DeleteGlossaryTerm(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteGlueIdentityCenterConfiguration(ctx context.Context, params *svc.DeleteGlueIdentityCenterConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteGlueIdentityCenterConfigurationOutput, error) {
+	return m.base.DeleteGlueIdentityCenterConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteIntegration(ctx context.Context, params *svc.DeleteIntegrationInput, optFns ...func(*svc.Options)) (*svc.DeleteIntegrationOutput, error) {
+	return m.base.DeleteIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteIntegrationResourceProperty(ctx context.Context, params *svc.DeleteIntegrationResourcePropertyInput, optFns ...func(*svc.Options)) (*svc.DeleteIntegrationResourcePropertyOutput, error) {
+	return m.base.DeleteIntegrationResourceProperty(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DeleteIntegrationTableProperties(ctx context.Context, params *svc.DeleteIntegrationTablePropertiesInput, optFns ...func(*svc.Options)) (*svc.DeleteIntegrationTablePropertiesOutput, error) {
+	return m.base.DeleteIntegrationTableProperties(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) DeleteJob(ctx context.Context, params *svc.DeleteJobInput, optFns ...func(*svc.Options)) (*svc.DeleteJobOutput, error) {
@@ -289,6 +401,10 @@ func (m *Glue) DeleteTable(ctx context.Context, params *svc.DeleteTableInput, op
 	return m.base.DeleteTable(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) DeleteTableOptimizer(ctx context.Context, params *svc.DeleteTableOptimizerInput, optFns ...func(*svc.Options)) (*svc.DeleteTableOptimizerOutput, error) {
+	return m.base.DeleteTableOptimizer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) DeleteTableVersion(ctx context.Context, params *svc.DeleteTableVersionInput, optFns ...func(*svc.Options)) (*svc.DeleteTableVersionOutput, error) {
 	return m.base.DeleteTableVersion(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -297,12 +413,44 @@ func (m *Glue) DeleteTrigger(ctx context.Context, params *svc.DeleteTriggerInput
 	return m.base.DeleteTrigger(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) DeleteUsageProfile(ctx context.Context, params *svc.DeleteUsageProfileInput, optFns ...func(*svc.Options)) (*svc.DeleteUsageProfileOutput, error) {
+	return m.base.DeleteUsageProfile(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) DeleteUserDefinedFunction(ctx context.Context, params *svc.DeleteUserDefinedFunctionInput, optFns ...func(*svc.Options)) (*svc.DeleteUserDefinedFunctionOutput, error) {
 	return m.base.DeleteUserDefinedFunction(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) DeleteWorkflow(ctx context.Context, params *svc.DeleteWorkflowInput, optFns ...func(*svc.Options)) (*svc.DeleteWorkflowOutput, error) {
 	return m.base.DeleteWorkflow(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DescribeConnectionType(ctx context.Context, params *svc.DescribeConnectionTypeInput, optFns ...func(*svc.Options)) (*svc.DescribeConnectionTypeOutput, error) {
+	return m.base.DescribeConnectionType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DescribeEntity(ctx context.Context, params *svc.DescribeEntityInput, optFns ...func(*svc.Options)) (*svc.DescribeEntityOutput, error) {
+	return m.base.DescribeEntity(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DescribeInboundIntegrations(ctx context.Context, params *svc.DescribeInboundIntegrationsInput, optFns ...func(*svc.Options)) (*svc.DescribeInboundIntegrationsOutput, error) {
+	return m.base.DescribeInboundIntegrations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DescribeIntegrations(ctx context.Context, params *svc.DescribeIntegrationsInput, optFns ...func(*svc.Options)) (*svc.DescribeIntegrationsOutput, error) {
+	return m.base.DescribeIntegrations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) DisassociateGlossaryTerms(ctx context.Context, params *svc.DisassociateGlossaryTermsInput, optFns ...func(*svc.Options)) (*svc.DisassociateGlossaryTermsOutput, error) {
+	return m.base.DisassociateGlossaryTerms(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetAsset(ctx context.Context, params *svc.GetAssetInput, optFns ...func(*svc.Options)) (*svc.GetAssetOutput, error) {
+	return m.base.GetAsset(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetAssetType(ctx context.Context, params *svc.GetAssetTypeInput, optFns ...func(*svc.Options)) (*svc.GetAssetTypeOutput, error) {
+	return m.base.GetAssetType(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetBlueprint(ctx context.Context, params *svc.GetBlueprintInput, optFns ...func(*svc.Options)) (*svc.GetBlueprintOutput, error) {
@@ -317,8 +465,16 @@ func (m *Glue) GetBlueprintRuns(ctx context.Context, params *svc.GetBlueprintRun
 	return m.base.GetBlueprintRuns(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) GetCatalog(ctx context.Context, params *svc.GetCatalogInput, optFns ...func(*svc.Options)) (*svc.GetCatalogOutput, error) {
+	return m.base.GetCatalog(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) GetCatalogImportStatus(ctx context.Context, params *svc.GetCatalogImportStatusInput, optFns ...func(*svc.Options)) (*svc.GetCatalogImportStatusOutput, error) {
 	return m.base.GetCatalogImportStatus(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetCatalogs(ctx context.Context, params *svc.GetCatalogsInput, optFns ...func(*svc.Options)) (*svc.GetCatalogsOutput, error) {
+	return m.base.GetCatalogs(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetClassifier(ctx context.Context, params *svc.GetClassifierInput, optFns ...func(*svc.Options)) (*svc.GetClassifierOutput, error) {
@@ -335,6 +491,18 @@ func (m *Glue) GetColumnStatisticsForPartition(ctx context.Context, params *svc.
 
 func (m *Glue) GetColumnStatisticsForTable(ctx context.Context, params *svc.GetColumnStatisticsForTableInput, optFns ...func(*svc.Options)) (*svc.GetColumnStatisticsForTableOutput, error) {
 	return m.base.GetColumnStatisticsForTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetColumnStatisticsTaskRun(ctx context.Context, params *svc.GetColumnStatisticsTaskRunInput, optFns ...func(*svc.Options)) (*svc.GetColumnStatisticsTaskRunOutput, error) {
+	return m.base.GetColumnStatisticsTaskRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetColumnStatisticsTaskRuns(ctx context.Context, params *svc.GetColumnStatisticsTaskRunsInput, optFns ...func(*svc.Options)) (*svc.GetColumnStatisticsTaskRunsOutput, error) {
+	return m.base.GetColumnStatisticsTaskRuns(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetColumnStatisticsTaskSettings(ctx context.Context, params *svc.GetColumnStatisticsTaskSettingsInput, optFns ...func(*svc.Options)) (*svc.GetColumnStatisticsTaskSettingsOutput, error) {
+	return m.base.GetColumnStatisticsTaskSettings(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetConnection(ctx context.Context, params *svc.GetConnectionInput, optFns ...func(*svc.Options)) (*svc.GetConnectionOutput, error) {
@@ -361,8 +529,24 @@ func (m *Glue) GetCustomEntityType(ctx context.Context, params *svc.GetCustomEnt
 	return m.base.GetCustomEntityType(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) GetDashboardUrl(ctx context.Context, params *svc.GetDashboardUrlInput, optFns ...func(*svc.Options)) (*svc.GetDashboardUrlOutput, error) {
+	return m.base.GetDashboardUrl(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) GetDataCatalogEncryptionSettings(ctx context.Context, params *svc.GetDataCatalogEncryptionSettingsInput, optFns ...func(*svc.Options)) (*svc.GetDataCatalogEncryptionSettingsOutput, error) {
 	return m.base.GetDataCatalogEncryptionSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetDataCatalogExportConfiguration(ctx context.Context, params *svc.GetDataCatalogExportConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetDataCatalogExportConfigurationOutput, error) {
+	return m.base.GetDataCatalogExportConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetDataQualityModel(ctx context.Context, params *svc.GetDataQualityModelInput, optFns ...func(*svc.Options)) (*svc.GetDataQualityModelOutput, error) {
+	return m.base.GetDataQualityModel(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetDataQualityModelResult(ctx context.Context, params *svc.GetDataQualityModelResultInput, optFns ...func(*svc.Options)) (*svc.GetDataQualityModelResultOutput, error) {
+	return m.base.GetDataQualityModelResult(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetDataQualityResult(ctx context.Context, params *svc.GetDataQualityResultInput, optFns ...func(*svc.Options)) (*svc.GetDataQualityResultOutput, error) {
@@ -399,6 +583,34 @@ func (m *Glue) GetDevEndpoint(ctx context.Context, params *svc.GetDevEndpointInp
 
 func (m *Glue) GetDevEndpoints(ctx context.Context, params *svc.GetDevEndpointsInput, optFns ...func(*svc.Options)) (*svc.GetDevEndpointsOutput, error) {
 	return m.base.GetDevEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetEntityRecords(ctx context.Context, params *svc.GetEntityRecordsInput, optFns ...func(*svc.Options)) (*svc.GetEntityRecordsOutput, error) {
+	return m.base.GetEntityRecords(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetFormType(ctx context.Context, params *svc.GetFormTypeInput, optFns ...func(*svc.Options)) (*svc.GetFormTypeOutput, error) {
+	return m.base.GetFormType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetGlossary(ctx context.Context, params *svc.GetGlossaryInput, optFns ...func(*svc.Options)) (*svc.GetGlossaryOutput, error) {
+	return m.base.GetGlossary(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetGlossaryTerm(ctx context.Context, params *svc.GetGlossaryTermInput, optFns ...func(*svc.Options)) (*svc.GetGlossaryTermOutput, error) {
+	return m.base.GetGlossaryTerm(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetGlueIdentityCenterConfiguration(ctx context.Context, params *svc.GetGlueIdentityCenterConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetGlueIdentityCenterConfigurationOutput, error) {
+	return m.base.GetGlueIdentityCenterConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetIntegrationResourceProperty(ctx context.Context, params *svc.GetIntegrationResourcePropertyInput, optFns ...func(*svc.Options)) (*svc.GetIntegrationResourcePropertyOutput, error) {
+	return m.base.GetIntegrationResourceProperty(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetIntegrationTableProperties(ctx context.Context, params *svc.GetIntegrationTablePropertiesInput, optFns ...func(*svc.Options)) (*svc.GetIntegrationTablePropertiesOutput, error) {
+	return m.base.GetIntegrationTableProperties(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetJob(ctx context.Context, params *svc.GetJobInput, optFns ...func(*svc.Options)) (*svc.GetJobOutput, error) {
@@ -439,6 +651,10 @@ func (m *Glue) GetMLTransforms(ctx context.Context, params *svc.GetMLTransformsI
 
 func (m *Glue) GetMapping(ctx context.Context, params *svc.GetMappingInput, optFns ...func(*svc.Options)) (*svc.GetMappingOutput, error) {
 	return m.base.GetMapping(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetMaterializedViewRefreshTaskRun(ctx context.Context, params *svc.GetMaterializedViewRefreshTaskRunInput, optFns ...func(*svc.Options)) (*svc.GetMaterializedViewRefreshTaskRunOutput, error) {
+	return m.base.GetMaterializedViewRefreshTaskRun(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetPartition(ctx context.Context, params *svc.GetPartitionInput, optFns ...func(*svc.Options)) (*svc.GetPartitionOutput, error) {
@@ -497,12 +713,20 @@ func (m *Glue) GetSession(ctx context.Context, params *svc.GetSessionInput, optF
 	return m.base.GetSession(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) GetSessionEndpoint(ctx context.Context, params *svc.GetSessionEndpointInput, optFns ...func(*svc.Options)) (*svc.GetSessionEndpointOutput, error) {
+	return m.base.GetSessionEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) GetStatement(ctx context.Context, params *svc.GetStatementInput, optFns ...func(*svc.Options)) (*svc.GetStatementOutput, error) {
 	return m.base.GetStatement(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetTable(ctx context.Context, params *svc.GetTableInput, optFns ...func(*svc.Options)) (*svc.GetTableOutput, error) {
 	return m.base.GetTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) GetTableOptimizer(ctx context.Context, params *svc.GetTableOptimizerInput, optFns ...func(*svc.Options)) (*svc.GetTableOptimizerOutput, error) {
+	return m.base.GetTableOptimizer(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) GetTableVersion(ctx context.Context, params *svc.GetTableVersionInput, optFns ...func(*svc.Options)) (*svc.GetTableVersionOutput, error) {
@@ -541,6 +765,10 @@ func (m *Glue) GetUnfilteredTableMetadata(ctx context.Context, params *svc.GetUn
 	return m.base.GetUnfilteredTableMetadata(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) GetUsageProfile(ctx context.Context, params *svc.GetUsageProfileInput, optFns ...func(*svc.Options)) (*svc.GetUsageProfileOutput, error) {
+	return m.base.GetUsageProfile(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) GetUserDefinedFunction(ctx context.Context, params *svc.GetUserDefinedFunctionInput, optFns ...func(*svc.Options)) (*svc.GetUserDefinedFunctionOutput, error) {
 	return m.base.GetUserDefinedFunction(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -569,8 +797,20 @@ func (m *Glue) ImportCatalogToGlue(ctx context.Context, params *svc.ImportCatalo
 	return m.base.ImportCatalogToGlue(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) ListAssetTypes(ctx context.Context, params *svc.ListAssetTypesInput, optFns ...func(*svc.Options)) (*svc.ListAssetTypesOutput, error) {
+	return m.base.ListAssetTypes(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) ListBlueprints(ctx context.Context, params *svc.ListBlueprintsInput, optFns ...func(*svc.Options)) (*svc.ListBlueprintsOutput, error) {
 	return m.base.ListBlueprints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListColumnStatisticsTaskRuns(ctx context.Context, params *svc.ListColumnStatisticsTaskRunsInput, optFns ...func(*svc.Options)) (*svc.ListColumnStatisticsTaskRunsOutput, error) {
+	return m.base.ListColumnStatisticsTaskRuns(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListConnectionTypes(ctx context.Context, params *svc.ListConnectionTypesInput, optFns ...func(*svc.Options)) (*svc.ListConnectionTypesOutput, error) {
+	return m.base.ListConnectionTypes(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) ListCrawlers(ctx context.Context, params *svc.ListCrawlersInput, optFns ...func(*svc.Options)) (*svc.ListCrawlersOutput, error) {
@@ -601,8 +841,40 @@ func (m *Glue) ListDataQualityRulesets(ctx context.Context, params *svc.ListData
 	return m.base.ListDataQualityRulesets(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) ListDataQualityStatisticAnnotations(ctx context.Context, params *svc.ListDataQualityStatisticAnnotationsInput, optFns ...func(*svc.Options)) (*svc.ListDataQualityStatisticAnnotationsOutput, error) {
+	return m.base.ListDataQualityStatisticAnnotations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListDataQualityStatistics(ctx context.Context, params *svc.ListDataQualityStatisticsInput, optFns ...func(*svc.Options)) (*svc.ListDataQualityStatisticsOutput, error) {
+	return m.base.ListDataQualityStatistics(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) ListDevEndpoints(ctx context.Context, params *svc.ListDevEndpointsInput, optFns ...func(*svc.Options)) (*svc.ListDevEndpointsOutput, error) {
 	return m.base.ListDevEndpoints(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListEntities(ctx context.Context, params *svc.ListEntitiesInput, optFns ...func(*svc.Options)) (*svc.ListEntitiesOutput, error) {
+	return m.base.ListEntities(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListFormTypes(ctx context.Context, params *svc.ListFormTypesInput, optFns ...func(*svc.Options)) (*svc.ListFormTypesOutput, error) {
+	return m.base.ListFormTypes(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListGlossaries(ctx context.Context, params *svc.ListGlossariesInput, optFns ...func(*svc.Options)) (*svc.ListGlossariesOutput, error) {
+	return m.base.ListGlossaries(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListGlossaryTerms(ctx context.Context, params *svc.ListGlossaryTermsInput, optFns ...func(*svc.Options)) (*svc.ListGlossaryTermsOutput, error) {
+	return m.base.ListGlossaryTerms(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListIntegrationResourceProperties(ctx context.Context, params *svc.ListIntegrationResourcePropertiesInput, optFns ...func(*svc.Options)) (*svc.ListIntegrationResourcePropertiesOutput, error) {
+	return m.base.ListIntegrationResourceProperties(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListIterableForms(ctx context.Context, params *svc.ListIterableFormsInput, optFns ...func(*svc.Options)) (*svc.ListIterableFormsOutput, error) {
+	return m.base.ListIterableForms(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) ListJobs(ctx context.Context, params *svc.ListJobsInput, optFns ...func(*svc.Options)) (*svc.ListJobsOutput, error) {
@@ -611,6 +883,10 @@ func (m *Glue) ListJobs(ctx context.Context, params *svc.ListJobsInput, optFns .
 
 func (m *Glue) ListMLTransforms(ctx context.Context, params *svc.ListMLTransformsInput, optFns ...func(*svc.Options)) (*svc.ListMLTransformsOutput, error) {
 	return m.base.ListMLTransforms(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListMaterializedViewRefreshTaskRuns(ctx context.Context, params *svc.ListMaterializedViewRefreshTaskRunsInput, optFns ...func(*svc.Options)) (*svc.ListMaterializedViewRefreshTaskRunsOutput, error) {
+	return m.base.ListMaterializedViewRefreshTaskRuns(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) ListRegistries(ctx context.Context, params *svc.ListRegistriesInput, optFns ...func(*svc.Options)) (*svc.ListRegistriesOutput, error) {
@@ -633,16 +909,52 @@ func (m *Glue) ListStatements(ctx context.Context, params *svc.ListStatementsInp
 	return m.base.ListStatements(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) ListTableOptimizerRuns(ctx context.Context, params *svc.ListTableOptimizerRunsInput, optFns ...func(*svc.Options)) (*svc.ListTableOptimizerRunsOutput, error) {
+	return m.base.ListTableOptimizerRuns(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) ListTriggers(ctx context.Context, params *svc.ListTriggersInput, optFns ...func(*svc.Options)) (*svc.ListTriggersOutput, error) {
 	return m.base.ListTriggers(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) ListUsageProfiles(ctx context.Context, params *svc.ListUsageProfilesInput, optFns ...func(*svc.Options)) (*svc.ListUsageProfilesOutput, error) {
+	return m.base.ListUsageProfiles(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) ListWorkflows(ctx context.Context, params *svc.ListWorkflowsInput, optFns ...func(*svc.Options)) (*svc.ListWorkflowsOutput, error) {
 	return m.base.ListWorkflows(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) ModifyIntegration(ctx context.Context, params *svc.ModifyIntegrationInput, optFns ...func(*svc.Options)) (*svc.ModifyIntegrationOutput, error) {
+	return m.base.ModifyIntegration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutAsset(ctx context.Context, params *svc.PutAssetInput, optFns ...func(*svc.Options)) (*svc.PutAssetOutput, error) {
+	return m.base.PutAsset(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutAssetType(ctx context.Context, params *svc.PutAssetTypeInput, optFns ...func(*svc.Options)) (*svc.PutAssetTypeOutput, error) {
+	return m.base.PutAssetType(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutAttachment(ctx context.Context, params *svc.PutAttachmentInput, optFns ...func(*svc.Options)) (*svc.PutAttachmentOutput, error) {
+	return m.base.PutAttachment(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) PutDataCatalogEncryptionSettings(ctx context.Context, params *svc.PutDataCatalogEncryptionSettingsInput, optFns ...func(*svc.Options)) (*svc.PutDataCatalogEncryptionSettingsOutput, error) {
 	return m.base.PutDataCatalogEncryptionSettings(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutDataCatalogExportConfiguration(ctx context.Context, params *svc.PutDataCatalogExportConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutDataCatalogExportConfigurationOutput, error) {
+	return m.base.PutDataCatalogExportConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutDataQualityProfileAnnotation(ctx context.Context, params *svc.PutDataQualityProfileAnnotationInput, optFns ...func(*svc.Options)) (*svc.PutDataQualityProfileAnnotationOutput, error) {
+	return m.base.PutDataQualityProfileAnnotation(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) PutFormType(ctx context.Context, params *svc.PutFormTypeInput, optFns ...func(*svc.Options)) (*svc.PutFormTypeOutput, error) {
+	return m.base.PutFormType(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) PutResourcePolicy(ctx context.Context, params *svc.PutResourcePolicyInput, optFns ...func(*svc.Options)) (*svc.PutResourcePolicyOutput, error) {
@@ -659,6 +971,10 @@ func (m *Glue) PutWorkflowRunProperties(ctx context.Context, params *svc.PutWork
 
 func (m *Glue) QuerySchemaVersionMetadata(ctx context.Context, params *svc.QuerySchemaVersionMetadataInput, optFns ...func(*svc.Options)) (*svc.QuerySchemaVersionMetadataOutput, error) {
 	return m.base.QuerySchemaVersionMetadata(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) RegisterConnectionType(ctx context.Context, params *svc.RegisterConnectionTypeInput, optFns ...func(*svc.Options)) (*svc.RegisterConnectionTypeOutput, error) {
+	return m.base.RegisterConnectionType(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) RegisterSchemaVersion(ctx context.Context, params *svc.RegisterSchemaVersionInput, optFns ...func(*svc.Options)) (*svc.RegisterSchemaVersionOutput, error) {
@@ -681,12 +997,24 @@ func (m *Glue) RunStatement(ctx context.Context, params *svc.RunStatementInput, 
 	return m.base.RunStatement(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) SearchAssets(ctx context.Context, params *svc.SearchAssetsInput, optFns ...func(*svc.Options)) (*svc.SearchAssetsOutput, error) {
+	return m.base.SearchAssets(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) SearchTables(ctx context.Context, params *svc.SearchTablesInput, optFns ...func(*svc.Options)) (*svc.SearchTablesOutput, error) {
 	return m.base.SearchTables(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) StartBlueprintRun(ctx context.Context, params *svc.StartBlueprintRunInput, optFns ...func(*svc.Options)) (*svc.StartBlueprintRunOutput, error) {
 	return m.base.StartBlueprintRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) StartColumnStatisticsTaskRun(ctx context.Context, params *svc.StartColumnStatisticsTaskRunInput, optFns ...func(*svc.Options)) (*svc.StartColumnStatisticsTaskRunOutput, error) {
+	return m.base.StartColumnStatisticsTaskRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) StartColumnStatisticsTaskRunSchedule(ctx context.Context, params *svc.StartColumnStatisticsTaskRunScheduleInput, optFns ...func(*svc.Options)) (*svc.StartColumnStatisticsTaskRunScheduleOutput, error) {
+	return m.base.StartColumnStatisticsTaskRunSchedule(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) StartCrawler(ctx context.Context, params *svc.StartCrawlerInput, optFns ...func(*svc.Options)) (*svc.StartCrawlerOutput, error) {
@@ -725,6 +1053,10 @@ func (m *Glue) StartMLLabelingSetGenerationTaskRun(ctx context.Context, params *
 	return m.base.StartMLLabelingSetGenerationTaskRun(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) StartMaterializedViewRefreshTaskRun(ctx context.Context, params *svc.StartMaterializedViewRefreshTaskRunInput, optFns ...func(*svc.Options)) (*svc.StartMaterializedViewRefreshTaskRunOutput, error) {
+	return m.base.StartMaterializedViewRefreshTaskRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) StartTrigger(ctx context.Context, params *svc.StartTriggerInput, optFns ...func(*svc.Options)) (*svc.StartTriggerOutput, error) {
 	return m.base.StartTrigger(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -733,12 +1065,24 @@ func (m *Glue) StartWorkflowRun(ctx context.Context, params *svc.StartWorkflowRu
 	return m.base.StartWorkflowRun(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) StopColumnStatisticsTaskRun(ctx context.Context, params *svc.StopColumnStatisticsTaskRunInput, optFns ...func(*svc.Options)) (*svc.StopColumnStatisticsTaskRunOutput, error) {
+	return m.base.StopColumnStatisticsTaskRun(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) StopColumnStatisticsTaskRunSchedule(ctx context.Context, params *svc.StopColumnStatisticsTaskRunScheduleInput, optFns ...func(*svc.Options)) (*svc.StopColumnStatisticsTaskRunScheduleOutput, error) {
+	return m.base.StopColumnStatisticsTaskRunSchedule(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) StopCrawler(ctx context.Context, params *svc.StopCrawlerInput, optFns ...func(*svc.Options)) (*svc.StopCrawlerOutput, error) {
 	return m.base.StopCrawler(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) StopCrawlerSchedule(ctx context.Context, params *svc.StopCrawlerScheduleInput, optFns ...func(*svc.Options)) (*svc.StopCrawlerScheduleOutput, error) {
 	return m.base.StopCrawlerSchedule(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) StopMaterializedViewRefreshTaskRun(ctx context.Context, params *svc.StopMaterializedViewRefreshTaskRunInput, optFns ...func(*svc.Options)) (*svc.StopMaterializedViewRefreshTaskRunOutput, error) {
+	return m.base.StopMaterializedViewRefreshTaskRun(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) StopSession(ctx context.Context, params *svc.StopSessionInput, optFns ...func(*svc.Options)) (*svc.StopSessionOutput, error) {
@@ -757,12 +1101,24 @@ func (m *Glue) TagResource(ctx context.Context, params *svc.TagResourceInput, op
 	return m.base.TagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) TestConnection(ctx context.Context, params *svc.TestConnectionInput, optFns ...func(*svc.Options)) (*svc.TestConnectionOutput, error) {
+	return m.base.TestConnection(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) UntagResource(ctx context.Context, params *svc.UntagResourceInput, optFns ...func(*svc.Options)) (*svc.UntagResourceOutput, error) {
 	return m.base.UntagResource(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) UpdateAsset(ctx context.Context, params *svc.UpdateAssetInput, optFns ...func(*svc.Options)) (*svc.UpdateAssetOutput, error) {
+	return m.base.UpdateAsset(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) UpdateBlueprint(ctx context.Context, params *svc.UpdateBlueprintInput, optFns ...func(*svc.Options)) (*svc.UpdateBlueprintOutput, error) {
 	return m.base.UpdateBlueprint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateCatalog(ctx context.Context, params *svc.UpdateCatalogInput, optFns ...func(*svc.Options)) (*svc.UpdateCatalogOutput, error) {
+	return m.base.UpdateCatalog(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) UpdateClassifier(ctx context.Context, params *svc.UpdateClassifierInput, optFns ...func(*svc.Options)) (*svc.UpdateClassifierOutput, error) {
@@ -775,6 +1131,10 @@ func (m *Glue) UpdateColumnStatisticsForPartition(ctx context.Context, params *s
 
 func (m *Glue) UpdateColumnStatisticsForTable(ctx context.Context, params *svc.UpdateColumnStatisticsForTableInput, optFns ...func(*svc.Options)) (*svc.UpdateColumnStatisticsForTableOutput, error) {
 	return m.base.UpdateColumnStatisticsForTable(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateColumnStatisticsTaskSettings(ctx context.Context, params *svc.UpdateColumnStatisticsTaskSettingsInput, optFns ...func(*svc.Options)) (*svc.UpdateColumnStatisticsTaskSettingsOutput, error) {
+	return m.base.UpdateColumnStatisticsTaskSettings(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) UpdateConnection(ctx context.Context, params *svc.UpdateConnectionInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectionOutput, error) {
@@ -799,6 +1159,26 @@ func (m *Glue) UpdateDatabase(ctx context.Context, params *svc.UpdateDatabaseInp
 
 func (m *Glue) UpdateDevEndpoint(ctx context.Context, params *svc.UpdateDevEndpointInput, optFns ...func(*svc.Options)) (*svc.UpdateDevEndpointOutput, error) {
 	return m.base.UpdateDevEndpoint(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateGlossary(ctx context.Context, params *svc.UpdateGlossaryInput, optFns ...func(*svc.Options)) (*svc.UpdateGlossaryOutput, error) {
+	return m.base.UpdateGlossary(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateGlossaryTerm(ctx context.Context, params *svc.UpdateGlossaryTermInput, optFns ...func(*svc.Options)) (*svc.UpdateGlossaryTermOutput, error) {
+	return m.base.UpdateGlossaryTerm(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateGlueIdentityCenterConfiguration(ctx context.Context, params *svc.UpdateGlueIdentityCenterConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateGlueIdentityCenterConfigurationOutput, error) {
+	return m.base.UpdateGlueIdentityCenterConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateIntegrationResourceProperty(ctx context.Context, params *svc.UpdateIntegrationResourcePropertyInput, optFns ...func(*svc.Options)) (*svc.UpdateIntegrationResourcePropertyOutput, error) {
+	return m.base.UpdateIntegrationResourceProperty(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateIntegrationTableProperties(ctx context.Context, params *svc.UpdateIntegrationTablePropertiesInput, optFns ...func(*svc.Options)) (*svc.UpdateIntegrationTablePropertiesOutput, error) {
+	return m.base.UpdateIntegrationTableProperties(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) UpdateJob(ctx context.Context, params *svc.UpdateJobInput, optFns ...func(*svc.Options)) (*svc.UpdateJobOutput, error) {
@@ -833,8 +1213,16 @@ func (m *Glue) UpdateTable(ctx context.Context, params *svc.UpdateTableInput, op
 	return m.base.UpdateTable(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Glue) UpdateTableOptimizer(ctx context.Context, params *svc.UpdateTableOptimizerInput, optFns ...func(*svc.Options)) (*svc.UpdateTableOptimizerOutput, error) {
+	return m.base.UpdateTableOptimizer(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Glue) UpdateTrigger(ctx context.Context, params *svc.UpdateTriggerInput, optFns ...func(*svc.Options)) (*svc.UpdateTriggerOutput, error) {
 	return m.base.UpdateTrigger(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Glue) UpdateUsageProfile(ctx context.Context, params *svc.UpdateUsageProfileInput, optFns ...func(*svc.Options)) (*svc.UpdateUsageProfileOutput, error) {
+	return m.base.UpdateUsageProfile(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Glue) UpdateUserDefinedFunction(ctx context.Context, params *svc.UpdateUserDefinedFunctionInput, optFns ...func(*svc.Options)) (*svc.UpdateUserDefinedFunctionOutput, error) {

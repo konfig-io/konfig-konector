@@ -1,15 +1,6 @@
 /* ── Sidebar Data ────────────────────────────────────────────────────────────── */
 const SIDEBAR_DATA = [
   {
-    id: "accessanalyzer",
-    label: "ACCESSANALYZER",
-    href: "/docs/accessanalyzer.html",
-    items: [
-      { label: "AccessAnalyzerAnalyzer", anchor: "accessanalyzeranalyzer" },
-      { label: "AccessAnalyzerArchiveRule", anchor: "accessanalyzerarchiverule" }
-    ]
-  },
-  {
     id: "accountaccess",
     label: "ACCOUNTACCESS",
     href: "/docs/accountaccess.html",
@@ -27,7 +18,8 @@ const SIDEBAR_DATA = [
       { label: "ACMAcmeDomainValidation", anchor: "acmacmedomainvalidation" },
       { label: "ACMAcmeEndpoint", anchor: "acmacmeendpoint" },
       { label: "ACMAcmeExternalAccountBinding", anchor: "acmacmeexternalaccountbinding" },
-      { label: "Certificate", anchor: "certificate" }
+      { label: "Certificate", anchor: "certificate" },
+      { label: "CertificateValidation", anchor: "certificatevalidation" }
     ]
   },
   {
@@ -52,7 +44,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "amplify",
-    label: "AMPLIFY",
+    label: "Amplify",
     href: "/docs/amplify.html",
     items: [
       { label: "AmplifyApp", anchor: "amplifyapp" },
@@ -126,7 +118,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "appconfig",
-    label: "APPCONFIG",
+    label: "AppConfig",
     href: "/docs/appconfig.html",
     items: [
       { label: "AppConfigApplication", anchor: "appconfigapplication" },
@@ -143,7 +135,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "appflow",
-    label: "APPFLOW",
+    label: "AppFlow",
     href: "/docs/appflow.html",
     items: [
       { label: "AppFlowConnector", anchor: "appflowconnector" },
@@ -162,7 +154,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "applicationinsights",
-    label: "APPLICATIONINSIGHTS",
+    label: "Application Insights",
     href: "/docs/applicationinsights.html",
     items: [
       { label: "ApplicationInsightsApplication", anchor: "applicationinsightsapplication" }
@@ -170,7 +162,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "applicationsignals",
-    label: "APPLICATIONSIGNALS",
+    label: "Application Signals",
     href: "/docs/applicationsignals.html",
     items: [
       { label: "ApplicationSignalsDiscovery", anchor: "applicationsignalsdiscovery" },
@@ -180,7 +172,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "appsync",
-    label: "APPSYNC",
+    label: "AppSync",
     href: "/docs/appsync.html",
     items: [
       { label: "AppSyncApi", anchor: "appsyncapi" },
@@ -197,7 +189,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "arczonalshift",
-    label: "ARCZONALSHIFT",
+    label: "ARC Zonal Shift",
     href: "/docs/arczonalshift.html",
     items: [
       { label: "ARCZonalShiftAutoshiftObserverNotificationStatus", anchor: "arczonalshiftautoshiftobservernotificationstatus" },
@@ -218,7 +210,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "auditmanager",
-    label: "AUDITMANAGER",
+    label: "Audit Manager",
     href: "/docs/auditmanager.html",
     items: [
       { label: "AuditManagerAssessment", anchor: "auditmanagerassessment" },
@@ -234,7 +226,8 @@ const SIDEBAR_DATA = [
       { label: "AutoScalingLaunchConfiguration", anchor: "autoscalinglaunchconfiguration" },
       { label: "AutoScalingLifecycleHook", anchor: "autoscalinglifecyclehook" },
       { label: "AutoScalingScheduledAction", anchor: "autoscalingscheduledaction" },
-      { label: "AutoScalingWarmPool", anchor: "autoscalingwarmpool" }
+      { label: "AutoScalingWarmPool", anchor: "autoscalingwarmpool" },
+      { label: "ScalingPolicy", anchor: "scalingpolicy" }
     ]
   },
   {
@@ -287,7 +280,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "bedrock",
-    label: "BEDROCK",
+    label: "Bedrock",
     href: "/docs/bedrock.html",
     items: [
       { label: "BedrockAgent", anchor: "bedrockagent" },
@@ -316,7 +309,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "bedrockagentcore",
-    label: "BEDROCKAGENTCORE",
+    label: "Bedrock AgentCore",
     href: "/docs/bedrockagentcore.html",
     items: [
       { label: "BedrockAgentCoreApiKeyCredentialProvider", anchor: "bedrockagentcoreapikeycredentialprovider" },
@@ -353,18 +346,8 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "cassandra",
-    label: "CASSANDRA",
-    href: "/docs/cassandra.html",
-    items: [
-      { label: "CassandraKeyspace", anchor: "cassandrakeyspace" },
-      { label: "CassandraTable", anchor: "cassandratable" },
-      { label: "CassandraType", anchor: "cassandratype" }
-    ]
-  },
-  {
     id: "chatbot",
-    label: "CHATBOT",
+    label: "Chatbot",
     href: "/docs/chatbot.html",
     items: [
       { label: "ChatbotCustomAction", anchor: "chatbotcustomaction" },
@@ -442,7 +425,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "cloudhsm",
-    label: "CLOUDHSM",
+    label: "CloudHSM",
     href: "/docs/cloudhsm.html",
     items: [
       { label: "CloudHSMCluster", anchor: "cloudhsmcluster" }
@@ -476,6 +459,18 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "evidently",
+    label: "CloudWatch Evidently",
+    href: "/docs/evidently.html",
+    items: [
+      { label: "EvidentlyExperiment", anchor: "evidentlyexperiment" },
+      { label: "EvidentlyFeature", anchor: "evidentlyfeature" },
+      { label: "EvidentlyLaunch", anchor: "evidentlylaunch" },
+      { label: "EvidentlyProject", anchor: "evidentlyproject" },
+      { label: "EvidentlySegment", anchor: "evidentlysegment" }
+    ]
+  },
+  {
     id: "cloudwatchlogs",
     label: "CloudWatch Logs",
     href: "/docs/cloudwatchlogs.html",
@@ -499,6 +494,32 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "oam",
+    label: "CloudWatch OAM",
+    href: "/docs/oam.html",
+    items: [
+      { label: "OAMLink", anchor: "oamlink" },
+      { label: "OAMSink", anchor: "oamsink" }
+    ]
+  },
+  {
+    id: "rum",
+    label: "CloudWatch RUM",
+    href: "/docs/rum.html",
+    items: [
+      { label: "RUMAppMonitor", anchor: "rumappmonitor" }
+    ]
+  },
+  {
+    id: "synthetics",
+    label: "CloudWatch Synthetics",
+    href: "/docs/synthetics.html",
+    items: [
+      { label: "SyntheticsCanary", anchor: "syntheticscanary" },
+      { label: "SyntheticsGroup", anchor: "syntheticsgroup" }
+    ]
+  },
+  {
     id: "codeartifact",
     label: "CodeArtifact",
     href: "/docs/codeartifact.html",
@@ -514,6 +535,7 @@ const SIDEBAR_DATA = [
     href: "/docs/codebuild.html",
     items: [
       { label: "CodeBuildFleet", anchor: "codebuildfleet" },
+      { label: "CodeBuildProject", anchor: "codebuildproject" },
       { label: "CodeBuildReportGroup", anchor: "codebuildreportgroup" },
       { label: "CodeBuildSourceCredential", anchor: "codebuildsourcecredential" }
     ]
@@ -528,7 +550,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "codeconnections",
-    label: "CODECONNECTIONS",
+    label: "CodeConnections",
     href: "/docs/codeconnections.html",
     items: [
       { label: "CodeConnectionsConnection", anchor: "codeconnectionsconnection" },
@@ -547,7 +569,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "codeguruprofiler",
-    label: "CODEGURUPROFILER",
+    label: "CodeGuru Profiler",
     href: "/docs/codeguruprofiler.html",
     items: [
       { label: "CodeGuruProfilerProfilingGroup", anchor: "codeguruprofilerprofilinggroup" }
@@ -555,7 +577,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "codegurureviewer",
-    label: "CODEGURUREVIEWER",
+    label: "CodeGuru Reviewer",
     href: "/docs/codegurureviewer.html",
     items: [
       { label: "CodeGuruReviewerRepositoryAssociation", anchor: "codegurureviewerrepositoryassociation" }
@@ -573,7 +595,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "codestarconnections",
-    label: "CODESTARCONNECTIONS",
+    label: "CodeStar Connections",
     href: "/docs/codestarconnections.html",
     items: [
       { label: "CodeStarConnectionsConnection", anchor: "codestarconnectionsconnection" },
@@ -583,7 +605,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "codestarnotifications",
-    label: "CODESTARNOTIFICATIONS",
+    label: "CodeStar Notifications",
     href: "/docs/codestarnotifications.html",
     items: [
       { label: "CodeStarNotificationsNotificationRule", anchor: "codestarnotificationsnotificationrule" }
@@ -617,7 +639,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "computeoptimizer",
-    label: "COMPUTEOPTIMIZER",
+    label: "Compute Optimizer",
     href: "/docs/computeoptimizer.html",
     items: [
       { label: "ComputeOptimizerAutomationRule", anchor: "computeoptimizerautomationrule" }
@@ -653,7 +675,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "datasync",
-    label: "DATASYNC",
+    label: "DataSync",
     href: "/docs/datasync.html",
     items: [
       { label: "DataSyncAgent", anchor: "datasyncagent" },
@@ -673,7 +695,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "datazone",
-    label: "DATAZONE",
+    label: "DataZone",
     href: "/docs/datazone.html",
     items: [
       { label: "DataZoneConnection", anchor: "datazoneconnection" },
@@ -706,7 +728,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "detective",
-    label: "DETECTIVE",
+    label: "Detective",
     href: "/docs/detective.html",
     items: [
       { label: "DetectiveGraph", anchor: "detectivegraph" },
@@ -716,7 +738,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "directconnect",
-    label: "DIRECTCONNECT",
+    label: "Direct Connect",
     href: "/docs/directconnect.html",
     items: [
       { label: "DirectConnectConnection", anchor: "directconnectconnection" },
@@ -747,7 +769,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "docdb",
-    label: "DOCDB",
+    label: "DocumentDB",
     href: "/docs/docdb.html",
     items: [
       { label: "DocDBDBClusterParameterGroup", anchor: "docdbdbclusterparametergroup" },
@@ -887,6 +909,21 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "imagebuilder",
+    label: "EC2 Image Builder",
+    href: "/docs/imagebuilder.html",
+    items: [
+      { label: "ImageBuilderComponent", anchor: "imagebuildercomponent" },
+      { label: "ImageBuilderContainerRecipe", anchor: "imagebuildercontainerrecipe" },
+      { label: "ImageBuilderDistributionConfiguration", anchor: "imagebuilderdistributionconfiguration" },
+      { label: "ImageBuilderImagePipeline", anchor: "imagebuilderimagepipeline" },
+      { label: "ImageBuilderImageRecipe", anchor: "imagebuilderimagerecipe" },
+      { label: "ImageBuilderInfrastructureConfiguration", anchor: "imagebuilderinfrastructureconfiguration" },
+      { label: "ImageBuilderLifecyclePolicy", anchor: "imagebuilderlifecyclepolicy" },
+      { label: "ImageBuilderWorkflow", anchor: "imagebuilderworkflow" }
+    ]
+  },
+  {
     id: "ecr",
     label: "ECR",
     href: "/docs/ecr.html",
@@ -948,6 +985,31 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "elasticbeanstalk",
+    label: "Elastic Beanstalk",
+    href: "/docs/elasticbeanstalk.html",
+    items: [
+      { label: "ElasticBeanstalkApplication", anchor: "elasticbeanstalkapplication" },
+      { label: "ElasticBeanstalkApplicationVersion", anchor: "elasticbeanstalkapplicationversion" },
+      { label: "ElasticBeanstalkConfigurationTemplate", anchor: "elasticbeanstalkconfigurationtemplate" },
+      { label: "ElasticBeanstalkEnvironment", anchor: "elasticbeanstalkenvironment" }
+    ]
+  },
+  {
+    id: "elbv2",
+    label: "Elastic Load Balancing",
+    href: "/docs/elbv2.html",
+    items: [
+      { label: "ELBLoadBalancer", anchor: "elbloadbalancer" },
+      { label: "ELBv2TrustStore", anchor: "elbv2truststore" },
+      { label: "ELBv2TrustStoreRevocation", anchor: "elbv2truststorerevocation" },
+      { label: "Listener", anchor: "listener" },
+      { label: "ListenerRule", anchor: "listenerrule" },
+      { label: "LoadBalancer", anchor: "loadbalancer" },
+      { label: "TargetGroup", anchor: "targetgroup" }
+    ]
+  },
+  {
     id: "elasticache",
     label: "ElastiCache",
     href: "/docs/elasticache.html",
@@ -964,17 +1026,6 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "elasticbeanstalk",
-    label: "ELASTICBEANSTALK",
-    href: "/docs/elasticbeanstalk.html",
-    items: [
-      { label: "ElasticBeanstalkApplication", anchor: "elasticbeanstalkapplication" },
-      { label: "ElasticBeanstalkApplicationVersion", anchor: "elasticbeanstalkapplicationversion" },
-      { label: "ElasticBeanstalkConfigurationTemplate", anchor: "elasticbeanstalkconfigurationtemplate" },
-      { label: "ElasticBeanstalkEnvironment", anchor: "elasticbeanstalkenvironment" }
-    ]
-  },
-  {
     id: "emr",
     label: "EMR",
     href: "/docs/emr.html",
@@ -988,7 +1039,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "emrcontainers",
-    label: "EMRCONTAINERS",
+    label: "EMR on EKS",
     href: "/docs/emrcontainers.html",
     items: [
       { label: "EMRContainersEndpoint", anchor: "emrcontainersendpoint" },
@@ -998,7 +1049,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "emrserverless",
-    label: "EMRSERVERLESS",
+    label: "EMR Serverless",
     href: "/docs/emrserverless.html",
     items: [
       { label: "EMRServerlessApplication", anchor: "emrserverlessapplication" }
@@ -1021,6 +1072,14 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "pipes",
+    label: "EventBridge Pipes",
+    href: "/docs/pipes.html",
+    items: [
+      { label: "EventBridgePipe", anchor: "eventbridgepipe" }
+    ]
+  },
+  {
     id: "scheduler",
     label: "EventBridge Scheduler",
     href: "/docs/scheduler.html",
@@ -1031,7 +1090,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "eventschemas",
-    label: "EVENTSCHEMAS",
+    label: "EventBridge Schemas",
     href: "/docs/eventschemas.html",
     items: [
       { label: "EventSchemasDiscoverer", anchor: "eventschemasdiscoverer" },
@@ -1041,20 +1100,8 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "evidently",
-    label: "EVIDENTLY",
-    href: "/docs/evidently.html",
-    items: [
-      { label: "EvidentlyExperiment", anchor: "evidentlyexperiment" },
-      { label: "EvidentlyFeature", anchor: "evidentlyfeature" },
-      { label: "EvidentlyLaunch", anchor: "evidentlylaunch" },
-      { label: "EvidentlyProject", anchor: "evidentlyproject" },
-      { label: "EvidentlySegment", anchor: "evidentlysegment" }
-    ]
-  },
-  {
     id: "fis",
-    label: "FIS",
+    label: "Fault Injection Service",
     href: "/docs/fis.html",
     items: [
       { label: "FISExperimentTemplate", anchor: "fisexperimenttemplate" },
@@ -1063,7 +1110,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "fms",
-    label: "FMS",
+    label: "Firewall Manager",
     href: "/docs/fms.html",
     items: [
       { label: "FMSNotificationChannel", anchor: "fmsnotificationchannel" },
@@ -1073,7 +1120,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "fsx",
-    label: "FSX",
+    label: "FSx",
     href: "/docs/fsx.html",
     items: [
       { label: "FSxDataRepositoryAssociation", anchor: "fsxdatarepositoryassociation" },
@@ -1083,7 +1130,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "globalaccelerator",
-    label: "GLOBALACCELERATOR",
+    label: "Global Accelerator",
     href: "/docs/globalaccelerator.html",
     items: [
       { label: "GlobalAcceleratorAccelerator", anchor: "globalacceleratoraccelerator" },
@@ -1166,6 +1213,15 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "accessanalyzer",
+    label: "IAM Access Analyzer",
+    href: "/docs/accessanalyzer.html",
+    items: [
+      { label: "AccessAnalyzerAnalyzer", anchor: "accessanalyzeranalyzer" },
+      { label: "AccessAnalyzerArchiveRule", anchor: "accessanalyzerarchiverule" }
+    ]
+  },
+  {
     id: "ssoadmin",
     label: "IAM Identity Center",
     href: "/docs/ssoadmin.html",
@@ -1180,7 +1236,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "identitystore",
-    label: "IDENTITYSTORE",
+    label: "IAM Identity Store",
     href: "/docs/identitystore.html",
     items: [
       { label: "IdentityStoreGroup", anchor: "identitystoregroup" },
@@ -1189,18 +1245,33 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "imagebuilder",
-    label: "IMAGEBUILDER",
-    href: "/docs/imagebuilder.html",
+    id: "rolesanywhere",
+    label: "IAM Roles Anywhere",
+    href: "/docs/rolesanywhere.html",
     items: [
-      { label: "ImageBuilderComponent", anchor: "imagebuildercomponent" },
-      { label: "ImageBuilderContainerRecipe", anchor: "imagebuildercontainerrecipe" },
-      { label: "ImageBuilderDistributionConfiguration", anchor: "imagebuilderdistributionconfiguration" },
-      { label: "ImageBuilderImagePipeline", anchor: "imagebuilderimagepipeline" },
-      { label: "ImageBuilderImageRecipe", anchor: "imagebuilderimagerecipe" },
-      { label: "ImageBuilderInfrastructureConfiguration", anchor: "imagebuilderinfrastructureconfiguration" },
-      { label: "ImageBuilderLifecyclePolicy", anchor: "imagebuilderlifecyclepolicy" },
-      { label: "ImageBuilderWorkflow", anchor: "imagebuilderworkflow" }
+      { label: "RolesAnywhereCRL", anchor: "rolesanywherecrl" },
+      { label: "RolesAnywhereProfile", anchor: "rolesanywhereprofile" },
+      { label: "RolesAnywhereTrustAnchor", anchor: "rolesanywheretrustanchor" }
+    ]
+  },
+  {
+    id: "ssmincidents",
+    label: "Incident Manager",
+    href: "/docs/ssmincidents.html",
+    items: [
+      { label: "SSMIncidentsReplicationSet", anchor: "ssmincidentsreplicationset" },
+      { label: "SSMIncidentsResponsePlan", anchor: "ssmincidentsresponseplan" }
+    ]
+  },
+  {
+    id: "ssmcontacts",
+    label: "Incident Manager Contacts",
+    href: "/docs/ssmcontacts.html",
+    items: [
+      { label: "SSMContactsContact", anchor: "ssmcontactscontact" },
+      { label: "SSMContactsContactChannel", anchor: "ssmcontactscontactchannel" },
+      { label: "SSMContactsPlan", anchor: "ssmcontactsplan" },
+      { label: "SSMContactsRotation", anchor: "ssmcontactsrotation" }
     ]
   },
   {
@@ -1218,7 +1289,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "inspector",
-    label: "INSPECTOR",
+    label: "Inspector Classic",
     href: "/docs/inspector.html",
     items: [
       { label: "InspectorAssessmentTarget", anchor: "inspectorassessmenttarget" },
@@ -1228,20 +1299,20 @@ const SIDEBAR_DATA = [
   },
   {
     id: "internetmonitor",
-    label: "INTERNETMONITOR",
+    label: "Internet Monitor",
     href: "/docs/internetmonitor.html",
     items: [
       { label: "InternetMonitorMonitor", anchor: "internetmonitormonitor" }
     ]
   },
   {
-    id: "kafkaconnect",
-    label: "KAFKACONNECT",
-    href: "/docs/kafkaconnect.html",
+    id: "cassandra",
+    label: "Keyspaces",
+    href: "/docs/cassandra.html",
     items: [
-      { label: "KafkaConnectConnector", anchor: "kafkaconnectconnector" },
-      { label: "KafkaConnectCustomPlugin", anchor: "kafkaconnectcustomplugin" },
-      { label: "KafkaConnectWorkerConfiguration", anchor: "kafkaconnectworkerconfiguration" }
+      { label: "CassandraKeyspace", anchor: "cassandrakeyspace" },
+      { label: "CassandraTable", anchor: "cassandratable" },
+      { label: "CassandraType", anchor: "cassandratype" }
     ]
   },
   {
@@ -1255,14 +1326,6 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "kinesisanalyticsv2",
-    label: "KINESISANALYTICSV2",
-    href: "/docs/kinesisanalyticsv2.html",
-    items: [
-      { label: "KinesisAnalyticsV2Application", anchor: "kinesisanalyticsv2application" }
-    ]
-  },
-  {
     id: "kms",
     label: "KMS",
     href: "/docs/kms.html",
@@ -1270,12 +1333,13 @@ const SIDEBAR_DATA = [
       { label: "KMSAlias", anchor: "kmsalias" },
       { label: "KMSGrant", anchor: "kmsgrant" },
       { label: "KMSKey", anchor: "kmskey" },
+      { label: "KMSKeyPolicy", anchor: "kmskeypolicy" },
       { label: "KMSReplicaKey", anchor: "kmsreplicakey" }
     ]
   },
   {
     id: "lakeformation",
-    label: "LAKEFORMATION",
+    label: "Lake Formation",
     href: "/docs/lakeformation.html",
     items: [
       { label: "LakeFormationDataCellsFilter", anchor: "lakeformationdatacellsfilter" },
@@ -1307,7 +1371,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "licensemanager",
-    label: "LICENSEMANAGER",
+    label: "License Manager",
     href: "/docs/licensemanager.html",
     items: [
       { label: "LicenseManagerGrant", anchor: "licensemanagergrant" },
@@ -1316,28 +1380,22 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "elbv2",
-    label: "Load Balancing",
-    href: "/docs/elbv2.html",
-    items: [
-      { label: "ELBLoadBalancer", anchor: "elbloadbalancer" },
-      { label: "ELBv2TrustStore", anchor: "elbv2truststore" },
-      { label: "ELBv2TrustStoreRevocation", anchor: "elbv2truststorerevocation" },
-      { label: "Listener", anchor: "listener" },
-      { label: "ListenerRule", anchor: "listenerrule" },
-      { label: "LoadBalancer", anchor: "loadbalancer" },
-      { label: "TargetGroup", anchor: "targetgroup" }
-    ]
-  },
-  {
     id: "macie",
-    label: "MACIE",
+    label: "Macie",
     href: "/docs/macie.html",
     items: [
       { label: "MacieAllowList", anchor: "macieallowlist" },
       { label: "MacieCustomDataIdentifier", anchor: "maciecustomdataidentifier" },
       { label: "MacieFindingsFilter", anchor: "maciefindingsfilter" },
       { label: "MacieSession", anchor: "maciesession" }
+    ]
+  },
+  {
+    id: "kinesisanalyticsv2",
+    label: "Managed Flink",
+    href: "/docs/kinesisanalyticsv2.html",
+    items: [
+      { label: "KinesisAnalyticsV2Application", anchor: "kinesisanalyticsv2application" }
     ]
   },
   {
@@ -1391,53 +1449,13 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "multi",
-    label: "MULTI",
-    href: "/docs/multi.html",
+    id: "kafkaconnect",
+    label: "MSK Connect",
+    href: "/docs/kafkaconnect.html",
     items: [
-      { label: "Activity", anchor: "activity" },
-      { label: "CertificateValidation", anchor: "certificatevalidation" },
-      { label: "CodeBuildProject", anchor: "codebuildproject" },
-      { label: "DBCluster", anchor: "dbcluster" },
-      { label: "DBClusterParameterGroup", anchor: "dbclusterparametergroup" },
-      { label: "DBOptionGroup", anchor: "dboptiongroup" },
-      { label: "DBParameterGroup", anchor: "dbparametergroup" },
-      { label: "DBProxy", anchor: "dbproxy" },
-      { label: "DBSnapshot", anchor: "dbsnapshot" },
-      { label: "DBSubnetGroup", anchor: "dbsubnetgroup" },
-      { label: "DelegationSignerRecord", anchor: "delegationsignerrecord" },
-      { label: "EventBridgePipe", anchor: "eventbridgepipe" },
-      { label: "IPSet", anchor: "ipset" },
-      { label: "KMSKeyPolicy", anchor: "kmskeypolicy" },
-      { label: "OpenSearchAccessPolicy", anchor: "opensearchaccesspolicy" },
-      { label: "OpenSearchDomain", anchor: "opensearchdomain" },
-      { label: "OpenSearchServerlessCollection", anchor: "opensearchserverlesscollection" },
-      { label: "ResolverEndpoint", anchor: "resolverendpoint" },
-      { label: "ResolverRule", anchor: "resolverrule" },
-      { label: "S3BucketCORS", anchor: "s3bucketcors" },
-      { label: "S3BucketLifecycle", anchor: "s3bucketlifecycle" },
-      { label: "S3BucketNotification", anchor: "s3bucketnotification" },
-      { label: "S3BucketPolicy", anchor: "s3bucketpolicy" },
-      { label: "S3BucketReplication", anchor: "s3bucketreplication" },
-      { label: "SESConfigurationSet", anchor: "sesconfigurationset" },
-      { label: "SESEmailIdentity", anchor: "sesemailidentity" },
-      { label: "SNSSubscription", anchor: "snssubscription" },
-      { label: "SSMDocument", anchor: "ssmdocument" },
-      { label: "ScalingPolicy", anchor: "scalingpolicy" },
-      { label: "SecretRotation", anchor: "secretrotation" },
-      { label: "ShieldProtection", anchor: "shieldprotection" },
-      { label: "StateMachine", anchor: "statemachine" },
-      { label: "WAFRegexPatternSet", anchor: "wafregexpatternset" },
-      { label: "WAFRuleGroup", anchor: "wafrulegroup" },
-      { label: "WebACL", anchor: "webacl" }
-    ]
-  },
-  {
-    id: "provider",
-    label: "Multi-Account Provider",
-    href: "/docs/provider.html",
-    items: [
-      { label: "AWSProvider", anchor: "awsprovider" }
+      { label: "KafkaConnectConnector", anchor: "kafkaconnectconnector" },
+      { label: "KafkaConnectCustomPlugin", anchor: "kafkaconnectcustomplugin" },
+      { label: "KafkaConnectWorkerConfiguration", anchor: "kafkaconnectworkerconfiguration" }
     ]
   },
   {
@@ -1450,7 +1468,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "neptune",
-    label: "NEPTUNE",
+    label: "Neptune",
     href: "/docs/neptune.html",
     items: [
       { label: "NeptuneDBCluster", anchor: "neptunedbcluster" },
@@ -1477,7 +1495,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "networkflowmonitor",
-    label: "NETWORKFLOWMONITOR",
+    label: "Network Flow Monitor",
     href: "/docs/networkflowmonitor.html",
     items: [
       { label: "NetworkFlowMonitorMonitor", anchor: "networkflowmonitormonitor" }
@@ -1485,7 +1503,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "networkmanager",
-    label: "NETWORKMANAGER",
+    label: "Network Manager",
     href: "/docs/networkmanager.html",
     items: [
       { label: "NetworkManagerConnectAttachment", anchor: "networkmanagerconnectattachment" },
@@ -1507,39 +1525,16 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "notifications",
-    label: "NOTIFICATIONS",
-    href: "/docs/notifications.html",
-    items: [
-      { label: "NotificationsChannelAssociation", anchor: "notificationschannelassociation" },
-      { label: "NotificationsEventRule", anchor: "notificationseventrule" },
-      { label: "NotificationsManagedNotificationAccountContactAssociation", anchor: "notificationsmanagednotificationaccountcontactassociation" },
-      { label: "NotificationsManagedNotificationAdditionalChannelAssociation", anchor: "notificationsmanagednotificationadditionalchannelassociation" },
-      { label: "NotificationsNotificationConfiguration", anchor: "notificationsnotificationconfiguration" },
-      { label: "NotificationsNotificationHub", anchor: "notificationsnotificationhub" },
-      { label: "NotificationsOrganizationalUnitAssociation", anchor: "notificationsorganizationalunitassociation" }
-    ]
-  },
-  {
     id: "notificationscontacts",
-    label: "NOTIFICATIONSCONTACTS",
+    label: "Notification Contacts",
     href: "/docs/notificationscontacts.html",
     items: [
       { label: "NotificationsContactsEmailContact", anchor: "notificationscontactsemailcontact" }
     ]
   },
   {
-    id: "oam",
-    label: "OAM",
-    href: "/docs/oam.html",
-    items: [
-      { label: "OAMLink", anchor: "oamlink" },
-      { label: "OAMSink", anchor: "oamsink" }
-    ]
-  },
-  {
     id: "observabilityadmin",
-    label: "OBSERVABILITYADMIN",
+    label: "Observability Admin",
     href: "/docs/observabilityadmin.html",
     items: [
       { label: "ObservabilityAdminOrganizationCentralizationRule", anchor: "observabilityadminorganizationcentralizationrule" },
@@ -1556,7 +1551,16 @@ const SIDEBAR_DATA = [
     href: "/docs/opensearch.html",
     items: [
       { label: "OpenSearchApplication", anchor: "opensearchapplication" },
-      { label: "OpenSearchDataSource", anchor: "opensearchdatasource" }
+      { label: "OpenSearchDataSource", anchor: "opensearchdatasource" },
+      { label: "OpenSearchDomain", anchor: "opensearchdomain" }
+    ]
+  },
+  {
+    id: "osis",
+    label: "OpenSearch Ingestion",
+    href: "/docs/osis.html",
+    items: [
+      { label: "OSISPipeline", anchor: "osispipeline" }
     ]
   },
   {
@@ -1564,7 +1568,9 @@ const SIDEBAR_DATA = [
     label: "OpenSearch Serverless",
     href: "/docs/opensearchserverless.html",
     items: [
+      { label: "OpenSearchAccessPolicy", anchor: "opensearchaccesspolicy" },
       { label: "OpenSearchServerlessAccessPolicy", anchor: "opensearchserverlessaccesspolicy" },
+      { label: "OpenSearchServerlessCollection", anchor: "opensearchserverlesscollection" },
       { label: "OpenSearchServerlessCollectionGroup", anchor: "opensearchserverlesscollectiongroup" },
       { label: "OpenSearchServerlessCollectionIndex", anchor: "opensearchserverlesscollectionindex" },
       { label: "OpenSearchServerlessIndex", anchor: "opensearchserverlessindex" },
@@ -1588,14 +1594,6 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "osis",
-    label: "OSIS",
-    href: "/docs/osis.html",
-    items: [
-      { label: "OSISPipeline", anchor: "osispipeline" }
-    ]
-  },
-  {
     id: "ram",
     label: "RAM",
     href: "/docs/ram.html",
@@ -1606,19 +1604,18 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "rbin",
-    label: "RBIN",
-    href: "/docs/rbin.html",
-    items: [
-      { label: "RbinRule", anchor: "rbinrule" }
-    ]
-  },
-  {
     id: "rds",
     label: "RDS & Aurora",
     href: "/docs/rds.html",
     items: [
+      { label: "DBCluster", anchor: "dbcluster" },
+      { label: "DBClusterParameterGroup", anchor: "dbclusterparametergroup" },
       { label: "DBInstance", anchor: "dbinstance" },
+      { label: "DBOptionGroup", anchor: "dboptiongroup" },
+      { label: "DBParameterGroup", anchor: "dbparametergroup" },
+      { label: "DBProxy", anchor: "dbproxy" },
+      { label: "DBSnapshot", anchor: "dbsnapshot" },
+      { label: "DBSubnetGroup", anchor: "dbsubnetgroup" },
       { label: "RDSClusterSnapshot", anchor: "rdsclustersnapshot" },
       { label: "RDSCustomDBEngineVersion", anchor: "rdscustomdbengineversion" },
       { label: "RDSDBProxyEndpoint", anchor: "rdsdbproxyendpoint" },
@@ -1628,6 +1625,14 @@ const SIDEBAR_DATA = [
       { label: "RDSEventSubscription", anchor: "rdseventsubscription" },
       { label: "RDSGlobalCluster", anchor: "rdsglobalcluster" },
       { label: "RDSIntegration", anchor: "rdsintegration" }
+    ]
+  },
+  {
+    id: "rbin",
+    label: "Recycle Bin",
+    href: "/docs/rbin.html",
+    items: [
+      { label: "RbinRule", anchor: "rbinrule" }
     ]
   },
   {
@@ -1648,7 +1653,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "redshiftserverless",
-    label: "REDSHIFTSERVERLESS",
+    label: "Redshift Serverless",
     href: "/docs/redshiftserverless.html",
     items: [
       { label: "RedshiftServerlessNamespace", anchor: "redshiftserverlessnamespace" },
@@ -1658,7 +1663,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "resiliencehub",
-    label: "RESILIENCEHUB",
+    label: "Resilience Hub",
     href: "/docs/resiliencehub.html",
     items: [
       { label: "ResilienceHubApp", anchor: "resiliencehubapp" },
@@ -1667,7 +1672,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "resiliencehubv2",
-    label: "RESILIENCEHUBV2",
+    label: "Resilience Hub v2",
     href: "/docs/resiliencehubv2.html",
     items: [
       { label: "ResilienceHubV2Policy", anchor: "resiliencehubv2policy" },
@@ -1679,7 +1684,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "resourceexplorer2",
-    label: "RESOURCEEXPLORER2",
+    label: "Resource Explorer",
     href: "/docs/resourceexplorer2.html",
     items: [
       { label: "ResourceExplorer2DefaultViewAssociation", anchor: "resourceexplorer2defaultviewassociation" },
@@ -1689,7 +1694,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "resourcegroups",
-    label: "RESOURCEGROUPS",
+    label: "Resource Groups",
     href: "/docs/resourcegroups.html",
     items: [
       { label: "ResourceGroupsGroup", anchor: "resourcegroupsgroup" },
@@ -1697,20 +1702,11 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "rolesanywhere",
-    label: "ROLESANYWHERE",
-    href: "/docs/rolesanywhere.html",
-    items: [
-      { label: "RolesAnywhereCRL", anchor: "rolesanywherecrl" },
-      { label: "RolesAnywhereProfile", anchor: "rolesanywhereprofile" },
-      { label: "RolesAnywhereTrustAnchor", anchor: "rolesanywheretrustanchor" }
-    ]
-  },
-  {
     id: "route53",
     label: "Route 53",
     href: "/docs/route53.html",
     items: [
+      { label: "DelegationSignerRecord", anchor: "delegationsignerrecord" },
       { label: "HealthCheck", anchor: "healthcheck" },
       { label: "HostedZone", anchor: "hostedzone" },
       { label: "HostedZoneVPCAssociation", anchor: "hostedzonevpcassociation" },
@@ -1720,10 +1716,44 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "route53recoverycontrol",
+    label: "Route 53 ARC Control",
+    href: "/docs/route53recoverycontrol.html",
+    items: [
+      { label: "Route53RecoveryControlCluster", anchor: "route53recoverycontrolcluster" },
+      { label: "Route53RecoveryControlControlPanel", anchor: "route53recoverycontrolcontrolpanel" },
+      { label: "Route53RecoveryControlRoutingControl", anchor: "route53recoverycontrolroutingcontrol" },
+      { label: "Route53RecoveryControlSafetyRule", anchor: "route53recoverycontrolsafetyrule" }
+    ]
+  },
+  {
+    id: "route53recoveryreadiness",
+    label: "Route 53 ARC Readiness",
+    href: "/docs/route53recoveryreadiness.html",
+    items: [
+      { label: "Route53RecoveryReadinessCell", anchor: "route53recoveryreadinesscell" },
+      { label: "Route53RecoveryReadinessReadinessCheck", anchor: "route53recoveryreadinessreadinesscheck" },
+      { label: "Route53RecoveryReadinessRecoveryGroup", anchor: "route53recoveryreadinessrecoverygroup" },
+      { label: "Route53RecoveryReadinessResourceSet", anchor: "route53recoveryreadinessresourceset" }
+    ]
+  },
+  {
+    id: "route53profiles",
+    label: "Route 53 Profiles",
+    href: "/docs/route53profiles.html",
+    items: [
+      { label: "Route53ProfilesProfile", anchor: "route53profilesprofile" },
+      { label: "Route53ProfilesProfileAssociation", anchor: "route53profilesprofileassociation" },
+      { label: "Route53ProfilesProfileResourceAssociation", anchor: "route53profilesprofileresourceassociation" }
+    ]
+  },
+  {
     id: "route53resolver",
     label: "Route 53 Resolver",
     href: "/docs/route53resolver.html",
     items: [
+      { label: "ResolverEndpoint", anchor: "resolverendpoint" },
+      { label: "ResolverRule", anchor: "resolverrule" },
       { label: "Route53ResolverFirewallDomainList", anchor: "route53resolverfirewalldomainlist" },
       { label: "Route53ResolverFirewallRuleGroup", anchor: "route53resolverfirewallrulegroup" },
       { label: "Route53ResolverFirewallRuleGroupAssociation", anchor: "route53resolverfirewallrulegroupassociation" },
@@ -1736,46 +1766,6 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "route53profiles",
-    label: "ROUTE53PROFILES",
-    href: "/docs/route53profiles.html",
-    items: [
-      { label: "Route53ProfilesProfile", anchor: "route53profilesprofile" },
-      { label: "Route53ProfilesProfileAssociation", anchor: "route53profilesprofileassociation" },
-      { label: "Route53ProfilesProfileResourceAssociation", anchor: "route53profilesprofileresourceassociation" }
-    ]
-  },
-  {
-    id: "route53recoverycontrol",
-    label: "ROUTE53RECOVERYCONTROL",
-    href: "/docs/route53recoverycontrol.html",
-    items: [
-      { label: "Route53RecoveryControlCluster", anchor: "route53recoverycontrolcluster" },
-      { label: "Route53RecoveryControlControlPanel", anchor: "route53recoverycontrolcontrolpanel" },
-      { label: "Route53RecoveryControlRoutingControl", anchor: "route53recoverycontrolroutingcontrol" },
-      { label: "Route53RecoveryControlSafetyRule", anchor: "route53recoverycontrolsafetyrule" }
-    ]
-  },
-  {
-    id: "route53recoveryreadiness",
-    label: "ROUTE53RECOVERYREADINESS",
-    href: "/docs/route53recoveryreadiness.html",
-    items: [
-      { label: "Route53RecoveryReadinessCell", anchor: "route53recoveryreadinesscell" },
-      { label: "Route53RecoveryReadinessReadinessCheck", anchor: "route53recoveryreadinessreadinesscheck" },
-      { label: "Route53RecoveryReadinessRecoveryGroup", anchor: "route53recoveryreadinessrecoverygroup" },
-      { label: "Route53RecoveryReadinessResourceSet", anchor: "route53recoveryreadinessresourceset" }
-    ]
-  },
-  {
-    id: "rum",
-    label: "RUM",
-    href: "/docs/rum.html",
-    items: [
-      { label: "RUMAppMonitor", anchor: "rumappmonitor" }
-    ]
-  },
-  {
     id: "s3",
     label: "S3",
     href: "/docs/s3.html",
@@ -1784,6 +1774,11 @@ const SIDEBAR_DATA = [
       { label: "S3AccessGrantsInstance", anchor: "s3accessgrantsinstance" },
       { label: "S3AccessGrantsLocation", anchor: "s3accessgrantslocation" },
       { label: "S3Bucket", anchor: "s3bucket" },
+      { label: "S3BucketCORS", anchor: "s3bucketcors" },
+      { label: "S3BucketLifecycle", anchor: "s3bucketlifecycle" },
+      { label: "S3BucketNotification", anchor: "s3bucketnotification" },
+      { label: "S3BucketPolicy", anchor: "s3bucketpolicy" },
+      { label: "S3BucketReplication", anchor: "s3bucketreplication" },
       { label: "S3MultiRegionAccessPoint", anchor: "s3multiregionaccesspoint" },
       { label: "S3MultiRegionAccessPointPolicy", anchor: "s3multiregionaccesspointpolicy" },
       { label: "S3StorageLens", anchor: "s3storagelens" },
@@ -1800,7 +1795,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "s3express",
-    label: "S3EXPRESS",
+    label: "S3 Express",
     href: "/docs/s3express.html",
     items: [
       { label: "S3ExpressAccessPoint", anchor: "s3expressaccesspoint" },
@@ -1810,7 +1805,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "s3objectlambda",
-    label: "S3OBJECTLAMBDA",
+    label: "S3 Object Lambda",
     href: "/docs/s3objectlambda.html",
     items: [
       { label: "S3ObjectLambdaAccessPoint", anchor: "s3objectlambdaaccesspoint" },
@@ -1819,7 +1814,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "s3tables",
-    label: "S3TABLES",
+    label: "S3 Tables",
     href: "/docs/s3tables.html",
     items: [
       { label: "S3TablesNamespace", anchor: "s3tablesnamespace" },
@@ -1831,7 +1826,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "sagemaker",
-    label: "SAGEMAKER",
+    label: "SageMaker",
     href: "/docs/sagemaker.html",
     items: [
       { label: "SageMakerAction", anchor: "sagemakeraction" },
@@ -1882,6 +1877,7 @@ const SIDEBAR_DATA = [
     href: "/docs/secretsmanager.html",
     items: [
       { label: "Secret", anchor: "secret" },
+      { label: "SecretRotation", anchor: "secretrotation" },
       { label: "SecretsManagerResourcePolicy", anchor: "secretsmanagerresourcepolicy" },
       { label: "SecretsManagerSecretTargetAttachment", anchor: "secretsmanagersecrettargetattachment" }
     ]
@@ -1911,7 +1907,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "securitylake",
-    label: "SECURITYLAKE",
+    label: "Security Lake",
     href: "/docs/securitylake.html",
     items: [
       { label: "SecurityLakeAwsLogSource", anchor: "securitylakeawslogsource" },
@@ -1944,14 +1940,12 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "servicecatalogappregistry",
-    label: "SERVICECATALOGAPPREGISTRY",
-    href: "/docs/servicecatalogappregistry.html",
+    id: "sesv2",
+    label: "SES",
+    href: "/docs/sesv2.html",
     items: [
-      { label: "ServiceCatalogAppRegistryApplication", anchor: "servicecatalogappregistryapplication" },
-      { label: "ServiceCatalogAppRegistryAttributeGroup", anchor: "servicecatalogappregistryattributegroup" },
-      { label: "ServiceCatalogAppRegistryAttributeGroupAssociation", anchor: "servicecatalogappregistryattributegroupassociation" },
-      { label: "ServiceCatalogAppRegistryResourceAssociation", anchor: "servicecatalogappregistryresourceassociation" }
+      { label: "SESConfigurationSet", anchor: "sesconfigurationset" },
+      { label: "SESEmailIdentity", anchor: "sesemailidentity" }
     ]
   },
   {
@@ -1987,12 +1981,13 @@ const SIDEBAR_DATA = [
     items: [
       { label: "ShieldDRTAccess", anchor: "shielddrtaccess" },
       { label: "ShieldProactiveEngagement", anchor: "shieldproactiveengagement" },
+      { label: "ShieldProtection", anchor: "shieldprotection" },
       { label: "ShieldProtectionGroup", anchor: "shieldprotectiongroup" }
     ]
   },
   {
     id: "signer",
-    label: "SIGNER",
+    label: "Signer",
     href: "/docs/signer.html",
     items: [
       { label: "SignerProfilePermission", anchor: "signerprofilepermission" },
@@ -2004,6 +1999,7 @@ const SIDEBAR_DATA = [
     label: "SNS",
     href: "/docs/sns.html",
     items: [
+      { label: "SNSSubscription", anchor: "snssubscription" },
       { label: "SNSTopic", anchor: "snstopic" },
       { label: "SNSTopicInlinePolicy", anchor: "snstopicinlinepolicy" }
     ]
@@ -2018,12 +2014,49 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "ssmquicksetup",
+    label: "SSM Quick Setup",
+    href: "/docs/ssmquicksetup.html",
+    items: [
+      { label: "SSMQuickSetupConfigurationManager", anchor: "ssmquicksetupconfigurationmanager" },
+      { label: "SSMQuickSetupLifecycleAutomation", anchor: "ssmquicksetuplifecycleautomation" }
+    ]
+  },
+  {
+    id: "sfn",
+    label: "Step Functions",
+    href: "/docs/sfn.html",
+    items: [
+      { label: "Activity", anchor: "activity" },
+      { label: "SFNStateMachineAlias", anchor: "sfnstatemachinealias" },
+      { label: "SFNStateMachineVersion", anchor: "sfnstatemachineversion" },
+      { label: "StateMachine", anchor: "statemachine" }
+    ]
+  },
+  {
+    id: "storagegateway",
+    label: "Storage Gateway",
+    href: "/docs/storagegateway.html",
+    items: [
+      { label: "StorageGatewayTapePool", anchor: "storagegatewaytapepool" }
+    ]
+  },
+  {
+    id: "sts",
+    label: "STS",
+    href: "/docs/sts.html",
+    items: [
+      { label: "AWSProvider", anchor: "awsprovider" }
+    ]
+  },
+  {
     id: "ssm",
-    label: "SSM",
+    label: "Systems Manager",
     href: "/docs/ssm.html",
     items: [
       { label: "SSMAssociation", anchor: "ssmassociation" },
       { label: "SSMCloudConnector", anchor: "ssmcloudconnector" },
+      { label: "SSMDocument", anchor: "ssmdocument" },
       { label: "SSMMaintenanceWindow", anchor: "ssmmaintenancewindow" },
       { label: "SSMMaintenanceWindowTarget", anchor: "ssmmaintenancewindowtarget" },
       { label: "SSMMaintenanceWindowTask", anchor: "ssmmaintenancewindowtask" },
@@ -2036,63 +2069,8 @@ const SIDEBAR_DATA = [
     ]
   },
   {
-    id: "ssmcontacts",
-    label: "SSMCONTACTS",
-    href: "/docs/ssmcontacts.html",
-    items: [
-      { label: "SSMContactsContact", anchor: "ssmcontactscontact" },
-      { label: "SSMContactsContactChannel", anchor: "ssmcontactscontactchannel" },
-      { label: "SSMContactsPlan", anchor: "ssmcontactsplan" },
-      { label: "SSMContactsRotation", anchor: "ssmcontactsrotation" }
-    ]
-  },
-  {
-    id: "ssmincidents",
-    label: "SSMINCIDENTS",
-    href: "/docs/ssmincidents.html",
-    items: [
-      { label: "SSMIncidentsReplicationSet", anchor: "ssmincidentsreplicationset" },
-      { label: "SSMIncidentsResponsePlan", anchor: "ssmincidentsresponseplan" }
-    ]
-  },
-  {
-    id: "ssmquicksetup",
-    label: "SSMQUICKSETUP",
-    href: "/docs/ssmquicksetup.html",
-    items: [
-      { label: "SSMQuickSetupConfigurationManager", anchor: "ssmquicksetupconfigurationmanager" },
-      { label: "SSMQuickSetupLifecycleAutomation", anchor: "ssmquicksetuplifecycleautomation" }
-    ]
-  },
-  {
-    id: "sfn",
-    label: "Step Functions",
-    href: "/docs/sfn.html",
-    items: [
-      { label: "SFNStateMachineAlias", anchor: "sfnstatemachinealias" },
-      { label: "SFNStateMachineVersion", anchor: "sfnstatemachineversion" }
-    ]
-  },
-  {
-    id: "storagegateway",
-    label: "STORAGEGATEWAY",
-    href: "/docs/storagegateway.html",
-    items: [
-      { label: "StorageGatewayTapePool", anchor: "storagegatewaytapepool" }
-    ]
-  },
-  {
-    id: "synthetics",
-    label: "SYNTHETICS",
-    href: "/docs/synthetics.html",
-    items: [
-      { label: "SyntheticsCanary", anchor: "syntheticscanary" },
-      { label: "SyntheticsGroup", anchor: "syntheticsgroup" }
-    ]
-  },
-  {
     id: "timestream",
-    label: "TIMESTREAM",
+    label: "Timestream",
     href: "/docs/timestream.html",
     items: [
       { label: "TimestreamDatabase", anchor: "timestreamdatabase" },
@@ -2104,7 +2082,7 @@ const SIDEBAR_DATA = [
   },
   {
     id: "transfer",
-    label: "TRANSFER",
+    label: "Transfer Family",
     href: "/docs/transfer.html",
     items: [
       { label: "TransferAgreement", anchor: "transferagreement" },
@@ -2119,8 +2097,22 @@ const SIDEBAR_DATA = [
     ]
   },
   {
+    id: "notifications",
+    label: "User Notifications",
+    href: "/docs/notifications.html",
+    items: [
+      { label: "NotificationsChannelAssociation", anchor: "notificationschannelassociation" },
+      { label: "NotificationsEventRule", anchor: "notificationseventrule" },
+      { label: "NotificationsManagedNotificationAccountContactAssociation", anchor: "notificationsmanagednotificationaccountcontactassociation" },
+      { label: "NotificationsManagedNotificationAdditionalChannelAssociation", anchor: "notificationsmanagednotificationadditionalchannelassociation" },
+      { label: "NotificationsNotificationConfiguration", anchor: "notificationsnotificationconfiguration" },
+      { label: "NotificationsNotificationHub", anchor: "notificationsnotificationhub" },
+      { label: "NotificationsOrganizationalUnitAssociation", anchor: "notificationsorganizationalunitassociation" }
+    ]
+  },
+  {
     id: "verifiedpermissions",
-    label: "VERIFIEDPERMISSIONS",
+    label: "Verified Permissions",
     href: "/docs/verifiedpermissions.html",
     items: [
       { label: "VerifiedPermissionsIdentitySource", anchor: "verifiedpermissionsidentitysource" },
@@ -2156,8 +2148,12 @@ const SIDEBAR_DATA = [
     label: "WAFv2",
     href: "/docs/wafv2.html",
     items: [
+      { label: "IPSet", anchor: "ipset" },
+      { label: "WAFRegexPatternSet", anchor: "wafregexpatternset" },
+      { label: "WAFRuleGroup", anchor: "wafrulegroup" },
       { label: "WAFv2LoggingConfiguration", anchor: "wafv2loggingconfiguration" },
-      { label: "WAFv2WebACLAssociation", anchor: "wafv2webaclassociation" }
+      { label: "WAFv2WebACLAssociation", anchor: "wafv2webaclassociation" },
+      { label: "WebACL", anchor: "webacl" }
     ]
   },
   {

@@ -127,7 +127,7 @@ func TestLoadBalancerReconcile(t *testing.T) {
 
 	newLB := func(mutate ...func(*awsv1alpha1.LoadBalancer)) *awsv1alpha1.LoadBalancer {
 		lb := &awsv1alpha1.LoadBalancer{
-			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Generation: 1},
+			ObjectMeta: metav1.ObjectMeta{Name: nn.Name, Namespace: nn.Namespace, Finalizers: []string{awsv1alpha1.FinalizerName}, Generation: 1},
 			Spec: awsv1alpha1.LoadBalancerSpec{
 				Name:   "web-alb",
 				Type:   "application",

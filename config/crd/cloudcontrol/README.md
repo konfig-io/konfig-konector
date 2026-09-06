@@ -128,7 +128,6 @@
 | securityhub | 14 | `kubectl apply -f config/crd/cloudcontrol/securityhub.yaml` |
 | securitylake | 4 | `kubectl apply -f config/crd/cloudcontrol/securitylake.yaml` |
 | servicecatalog | 13 | `kubectl apply -f config/crd/cloudcontrol/servicecatalog.yaml` |
-| servicecatalogappregistry | 4 | `kubectl apply -f config/crd/cloudcontrol/servicecatalogappregistry.yaml` |
 | servicediscovery | 2 | `kubectl apply -f config/crd/cloudcontrol/servicediscovery.yaml` |
 | ses | 19 | `kubectl apply -f config/crd/cloudcontrol/ses.yaml` |
 | shield | 3 | `kubectl apply -f config/crd/cloudcontrol/shield.yaml` |

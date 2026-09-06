@@ -82,6 +82,10 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if err := r.Update(ctx, eb); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileEventBus(ctx, eb); err != nil {
@@ -98,7 +102,9 @@ func (r *EventBusReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 }
 
 func (r *EventBusReconciler) reconcileEventBus(ctx context.Context, eb *awsv1alpha1.EventBus) error {
-	if eb.Status.ARN != "" {
+	// Always look the bus up by name first so an existing one is adopted
+	// instead of failing with ResourceAlreadyExistsException.
+	{
 		out, err := r.EventBridgeClient.DescribeEventBus(ctx, &awseb.DescribeEventBusInput{
 			Name: aws.String(eb.Spec.EventBusName),
 		})

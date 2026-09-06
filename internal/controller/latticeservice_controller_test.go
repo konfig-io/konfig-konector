@@ -258,7 +258,7 @@ const (
 
 func latticeServiceCR(mutate ...func(*awsv1alpha1.LatticeService)) *awsv1alpha1.LatticeService {
 	svc := &awsv1alpha1.LatticeService{
-		ObjectMeta: metav1.ObjectMeta{Name: "my-service", Namespace: "default"},
+		ObjectMeta: metav1.ObjectMeta{Name: "my-service", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 		Spec: awsv1alpha1.LatticeServiceSpec{
 			Name:     "my-service",
 			AuthType: "AWS_IAM",
@@ -524,7 +524,7 @@ func TestLatticeServiceNetworkReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-sn", Namespace: "default"}}
 	snCR := func(mutate ...func(*awsv1alpha1.LatticeServiceNetwork)) *awsv1alpha1.LatticeServiceNetwork {
 		sn := &awsv1alpha1.LatticeServiceNetwork{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-sn", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-sn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec:       awsv1alpha1.LatticeServiceNetworkSpec{Name: "my-sn", AuthType: "NONE"},
 		}
 		for _, m := range mutate {
@@ -610,7 +610,7 @@ func TestLatticeServiceNetworkVpcAssociationReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-assoc", Namespace: "default"}}
 	assocCR := func(mutate ...func(*awsv1alpha1.LatticeServiceNetworkVpcAssociation)) *awsv1alpha1.LatticeServiceNetworkVpcAssociation {
 		a := &awsv1alpha1.LatticeServiceNetworkVpcAssociation{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LatticeServiceNetworkVpcAssociationSpec{
 				ServiceNetworkRef: awsv1alpha1.LatticeServiceNetworkRef{ID: testLatticeSNID},
 				VPCRef:            awsv1alpha1.VPCResourceRef{ID: "vpc-123"},
@@ -662,7 +662,7 @@ func TestLatticeServiceNetworkVpcAssociationReconcile(t *testing.T) {
 			a.Spec.ServiceNetworkRef = awsv1alpha1.LatticeServiceNetworkRef{Name: "my-sn"}
 		})
 		sn := &awsv1alpha1.LatticeServiceNetwork{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-sn", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-sn", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec:       awsv1alpha1.LatticeServiceNetworkSpec{Name: "my-sn"},
 		}
 		c := newNetsecFakeClient(scheme, obj, sn)
@@ -732,7 +732,7 @@ func TestLatticeServiceNetworkServiceAssociationReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-assoc", Namespace: "default"}}
 	assocCR := func(mutate ...func(*awsv1alpha1.LatticeServiceNetworkServiceAssociation)) *awsv1alpha1.LatticeServiceNetworkServiceAssociation {
 		a := &awsv1alpha1.LatticeServiceNetworkServiceAssociation{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-assoc", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LatticeServiceNetworkServiceAssociationSpec{
 				ServiceNetworkRef: awsv1alpha1.LatticeServiceNetworkRef{ID: testLatticeSNID},
 				ServiceRef:        awsv1alpha1.LatticeServiceRef{ID: testLatticeSvcID},
@@ -822,7 +822,7 @@ func TestLatticeTargetGroupReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-tg", Namespace: "default"}}
 	tgCR := func(mutate ...func(*awsv1alpha1.LatticeTargetGroup)) *awsv1alpha1.LatticeTargetGroup {
 		tg := &awsv1alpha1.LatticeTargetGroup{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-tg", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-tg", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LatticeTargetGroupSpec{
 				Name: "my-tg",
 				Type: "IP",
@@ -927,7 +927,7 @@ func TestLatticeListenerReconcile(t *testing.T) {
 	req := ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-listener", Namespace: "default"}}
 	lisCR := func(mutate ...func(*awsv1alpha1.LatticeListener)) *awsv1alpha1.LatticeListener {
 		l := &awsv1alpha1.LatticeListener{
-			ObjectMeta: metav1.ObjectMeta{Name: "my-listener", Namespace: "default"},
+			ObjectMeta: metav1.ObjectMeta{Name: "my-listener", Namespace: "default", Finalizers: []string{awsv1alpha1.FinalizerName}},
 			Spec: awsv1alpha1.LatticeListenerSpec{
 				ServiceRef: awsv1alpha1.LatticeServiceRef{ID: testLatticeSvcID},
 				Name:       "my-listener",

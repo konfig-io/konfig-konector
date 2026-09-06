@@ -241,9 +241,13 @@ type TaskDefinitionInput struct {
 
 func RegisterTaskDefinition(ctx context.Context, c *multi.ECS, in TaskDefinitionInput) (*types.TaskDefinition, error) {
 	input := &ecs.RegisterTaskDefinitionInput{
-		Family:                  aws.String(in.Family),
-		ContainerDefinitions:    in.ContainerDefs,
-		RequiresCompatibilities: []types.Compatibility{types.CompatibilityFargate},
+		Family:               aws.String(in.Family),
+		ContainerDefinitions: in.ContainerDefs,
+	}
+	// Fargate needs task-level cpu and memory; without them register an
+	// EC2-launch-type definition instead of failing.
+	if in.CPU != "" && in.Memory != "" {
+		input.RequiresCompatibilities = []types.Compatibility{types.CompatibilityFargate}
 	}
 	if in.CPU != "" {
 		input.Cpu = aws.String(in.CPU)

@@ -53,6 +53,14 @@ func (m *S3) CreateBucket(ctx context.Context, params *svc.CreateBucketInput, op
 	return m.base.CreateBucket(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) CreateBucketMetadataConfiguration(ctx context.Context, params *svc.CreateBucketMetadataConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateBucketMetadataConfigurationOutput, error) {
+	return m.base.CreateBucketMetadataConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) CreateBucketMetadataTableConfiguration(ctx context.Context, params *svc.CreateBucketMetadataTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.CreateBucketMetadataTableConfigurationOutput, error) {
+	return m.base.CreateBucketMetadataTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) CreateMultipartUpload(ctx context.Context, params *svc.CreateMultipartUploadInput, optFns ...func(*svc.Options)) (*svc.CreateMultipartUploadOutput, error) {
 	return m.base.CreateMultipartUpload(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -89,6 +97,14 @@ func (m *S3) DeleteBucketLifecycle(ctx context.Context, params *svc.DeleteBucket
 	return m.base.DeleteBucketLifecycle(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) DeleteBucketMetadataConfiguration(ctx context.Context, params *svc.DeleteBucketMetadataConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteBucketMetadataConfigurationOutput, error) {
+	return m.base.DeleteBucketMetadataConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) DeleteBucketMetadataTableConfiguration(ctx context.Context, params *svc.DeleteBucketMetadataTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteBucketMetadataTableConfigurationOutput, error) {
+	return m.base.DeleteBucketMetadataTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) DeleteBucketMetricsConfiguration(ctx context.Context, params *svc.DeleteBucketMetricsConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteBucketMetricsConfigurationOutput, error) {
 	return m.base.DeleteBucketMetricsConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -117,6 +133,10 @@ func (m *S3) DeleteObject(ctx context.Context, params *svc.DeleteObjectInput, op
 	return m.base.DeleteObject(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) DeleteObjectAnnotation(ctx context.Context, params *svc.DeleteObjectAnnotationInput, optFns ...func(*svc.Options)) (*svc.DeleteObjectAnnotationOutput, error) {
+	return m.base.DeleteObjectAnnotation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) DeleteObjectTagging(ctx context.Context, params *svc.DeleteObjectTaggingInput, optFns ...func(*svc.Options)) (*svc.DeleteObjectTaggingOutput, error) {
 	return m.base.DeleteObjectTagging(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -127,6 +147,10 @@ func (m *S3) DeleteObjects(ctx context.Context, params *svc.DeleteObjectsInput, 
 
 func (m *S3) DeletePublicAccessBlock(ctx context.Context, params *svc.DeletePublicAccessBlockInput, optFns ...func(*svc.Options)) (*svc.DeletePublicAccessBlockOutput, error) {
 	return m.base.DeletePublicAccessBlock(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) GetBucketAbac(ctx context.Context, params *svc.GetBucketAbacInput, optFns ...func(*svc.Options)) (*svc.GetBucketAbacOutput, error) {
+	return m.base.GetBucketAbac(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) GetBucketAccelerateConfiguration(ctx context.Context, params *svc.GetBucketAccelerateConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetBucketAccelerateConfigurationOutput, error) {
@@ -167,6 +191,14 @@ func (m *S3) GetBucketLocation(ctx context.Context, params *svc.GetBucketLocatio
 
 func (m *S3) GetBucketLogging(ctx context.Context, params *svc.GetBucketLoggingInput, optFns ...func(*svc.Options)) (*svc.GetBucketLoggingOutput, error) {
 	return m.base.GetBucketLogging(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) GetBucketMetadataConfiguration(ctx context.Context, params *svc.GetBucketMetadataConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetBucketMetadataConfigurationOutput, error) {
+	return m.base.GetBucketMetadataConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) GetBucketMetadataTableConfiguration(ctx context.Context, params *svc.GetBucketMetadataTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetBucketMetadataTableConfigurationOutput, error) {
+	return m.base.GetBucketMetadataTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) GetBucketMetricsConfiguration(ctx context.Context, params *svc.GetBucketMetricsConfigurationInput, optFns ...func(*svc.Options)) (*svc.GetBucketMetricsConfigurationOutput, error) {
@@ -215,6 +247,10 @@ func (m *S3) GetObject(ctx context.Context, params *svc.GetObjectInput, optFns .
 
 func (m *S3) GetObjectAcl(ctx context.Context, params *svc.GetObjectAclInput, optFns ...func(*svc.Options)) (*svc.GetObjectAclOutput, error) {
 	return m.base.GetObjectAcl(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) GetObjectAnnotation(ctx context.Context, params *svc.GetObjectAnnotationInput, optFns ...func(*svc.Options)) (*svc.GetObjectAnnotationOutput, error) {
+	return m.base.GetObjectAnnotation(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) GetObjectAttributes(ctx context.Context, params *svc.GetObjectAttributesInput, optFns ...func(*svc.Options)) (*svc.GetObjectAttributesOutput, error) {
@@ -281,6 +317,10 @@ func (m *S3) ListMultipartUploads(ctx context.Context, params *svc.ListMultipart
 	return m.base.ListMultipartUploads(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) ListObjectAnnotations(ctx context.Context, params *svc.ListObjectAnnotationsInput, optFns ...func(*svc.Options)) (*svc.ListObjectAnnotationsOutput, error) {
+	return m.base.ListObjectAnnotations(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) ListObjectVersions(ctx context.Context, params *svc.ListObjectVersionsInput, optFns ...func(*svc.Options)) (*svc.ListObjectVersionsOutput, error) {
 	return m.base.ListObjectVersions(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -295,6 +335,10 @@ func (m *S3) ListObjectsV2(ctx context.Context, params *svc.ListObjectsV2Input, 
 
 func (m *S3) ListParts(ctx context.Context, params *svc.ListPartsInput, optFns ...func(*svc.Options)) (*svc.ListPartsOutput, error) {
 	return m.base.ListParts(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) PutBucketAbac(ctx context.Context, params *svc.PutBucketAbacInput, optFns ...func(*svc.Options)) (*svc.PutBucketAbacOutput, error) {
+	return m.base.PutBucketAbac(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) PutBucketAccelerateConfiguration(ctx context.Context, params *svc.PutBucketAccelerateConfigurationInput, optFns ...func(*svc.Options)) (*svc.PutBucketAccelerateConfigurationOutput, error) {
@@ -377,6 +421,10 @@ func (m *S3) PutObjectAcl(ctx context.Context, params *svc.PutObjectAclInput, op
 	return m.base.PutObjectAcl(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) PutObjectAnnotation(ctx context.Context, params *svc.PutObjectAnnotationInput, optFns ...func(*svc.Options)) (*svc.PutObjectAnnotationOutput, error) {
+	return m.base.PutObjectAnnotation(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) PutObjectLegalHold(ctx context.Context, params *svc.PutObjectLegalHoldInput, optFns ...func(*svc.Options)) (*svc.PutObjectLegalHoldOutput, error) {
 	return m.base.PutObjectLegalHold(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -397,12 +445,32 @@ func (m *S3) PutPublicAccessBlock(ctx context.Context, params *svc.PutPublicAcce
 	return m.base.PutPublicAccessBlock(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *S3) RenameObject(ctx context.Context, params *svc.RenameObjectInput, optFns ...func(*svc.Options)) (*svc.RenameObjectOutput, error) {
+	return m.base.RenameObject(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *S3) RestoreObject(ctx context.Context, params *svc.RestoreObjectInput, optFns ...func(*svc.Options)) (*svc.RestoreObjectOutput, error) {
 	return m.base.RestoreObject(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) SelectObjectContent(ctx context.Context, params *svc.SelectObjectContentInput, optFns ...func(*svc.Options)) (*svc.SelectObjectContentOutput, error) {
 	return m.base.SelectObjectContent(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) UpdateBucketMetadataAnnotationTableConfiguration(ctx context.Context, params *svc.UpdateBucketMetadataAnnotationTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateBucketMetadataAnnotationTableConfigurationOutput, error) {
+	return m.base.UpdateBucketMetadataAnnotationTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) UpdateBucketMetadataInventoryTableConfiguration(ctx context.Context, params *svc.UpdateBucketMetadataInventoryTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateBucketMetadataInventoryTableConfigurationOutput, error) {
+	return m.base.UpdateBucketMetadataInventoryTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) UpdateBucketMetadataJournalTableConfiguration(ctx context.Context, params *svc.UpdateBucketMetadataJournalTableConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateBucketMetadataJournalTableConfigurationOutput, error) {
+	return m.base.UpdateBucketMetadataJournalTableConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *S3) UpdateObjectEncryption(ctx context.Context, params *svc.UpdateObjectEncryptionInput, optFns ...func(*svc.Options)) (*svc.UpdateObjectEncryptionOutput, error) {
+	return m.base.UpdateObjectEncryption(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *S3) UploadPart(ctx context.Context, params *svc.UploadPartInput, optFns ...func(*svc.Options)) (*svc.UploadPartOutput, error) {

@@ -106,6 +106,10 @@ func (r *CloudControlKindReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcile(ctx, obj); err != nil {
@@ -189,7 +193,7 @@ func (r *CloudControlKindReconciler) reconcile(ctx context.Context, obj cfn.Clou
 
 	if live == nil {
 		out, err := r.CCClient.CreateResource(ctx, &awscc.CreateResourceInput{
-			TypeName: aws.String(typeName), DesiredState: aws.String(string(desired)), ClientToken: aws.String(ccClientToken(obj)),
+			TypeName: aws.String(typeName), DesiredState: aws.String(string(desired)), ClientToken: aws.String(ccClientToken(obj, "create")),
 		})
 		if err != nil {
 			return fmt.Errorf("create %s: %w", typeName, err)
@@ -205,7 +209,7 @@ func (r *CloudControlKindReconciler) reconcile(ctx context.Context, obj cfn.Clou
 	if patch != nil {
 		out, err := r.CCClient.UpdateResource(ctx, &awscc.UpdateResourceInput{
 			TypeName: aws.String(typeName), Identifier: aws.String(st.Identifier),
-			PatchDocument: aws.String(string(patch)), ClientToken: aws.String(ccClientToken(obj)),
+			PatchDocument: aws.String(string(patch)), ClientToken: aws.String(ccClientToken(obj, "update-"+cchelper.ShortHash(patch))),
 		})
 		if err != nil {
 			var nu *cctypes.NotUpdatableException
@@ -267,7 +271,7 @@ func (r *CloudControlKindReconciler) deleteResource(ctx context.Context, obj cfn
 		return true, nil
 	}
 	out, err := r.CCClient.DeleteResource(ctx, &awscc.DeleteResourceInput{
-		TypeName: aws.String(obj.CloudControlTypeName()), Identifier: aws.String(st.Identifier), ClientToken: aws.String(ccClientToken(obj) + "-del"),
+		TypeName: aws.String(obj.CloudControlTypeName()), Identifier: aws.String(st.Identifier), ClientToken: aws.String(ccClientToken(obj, "delete")),
 	})
 	if cchelper.IsNotFound(err) {
 		return true, nil
@@ -287,8 +291,13 @@ func (r *CloudControlKindReconciler) deleteResource(ctx context.Context, obj cfn
 	return out.ProgressEvent.OperationStatus == cctypes.OperationStatusSuccess, nil
 }
 
-func ccClientToken(obj metav1.Object) string {
-	t := fmt.Sprintf("%s-%d", obj.GetUID(), obj.GetGeneration())
+// ccClientToken derives a Cloud Control idempotency token that is stable for
+// retries of the same operation on the same generation but distinct across
+// operations (create/update/delete) and across different patches, so a retry
+// after a crash is deduplicated while a follow-up update is not rejected with
+// ClientTokenConflictException.
+func ccClientToken(obj metav1.Object, op string) string {
+	t := fmt.Sprintf("%s-%d-%s", obj.GetUID(), obj.GetGeneration(), op)
 	if len(t) > 64 {
 		t = t[len(t)-64:]
 	}

@@ -65,6 +65,10 @@ func (m *WAFv2) CreateWebACL(ctx context.Context, params *svc.CreateWebACLInput,
 	return m.base.CreateWebACL(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *WAFv2) DeleteAPIKey(ctx context.Context, params *svc.DeleteAPIKeyInput, optFns ...func(*svc.Options)) (*svc.DeleteAPIKeyOutput, error) {
+	return m.base.DeleteAPIKey(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *WAFv2) DeleteFirewallManagerRuleGroups(ctx context.Context, params *svc.DeleteFirewallManagerRuleGroupsInput, optFns ...func(*svc.Options)) (*svc.DeleteFirewallManagerRuleGroupsOutput, error) {
 	return m.base.DeleteFirewallManagerRuleGroups(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -145,12 +149,28 @@ func (m *WAFv2) GetRegexPatternSet(ctx context.Context, params *svc.GetRegexPatt
 	return m.base.GetRegexPatternSet(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *WAFv2) GetRevenueStatistics(ctx context.Context, params *svc.GetRevenueStatisticsInput, optFns ...func(*svc.Options)) (*svc.GetRevenueStatisticsOutput, error) {
+	return m.base.GetRevenueStatistics(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *WAFv2) GetRevenueStatisticsSummary(ctx context.Context, params *svc.GetRevenueStatisticsSummaryInput, optFns ...func(*svc.Options)) (*svc.GetRevenueStatisticsSummaryOutput, error) {
+	return m.base.GetRevenueStatisticsSummary(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *WAFv2) GetRevenueStatisticsTimeSeries(ctx context.Context, params *svc.GetRevenueStatisticsTimeSeriesInput, optFns ...func(*svc.Options)) (*svc.GetRevenueStatisticsTimeSeriesOutput, error) {
+	return m.base.GetRevenueStatisticsTimeSeries(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *WAFv2) GetRuleGroup(ctx context.Context, params *svc.GetRuleGroupInput, optFns ...func(*svc.Options)) (*svc.GetRuleGroupOutput, error) {
 	return m.base.GetRuleGroup(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *WAFv2) GetSampledRequests(ctx context.Context, params *svc.GetSampledRequestsInput, optFns ...func(*svc.Options)) (*svc.GetSampledRequestsOutput, error) {
 	return m.base.GetSampledRequests(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *WAFv2) GetTopPathStatisticsByTraffic(ctx context.Context, params *svc.GetTopPathStatisticsByTrafficInput, optFns ...func(*svc.Options)) (*svc.GetTopPathStatisticsByTrafficOutput, error) {
+	return m.base.GetTopPathStatisticsByTraffic(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *WAFv2) GetWebACL(ctx context.Context, params *svc.GetWebACLInput, optFns ...func(*svc.Options)) (*svc.GetWebACLOutput, error) {
@@ -199,6 +219,10 @@ func (m *WAFv2) ListResourcesForWebACL(ctx context.Context, params *svc.ListReso
 
 func (m *WAFv2) ListRuleGroups(ctx context.Context, params *svc.ListRuleGroupsInput, optFns ...func(*svc.Options)) (*svc.ListRuleGroupsOutput, error) {
 	return m.base.ListRuleGroups(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *WAFv2) ListSettlementRecords(ctx context.Context, params *svc.ListSettlementRecordsInput, optFns ...func(*svc.Options)) (*svc.ListSettlementRecordsOutput, error) {
+	return m.base.ListSettlementRecords(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *WAFv2) ListTagsForResource(ctx context.Context, params *svc.ListTagsForResourceInput, optFns ...func(*svc.Options)) (*svc.ListTagsForResourceOutput, error) {

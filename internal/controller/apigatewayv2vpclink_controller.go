@@ -88,6 +88,10 @@ func (r *APIGatewayV2VpcLinkReconciler) Reconcile(ctx context.Context, req ctrl.
 		if err := r.Update(ctx, obj); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	res, err := r.reconcileVpcLink(ctx, obj)

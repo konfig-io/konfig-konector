@@ -108,6 +108,10 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		if err := r.Update(ctx, sn); err != nil {
 			return ctrl.Result{}, err
 		}
+		// Return and let the update event drive the next reconcile: creating the
+		// AWS resource in this pass races the stale-cache reconcile queued by the
+		// finalizer update and produces duplicate creates (AlreadyExists).
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	if err := r.reconcileSubnet(ctx, sn); err != nil {
@@ -140,6 +144,26 @@ func (r *SubnetReconciler) reconcileSubnet(ctx context.Context, sn *awsv1alpha1.
 		if err == nil && len(out.Subnets) > 0 {
 			subnetID = sn.Status.SubnetID
 			sn.Status.AvailableIPAddressCount = aws.ToInt32(out.Subnets[0].AvailableIpAddressCount)
+		}
+	}
+
+	if subnetID == "" {
+		// Adopt a subnet that already exists with this VPC + CIDR (e.g. created
+		// by a reconcile whose status persist failed) instead of conflicting.
+		found, err := r.EC2Client.DescribeSubnets(ctx, &awsec2.DescribeSubnetsInput{Filters: []types.Filter{
+			{Name: aws.String("vpc-id"), Values: []string{vpcID}},
+			{Name: aws.String("cidr-block"), Values: []string{sn.Spec.CIDRBlock}},
+		}})
+		if err != nil {
+			return fmt.Errorf("describe subnets by cidr: %w", err)
+		}
+		if len(found.Subnets) > 0 {
+			subnetID = aws.ToString(found.Subnets[0].SubnetId)
+			sn.Status.SubnetID = subnetID
+			sn.Status.AvailableIPAddressCount = aws.ToInt32(found.Subnets[0].AvailableIpAddressCount)
+			if err := persistStatus(ctx, r.Client, sn); err != nil {
+				return fmt.Errorf("persist adopted subnet ID: %w", err)
+			}
 		}
 	}
 

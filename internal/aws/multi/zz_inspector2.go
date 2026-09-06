@@ -93,6 +93,10 @@ func (m *Inspector2) CreateCodeSecurityScanConfiguration(ctx context.Context, pa
 	return m.base.CreateCodeSecurityScanConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Inspector2) CreateConnector(ctx context.Context, params *svc.CreateConnectorInput, optFns ...func(*svc.Options)) (*svc.CreateConnectorOutput, error) {
+	return m.base.CreateConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Inspector2) CreateFilter(ctx context.Context, params *svc.CreateFilterInput, optFns ...func(*svc.Options)) (*svc.CreateFilterOutput, error) {
 	return m.base.CreateFilter(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -115,6 +119,10 @@ func (m *Inspector2) DeleteCodeSecurityIntegration(ctx context.Context, params *
 
 func (m *Inspector2) DeleteCodeSecurityScanConfiguration(ctx context.Context, params *svc.DeleteCodeSecurityScanConfigurationInput, optFns ...func(*svc.Options)) (*svc.DeleteCodeSecurityScanConfigurationOutput, error) {
 	return m.base.DeleteCodeSecurityScanConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Inspector2) DeleteConnector(ctx context.Context, params *svc.DeleteConnectorInput, optFns ...func(*svc.Options)) (*svc.DeleteConnectorOutput, error) {
+	return m.base.DeleteConnector(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Inspector2) DeleteFilter(ctx context.Context, params *svc.DeleteFilterInput, optFns ...func(*svc.Options)) (*svc.DeleteFilterOutput, error) {
@@ -229,6 +237,14 @@ func (m *Inspector2) ListCodeSecurityScanConfigurations(ctx context.Context, par
 	return m.base.ListCodeSecurityScanConfigurations(ctx, params, m.opts(ctx, optFns)...)
 }
 
+func (m *Inspector2) ListConnectorScanConfigurations(ctx context.Context, params *svc.ListConnectorScanConfigurationsInput, optFns ...func(*svc.Options)) (*svc.ListConnectorScanConfigurationsOutput, error) {
+	return m.base.ListConnectorScanConfigurations(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Inspector2) ListConnectors(ctx context.Context, params *svc.ListConnectorsInput, optFns ...func(*svc.Options)) (*svc.ListConnectorsOutput, error) {
+	return m.base.ListConnectors(ctx, params, m.opts(ctx, optFns)...)
+}
+
 func (m *Inspector2) ListCoverage(ctx context.Context, params *svc.ListCoverageInput, optFns ...func(*svc.Options)) (*svc.ListCoverageOutput, error) {
 	return m.base.ListCoverage(ctx, params, m.opts(ctx, optFns)...)
 }
@@ -315,6 +331,14 @@ func (m *Inspector2) UpdateCodeSecurityScanConfiguration(ctx context.Context, pa
 
 func (m *Inspector2) UpdateConfiguration(ctx context.Context, params *svc.UpdateConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateConfigurationOutput, error) {
 	return m.base.UpdateConfiguration(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Inspector2) UpdateConnector(ctx context.Context, params *svc.UpdateConnectorInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectorOutput, error) {
+	return m.base.UpdateConnector(ctx, params, m.opts(ctx, optFns)...)
+}
+
+func (m *Inspector2) UpdateConnectorScanConfiguration(ctx context.Context, params *svc.UpdateConnectorScanConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateConnectorScanConfigurationOutput, error) {
+	return m.base.UpdateConnectorScanConfiguration(ctx, params, m.opts(ctx, optFns)...)
 }
 
 func (m *Inspector2) UpdateEc2DeepInspectionConfiguration(ctx context.Context, params *svc.UpdateEc2DeepInspectionConfigurationInput, optFns ...func(*svc.Options)) (*svc.UpdateEc2DeepInspectionConfigurationOutput, error) {
