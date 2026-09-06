@@ -151,13 +151,15 @@ func (r *SQSQueueReconciler) reconcileQueue(ctx context.Context, q *awsv1alpha1.
 	} else {
 		queueURL = aws.ToString(getOut.QueueUrl)
 
-		// Update attributes.
-		attrs := r.buildAttributes(q, redrive)
-		if _, err := r.SQSClient.SetQueueAttributes(ctx, &awssqs.SetQueueAttributesInput{
-			QueueUrl:   aws.String(queueURL),
-			Attributes: attrs,
-		}); err != nil {
-			return fmt.Errorf("set queue attributes: %w", err)
+		// Update attributes. SQS rejects an empty attribute map
+		// (MissingParameter), so skip the call when the spec sets none.
+		if attrs := r.buildAttributes(q, redrive); len(attrs) > 0 {
+			if _, err := r.SQSClient.SetQueueAttributes(ctx, &awssqs.SetQueueAttributesInput{
+				QueueUrl:   aws.String(queueURL),
+				Attributes: attrs,
+			}); err != nil {
+				return fmt.Errorf("set queue attributes: %w", err)
+			}
 		}
 
 		// Sync tags.
