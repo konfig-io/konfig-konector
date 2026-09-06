@@ -77,7 +77,8 @@ func (o *ApiGatewayAccount) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayAccount) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayAccount) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayAccount) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayAccount) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayApiKeySpec is the desired state of AWS::ApiGateway::ApiKey.
 type ApiGatewayApiKeySpec struct {
@@ -161,7 +162,8 @@ func (o *ApiGatewayApiKey) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayApiKey) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayApiKey) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayApiKey) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayApiKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayApiKeyStageKey is a nested property type of AWS::ApiGateway::ApiKey.
 type ApiGatewayApiKeyStageKey struct {
@@ -250,7 +252,8 @@ func (o *ApiGatewayAuthorizer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayAuthorizer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayAuthorizer) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayAuthorizer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayAuthorizer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayBasePathMappingSpec is the desired state of AWS::ApiGateway::BasePathMapping.
 type ApiGatewayBasePathMappingSpec struct {
@@ -313,7 +316,8 @@ func (o *ApiGatewayBasePathMapping) CloudControlSpec() interface{} { return &o.S
 func (o *ApiGatewayBasePathMapping) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayBasePathMapping) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayBasePathMapping) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayBasePathMapping) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayBasePathMappingV2Spec is the desired state of AWS::ApiGateway::BasePathMappingV2.
 type ApiGatewayBasePathMappingV2Spec struct {
@@ -383,7 +387,8 @@ func (o *ApiGatewayBasePathMappingV2) CloudControlSpec() interface{} { return &o
 func (o *ApiGatewayBasePathMappingV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayBasePathMappingV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayBasePathMappingV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayBasePathMappingV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayClientCertificateSpec is the desired state of AWS::ApiGateway::ClientCertificate.
 type ApiGatewayClientCertificateSpec struct {
@@ -442,7 +447,8 @@ func (o *ApiGatewayClientCertificate) CloudControlSpec() interface{} { return &o
 func (o *ApiGatewayClientCertificate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayClientCertificate) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayClientCertificate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayClientCertificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayDocumentationPartSpec is the desired state of AWS::ApiGateway::DocumentationPart.
 type ApiGatewayDocumentationPartSpec struct {
@@ -506,7 +512,8 @@ func (o *ApiGatewayDocumentationPart) CloudControlSpec() interface{} { return &o
 func (o *ApiGatewayDocumentationPart) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayDocumentationPart) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayDocumentationPart) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayDocumentationPart) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayDocumentationPartLocation is a nested property type of AWS::ApiGateway::DocumentationPart.
 type ApiGatewayDocumentationPartLocation struct {
@@ -589,6 +596,9 @@ func (o *ApiGatewayDocumentationVersion) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ApiGatewayDocumentationVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayDocumentationVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ApiGatewayDomainNameSpec is the desired state of AWS::ApiGateway::DomainName.
 type ApiGatewayDomainNameSpec struct {
@@ -694,7 +704,8 @@ func (o *ApiGatewayDomainName) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayDomainName) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayDomainName) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayDomainName) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayDomainName) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayDomainNameEndpointConfiguration is a nested property type of AWS::ApiGateway::DomainName.
 type ApiGatewayDomainNameEndpointConfiguration struct {
@@ -789,6 +800,9 @@ func (o *ApiGatewayDomainNameAccessAssociation) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *ApiGatewayDomainNameAccessAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayDomainNameAccessAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ApiGatewayDomainNameV2Spec is the desired state of AWS::ApiGateway::DomainNameV2.
 type ApiGatewayDomainNameV2Spec struct {
@@ -876,7 +890,8 @@ func (o *ApiGatewayDomainNameV2) CloudControlSpec() interface{} { return &o.Spec
 func (o *ApiGatewayDomainNameV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayDomainNameV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayDomainNameV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayDomainNameV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayDomainNameV2EndpointConfiguration is a nested property type of AWS::ApiGateway::DomainNameV2.
 type ApiGatewayDomainNameV2EndpointConfiguration struct {
@@ -956,7 +971,8 @@ func (o *ApiGatewayGatewayResponse) CloudControlSpec() interface{} { return &o.S
 func (o *ApiGatewayGatewayResponse) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayGatewayResponse) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayGatewayResponse) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayGatewayResponse) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayMethodSpec is the desired state of AWS::ApiGateway::Method.
 type ApiGatewayMethodSpec struct {
@@ -1050,7 +1066,8 @@ func (o *ApiGatewayMethod) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayMethod) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayMethod) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayMethod) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayMethod) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayMethodIntegration is a nested property type of AWS::ApiGateway::Method.
 type ApiGatewayMethodIntegration struct {
@@ -1206,7 +1223,8 @@ func (o *ApiGatewayModel) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayModel) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayModel) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayModel) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayModel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayRequestValidatorSpec is the desired state of AWS::ApiGateway::RequestValidator.
 type ApiGatewayRequestValidatorSpec struct {
@@ -1274,7 +1292,8 @@ func (o *ApiGatewayRequestValidator) CloudControlSpec() interface{} { return &o.
 func (o *ApiGatewayRequestValidator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayRequestValidator) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayRequestValidator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayRequestValidator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayResourceSpec is the desired state of AWS::ApiGateway::Resource.
 type ApiGatewayResourceSpec struct {
@@ -1336,7 +1355,8 @@ func (o *ApiGatewayResource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayResource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayResource) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayResource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayResource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayUsagePlanSpec is the desired state of AWS::ApiGateway::UsagePlan.
 type ApiGatewayUsagePlanSpec struct {
@@ -1406,7 +1426,8 @@ func (o *ApiGatewayUsagePlan) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayUsagePlan) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayUsagePlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayUsagePlan) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayUsagePlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayUsagePlanApiStage is a nested property type of AWS::ApiGateway::UsagePlan.
 type ApiGatewayUsagePlanApiStage struct {
@@ -1511,7 +1532,8 @@ func (o *ApiGatewayUsagePlanKey) CloudControlSpec() interface{} { return &o.Spec
 func (o *ApiGatewayUsagePlanKey) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayUsagePlanKey) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayUsagePlanKey) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayUsagePlanKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayVpcLinkSpec is the desired state of AWS::ApiGateway::VpcLink.
 type ApiGatewayVpcLinkSpec struct {
@@ -1576,7 +1598,8 @@ func (o *ApiGatewayVpcLink) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayVpcLink) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayVpcLink) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayVpcLink) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayVpcLink) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ApiGatewayAccount{}, &ApiGatewayAccountList{})

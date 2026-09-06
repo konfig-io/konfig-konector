@@ -90,6 +90,9 @@ type CloudFrontDistributionSpec struct {
 
 // CloudFrontDistributionStatus defines the observed state of CloudFrontDistribution.
 type CloudFrontDistributionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DistributionID is the ID of the distribution.
 	// +optional
 	DistributionID string `json:"distributionId,omitempty"`

@@ -75,6 +75,9 @@ type BatchJobQueueSpec struct {
 
 // BatchJobQueueStatus defines the observed state of BatchJobQueue.
 type BatchJobQueueStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// JobQueueARN is the ARN of the job queue.
 	// +optional
 	JobQueueARN string `json:"jobQueueArn,omitempty"`

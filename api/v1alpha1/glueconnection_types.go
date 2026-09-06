@@ -83,6 +83,9 @@ type GlueConnectionSpec struct {
 
 // GlueConnectionStatus defines the observed state of GlueConnection.
 type GlueConnectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConnectionName is the name of the connection in AWS.
 	// +optional
 	ConnectionName string `json:"connectionName,omitempty"`

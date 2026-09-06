@@ -91,7 +91,8 @@ func (o *SecurityLakeAwsLogSource) CloudControlSpec() interface{} { return &o.Sp
 func (o *SecurityLakeAwsLogSource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityLakeAwsLogSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityLakeAwsLogSource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityLakeAwsLogSource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityLakeDataLakeSpec is the desired state of AWS::SecurityLake::DataLake.
 type SecurityLakeDataLakeSpec struct {
@@ -165,7 +166,8 @@ func (o *SecurityLakeDataLake) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SecurityLakeDataLake) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityLakeDataLake) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityLakeDataLake) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityLakeDataLake) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityLakeDataLakeEncryptionConfiguration is a nested property type of AWS::SecurityLake::DataLake.
 type SecurityLakeDataLakeEncryptionConfiguration struct {
@@ -310,7 +312,8 @@ func (o *SecurityLakeSubscriber) CloudControlSpec() interface{} { return &o.Spec
 func (o *SecurityLakeSubscriber) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityLakeSubscriber) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityLakeSubscriber) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityLakeSubscriber) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityLakeSubscriberSubscriberIdentity is a nested property type of AWS::SecurityLake::Subscriber.
 type SecurityLakeSubscriberSubscriberIdentity struct {
@@ -415,6 +418,9 @@ func (o *SecurityLakeSubscriberNotification) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *SecurityLakeSubscriberNotification) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityLakeSubscriberNotification) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SecurityLakeSubscriberNotificationNotificationConfiguration is a nested property type of AWS::SecurityLake::SubscriberNotification.
 type SecurityLakeSubscriberNotificationNotificationConfiguration struct {

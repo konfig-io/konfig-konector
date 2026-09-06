@@ -38,6 +38,9 @@ type EgressOnlyIGWSpec struct {
 
 // EgressOnlyIGWStatus defines the observed state of EgressOnlyIGW.
 type EgressOnlyIGWStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// EgressOnlyIGWID is the ID of the egress-only internet gateway.
 	// +optional
 	EgressOnlyIGWID string `json:"egressOnlyIgwId,omitempty"`

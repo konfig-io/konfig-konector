@@ -93,6 +93,9 @@ func (o *VerifiedPermissionsIdentitySource) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *VerifiedPermissionsIdentitySource) CloudControlObserved() interface{} { return &o.Status }
+func (o *VerifiedPermissionsIdentitySource) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // VerifiedPermissionsIdentitySourceIdentitySourceDetails is a nested property type of AWS::VerifiedPermissions::IdentitySource.
 type VerifiedPermissionsIdentitySourceIdentitySourceDetails struct {
@@ -181,7 +184,8 @@ func (o *VerifiedPermissionsPolicy) CloudControlSpec() interface{} { return &o.S
 func (o *VerifiedPermissionsPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VerifiedPermissionsPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *VerifiedPermissionsPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VerifiedPermissionsPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VerifiedPermissionsPolicyStoreSpec is the desired state of AWS::VerifiedPermissions::PolicyStore.
 type VerifiedPermissionsPolicyStoreSpec struct {
@@ -266,6 +270,9 @@ func (o *VerifiedPermissionsPolicyStore) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *VerifiedPermissionsPolicyStore) CloudControlObserved() interface{} { return &o.Status }
+func (o *VerifiedPermissionsPolicyStore) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // VerifiedPermissionsPolicyStoreValidationSettings is a nested property type of AWS::VerifiedPermissions::PolicyStore.
 type VerifiedPermissionsPolicyStoreValidationSettings struct {
@@ -346,6 +353,9 @@ func (o *VerifiedPermissionsPolicyStoreAlias) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *VerifiedPermissionsPolicyStoreAlias) CloudControlObserved() interface{} { return &o.Status }
+func (o *VerifiedPermissionsPolicyStoreAlias) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // VerifiedPermissionsPolicyTemplateSpec is the desired state of AWS::VerifiedPermissions::PolicyTemplate.
 type VerifiedPermissionsPolicyTemplateSpec struct {
@@ -417,6 +427,9 @@ func (o *VerifiedPermissionsPolicyTemplate) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *VerifiedPermissionsPolicyTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *VerifiedPermissionsPolicyTemplate) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&VerifiedPermissionsIdentitySource{}, &VerifiedPermissionsIdentitySourceList{})

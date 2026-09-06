@@ -91,7 +91,8 @@ func (o *MemoryDBACL) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MemoryDBACL) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MemoryDBACL) CloudControlObserved() interface{} { return &o.Status }
+func (o *MemoryDBACL) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MemoryDBACL) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MemoryDBMultiRegionClusterSpec is the desired state of AWS::MemoryDB::MultiRegionCluster.
 type MemoryDBMultiRegionClusterSpec struct {
@@ -202,7 +203,8 @@ func (o *MemoryDBMultiRegionCluster) CloudControlSpec() interface{} { return &o.
 func (o *MemoryDBMultiRegionCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MemoryDBMultiRegionCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *MemoryDBMultiRegionCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MemoryDBMultiRegionCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MemoryDBParameterGroupSpec is the desired state of AWS::MemoryDB::ParameterGroup.
 type MemoryDBParameterGroupSpec struct {
@@ -280,7 +282,8 @@ func (o *MemoryDBParameterGroup) CloudControlSpec() interface{} { return &o.Spec
 func (o *MemoryDBParameterGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MemoryDBParameterGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *MemoryDBParameterGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MemoryDBParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MemoryDBSubnetGroupSpec is the desired state of AWS::MemoryDB::SubnetGroup.
 type MemoryDBSubnetGroupSpec struct {
@@ -353,7 +356,8 @@ func (o *MemoryDBSubnetGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MemoryDBSubnetGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MemoryDBSubnetGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *MemoryDBSubnetGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MemoryDBSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MemoryDBUserSpec is the desired state of AWS::MemoryDB::User.
 type MemoryDBUserSpec struct {
@@ -425,7 +429,8 @@ func (o *MemoryDBUser) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MemoryDBUser) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MemoryDBUser) CloudControlObserved() interface{} { return &o.Status }
+func (o *MemoryDBUser) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MemoryDBUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MemoryDBUserAuthenticationMode is a nested property type of AWS::MemoryDB::User.
 type MemoryDBUserAuthenticationMode struct {

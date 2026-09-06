@@ -104,7 +104,8 @@ func (o *CECostCategory) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CECostCategory) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CECostCategory) CloudControlObserved() interface{} { return &o.Status }
+func (o *CECostCategory) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CECostCategory) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&CECostCategory{}, &CECostCategoryList{})

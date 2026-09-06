@@ -125,7 +125,8 @@ func (o *SageMakerAction) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerAction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerAction) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerAction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerAction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerActionActionSource is a nested property type of AWS::SageMaker::Action.
 type SageMakerActionActionSource struct {
@@ -252,7 +253,8 @@ func (o *SageMakerAlgorithm) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerAlgorithm) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerAlgorithm) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerAlgorithm) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerAlgorithm) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerAlgorithmTrainingSpecification is a nested property type of AWS::SageMaker::Algorithm.
 type SageMakerAlgorithmTrainingSpecification struct {
@@ -534,7 +536,8 @@ func (o *SageMakerApp) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerApp) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerApp) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerApp) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerApp) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerAppResourceSpec is a nested property type of AWS::SageMaker::App.
 type SageMakerAppResourceSpec struct {
@@ -633,7 +636,8 @@ func (o *SageMakerAppImageConfig) CloudControlSpec() interface{} { return &o.Spe
 func (o *SageMakerAppImageConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerAppImageConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerAppImageConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerAppImageConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerAppImageConfigKernelGatewayImageConfig is a nested property type of AWS::SageMaker::AppImageConfig.
 type SageMakerAppImageConfigKernelGatewayImageConfig struct {
@@ -797,7 +801,8 @@ func (o *SageMakerArtifact) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerArtifact) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerArtifact) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerArtifact) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerArtifact) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerArtifactArtifactSource is a nested property type of AWS::SageMaker::Artifact.
 type SageMakerArtifactArtifactSource struct {
@@ -963,7 +968,8 @@ func (o *SageMakerCluster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerClusterVpcConfig is a nested property type of AWS::SageMaker::Cluster.
 type SageMakerClusterVpcConfig struct {
@@ -1405,7 +1411,8 @@ func (o *SageMakerContext) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerContext) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerContext) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerContext) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerContext) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerContextSource is a nested property type of AWS::SageMaker::Context.
 type SageMakerContextSource struct {
@@ -1542,6 +1549,9 @@ func (o *SageMakerDataQualityJobDefinition) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *SageMakerDataQualityJobDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerDataQualityJobDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerDataQualityJobDefinitionDataQualityBaselineConfig is a nested property type of AWS::SageMaker::DataQualityJobDefinition.
 type SageMakerDataQualityJobDefinitionDataQualityBaselineConfig struct {
@@ -1852,7 +1862,8 @@ func (o *SageMakerDevice) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerDevice) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerDevice) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerDevice) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerDevice) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerDeviceDevice is a nested property type of AWS::SageMaker::Device.
 type SageMakerDeviceDevice struct {
@@ -1940,7 +1951,8 @@ func (o *SageMakerDeviceFleet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerDeviceFleet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerDeviceFleet) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerDeviceFleet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerDeviceFleet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerDeviceFleetEdgeOutputConfig is a nested property type of AWS::SageMaker::DeviceFleet.
 type SageMakerDeviceFleetEdgeOutputConfig struct {
@@ -2107,7 +2119,8 @@ func (o *SageMakerDomain) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerDomain) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerDomain) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerDomain) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerDomainUserSettings is a nested property type of AWS::SageMaker::Domain.
 type SageMakerDomainUserSettings struct {
@@ -2690,7 +2703,8 @@ func (o *SageMakerEndpoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerEndpointDeploymentConfig is a nested property type of AWS::SageMaker::Endpoint.
 type SageMakerEndpointDeploymentConfig struct {
@@ -2916,7 +2930,8 @@ func (o *SageMakerEndpointConfig) CloudControlSpec() interface{} { return &o.Spe
 func (o *SageMakerEndpointConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerEndpointConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerEndpointConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerEndpointConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerEndpointConfigProductionVariant is a nested property type of AWS::SageMaker::EndpointConfig.
 type SageMakerEndpointConfigProductionVariant struct {
@@ -3496,7 +3511,8 @@ func (o *SageMakerExperiment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerExperiment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerExperiment) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerExperiment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerExperiment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerExperimentTagsItem is a nested property type of AWS::SageMaker::Experiment.
 type SageMakerExperimentTagsItem struct {
@@ -3615,7 +3631,8 @@ func (o *SageMakerFeatureGroup) CloudControlSpec() interface{} { return &o.Spec 
 func (o *SageMakerFeatureGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerFeatureGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerFeatureGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerFeatureGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerFeatureGroupFeatureDefinition is a nested property type of AWS::SageMaker::FeatureGroup.
 type SageMakerFeatureGroupFeatureDefinition struct {
@@ -3810,7 +3827,8 @@ func (o *SageMakerHub) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerHub) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerHub) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerHub) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerHub) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerHubS3StorageConfig is a nested property type of AWS::SageMaker::Hub.
 type SageMakerHubS3StorageConfig struct {
@@ -3892,7 +3910,8 @@ func (o *SageMakerHumanTaskUi) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerHumanTaskUi) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerHumanTaskUi) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerHumanTaskUi) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerHumanTaskUi) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerHumanTaskUiUiTemplate is a nested property type of AWS::SageMaker::HumanTaskUi.
 type SageMakerHumanTaskUiUiTemplate struct {
@@ -3973,7 +3992,8 @@ func (o *SageMakerImage) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerImage) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerImage) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerImage) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerImage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerImageVersionSpec is the desired state of AWS::SageMaker::ImageVersion.
 type SageMakerImageVersionSpec struct {
@@ -4085,7 +4105,8 @@ func (o *SageMakerImageVersion) CloudControlSpec() interface{} { return &o.Spec 
 func (o *SageMakerImageVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerImageVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerImageVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerImageVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerInferenceComponentSpec is the desired state of AWS::SageMaker::InferenceComponent.
 type SageMakerInferenceComponentSpec struct {
@@ -4186,7 +4207,8 @@ func (o *SageMakerInferenceComponent) CloudControlSpec() interface{} { return &o
 func (o *SageMakerInferenceComponent) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerInferenceComponent) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerInferenceComponent) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerInferenceComponent) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerInferenceComponentInferenceComponentSpecification is a nested property type of AWS::SageMaker::InferenceComponent.
 type SageMakerInferenceComponentInferenceComponentSpecification struct {
@@ -4595,7 +4617,8 @@ func (o *SageMakerInferenceExperiment) CloudControlSpec() interface{} { return &
 func (o *SageMakerInferenceExperiment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerInferenceExperiment) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerInferenceExperiment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerInferenceExperiment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerInferenceExperimentEndpointMetadata is a nested property type of AWS::SageMaker::InferenceExperiment.
 type SageMakerInferenceExperimentEndpointMetadata struct {
@@ -4815,7 +4838,8 @@ func (o *SageMakerMlflowApp) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerMlflowApp) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerMlflowApp) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerMlflowApp) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerMlflowApp) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerMlflowTrackingServerSpec is the desired state of AWS::SageMaker::MlflowTrackingServer.
 type SageMakerMlflowTrackingServerSpec struct {
@@ -4911,6 +4935,9 @@ func (o *SageMakerMlflowTrackingServer) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *SageMakerMlflowTrackingServer) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerMlflowTrackingServer) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerModelSpec is the desired state of AWS::SageMaker::Model.
 type SageMakerModelSpec struct {
@@ -4999,7 +5026,8 @@ func (o *SageMakerModel) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerModel) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerModel) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModel) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerModel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerModelContainerDefinition is a nested property type of AWS::SageMaker::Model.
 type SageMakerModelContainerDefinition struct {
@@ -5251,6 +5279,9 @@ func (o *SageMakerModelBiasJobDefinition) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *SageMakerModelBiasJobDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModelBiasJobDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerModelBiasJobDefinitionModelBiasBaselineConfig is a nested property type of AWS::SageMaker::ModelBiasJobDefinition.
 type SageMakerModelBiasJobDefinitionModelBiasBaselineConfig struct {
@@ -5635,7 +5666,8 @@ func (o *SageMakerModelCard) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerModelCard) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerModelCard) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModelCard) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerModelCard) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerModelCardSecurityConfig is a nested property type of AWS::SageMaker::ModelCard.
 type SageMakerModelCardSecurityConfig struct {
@@ -6140,6 +6172,9 @@ func (o *SageMakerModelExplainabilityJobDefinition) CloudControlStatusRef() *Clo
 func (o *SageMakerModelExplainabilityJobDefinition) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *SageMakerModelExplainabilityJobDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerModelExplainabilityJobDefinitionModelExplainabilityBaselineConfig is a nested property type of AWS::SageMaker::ModelExplainabilityJobDefinition.
 type SageMakerModelExplainabilityJobDefinitionModelExplainabilityBaselineConfig struct {
@@ -6547,7 +6582,8 @@ func (o *SageMakerModelPackage) CloudControlSpec() interface{} { return &o.Spec 
 func (o *SageMakerModelPackage) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerModelPackage) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModelPackage) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerModelPackage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerModelPackageAdditionalInferenceSpecificationDefinition is a nested property type of AWS::SageMaker::ModelPackage.
 type SageMakerModelPackageAdditionalInferenceSpecificationDefinition struct {
@@ -7115,7 +7151,8 @@ func (o *SageMakerModelPackageGroup) CloudControlSpec() interface{} { return &o.
 func (o *SageMakerModelPackageGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerModelPackageGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModelPackageGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerModelPackageGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerModelQualityJobDefinitionSpec is the desired state of AWS::SageMaker::ModelQualityJobDefinition.
 type SageMakerModelQualityJobDefinitionSpec struct {
@@ -7222,6 +7259,9 @@ func (o *SageMakerModelQualityJobDefinition) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *SageMakerModelQualityJobDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerModelQualityJobDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerModelQualityJobDefinitionModelQualityBaselineConfig is a nested property type of AWS::SageMaker::ModelQualityJobDefinition.
 type SageMakerModelQualityJobDefinitionModelQualityBaselineConfig struct {
@@ -7603,7 +7643,8 @@ func (o *SageMakerMonitoringSchedule) CloudControlSpec() interface{} { return &o
 func (o *SageMakerMonitoringSchedule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerMonitoringSchedule) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerMonitoringSchedule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerMonitoringSchedule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerMonitoringScheduleMonitoringScheduleConfig is a nested property type of AWS::SageMaker::MonitoringSchedule.
 type SageMakerMonitoringScheduleMonitoringScheduleConfig struct {
@@ -8076,7 +8117,8 @@ func (o *SageMakerPartnerApp) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerPartnerApp) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerPartnerApp) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerPartnerApp) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerPartnerApp) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerPartnerAppPartnerAppConfig is a nested property type of AWS::SageMaker::PartnerApp.
 type SageMakerPartnerAppPartnerAppConfig struct {
@@ -8171,7 +8213,8 @@ func (o *SageMakerPipeline) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerPipeline) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerPipeline) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerPipeline) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerPipeline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerPipelineParallelismConfiguration is a nested property type of AWS::SageMaker::Pipeline.
 type SageMakerPipelineParallelismConfiguration struct {
@@ -8341,7 +8384,8 @@ func (o *SageMakerProcessingJob) CloudControlSpec() interface{} { return &o.Spec
 func (o *SageMakerProcessingJob) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerProcessingJob) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerProcessingJob) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerProcessingJob) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerProcessingJobAppSpecification is a nested property type of AWS::SageMaker::ProcessingJob.
 type SageMakerProcessingJobAppSpecification struct {
@@ -8769,7 +8813,8 @@ func (o *SageMakerProject) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerProject) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerProject) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerProject) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerProjectServiceCatalogProvisioningDetails is a nested property type of AWS::SageMaker::Project.
 type SageMakerProjectServiceCatalogProvisioningDetails struct {
@@ -8915,7 +8960,8 @@ func (o *SageMakerSpace) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerSpace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerSpace) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerSpace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerSpace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerSpaceSpaceSettings is a nested property type of AWS::SageMaker::Space.
 type SageMakerSpaceSpaceSettings struct {
@@ -9204,6 +9250,9 @@ func (o *SageMakerStudioLifecycleConfig) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *SageMakerStudioLifecycleConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerStudioLifecycleConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SageMakerTrialComponentSpec is the desired state of AWS::SageMaker::TrialComponent.
 type SageMakerTrialComponentSpec struct {
@@ -9309,7 +9358,8 @@ func (o *SageMakerTrialComponent) CloudControlSpec() interface{} { return &o.Spe
 func (o *SageMakerTrialComponent) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerTrialComponent) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerTrialComponent) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerTrialComponent) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerTrialComponentTrialComponentStatus is a nested property type of AWS::SageMaker::TrialComponent.
 type SageMakerTrialComponentTrialComponentStatus struct {
@@ -9470,7 +9520,8 @@ func (o *SageMakerUserProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerUserProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerUserProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerUserProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerUserProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerUserProfileUserSettings is a nested property type of AWS::SageMaker::UserProfile.
 type SageMakerUserProfileUserSettings struct {
@@ -9925,7 +9976,8 @@ func (o *SageMakerWorkforce) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SageMakerWorkforce) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SageMakerWorkforce) CloudControlObserved() interface{} { return &o.Status }
+func (o *SageMakerWorkforce) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SageMakerWorkforce) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SageMakerWorkforceCognitoConfig is a nested property type of AWS::SageMaker::Workforce.
 type SageMakerWorkforceCognitoConfig struct {

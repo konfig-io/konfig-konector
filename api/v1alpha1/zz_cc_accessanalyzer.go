@@ -100,7 +100,8 @@ func (o *AccessAnalyzerAnalyzer) CloudControlSpec() interface{} { return &o.Spec
 func (o *AccessAnalyzerAnalyzer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AccessAnalyzerAnalyzer) CloudControlObserved() interface{} { return &o.Status }
+func (o *AccessAnalyzerAnalyzer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AccessAnalyzerAnalyzer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AccessAnalyzerAnalyzerArchiveRule is a nested property type of AWS::AccessAnalyzer::Analyzer.
 type AccessAnalyzerAnalyzerArchiveRule struct {
@@ -290,7 +291,8 @@ func (o *AccessAnalyzerArchiveRule) CloudControlSpec() interface{} { return &o.S
 func (o *AccessAnalyzerArchiveRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AccessAnalyzerArchiveRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *AccessAnalyzerArchiveRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AccessAnalyzerArchiveRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AccessAnalyzerArchiveRuleFilterValue is a nested property type of AWS::AccessAnalyzer::ArchiveRule.
 type AccessAnalyzerArchiveRuleFilterValue struct {

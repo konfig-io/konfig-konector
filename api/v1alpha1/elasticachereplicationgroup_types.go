@@ -101,6 +101,9 @@ type ElastiCacheReplicationGroupSpec struct {
 
 // ElastiCacheReplicationGroupStatus defines the observed state of ElastiCacheReplicationGroup.
 type ElastiCacheReplicationGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the replication group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

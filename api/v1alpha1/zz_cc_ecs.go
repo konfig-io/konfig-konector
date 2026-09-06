@@ -84,6 +84,9 @@ func (o *ECSClusterCapacityProviderAssociations) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *ECSClusterCapacityProviderAssociations) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECSClusterCapacityProviderAssociations) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ECSClusterCapacityProviderAssociationsCapacityProviderStrategy is a nested property type of AWS::ECS::ClusterCapacityProviderAssociations.
 type ECSClusterCapacityProviderAssociationsCapacityProviderStrategy struct {
@@ -201,6 +204,7 @@ func (o *ECSDaemon) CloudControlTypeName() string               { return "AWS::E
 func (o *ECSDaemon) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *ECSDaemon) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *ECSDaemon) CloudControlObserved() interface{}          { return &o.Status }
+func (o *ECSDaemon) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // ECSDaemonDaemonDeploymentConfiguration is a nested property type of AWS::ECS::Daemon.
 type ECSDaemonDaemonDeploymentConfiguration struct {
@@ -341,7 +345,8 @@ func (o *ECSDaemonTaskDefinition) CloudControlSpec() interface{} { return &o.Spe
 func (o *ECSDaemonTaskDefinition) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECSDaemonTaskDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECSDaemonTaskDefinition) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECSDaemonTaskDefinition) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECSDaemonTaskDefinitionVolume is a nested property type of AWS::ECS::DaemonTaskDefinition.
 type ECSDaemonTaskDefinitionVolume struct {
@@ -879,7 +884,8 @@ func (o *ECSExpressGatewayService) CloudControlSpec() interface{} { return &o.Sp
 func (o *ECSExpressGatewayService) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECSExpressGatewayService) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECSExpressGatewayService) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECSExpressGatewayService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECSExpressGatewayServiceExpressGatewayServiceStatus is a nested property type of AWS::ECS::ExpressGatewayService.
 type ECSExpressGatewayServiceExpressGatewayServiceStatus struct {
@@ -1117,7 +1123,8 @@ func (o *ECSPrimaryTaskSet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ECSPrimaryTaskSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECSPrimaryTaskSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECSPrimaryTaskSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECSPrimaryTaskSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECSTaskSetSpec is the desired state of AWS::ECS::TaskSet.
 type ECSTaskSetSpec struct {
@@ -1231,6 +1238,7 @@ func (o *ECSTaskSet) CloudControlTypeName() string               { return "AWS::
 func (o *ECSTaskSet) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *ECSTaskSet) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *ECSTaskSet) CloudControlObserved() interface{}          { return &o.Status }
+func (o *ECSTaskSet) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // ECSTaskSetLoadBalancer is a nested property type of AWS::ECS::TaskSet.
 type ECSTaskSetLoadBalancer struct {

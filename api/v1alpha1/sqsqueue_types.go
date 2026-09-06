@@ -93,6 +93,9 @@ type SQSQueueSpec struct {
 
 // SQSQueueStatus defines the observed state of SQSQueue.
 type SQSQueueStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// QueueURL is the URL of the SQS queue.
 	// +optional
 	QueueURL string `json:"queueUrl,omitempty"`

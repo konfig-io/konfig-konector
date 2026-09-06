@@ -44,6 +44,9 @@ type LambdaCodeSigningConfigSpec struct {
 
 // LambdaCodeSigningConfigStatus defines the observed state of LambdaCodeSigningConfig.
 type LambdaCodeSigningConfigStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CodeSigningConfigARN is the ARN of the code signing config.
 	// +optional
 	CodeSigningConfigARN string `json:"codeSigningConfigArn,omitempty"`

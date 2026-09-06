@@ -92,7 +92,8 @@ func (o *SecurityHubAggregatorV2) CloudControlSpec() interface{} { return &o.Spe
 func (o *SecurityHubAggregatorV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubAggregatorV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubAggregatorV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubAggregatorV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubAutomationRuleSpec is the desired state of AWS::SecurityHub::AutomationRule.
 type SecurityHubAutomationRuleSpec struct {
@@ -201,7 +202,8 @@ func (o *SecurityHubAutomationRule) CloudControlSpec() interface{} { return &o.S
 func (o *SecurityHubAutomationRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubAutomationRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubAutomationRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubAutomationRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubAutomationRuleAutomationRulesAction is a nested property type of AWS::SecurityHub::AutomationRule.
 type SecurityHubAutomationRuleAutomationRulesAction struct {
@@ -676,7 +678,8 @@ func (o *SecurityHubAutomationRuleV2) CloudControlSpec() interface{} { return &o
 func (o *SecurityHubAutomationRuleV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubAutomationRuleV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubAutomationRuleV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubAutomationRuleV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubAutomationRuleV2Criteria is a nested property type of AWS::SecurityHub::AutomationRuleV2.
 type SecurityHubAutomationRuleV2Criteria struct {
@@ -961,6 +964,9 @@ func (o *SecurityHubConfigurationPolicy) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *SecurityHubConfigurationPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubConfigurationPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SecurityHubConfigurationPolicyPolicy is a nested property type of AWS::SecurityHub::ConfigurationPolicy.
 type SecurityHubConfigurationPolicyPolicy struct {
@@ -1157,7 +1163,8 @@ func (o *SecurityHubConnector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SecurityHubConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubConnectorProvider is a nested property type of AWS::SecurityHub::Connector.
 type SecurityHubConnectorProvider struct {
@@ -1313,7 +1320,8 @@ func (o *SecurityHubConnectorV2) CloudControlSpec() interface{} { return &o.Spec
 func (o *SecurityHubConnectorV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubConnectorV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubConnectorV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubConnectorV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubConnectorV2HealthIssue is a nested property type of AWS::SecurityHub::ConnectorV2.
 type SecurityHubConnectorV2HealthIssue struct {
@@ -1386,7 +1394,8 @@ func (o *SecurityHubDelegatedAdmin) CloudControlSpec() interface{} { return &o.S
 func (o *SecurityHubDelegatedAdmin) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubDelegatedAdmin) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubDelegatedAdmin) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubDelegatedAdmin) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubFindingAggregatorSpec is the desired state of AWS::SecurityHub::FindingAggregator.
 type SecurityHubFindingAggregatorSpec struct {
@@ -1457,7 +1466,8 @@ func (o *SecurityHubFindingAggregator) CloudControlSpec() interface{} { return &
 func (o *SecurityHubFindingAggregator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubFindingAggregator) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubFindingAggregator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubFindingAggregator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubHubV2Spec is the desired state of AWS::SecurityHub::HubV2.
 type SecurityHubHubV2Spec struct {
@@ -1517,7 +1527,8 @@ func (o *SecurityHubHubV2) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SecurityHubHubV2) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubHubV2) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubHubV2) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubHubV2) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubInsightSpec is the desired state of AWS::SecurityHub::Insight.
 type SecurityHubInsightSpec struct {
@@ -1581,7 +1592,8 @@ func (o *SecurityHubInsight) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SecurityHubInsight) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubInsight) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubInsight) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubInsight) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubInsightAwsSecurityFindingFilters is a nested property type of AWS::SecurityHub::Insight.
 type SecurityHubInsightAwsSecurityFindingFilters struct {
@@ -2175,6 +2187,9 @@ func (o *SecurityHubOrganizationConfiguration) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *SecurityHubOrganizationConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubOrganizationConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SecurityHubPolicyAssociationSpec is the desired state of AWS::SecurityHub::PolicyAssociation.
 type SecurityHubPolicyAssociationSpec struct {
@@ -2267,7 +2282,8 @@ func (o *SecurityHubPolicyAssociation) CloudControlSpec() interface{} { return &
 func (o *SecurityHubPolicyAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubPolicyAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubPolicyAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubPolicyAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubProductSubscriptionSpec is the desired state of AWS::SecurityHub::ProductSubscription.
 type SecurityHubProductSubscriptionSpec struct {
@@ -2328,6 +2344,9 @@ func (o *SecurityHubProductSubscription) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *SecurityHubProductSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubProductSubscription) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SecurityHubSecurityControlSpec is the desired state of AWS::SecurityHub::SecurityControl.
 type SecurityHubSecurityControlSpec struct {
@@ -2398,7 +2417,8 @@ func (o *SecurityHubSecurityControl) CloudControlSpec() interface{} { return &o.
 func (o *SecurityHubSecurityControl) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecurityHubSecurityControl) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecurityHubSecurityControl) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecurityHubSecurityControl) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecurityHubSecurityControlParameterConfiguration is a nested property type of AWS::SecurityHub::SecurityControl.
 type SecurityHubSecurityControlParameterConfiguration struct {

@@ -62,6 +62,9 @@ type OpenSearchDomainSpec struct {
 
 // OpenSearchDomainStatus defines the observed state of OpenSearchDomain.
 type OpenSearchDomainStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DomainARN is the ARN of the OpenSearch domain.
 	// +optional
 	DomainARN string `json:"domainARN,omitempty"`

@@ -67,6 +67,9 @@ type RestAPISpec struct {
 
 // RestAPIStatus defines the observed state of RestAPI.
 type RestAPIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// APIID is the REST API identifier.
 	// +optional
 	APIID string `json:"apiId,omitempty"`

@@ -39,6 +39,9 @@ type ActivitySpec struct {
 
 // ActivityStatus defines the observed state of Activity.
 type ActivityStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ActivityARN is the ARN of the activity.
 	// +optional
 	ActivityARN string `json:"activityARN,omitempty"`

@@ -78,7 +78,8 @@ func (o *S3TablesNamespace) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3TablesNamespace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3TablesNamespace) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3TablesNamespace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3TablesNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3TablesTableSpec is the desired state of AWS::S3Tables::Table.
 type S3TablesTableSpec struct {
@@ -172,7 +173,8 @@ func (o *S3TablesTable) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3TablesTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3TablesTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3TablesTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3TablesTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3TablesTableStorageClassConfiguration is a nested property type of AWS::S3Tables::Table.
 type S3TablesTableStorageClassConfiguration struct {
@@ -423,7 +425,8 @@ func (o *S3TablesTableBucket) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3TablesTableBucket) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3TablesTableBucket) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3TablesTableBucket) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3TablesTableBucket) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3TablesTableBucketUnreferencedFileRemoval is a nested property type of AWS::S3Tables::TableBucket.
 type S3TablesTableBucketUnreferencedFileRemoval struct {
@@ -545,7 +548,8 @@ func (o *S3TablesTableBucketPolicy) CloudControlSpec() interface{} { return &o.S
 func (o *S3TablesTableBucketPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3TablesTableBucketPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3TablesTableBucketPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3TablesTableBucketPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3TablesTablePolicySpec is the desired state of AWS::S3Tables::TablePolicy.
 type S3TablesTablePolicySpec struct {
@@ -610,7 +614,8 @@ func (o *S3TablesTablePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3TablesTablePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3TablesTablePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3TablesTablePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3TablesTablePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&S3TablesNamespace{}, &S3TablesNamespaceList{})

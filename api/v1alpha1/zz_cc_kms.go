@@ -111,7 +111,8 @@ func (o *KMSReplicaKey) CloudControlSpec() interface{} { return &o.Spec }
 func (o *KMSReplicaKey) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *KMSReplicaKey) CloudControlObserved() interface{} { return &o.Status }
+func (o *KMSReplicaKey) CloudControlObserved() interface{}   { return &o.Status }
+func (o *KMSReplicaKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&KMSReplicaKey{}, &KMSReplicaKeyList{})

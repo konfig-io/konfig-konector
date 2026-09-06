@@ -84,7 +84,8 @@ func (o *XRayResourcePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *XRayResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *XRayResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *XRayResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *XRayResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // XRayTransactionSearchConfigSpec is the desired state of AWS::XRay::TransactionSearchConfig.
 type XRayTransactionSearchConfigSpec struct {
@@ -141,7 +142,8 @@ func (o *XRayTransactionSearchConfig) CloudControlSpec() interface{} { return &o
 func (o *XRayTransactionSearchConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *XRayTransactionSearchConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *XRayTransactionSearchConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *XRayTransactionSearchConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&XRayResourcePolicy{}, &XRayResourcePolicyList{})

@@ -85,7 +85,8 @@ func (o *CassandraKeyspace) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CassandraKeyspace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CassandraKeyspace) CloudControlObserved() interface{} { return &o.Status }
+func (o *CassandraKeyspace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CassandraKeyspace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CassandraKeyspaceReplicationSpecification is a nested property type of AWS::Cassandra::Keyspace.
 type CassandraKeyspaceReplicationSpecification struct {
@@ -202,7 +203,8 @@ func (o *CassandraTable) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CassandraTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CassandraTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *CassandraTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CassandraTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CassandraTableColumn is a nested property type of AWS::Cassandra::Table.
 type CassandraTableColumn struct {
@@ -414,7 +416,8 @@ func (o *CassandraType) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CassandraType) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CassandraType) CloudControlObserved() interface{} { return &o.Status }
+func (o *CassandraType) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CassandraType) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CassandraTypeField is a nested property type of AWS::Cassandra::Type.
 type CassandraTypeField struct {

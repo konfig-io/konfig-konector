@@ -59,6 +59,9 @@ type PodIdentityAssociationSpec struct {
 
 // PodIdentityAssociationStatus defines the observed state of PodIdentityAssociation.
 type PodIdentityAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AssociationID is the EKS Pod Identity association identifier.
 	// +optional
 	AssociationID string `json:"associationId,omitempty"`

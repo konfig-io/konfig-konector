@@ -51,6 +51,9 @@ type VPNGatewaySpec struct {
 
 // VPNGatewayStatus defines the observed state of VPNGateway.
 type VPNGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VPNGatewayID is the AWS virtual private gateway identifier.
 	// +optional
 	VPNGatewayID string `json:"vpnGatewayId,omitempty"`

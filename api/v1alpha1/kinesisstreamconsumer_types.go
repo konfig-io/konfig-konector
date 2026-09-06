@@ -39,6 +39,9 @@ type KinesisStreamConsumerSpec struct {
 
 // KinesisStreamConsumerStatus defines the observed state of KinesisStreamConsumer.
 type KinesisStreamConsumerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConsumerARN is the ARN of the registered consumer.
 	// +optional
 	ConsumerARN string `json:"consumerARN,omitempty"`

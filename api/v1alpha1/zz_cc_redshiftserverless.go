@@ -162,7 +162,8 @@ func (o *RedshiftServerlessNamespace) CloudControlSpec() interface{} { return &o
 func (o *RedshiftServerlessNamespace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftServerlessNamespace) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftServerlessNamespace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftServerlessNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftServerlessNamespaceNamespace is a nested property type of AWS::RedshiftServerless::Namespace.
 type RedshiftServerlessNamespaceNamespace struct {
@@ -297,7 +298,8 @@ func (o *RedshiftServerlessSnapshot) CloudControlSpec() interface{} { return &o.
 func (o *RedshiftServerlessSnapshot) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftServerlessSnapshot) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftServerlessSnapshot) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftServerlessSnapshot) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftServerlessSnapshotSnapshot is a nested property type of AWS::RedshiftServerless::Snapshot.
 type RedshiftServerlessSnapshotSnapshot struct {
@@ -473,7 +475,8 @@ func (o *RedshiftServerlessWorkgroup) CloudControlSpec() interface{} { return &o
 func (o *RedshiftServerlessWorkgroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftServerlessWorkgroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftServerlessWorkgroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftServerlessWorkgroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftServerlessWorkgroupConfigParameter is a nested property type of AWS::RedshiftServerless::Workgroup.
 type RedshiftServerlessWorkgroupConfigParameter struct {

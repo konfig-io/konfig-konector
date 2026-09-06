@@ -137,7 +137,8 @@ func (o *OSISPipeline) CloudControlSpec() interface{} { return &o.Spec }
 func (o *OSISPipeline) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OSISPipeline) CloudControlObserved() interface{} { return &o.Status }
+func (o *OSISPipeline) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OSISPipeline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // OSISPipelineBufferOptions is a nested property type of AWS::OSIS::Pipeline.
 type OSISPipelineBufferOptions struct {

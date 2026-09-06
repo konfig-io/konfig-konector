@@ -50,6 +50,9 @@ type KMSAliasSpec struct {
 
 // KMSAliasStatus defines the observed state of KMSAlias.
 type KMSAliasStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the alias.
 	// +optional
 	ARN string `json:"arn,omitempty"`

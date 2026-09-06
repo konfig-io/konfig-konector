@@ -57,6 +57,9 @@ type InspectorResourceStatus struct {
 
 // InspectorEnablerStatus defines the observed state of InspectorEnabler.
 type InspectorEnablerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccountID is the AWS account whose Inspector status is managed.
 	// +optional
 	AccountID string `json:"accountId,omitempty"`

@@ -54,6 +54,9 @@ type LatticeServiceSpec struct {
 
 // LatticeServiceStatus defines the observed state of LatticeService.
 type LatticeServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the service.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -89,6 +89,9 @@ func (o *NetworkFirewallLoggingConfiguration) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkFirewallLoggingConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkFirewallLoggingConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkFirewallLoggingConfigurationLoggingConfiguration is a nested property type of AWS::NetworkFirewall::LoggingConfiguration.
 type NetworkFirewallLoggingConfigurationLoggingConfiguration struct {
@@ -182,6 +185,9 @@ func (o *NetworkFirewallTLSInspectionConfiguration) CloudControlStatusRef() *Clo
 }
 func (o *NetworkFirewallTLSInspectionConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NetworkFirewallTLSInspectionConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // NetworkFirewallTLSInspectionConfigurationTLSInspectionConfiguration is a nested property type of AWS::NetworkFirewall::TLSInspectionConfiguration.
@@ -346,6 +352,9 @@ func (o *NetworkFirewallVpcEndpointAssociation) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkFirewallVpcEndpointAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkFirewallVpcEndpointAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkFirewallVpcEndpointAssociationSubnetMapping is a nested property type of AWS::NetworkFirewall::VpcEndpointAssociation.
 type NetworkFirewallVpcEndpointAssociationSubnetMapping struct {

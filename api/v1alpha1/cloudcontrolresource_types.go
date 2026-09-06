@@ -61,6 +61,9 @@ type CloudControlResourceSpec struct {
 
 // CloudControlResourceStatus defines the observed state of CloudControlResource.
 type CloudControlResourceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Identifier is the Cloud Control primary identifier of the resource.
 	// +optional
 	Identifier string `json:"identifier,omitempty"`
@@ -73,6 +76,10 @@ type CloudControlResourceStatus struct {
 	// OperationStatus is the last reported operation status.
 	// +optional
 	OperationStatus string `json:"operationStatus,omitempty"`
+	// Attempt counts failed create/delete requests; it salts the Cloud Control
+	// idempotency token so a retry is not served the cached failure.
+	// +optional
+	Attempt int32 `json:"attempt,omitempty"`
 	// Properties is the live resource model as returned by GetResource.
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional

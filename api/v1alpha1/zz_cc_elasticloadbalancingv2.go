@@ -106,7 +106,8 @@ func (o *ELBv2TrustStore) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ELBv2TrustStore) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ELBv2TrustStore) CloudControlObserved() interface{} { return &o.Status }
+func (o *ELBv2TrustStore) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ELBv2TrustStore) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ELBv2TrustStoreRevocationSpec is the desired state of AWS::ElasticLoadBalancingV2::TrustStoreRevocation.
 type ELBv2TrustStoreRevocationSpec struct {
@@ -174,7 +175,8 @@ func (o *ELBv2TrustStoreRevocation) CloudControlSpec() interface{} { return &o.S
 func (o *ELBv2TrustStoreRevocation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ELBv2TrustStoreRevocation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ELBv2TrustStoreRevocation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ELBv2TrustStoreRevocation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ELBv2TrustStoreRevocationRevocationContent is a nested property type of AWS::ElasticLoadBalancingV2::TrustStoreRevocation.
 type ELBv2TrustStoreRevocationRevocationContent struct {

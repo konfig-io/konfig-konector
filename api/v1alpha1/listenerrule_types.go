@@ -70,6 +70,9 @@ type ListenerRuleSpec struct {
 
 // ListenerRuleStatus defines the observed state of ListenerRule.
 type ListenerRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the listener rule.
 	// +optional
 	ARN string `json:"arn,omitempty"`

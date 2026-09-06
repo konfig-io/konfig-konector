@@ -117,7 +117,8 @@ func (o *NetworkFlowMonitorMonitor) CloudControlSpec() interface{} { return &o.S
 func (o *NetworkFlowMonitorMonitor) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkFlowMonitorMonitor) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkFlowMonitorMonitor) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkFlowMonitorMonitor) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkFlowMonitorMonitorMonitorLocalResource is a nested property type of AWS::NetworkFlowMonitor::Monitor.
 type NetworkFlowMonitorMonitorMonitorLocalResource struct {

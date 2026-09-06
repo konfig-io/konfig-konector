@@ -68,6 +68,9 @@ type ScalableTargetSpec struct {
 
 // ScalableTargetStatus defines the observed state of ScalableTarget.
 type ScalableTargetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ScalableTargetARN is the ARN of the scalable target.
 	// +optional
 	ScalableTargetARN string `json:"scalableTargetArn,omitempty"`

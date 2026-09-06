@@ -77,7 +77,8 @@ func (o *SQSQueueInlinePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SQSQueueInlinePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SQSQueueInlinePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SQSQueueInlinePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SQSQueueInlinePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&SQSQueueInlinePolicy{}, &SQSQueueInlinePolicyList{})

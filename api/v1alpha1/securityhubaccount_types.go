@@ -49,6 +49,9 @@ type SecurityHubAccountSpec struct {
 
 // SecurityHubAccountStatus defines the observed state of SecurityHubAccount.
 type SecurityHubAccountStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HubARN is the ARN of the Hub resource.
 	// +optional
 	HubARN string `json:"hubArn,omitempty"`

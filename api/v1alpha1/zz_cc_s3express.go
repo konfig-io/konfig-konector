@@ -127,7 +127,8 @@ func (o *S3ExpressAccessPoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3ExpressAccessPoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3ExpressAccessPoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3ExpressAccessPoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3ExpressAccessPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3ExpressAccessPointVpcConfiguration is a nested property type of AWS::S3Express::AccessPoint.
 type S3ExpressAccessPointVpcConfiguration struct {
@@ -234,7 +235,8 @@ func (o *S3ExpressBucketPolicy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *S3ExpressBucketPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3ExpressBucketPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3ExpressBucketPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3ExpressBucketPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3ExpressDirectoryBucketSpec is the desired state of AWS::S3Express::DirectoryBucket.
 type S3ExpressDirectoryBucketSpec struct {
@@ -332,7 +334,8 @@ func (o *S3ExpressDirectoryBucket) CloudControlSpec() interface{} { return &o.Sp
 func (o *S3ExpressDirectoryBucket) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3ExpressDirectoryBucket) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3ExpressDirectoryBucket) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3ExpressDirectoryBucket) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3ExpressDirectoryBucketBucketEncryption is a nested property type of AWS::S3Express::DirectoryBucket.
 type S3ExpressDirectoryBucketBucketEncryption struct {

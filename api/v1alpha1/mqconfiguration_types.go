@@ -55,6 +55,9 @@ type MQConfigurationSpec struct {
 
 // MQConfigurationStatus defines the observed state of MQConfiguration.
 type MQConfigurationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConfigurationID is the unique ID Amazon MQ generates for the configuration.
 	// +optional
 	ConfigurationID string `json:"configurationId,omitempty"`

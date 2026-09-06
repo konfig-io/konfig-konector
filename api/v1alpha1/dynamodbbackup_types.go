@@ -39,6 +39,9 @@ type DynamoDBBackupSpec struct {
 
 // DynamoDBBackupStatus defines the observed state of DynamoDBBackup.
 type DynamoDBBackupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// BackupARN is the ARN of the backup.
 	// +optional
 	BackupARN string `json:"backupArn,omitempty"`

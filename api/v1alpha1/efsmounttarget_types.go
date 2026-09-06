@@ -49,6 +49,9 @@ type EFSMountTargetSpec struct {
 
 // EFSMountTargetStatus defines the observed state of EFSMountTarget.
 type EFSMountTargetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// MountTargetID is the ID of the mount target.
 	// +optional
 	MountTargetID string `json:"mountTargetId,omitempty"`

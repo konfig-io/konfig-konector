@@ -68,6 +68,9 @@ type EC2InstanceSpec struct {
 
 // EC2InstanceStatus defines the observed state of EC2Instance.
 type EC2InstanceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// InstanceID is the EC2 instance ID.
 	// +optional
 	InstanceID string `json:"instanceId,omitempty"`

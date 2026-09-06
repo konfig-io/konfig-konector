@@ -99,7 +99,8 @@ func (o *DocDBDBClusterParameterGroup) CloudControlSpec() interface{} { return &
 func (o *DocDBDBClusterParameterGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DocDBDBClusterParameterGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *DocDBDBClusterParameterGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DocDBDBClusterParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DocDBDBSubnetGroupSpec is the desired state of AWS::DocDB::DBSubnetGroup.
 type DocDBDBSubnetGroupSpec struct {
@@ -163,7 +164,8 @@ func (o *DocDBDBSubnetGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DocDBDBSubnetGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DocDBDBSubnetGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *DocDBDBSubnetGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DocDBDBSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DocDBEventSubscriptionSpec is the desired state of AWS::DocDB::EventSubscription.
 type DocDBEventSubscriptionSpec struct {
@@ -241,7 +243,8 @@ func (o *DocDBEventSubscription) CloudControlSpec() interface{} { return &o.Spec
 func (o *DocDBEventSubscription) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DocDBEventSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *DocDBEventSubscription) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DocDBEventSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DocDBGlobalClusterSpec is the desired state of AWS::DocDB::GlobalCluster.
 type DocDBGlobalClusterSpec struct {
@@ -339,7 +342,8 @@ func (o *DocDBGlobalCluster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DocDBGlobalCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DocDBGlobalCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *DocDBGlobalCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DocDBGlobalCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&DocDBDBClusterParameterGroup{}, &DocDBDBClusterParameterGroupList{})

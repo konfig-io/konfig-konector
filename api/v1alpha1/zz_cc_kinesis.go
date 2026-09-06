@@ -79,7 +79,8 @@ func (o *KinesisResourcePolicy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *KinesisResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *KinesisResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *KinesisResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *KinesisResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&KinesisResourcePolicy{}, &KinesisResourcePolicyList{})

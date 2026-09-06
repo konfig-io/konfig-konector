@@ -87,6 +87,9 @@ type LaunchTemplateSpec struct {
 
 // LaunchTemplateStatus defines the observed state of LaunchTemplate.
 type LaunchTemplateStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// LaunchTemplateID is the AWS Launch Template identifier.
 	// +optional
 	LaunchTemplateID string `json:"launchTemplateId,omitempty"`

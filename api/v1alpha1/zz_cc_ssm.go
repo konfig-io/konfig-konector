@@ -119,7 +119,8 @@ func (o *SSMCloudConnector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMCloudConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMCloudConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMCloudConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMCloudConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMCloudConnectorCloudConnectorConfiguration is a nested property type of AWS::SSM::CloudConnector.
 type SSMCloudConnectorCloudConnectorConfiguration struct {
@@ -242,7 +243,8 @@ func (o *SSMMaintenanceWindowTarget) CloudControlSpec() interface{} { return &o.
 func (o *SSMMaintenanceWindowTarget) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMMaintenanceWindowTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMMaintenanceWindowTarget) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMMaintenanceWindowTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMMaintenanceWindowTargetTargets is a nested property type of AWS::SSM::MaintenanceWindowTarget.
 type SSMMaintenanceWindowTargetTargets struct {
@@ -365,7 +367,8 @@ func (o *SSMMaintenanceWindowTask) CloudControlSpec() interface{} { return &o.Sp
 func (o *SSMMaintenanceWindowTask) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMMaintenanceWindowTask) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMMaintenanceWindowTask) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMMaintenanceWindowTask) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMMaintenanceWindowTaskTarget is a nested property type of AWS::SSM::MaintenanceWindowTask.
 type SSMMaintenanceWindowTaskTarget struct {
@@ -603,6 +606,7 @@ func (o *SSMOpsItem) CloudControlTypeName() string               { return "AWS::
 func (o *SSMOpsItem) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *SSMOpsItem) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *SSMOpsItem) CloudControlObserved() interface{}          { return &o.Status }
+func (o *SSMOpsItem) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // SSMResourceDataSyncSpec is the desired state of AWS::SSM::ResourceDataSync.
 type SSMResourceDataSyncSpec struct {
@@ -691,7 +695,8 @@ func (o *SSMResourceDataSync) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMResourceDataSync) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMResourceDataSync) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMResourceDataSync) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMResourceDataSync) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMResourceDataSyncS3Destination is a nested property type of AWS::SSM::ResourceDataSync.
 type SSMResourceDataSyncS3Destination struct {
@@ -804,7 +809,8 @@ func (o *SSMResourcePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMServiceSettingSpec is the desired state of AWS::SSM::ServiceSetting.
 type SSMServiceSettingSpec struct {
@@ -883,7 +889,8 @@ func (o *SSMServiceSetting) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMServiceSetting) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMServiceSetting) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMServiceSetting) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMServiceSetting) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&SSMCloudConnector{}, &SSMCloudConnectorList{})

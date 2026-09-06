@@ -54,6 +54,9 @@ type GlueDatabaseSpec struct {
 
 // GlueDatabaseStatus defines the observed state of GlueDatabase.
 type GlueDatabaseStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DatabaseName is the name of the database in the Glue Data Catalog.
 	// +optional
 	DatabaseName string `json:"databaseName,omitempty"`

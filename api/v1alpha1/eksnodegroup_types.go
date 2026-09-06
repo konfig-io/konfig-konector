@@ -173,6 +173,9 @@ type EKSNodeGroupSpec struct {
 
 // EKSNodeGroupStatus defines the observed state of EKSNodeGroup.
 type EKSNodeGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NodegroupArn is the ARN of the node group.
 	// +optional
 	NodegroupArn string `json:"nodegroupArn,omitempty"`

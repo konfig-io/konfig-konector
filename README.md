@@ -6,7 +6,7 @@ konfig-konector is a Kubernetes operator that lets you declare AWS resources —
 
 Think of it as [Google Config Connector](https://cloud.google.com/config-connector/docs/overview), but for AWS and purpose-built for EKS teams who want to manage cloud infrastructure the same way they manage applications.
 
-**Contents:** [Supported Resources](#supported-resources) · [Installation](#installation) · [Usage](#usage) · [Multi-account](#multi-account-and-cross-account) · [Cross-resource References](#cross-resource-references) · [Exporting an Existing Account](#exporting-an-existing-account) · [Drift Detection](#drift-detection) · [Architecture](#architecture) · [Building from Source](#building-from-source) · [Contributing](#contributing)
+**Contents:** [Supported Resources](#supported-resources) · [Installation](#installation) · [Usage](#usage) · [Multi-account](#multi-account-and-cross-account) · [Cross-resource References](#cross-resource-references) · [Local Development](#local-development-and-smoke-test) · [Exporting an Existing Account](#exporting-an-existing-account) · [Drift Detection](#drift-detection) · [Architecture](#architecture) · [Building from Source](#building-from-source) · [Contributing](#contributing)
 
 ## Why konfig-konector?
 
@@ -467,7 +467,11 @@ only report `Ready` once AWS confirms both sides: `VPCPeeringConnection`
 (`accepterProviderRef`), `TransitGatewayVpcAttachment` (`accepterProviderRef`),
 `ResourceShareInvitation`, `HostedZoneVPCAssociation` (`vpcProviderRef`) and
 `VPCEndpointService`. The `terraform/spoke` module creates the per-account role.
-Full details in [docs/multi-account.md](docs/multi-account.md).
+Every resource records the account and region it landed in under
+`status.awsProvider`; an `AWSProvider` cannot be deleted while resources reference
+it; and `--set webhook.enabled=true` adds an admission webhook that rejects
+`providerRef`s a namespace is not allowed to use. Full details in
+[docs/multi-account.md](docs/multi-account.md).
 
 ## Cross-resource References
 
@@ -521,16 +525,27 @@ status:
   dbInstanceStatus: available
   endpoint: my-db.abc123.us-east-1.rds.amazonaws.com
   port: 3306
+  awsProvider:            # which account/region this resource was reconciled against
+    name: prod            # empty when the operator's own credentials were used
+    accountId: "111122223333"
+    region: us-east-1
   observedGeneration: 1
   lastSyncTime: "2026-01-01T00:00:00Z"
 ```
+
+Under Argo CD, apply [`argocd/health-customizations.yaml`](argocd/health-customizations.yaml)
+so the `Ready` condition drives the Healthy/Progressing state in the UI (see
+[docs/argocd.md](docs/argocd.md)).
 
 ## Exporting an Existing Account
 
 `konfig-export` walks an AWS account (one region) and renders every supported
 resource as CR YAML — the equivalent of GCP Config Connector's
 `config-connector export`. It is strictly read-only (List/Describe/Get calls
-only) and covers 235 of the 241 CRD kinds.
+only) and covers the native kinds plus every generated Cloud Control kind whose
+type has a parameter-less `list` handler. It runs against one account and
+region per invocation; add `providerRef` to the output (or annotate the target
+namespace) when importing into a multi-account operator.
 
 ```bash
 make build-export
@@ -617,12 +632,21 @@ DBInstance, DBCluster, LaunchTemplate, ElastiCacheReplicationGroup. These resour
 Every controller follows the same pattern:
 
 1. Fetch the CR; if not found, return (already deleted)
-2. If `DeletionTimestamp` is set → delete the AWS resource, remove finalizer, return
-3. Add finalizer if not present (prevents orphaned AWS resources on CR deletion)
-4. Fetch current AWS state (live — no caching)
-5. Create or update the AWS resource to match spec
-6. Write observed state (IDs, ARNs, endpoints) back to `status`
-7. Requeue after 5 minutes for drift detection
+2. Resolve the `AWSProvider` for the CR and attach its account/region scope to the
+   context; every SDK call in this reconcile runs under that scope
+3. If `DeletionTimestamp` is set → delete the AWS resource, remove finalizer, return
+4. Add finalizer if not present and return; the resulting update event drives the
+   next reconcile (creating in the same pass races the stale cache and duplicates
+   resources)
+5. Look the resource up by its deterministic name or attributes and adopt it if it
+   already exists; otherwise create it and persist the identifier immediately
+6. Update the AWS resource to match spec
+7. Write observed state (IDs, ARNs, endpoints, `awsProvider`) back to `status`
+8. Requeue after 5 minutes for drift detection
+
+Generated Cloud Control kinds share one engine (`internal/controller/cc_engine.go`)
+that renders the typed spec into a CloudFormation property document, creates or
+patches through the Cloud Control API, and polls the asynchronous request.
 
 ### Authentication
 
@@ -635,7 +659,10 @@ konfig-system/konfig-controller ServiceAccount
               └── inline policy with all required AWS permissions
 ```
 
-The Terraform module wires this up automatically.
+The Terraform module wires this up automatically. Additional accounts are reached
+by `sts:AssumeRole` into spoke roles declared as `AWSProvider` objects; the
+`terraform/spoke` module creates those roles. On clusters without Pod Identity
+(k3s, kind) the same chain reads static keys from a Secret (`aws.credentialsSecret`).
 
 ## Helm Chart Reference
 
@@ -645,7 +672,14 @@ The Terraform module wires this up automatically.
 | `image.tag` | `latest` | Image tag |
 | `image.pullPolicy` | `Always` | Image pull policy |
 | `aws.region` | `us-east-1` | AWS region for the operator |
-| `operatorRoleArn` | **required** | IAM role ARN for EKS Pod Identity |
+| `aws.credentialsSecret` | `""` | Secret with `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` for clusters without Pod Identity |
+| `operatorRoleArn` | **required** on EKS | IAM role ARN for EKS Pod Identity |
+| `providers` | `[]` | `AWSProvider` objects to render (`name`, `roleArn`, `region`, `default`, `externalId`, `allowedNamespaces`, ...) |
+| `webhook.enabled` | `false` | Serve the `providerRef` validating admission webhook |
+| `webhook.certManager` | `true` | Create a self-signed Issuer + Certificate and inject the CA (needs cert-manager) |
+| `webhook.secretName` | `konfig-konector-webhook-tls` | TLS Secret for the webhook server |
+| `webhook.caBundle` | `""` | Base64 CA bundle when not using cert-manager |
+| `webhook.failurePolicy` | `Fail` | Webhook failure policy |
 | `replicaCount` | `1` | Number of controller replicas |
 | `leaderElection` | `true` | Enable leader election (required for `replicaCount > 1`) |
 | `serviceAccount.create` | `true` | Create the `ServiceAccount` |
@@ -685,6 +719,13 @@ module "konfig_konector" {
 | `operator_namespace` | no | `konfig-system` | Kubernetes namespace |
 | `operator_service_account` | no | `konfig-controller` | ServiceAccount name |
 | `allowed_iam_resource_paths` | no | `/konfig/` | IAM path prefix the operator may manage |
+| `spoke_role_arns` | no | `[]` | Roles in other accounts the operator may assume (multi-account); create them with `terraform/spoke` |
+
+### Spoke module (`terraform/spoke`)
+
+Apply once per additional account. It creates a role trusted by the hub operator
+role (optionally gated by `external_id`) with the given `policy_arns`, and
+outputs `spoke_role_arn` for `AWSProvider.spec.roleArn`.
 
 ### Outputs
 

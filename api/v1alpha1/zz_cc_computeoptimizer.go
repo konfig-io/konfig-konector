@@ -142,6 +142,9 @@ func (o *ComputeOptimizerAutomationRule) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ComputeOptimizerAutomationRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *ComputeOptimizerAutomationRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ComputeOptimizerAutomationRuleOrganizationConfiguration is a nested property type of AWS::ComputeOptimizer::AutomationRule.
 type ComputeOptimizerAutomationRuleOrganizationConfiguration struct {

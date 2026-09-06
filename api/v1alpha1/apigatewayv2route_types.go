@@ -92,6 +92,9 @@ type APIGatewayV2RouteSpec struct {
 
 // APIGatewayV2RouteStatus defines the observed state of APIGatewayV2Route.
 type APIGatewayV2RouteStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RouteID is the route identifier.
 	// +optional
 	RouteID string `json:"routeId,omitempty"`

@@ -115,7 +115,8 @@ func (o *BackupFramework) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BackupFramework) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BackupFramework) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupFramework) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BackupFramework) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BackupFrameworkFrameworkControl is a nested property type of AWS::Backup::Framework.
 type BackupFrameworkFrameworkControl struct {
@@ -237,7 +238,8 @@ func (o *BackupLegalHold) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BackupLegalHold) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BackupLegalHold) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupLegalHold) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BackupLegalHold) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BackupLegalHoldRecoveryPointSelection is a nested property type of AWS::Backup::LegalHold.
 type BackupLegalHoldRecoveryPointSelection struct {
@@ -362,6 +364,9 @@ func (o *BackupLogicallyAirGappedBackupVault) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *BackupLogicallyAirGappedBackupVault) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupLogicallyAirGappedBackupVault) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BackupLogicallyAirGappedBackupVaultNotificationObjectType is a nested property type of AWS::Backup::LogicallyAirGappedBackupVault.
 type BackupLogicallyAirGappedBackupVaultNotificationObjectType struct {
@@ -443,7 +448,8 @@ func (o *BackupReportPlan) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BackupReportPlan) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BackupReportPlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupReportPlan) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BackupReportPlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BackupReportPlanReportDeliveryChannel is a nested property type of AWS::Backup::ReportPlan.
 type BackupReportPlanReportDeliveryChannel struct {
@@ -551,7 +557,8 @@ func (o *BackupRestoreTestingPlan) CloudControlSpec() interface{} { return &o.Sp
 func (o *BackupRestoreTestingPlan) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BackupRestoreTestingPlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupRestoreTestingPlan) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BackupRestoreTestingPlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BackupRestoreTestingPlanRestoreTestingRecoveryPointSelection is a nested property type of AWS::Backup::RestoreTestingPlan.
 type BackupRestoreTestingPlanRestoreTestingRecoveryPointSelection struct {
@@ -642,6 +649,9 @@ func (o *BackupRestoreTestingSelection) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *BackupRestoreTestingSelection) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupRestoreTestingSelection) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BackupRestoreTestingSelectionProtectedResourceConditions is a nested property type of AWS::Backup::RestoreTestingSelection.
 type BackupRestoreTestingSelectionProtectedResourceConditions struct {
@@ -721,7 +731,8 @@ func (o *BackupTieringConfiguration) CloudControlSpec() interface{} { return &o.
 func (o *BackupTieringConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BackupTieringConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *BackupTieringConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BackupTieringConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BackupTieringConfigurationResourceSelection is a nested property type of AWS::Backup::TieringConfiguration.
 type BackupTieringConfigurationResourceSelection struct {

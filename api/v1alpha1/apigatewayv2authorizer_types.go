@@ -92,6 +92,9 @@ type APIGatewayV2AuthorizerSpec struct {
 
 // APIGatewayV2AuthorizerStatus defines the observed state of APIGatewayV2Authorizer.
 type APIGatewayV2AuthorizerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AuthorizerID is the authorizer identifier.
 	// +optional
 	AuthorizerID string `json:"authorizerId,omitempty"`

@@ -116,7 +116,8 @@ func (o *GlueBlueprint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueBlueprint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueBlueprint) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueBlueprint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueBlueprint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueCatalogSpec is the desired state of AWS::Glue::Catalog.
 type GlueCatalogSpec struct {
@@ -229,7 +230,8 @@ func (o *GlueCatalog) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueCatalog) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueCatalog) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueCatalog) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueCatalog) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueCatalogFederatedCatalog is a nested property type of AWS::Glue::Catalog.
 type GlueCatalogFederatedCatalog struct {
@@ -378,7 +380,8 @@ func (o *GlueClassifier) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueClassifier) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueClassifier) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueClassifier) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueClassifier) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueClassifierXMLClassifier is a nested property type of AWS::Glue::Classifier.
 type GlueClassifierXMLClassifier struct {
@@ -528,7 +531,8 @@ func (o *GlueCustomEntityType) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueCustomEntityType) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueCustomEntityType) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueCustomEntityType) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueCustomEntityType) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueDataCatalogEncryptionSettingsSpec is the desired state of AWS::Glue::DataCatalogEncryptionSettings.
 type GlueDataCatalogEncryptionSettingsSpec struct {
@@ -586,6 +590,9 @@ func (o *GlueDataCatalogEncryptionSettings) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *GlueDataCatalogEncryptionSettings) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueDataCatalogEncryptionSettings) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GlueDataCatalogEncryptionSettingsDataCatalogEncryptionSettings is a nested property type of AWS::Glue::DataCatalogEncryptionSettings.
 type GlueDataCatalogEncryptionSettingsDataCatalogEncryptionSettings struct {
@@ -694,7 +701,8 @@ func (o *GlueDataQualityRuleset) CloudControlSpec() interface{} { return &o.Spec
 func (o *GlueDataQualityRuleset) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueDataQualityRuleset) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueDataQualityRuleset) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueDataQualityRuleset) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueDataQualityRulesetDataQualityTargetTable is a nested property type of AWS::Glue::DataQualityRuleset.
 type GlueDataQualityRulesetDataQualityTargetTable struct {
@@ -778,6 +786,9 @@ func (o *GlueIdentityCenterConfiguration) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *GlueIdentityCenterConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueIdentityCenterConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GlueIntegrationSpec is the desired state of AWS::Glue::Integration.
 type GlueIntegrationSpec struct {
@@ -883,7 +894,8 @@ func (o *GlueIntegration) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueIntegration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueIntegration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueIntegration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueIntegrationIntegrationConfig is a nested property type of AWS::Glue::Integration.
 type GlueIntegrationIntegrationConfig struct {
@@ -969,6 +981,9 @@ func (o *GlueIntegrationResourceProperty) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *GlueIntegrationResourceProperty) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueIntegrationResourceProperty) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GlueIntegrationResourcePropertySourceProcessingProperties is a nested property type of AWS::Glue::IntegrationResourceProperty.
 type GlueIntegrationResourcePropertySourceProcessingProperties struct {
@@ -1099,7 +1114,8 @@ func (o *GlueMLTransform) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueMLTransform) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueMLTransform) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueMLTransform) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueMLTransform) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueMLTransformInputRecordTables is a nested property type of AWS::Glue::MLTransform.
 type GlueMLTransformInputRecordTables struct {
@@ -1238,7 +1254,8 @@ func (o *GlueRegistry) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueRegistry) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueRegistry) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueRegistry) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueRegistry) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueSchemaSpec is the desired state of AWS::Glue::Schema.
 type GlueSchemaSpec struct {
@@ -1332,6 +1349,7 @@ func (o *GlueSchema) CloudControlTypeName() string               { return "AWS::
 func (o *GlueSchema) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *GlueSchema) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *GlueSchema) CloudControlObserved() interface{}          { return &o.Status }
+func (o *GlueSchema) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // GlueSchemaRegistry is a nested property type of AWS::Glue::Schema.
 type GlueSchemaRegistry struct {
@@ -1417,7 +1435,8 @@ func (o *GlueSchemaVersion) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueSchemaVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueSchemaVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueSchemaVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueSchemaVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueSchemaVersionSchema is a nested property type of AWS::Glue::SchemaVersion.
 type GlueSchemaVersionSchema struct {
@@ -1501,7 +1520,8 @@ func (o *GlueSchemaVersionMetadata) CloudControlSpec() interface{} { return &o.S
 func (o *GlueSchemaVersionMetadata) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueSchemaVersionMetadata) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueSchemaVersionMetadata) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueSchemaVersionMetadata) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueSecurityConfigurationSpec is the desired state of AWS::Glue::SecurityConfiguration.
 type GlueSecurityConfigurationSpec struct {
@@ -1556,7 +1576,8 @@ func (o *GlueSecurityConfiguration) CloudControlSpec() interface{} { return &o.S
 func (o *GlueSecurityConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueSecurityConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueSecurityConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueSecurityConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueSecurityConfigurationEncryptionConfiguration is a nested property type of AWS::Glue::SecurityConfiguration.
 type GlueSecurityConfigurationEncryptionConfiguration struct {
@@ -1746,7 +1767,8 @@ func (o *GlueSession) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueSession) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueSession) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueSession) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueSession) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueSessionSessionCommand is a nested property type of AWS::Glue::Session.
 type GlueSessionSessionCommand struct {
@@ -1834,7 +1856,8 @@ func (o *GlueTableOptimizer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueTableOptimizer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueTableOptimizer) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueTableOptimizer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueTableOptimizer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueTableOptimizerTableOptimizerConfiguration is a nested property type of AWS::Glue::TableOptimizer.
 type GlueTableOptimizerTableOptimizerConfiguration struct {
@@ -2004,7 +2027,8 @@ func (o *GlueUsageProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueUsageProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueUsageProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueUsageProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueUsageProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueUsageProfileConfiguration is a nested property type of AWS::Glue::UsageProfile.
 type GlueUsageProfileConfiguration struct {
@@ -2107,7 +2131,8 @@ func (o *GlueUserDefinedFunction) CloudControlSpec() interface{} { return &o.Spe
 func (o *GlueUserDefinedFunction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueUserDefinedFunction) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueUserDefinedFunction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueUserDefinedFunction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlueUserDefinedFunctionResourceUri is a nested property type of AWS::Glue::UserDefinedFunction.
 type GlueUserDefinedFunctionResourceUri struct {
@@ -2191,7 +2216,8 @@ func (o *GlueWorkflow) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GlueWorkflow) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlueWorkflow) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlueWorkflow) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlueWorkflow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&GlueBlueprint{}, &GlueBlueprintList{})

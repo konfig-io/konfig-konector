@@ -175,7 +175,8 @@ func (o *RDSClusterSnapshot) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RDSClusterSnapshot) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSClusterSnapshot) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSClusterSnapshot) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSClusterSnapshot) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSCustomDBEngineVersionSpec is the desired state of AWS::RDS::CustomDBEngineVersion.
 type RDSCustomDBEngineVersionSpec struct {
@@ -315,7 +316,8 @@ func (o *RDSCustomDBEngineVersion) CloudControlSpec() interface{} { return &o.Sp
 func (o *RDSCustomDBEngineVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSCustomDBEngineVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSCustomDBEngineVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSCustomDBEngineVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSDBProxyEndpointSpec is the desired state of AWS::RDS::DBProxyEndpoint.
 type RDSDBProxyEndpointSpec struct {
@@ -423,7 +425,8 @@ func (o *RDSDBProxyEndpoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RDSDBProxyEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSDBProxyEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSDBProxyEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSDBProxyEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSDBProxyTargetGroupSpec is the desired state of AWS::RDS::DBProxyTargetGroup.
 type RDSDBProxyTargetGroupSpec struct {
@@ -495,7 +498,8 @@ func (o *RDSDBProxyTargetGroup) CloudControlSpec() interface{} { return &o.Spec 
 func (o *RDSDBProxyTargetGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSDBProxyTargetGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSDBProxyTargetGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSDBProxyTargetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSDBProxyTargetGroupConnectionPoolConfigurationInfoFormat is a nested property type of AWS::RDS::DBProxyTargetGroup.
 type RDSDBProxyTargetGroupConnectionPoolConfigurationInfoFormat struct {
@@ -618,7 +622,8 @@ func (o *RDSDBShardGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RDSDBShardGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSDBShardGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSDBShardGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSDBShardGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSDBSnapshotSpec is the desired state of AWS::RDS::DBSnapshot.
 type RDSDBSnapshotSpec struct {
@@ -791,7 +796,8 @@ func (o *RDSDBSnapshot) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RDSDBSnapshot) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSDBSnapshot) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSDBSnapshot) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSDBSnapshot) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RDSIntegrationSpec is the desired state of AWS::RDS::Integration.
 type RDSIntegrationSpec struct {
@@ -892,7 +898,8 @@ func (o *RDSIntegration) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RDSIntegration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RDSIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *RDSIntegration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RDSIntegration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&RDSClusterSnapshot{}, &RDSClusterSnapshotList{})

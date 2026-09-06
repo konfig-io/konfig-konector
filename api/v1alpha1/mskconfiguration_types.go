@@ -46,6 +46,9 @@ type MSKConfigurationSpec struct {
 
 // MSKConfigurationStatus defines the observed state of MSKConfiguration.
 type MSKConfigurationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ConfigurationARN is the ARN of the MSK configuration.
 	// +optional
 	ConfigurationARN string `json:"configurationARN,omitempty"`

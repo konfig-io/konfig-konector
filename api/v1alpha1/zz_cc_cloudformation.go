@@ -169,7 +169,8 @@ func (o *CloudFormationChangeSet) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudFormationChangeSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationChangeSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationChangeSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationChangeSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationChangeSetTagsItem is a nested property type of AWS::CloudFormation::ChangeSet.
 type CloudFormationChangeSetTagsItem struct {
@@ -269,6 +270,9 @@ func (o *CloudFormationGeneratedTemplate) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationGeneratedTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationGeneratedTemplate) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationGeneratedTemplateTemplateConfiguration is a nested property type of AWS::CloudFormation::GeneratedTemplate.
 type CloudFormationGeneratedTemplateTemplateConfiguration struct {
@@ -394,7 +398,8 @@ func (o *CloudFormationGuardHook) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudFormationGuardHook) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationGuardHook) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationGuardHook) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationGuardHook) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationGuardHookS3Location is a nested property type of AWS::CloudFormation::GuardHook.
 type CloudFormationGuardHookS3Location struct {
@@ -509,6 +514,9 @@ func (o *CloudFormationHookDefaultVersion) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationHookDefaultVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationHookDefaultVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationHookTypeConfigSpec is the desired state of AWS::CloudFormation::HookTypeConfig.
 type CloudFormationHookTypeConfigSpec struct {
@@ -580,7 +588,8 @@ func (o *CloudFormationHookTypeConfig) CloudControlSpec() interface{} { return &
 func (o *CloudFormationHookTypeConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationHookTypeConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationHookTypeConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationHookTypeConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationHookVersionSpec is the desired state of AWS::CloudFormation::HookVersion.
 type CloudFormationHookVersionSpec struct {
@@ -686,7 +695,8 @@ func (o *CloudFormationHookVersion) CloudControlSpec() interface{} { return &o.S
 func (o *CloudFormationHookVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationHookVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationHookVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationHookVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationHookVersionLoggingConfig is a nested property type of AWS::CloudFormation::HookVersion.
 type CloudFormationHookVersionLoggingConfig struct {
@@ -799,7 +809,8 @@ func (o *CloudFormationLambdaHook) CloudControlSpec() interface{} { return &o.Sp
 func (o *CloudFormationLambdaHook) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationLambdaHook) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationLambdaHook) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationLambdaHook) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationLambdaHookStackFilters is a nested property type of AWS::CloudFormation::LambdaHook.
 type CloudFormationLambdaHookStackFilters struct {
@@ -915,6 +926,9 @@ func (o *CloudFormationModuleDefaultVersion) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationModuleDefaultVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationModuleDefaultVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationModuleVersionSpec is the desired state of AWS::CloudFormation::ModuleVersion.
 type CloudFormationModuleVersionSpec struct {
@@ -1018,7 +1032,8 @@ func (o *CloudFormationModuleVersion) CloudControlSpec() interface{} { return &o
 func (o *CloudFormationModuleVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationModuleVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationModuleVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationModuleVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationPublicTypeVersionSpec is the desired state of AWS::CloudFormation::PublicTypeVersion.
 type CloudFormationPublicTypeVersionSpec struct {
@@ -1113,6 +1128,9 @@ func (o *CloudFormationPublicTypeVersion) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationPublicTypeVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationPublicTypeVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationPublisherSpec is the desired state of AWS::CloudFormation::Publisher.
 type CloudFormationPublisherSpec struct {
@@ -1199,7 +1217,8 @@ func (o *CloudFormationPublisher) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudFormationPublisher) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationPublisher) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationPublisher) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationPublisher) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationResourceDefaultVersionSpec is the desired state of AWS::CloudFormation::ResourceDefaultVersion.
 type CloudFormationResourceDefaultVersionSpec struct {
@@ -1268,6 +1287,9 @@ func (o *CloudFormationResourceDefaultVersion) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationResourceDefaultVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationResourceDefaultVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationResourceVersionSpec is the desired state of AWS::CloudFormation::ResourceVersion.
 type CloudFormationResourceVersionSpec struct {
@@ -1379,6 +1401,9 @@ func (o *CloudFormationResourceVersion) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFormationResourceVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationResourceVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFormationResourceVersionLoggingConfig is a nested property type of AWS::CloudFormation::ResourceVersion.
 type CloudFormationResourceVersionLoggingConfig struct {
@@ -1500,7 +1525,8 @@ func (o *CloudFormationTypeActivation) CloudControlSpec() interface{} { return &
 func (o *CloudFormationTypeActivation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFormationTypeActivation) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFormationTypeActivation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFormationTypeActivation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFormationTypeActivationLoggingConfig is a nested property type of AWS::CloudFormation::TypeActivation.
 type CloudFormationTypeActivationLoggingConfig struct {

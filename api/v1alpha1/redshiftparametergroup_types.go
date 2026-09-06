@@ -66,6 +66,9 @@ type RedshiftParameterGroupSpec struct {
 // RedshiftParameterGroupStatus defines the observed state of
 // RedshiftParameterGroup.
 type RedshiftParameterGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ParameterGroupName is the name of the parameter group in AWS.
 	// +optional
 	ParameterGroupName string `json:"parameterGroupName,omitempty"`

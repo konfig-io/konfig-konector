@@ -93,6 +93,9 @@ func (o *OpenSearchServerlessAccessPolicy) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessAccessPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessAccessPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessCollectionGroupSpec is the desired state of AWS::OpenSearchServerless::CollectionGroup.
 type OpenSearchServerlessCollectionGroupSpec struct {
@@ -185,6 +188,9 @@ func (o *OpenSearchServerlessCollectionGroup) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessCollectionGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessCollectionGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessCollectionGroupCapacityLimits is a nested property type of AWS::OpenSearchServerless::CollectionGroup.
 type OpenSearchServerlessCollectionGroupCapacityLimits struct {
@@ -273,6 +279,9 @@ func (o *OpenSearchServerlessCollectionIndex) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessCollectionIndex) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessCollectionIndex) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessIndexSpec is the desired state of AWS::OpenSearchServerless::Index.
 type OpenSearchServerlessIndexSpec struct {
@@ -343,7 +352,8 @@ func (o *OpenSearchServerlessIndex) CloudControlSpec() interface{} { return &o.S
 func (o *OpenSearchServerlessIndex) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OpenSearchServerlessIndex) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessIndex) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OpenSearchServerlessIndex) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // OpenSearchServerlessIndexIndexSettings is a nested property type of AWS::OpenSearchServerless::Index.
 type OpenSearchServerlessIndexIndexSettings struct {
@@ -554,6 +564,9 @@ func (o *OpenSearchServerlessLifecyclePolicy) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessLifecyclePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessLifecyclePolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessSecurityConfigSpec is the desired state of AWS::OpenSearchServerless::SecurityConfig.
 type OpenSearchServerlessSecurityConfigSpec struct {
@@ -633,6 +646,9 @@ func (o *OpenSearchServerlessSecurityConfig) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessSecurityConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessSecurityConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessSecurityConfigSamlConfigOptions is a nested property type of AWS::OpenSearchServerless::SecurityConfig.
 type OpenSearchServerlessSecurityConfigSamlConfigOptions struct {
@@ -763,6 +779,9 @@ func (o *OpenSearchServerlessSecurityPolicy) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessSecurityPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessSecurityPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // OpenSearchServerlessVpcEndpointSpec is the desired state of AWS::OpenSearchServerless::VpcEndpoint.
 type OpenSearchServerlessVpcEndpointSpec struct {
@@ -838,6 +857,9 @@ func (o *OpenSearchServerlessVpcEndpoint) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *OpenSearchServerlessVpcEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchServerlessVpcEndpoint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&OpenSearchServerlessAccessPolicy{}, &OpenSearchServerlessAccessPolicyList{})

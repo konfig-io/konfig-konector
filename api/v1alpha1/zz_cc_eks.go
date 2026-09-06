@@ -140,7 +140,8 @@ func (o *EKSCapability) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EKSCapability) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EKSCapability) CloudControlObserved() interface{} { return &o.Status }
+func (o *EKSCapability) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EKSCapability) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EKSCapabilityCapabilityConfiguration is a nested property type of AWS::EKS::Capability.
 type EKSCapabilityCapabilityConfiguration struct {
@@ -338,7 +339,8 @@ func (o *EKSCertificateAuthority) CloudControlSpec() interface{} { return &o.Spe
 func (o *EKSCertificateAuthority) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EKSCertificateAuthority) CloudControlObserved() interface{} { return &o.Status }
+func (o *EKSCertificateAuthority) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EKSCertificateAuthority) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EKSCertificateAuthorityValidity is a nested property type of AWS::EKS::CertificateAuthority.
 type EKSCertificateAuthorityValidity struct {

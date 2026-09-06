@@ -136,7 +136,8 @@ func (o *CloudHSMCluster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudHSMCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudHSMCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudHSMCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudHSMCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudHSMClusterBackupRetentionPolicy is a nested property type of AWS::CloudHSM::Cluster.
 type CloudHSMClusterBackupRetentionPolicy struct {

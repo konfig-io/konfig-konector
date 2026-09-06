@@ -83,6 +83,9 @@ func (o *NotificationsChannelAssociation) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *NotificationsChannelAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *NotificationsChannelAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NotificationsEventRuleSpec is the desired state of AWS::Notifications::EventRule.
 type NotificationsEventRuleSpec struct {
@@ -168,7 +171,8 @@ func (o *NotificationsEventRule) CloudControlSpec() interface{} { return &o.Spec
 func (o *NotificationsEventRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NotificationsEventRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *NotificationsEventRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NotificationsEventRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NotificationsEventRuleEventRuleStatusSummary is a nested property type of AWS::Notifications::EventRule.
 type NotificationsEventRuleEventRuleStatusSummary struct {
@@ -241,6 +245,9 @@ func (o *NotificationsManagedNotificationAccountContactAssociation) CloudControl
 func (o *NotificationsManagedNotificationAccountContactAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *NotificationsManagedNotificationAccountContactAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NotificationsManagedNotificationAdditionalChannelAssociationSpec is the desired state of AWS::Notifications::ManagedNotificationAdditionalChannelAssociation.
 type NotificationsManagedNotificationAdditionalChannelAssociationSpec struct {
@@ -307,6 +314,9 @@ func (o *NotificationsManagedNotificationAdditionalChannelAssociation) CloudCont
 }
 func (o *NotificationsManagedNotificationAdditionalChannelAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NotificationsManagedNotificationAdditionalChannelAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // NotificationsNotificationConfigurationSpec is the desired state of AWS::Notifications::NotificationConfiguration.
@@ -386,6 +396,9 @@ func (o *NotificationsNotificationConfiguration) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *NotificationsNotificationConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *NotificationsNotificationConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NotificationsNotificationHubSpec is the desired state of AWS::Notifications::NotificationHub.
 type NotificationsNotificationHubSpec struct {
@@ -447,7 +460,8 @@ func (o *NotificationsNotificationHub) CloudControlSpec() interface{} { return &
 func (o *NotificationsNotificationHub) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NotificationsNotificationHub) CloudControlObserved() interface{} { return &o.Status }
+func (o *NotificationsNotificationHub) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NotificationsNotificationHub) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NotificationsNotificationHubNotificationHubStatusSummary is a nested property type of AWS::Notifications::NotificationHub.
 type NotificationsNotificationHubNotificationHubStatusSummary struct {
@@ -518,6 +532,9 @@ func (o *NotificationsOrganizationalUnitAssociation) CloudControlStatusRef() *Cl
 }
 func (o *NotificationsOrganizationalUnitAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NotificationsOrganizationalUnitAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 func init() {

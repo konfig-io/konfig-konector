@@ -85,7 +85,8 @@ func (o *RolesAnywhereCRL) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RolesAnywhereCRL) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RolesAnywhereCRL) CloudControlObserved() interface{} { return &o.Status }
+func (o *RolesAnywhereCRL) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RolesAnywhereCRL) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RolesAnywhereProfileSpec is the desired state of AWS::RolesAnywhere::Profile.
 type RolesAnywhereProfileSpec struct {
@@ -168,7 +169,8 @@ func (o *RolesAnywhereProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RolesAnywhereProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RolesAnywhereProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *RolesAnywhereProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RolesAnywhereProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RolesAnywhereProfileAttributeMapping is a nested property type of AWS::RolesAnywhere::Profile.
 type RolesAnywhereProfileAttributeMapping struct {
@@ -250,7 +252,8 @@ func (o *RolesAnywhereTrustAnchor) CloudControlSpec() interface{} { return &o.Sp
 func (o *RolesAnywhereTrustAnchor) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RolesAnywhereTrustAnchor) CloudControlObserved() interface{} { return &o.Status }
+func (o *RolesAnywhereTrustAnchor) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RolesAnywhereTrustAnchor) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RolesAnywhereTrustAnchorNotificationSetting is a nested property type of AWS::RolesAnywhere::TrustAnchor.
 type RolesAnywhereTrustAnchorNotificationSetting struct {

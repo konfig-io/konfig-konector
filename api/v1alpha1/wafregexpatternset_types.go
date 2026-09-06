@@ -52,6 +52,9 @@ type WAFRegexPatternSetSpec struct {
 
 // WAFRegexPatternSetStatus defines the observed state of WAFRegexPatternSet.
 type WAFRegexPatternSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the identifier of the regex pattern set.
 	// +optional
 	ID string `json:"id,omitempty"`

@@ -80,6 +80,9 @@ type LambdaFunctionURLSpec struct {
 
 // LambdaFunctionURLStatus defines the observed state of LambdaFunctionURL.
 type LambdaFunctionURLStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionURL is the URL for the function.
 	// +optional
 	FunctionURL string `json:"functionUrl,omitempty"`

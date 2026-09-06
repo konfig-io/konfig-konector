@@ -65,6 +65,9 @@ type ResolverRuleSpec struct {
 
 // ResolverRuleStatus defines the observed state of ResolverRule.
 type ResolverRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RuleID is the unique identifier of the rule.
 	// +optional
 	RuleID string `json:"ruleID,omitempty"`

@@ -27,7 +27,7 @@ import (
 func init() {
 	RegisterSetup(func(mgr ctrl.Manager, clients *awsclient.Clients) error {
 		if err := (&AWSProviderReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),
-			STSClient: clients.STS, Resolver: providerResolver}).SetupWithManager(mgr); err != nil {
+			STSClient: clients.STS, Resolver: providerResolver, Reader: mgr.GetAPIReader()}).SetupWithManager(mgr); err != nil {
 			return fmt.Errorf("AWSProvider: %w", err)
 		}
 		if err := (&ResourceShareInvitationReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),

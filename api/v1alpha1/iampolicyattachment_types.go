@@ -37,6 +37,9 @@ type IAMPolicyAttachmentSpec struct {
 
 // IAMPolicyAttachmentStatus defines the observed state of IAMPolicyAttachment.
 type IAMPolicyAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Attached indicates whether the policy is currently attached.
 	// +optional
 	Attached bool `json:"attached,omitempty"`

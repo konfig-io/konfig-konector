@@ -133,7 +133,8 @@ func (o *KafkaConnectConnector) CloudControlSpec() interface{} { return &o.Spec 
 func (o *KafkaConnectConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *KafkaConnectConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *KafkaConnectConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *KafkaConnectConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // KafkaConnectConnectorCapacity is a nested property type of AWS::KafkaConnect::Connector.
 type KafkaConnectConnectorCapacity struct {
@@ -387,7 +388,8 @@ func (o *KafkaConnectCustomPlugin) CloudControlSpec() interface{} { return &o.Sp
 func (o *KafkaConnectCustomPlugin) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *KafkaConnectCustomPlugin) CloudControlObserved() interface{} { return &o.Status }
+func (o *KafkaConnectCustomPlugin) CloudControlObserved() interface{}   { return &o.Status }
+func (o *KafkaConnectCustomPlugin) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // KafkaConnectCustomPluginCustomPluginFileDescription is a nested property type of AWS::KafkaConnect::CustomPlugin.
 type KafkaConnectCustomPluginCustomPluginFileDescription struct {
@@ -497,6 +499,9 @@ func (o *KafkaConnectWorkerConfiguration) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *KafkaConnectWorkerConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *KafkaConnectWorkerConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&KafkaConnectConnector{}, &KafkaConnectConnectorList{})

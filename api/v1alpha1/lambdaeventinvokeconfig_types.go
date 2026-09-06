@@ -66,6 +66,9 @@ type LambdaEventInvokeConfigSpec struct {
 
 // LambdaEventInvokeConfigStatus defines the observed state of LambdaEventInvokeConfig.
 type LambdaEventInvokeConfigStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionARN is the ARN of the function (with qualifier) the config applies to.
 	// +optional
 	FunctionARN string `json:"functionArn,omitempty"`

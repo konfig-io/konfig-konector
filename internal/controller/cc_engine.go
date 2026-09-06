@@ -154,6 +154,7 @@ func (r *CloudControlKindReconciler) pollRequest(ctx context.Context, obj cfn.Cl
 		}
 		msg := fmt.Sprintf("%s %s: %s (%s)", st.Operation, ev.OperationStatus, aws.ToString(ev.StatusMessage), ev.ErrorCode)
 		st.RequestToken, st.Operation = "", ""
+		st.Attempt++ // next retry must use a fresh idempotency token
 		if err := persistStatus(ctx, r.Client, obj); err != nil {
 			return false, err
 		}
@@ -248,6 +249,8 @@ func (r *CloudControlKindReconciler) trackOperation(ctx context.Context, obj cfn
 	}
 	if ev.OperationStatus == cctypes.OperationStatusFailed {
 		st.RequestToken, st.Operation = "", ""
+		st.Attempt++
+		_ = persistStatus(ctx, r.Client, obj)
 		return fmt.Errorf("%s failed: %s (%s)", op, aws.ToString(ev.StatusMessage), ev.ErrorCode)
 	}
 	if ev.OperationStatus == cctypes.OperationStatusSuccess {
@@ -308,7 +311,13 @@ func (r *CloudControlKindReconciler) deleteResource(ctx context.Context, obj cfn
 // after a crash is deduplicated while a follow-up update is not rejected with
 // ClientTokenConflictException.
 func ccClientToken(obj metav1.Object, op string) string {
-	t := fmt.Sprintf("%s-%d-%s", obj.GetUID(), obj.GetGeneration(), op)
+	attempt := int32(0)
+	if cc, ok := obj.(cfn.CloudControlObject); ok {
+		attempt = cc.CloudControlStatusRef().Attempt
+	} else if r, ok := obj.(*awsv1alpha1.CloudControlResource); ok {
+		attempt = r.Status.Attempt
+	}
+	t := fmt.Sprintf("%s-%d-%s-%d", obj.GetUID(), obj.GetGeneration(), op, attempt)
 	if len(t) > 64 {
 		t = t[len(t)-64:]
 	}

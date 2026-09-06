@@ -153,6 +153,9 @@ type EKSClusterSpec struct {
 
 // EKSClusterStatus defines the observed state of EKSCluster.
 type EKSClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterArn is the ARN of the EKS cluster.
 	// +optional
 	ClusterArn string `json:"clusterArn,omitempty"`

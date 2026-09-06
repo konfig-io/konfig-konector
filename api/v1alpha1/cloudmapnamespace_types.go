@@ -54,6 +54,9 @@ type CloudMapNamespaceSpec struct {
 
 // CloudMapNamespaceStatus defines the observed state of CloudMapNamespace.
 type CloudMapNamespaceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NamespaceID is the ID of the namespace.
 	// +optional
 	NamespaceID string `json:"namespaceId,omitempty"`

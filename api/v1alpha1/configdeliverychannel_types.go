@@ -55,6 +55,9 @@ type ConfigDeliveryChannelSpec struct {
 
 // ConfigDeliveryChannelStatus defines the observed state of ConfigDeliveryChannel.
 type ConfigDeliveryChannelStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ChannelName is the name of the delivery channel in AWS.
 	// +optional
 	ChannelName string `json:"channelName,omitempty"`

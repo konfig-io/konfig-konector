@@ -97,7 +97,8 @@ func (o *FISExperimentTemplate) CloudControlSpec() interface{} { return &o.Spec 
 func (o *FISExperimentTemplate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *FISExperimentTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *FISExperimentTemplate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *FISExperimentTemplate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // FISExperimentTemplateExperimentTemplateTarget is a nested property type of AWS::FIS::ExperimentTemplate.
 type FISExperimentTemplateExperimentTemplateTarget struct {
@@ -310,6 +311,9 @@ func (o *FISTargetAccountConfiguration) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *FISTargetAccountConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *FISTargetAccountConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&FISExperimentTemplate{}, &FISExperimentTemplateList{})

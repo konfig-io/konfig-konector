@@ -112,7 +112,8 @@ func (o *CodeArtifactPackageGroup) CloudControlSpec() interface{} { return &o.Sp
 func (o *CodeArtifactPackageGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeArtifactPackageGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeArtifactPackageGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeArtifactPackageGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeArtifactPackageGroupOriginConfiguration is a nested property type of AWS::CodeArtifact::PackageGroup.
 type CodeArtifactPackageGroupOriginConfiguration struct {

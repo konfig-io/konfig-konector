@@ -100,7 +100,8 @@ func (o *SSMContactsContact) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMContactsContact) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMContactsContact) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMContactsContact) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMContactsContact) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMContactsContactStage is a nested property type of AWS::SSMContacts::Contact.
 type SSMContactsContactStage struct {
@@ -222,7 +223,8 @@ func (o *SSMContactsContactChannel) CloudControlSpec() interface{} { return &o.S
 func (o *SSMContactsContactChannel) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMContactsContactChannel) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMContactsContactChannel) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMContactsContactChannel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMContactsPlanSpec is the desired state of AWS::SSMContacts::Plan.
 type SSMContactsPlanSpec struct {
@@ -286,7 +288,8 @@ func (o *SSMContactsPlan) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMContactsPlan) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMContactsPlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMContactsPlan) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMContactsPlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMContactsPlanStage is a nested property type of AWS::SSMContacts::Plan.
 type SSMContactsPlanStage struct {
@@ -391,7 +394,8 @@ func (o *SSMContactsRotation) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSMContactsRotation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMContactsRotation) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMContactsRotation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMContactsRotation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMContactsRotationRecurrenceSettings is a nested property type of AWS::SSMContacts::Rotation.
 type SSMContactsRotationRecurrenceSettings struct {

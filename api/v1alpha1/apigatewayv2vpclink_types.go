@@ -47,6 +47,9 @@ type APIGatewayV2VpcLinkSpec struct {
 
 // APIGatewayV2VpcLinkStatus defines the observed state of APIGatewayV2VpcLink.
 type APIGatewayV2VpcLinkStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VPCLinkID is the VPC link identifier.
 	// +optional
 	VPCLinkID string `json:"vpcLinkId,omitempty"`

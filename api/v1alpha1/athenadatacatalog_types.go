@@ -54,6 +54,9 @@ type AthenaDataCatalogSpec struct {
 
 // AthenaDataCatalogStatus defines the observed state of AthenaDataCatalog.
 type AthenaDataCatalogStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CatalogName is the name of the data catalog in AWS.
 	// +optional
 	CatalogName string `json:"catalogName,omitempty"`

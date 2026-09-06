@@ -74,6 +74,9 @@ type EBSVolumeSpec struct {
 
 // EBSVolumeStatus defines the observed state of EBSVolume.
 type EBSVolumeStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VolumeID is the EBS volume ID.
 	// +optional
 	VolumeID string `json:"volumeId,omitempty"`

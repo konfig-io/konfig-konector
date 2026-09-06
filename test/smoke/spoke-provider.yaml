@@ -1,0 +1,27 @@
+# Same-account "spoke" for multi-account proof: a role the operator assumes,
+# with admin rights, and an AWSProvider pointing at it. Apply to a namespace
+# reconciled by the operator's own credentials, then install the smoke chart
+# with --set providerRef=spoke. Replace ACCOUNT_ID and the trusted principal.
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMRole
+metadata: {name: spoke-role}
+spec:
+  roleName: konfig-smoke-spoke
+  description: konfig-konector smoke spoke role (delete after testing)
+  assumeRolePolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":"arn:aws:iam::ACCOUNT_ID:root"},"Action":["sts:AssumeRole","sts:TagSession"]}]}'
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: IAMPolicyAttachment
+metadata: {name: spoke-admin}
+spec:
+  roleRef: {name: spoke-role}
+  policyRef: {arn: arn:aws:iam::aws:policy/AdministratorAccess}
+---
+apiVersion: aws.konfig.io/v1alpha1
+kind: AWSProvider
+metadata: {name: spoke}
+spec:
+  roleArn: arn:aws:iam::ACCOUNT_ID:role/konfig-smoke-spoke
+  region: us-east-1
+  sessionName: konfig-smoke
+  allowedNamespaces: ["smoke"]

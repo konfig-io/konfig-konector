@@ -159,6 +159,9 @@ type AppRunnerServiceSpec struct {
 
 // AppRunnerServiceStatus defines the observed state of AppRunnerService.
 type AppRunnerServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ServiceARN is the ARN of the App Runner service.
 	// +optional
 	ServiceARN string `json:"serviceArn,omitempty"`

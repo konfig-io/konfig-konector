@@ -91,6 +91,9 @@ type SSMPatchBaselineSpec struct {
 
 // SSMPatchBaselineStatus defines the observed state of SSMPatchBaseline.
 type SSMPatchBaselineStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// BaselineID is the AWS patch baseline ID (pb-...).
 	// +optional
 	BaselineID string `json:"baselineId,omitempty"`

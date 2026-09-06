@@ -143,6 +143,9 @@ func (o *Route53ResolverFirewallDomainList) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverFirewallDomainList) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverFirewallDomainList) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverFirewallRuleGroupSpec is the desired state of AWS::Route53Resolver::FirewallRuleGroup.
 type Route53ResolverFirewallRuleGroupSpec struct {
@@ -264,6 +267,9 @@ func (o *Route53ResolverFirewallRuleGroup) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverFirewallRuleGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverFirewallRuleGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverFirewallRuleGroupFirewallRule is a nested property type of AWS::Route53Resolver::FirewallRuleGroup.
 type Route53ResolverFirewallRuleGroupFirewallRule struct {
@@ -502,6 +508,9 @@ func (o *Route53ResolverFirewallRuleGroupAssociation) CloudControlStatusRef() *C
 func (o *Route53ResolverFirewallRuleGroupAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *Route53ResolverFirewallRuleGroupAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverOutpostResolverSpec is the desired state of AWS::Route53Resolver::OutpostResolver.
 type Route53ResolverOutpostResolverSpec struct {
@@ -619,6 +628,9 @@ func (o *Route53ResolverOutpostResolver) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverOutpostResolver) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverOutpostResolver) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverResolverConfigSpec is the desired state of AWS::Route53Resolver::ResolverConfig.
 type Route53ResolverResolverConfigSpec struct {
@@ -701,6 +713,9 @@ func (o *Route53ResolverResolverConfig) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverResolverConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverResolverConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverResolverDNSSECConfigSpec is the desired state of AWS::Route53Resolver::ResolverDNSSECConfig.
 type Route53ResolverResolverDNSSECConfigSpec struct {
@@ -777,6 +792,9 @@ func (o *Route53ResolverResolverDNSSECConfig) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverResolverDNSSECConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverResolverDNSSECConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverResolverQueryLoggingConfigSpec is the desired state of AWS::Route53Resolver::ResolverQueryLoggingConfig.
 type Route53ResolverResolverQueryLoggingConfigSpec struct {
@@ -893,6 +911,9 @@ func (o *Route53ResolverResolverQueryLoggingConfig) CloudControlStatusRef() *Clo
 func (o *Route53ResolverResolverQueryLoggingConfig) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *Route53ResolverResolverQueryLoggingConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverResolverQueryLoggingConfigAssociationSpec is the desired state of AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation.
 type Route53ResolverResolverQueryLoggingConfigAssociationSpec struct {
@@ -989,6 +1010,9 @@ func (o *Route53ResolverResolverQueryLoggingConfigAssociation) CloudControlStatu
 func (o *Route53ResolverResolverQueryLoggingConfigAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *Route53ResolverResolverQueryLoggingConfigAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ResolverResolverRuleAssociationSpec is the desired state of AWS::Route53Resolver::ResolverRuleAssociation.
 type Route53ResolverResolverRuleAssociationSpec struct {
@@ -1062,6 +1086,9 @@ func (o *Route53ResolverResolverRuleAssociation) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ResolverResolverRuleAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ResolverResolverRuleAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&Route53ResolverFirewallDomainList{}, &Route53ResolverFirewallDomainListList{})

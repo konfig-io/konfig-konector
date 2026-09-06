@@ -166,6 +166,9 @@ func (o *NetworkManagerConnectAttachment) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkManagerConnectAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerConnectAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerConnectAttachmentProposedSegmentChange is a nested property type of AWS::NetworkManager::ConnectAttachment.
 type NetworkManagerConnectAttachmentProposedSegmentChange struct {
@@ -319,7 +322,8 @@ func (o *NetworkManagerConnectPeer) CloudControlSpec() interface{} { return &o.S
 func (o *NetworkManagerConnectPeer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerConnectPeer) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerConnectPeer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerConnectPeer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerConnectPeerBgpOptions is a nested property type of AWS::NetworkManager::ConnectPeer.
 type NetworkManagerConnectPeerBgpOptions struct {
@@ -471,7 +475,8 @@ func (o *NetworkManagerCoreNetwork) CloudControlSpec() interface{} { return &o.S
 func (o *NetworkManagerCoreNetwork) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerCoreNetwork) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerCoreNetwork) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerCoreNetwork) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerCoreNetworkCoreNetworkSegment is a nested property type of AWS::NetworkManager::CoreNetwork.
 type NetworkManagerCoreNetworkCoreNetworkSegment struct {
@@ -591,6 +596,9 @@ func (o *NetworkManagerCoreNetworkPrefixListAssociation) CloudControlStatusRef()
 func (o *NetworkManagerCoreNetworkPrefixListAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *NetworkManagerCoreNetworkPrefixListAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerCustomerGatewayAssociationSpec is the desired state of AWS::NetworkManager::CustomerGatewayAssociation.
 type NetworkManagerCustomerGatewayAssociationSpec struct {
@@ -663,6 +671,9 @@ func (o *NetworkManagerCustomerGatewayAssociation) CloudControlStatusRef() *Clou
 }
 func (o *NetworkManagerCustomerGatewayAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NetworkManagerCustomerGatewayAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // NetworkManagerDeviceSpec is the desired state of AWS::NetworkManager::Device.
@@ -770,7 +781,8 @@ func (o *NetworkManagerDevice) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NetworkManagerDevice) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerDevice) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerDevice) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerDevice) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerDeviceAWSLocation is a nested property type of AWS::NetworkManager::Device.
 type NetworkManagerDeviceAWSLocation struct {
@@ -940,6 +952,9 @@ func (o *NetworkManagerDirectConnectGatewayAttachment) CloudControlStatusRef() *
 func (o *NetworkManagerDirectConnectGatewayAttachment) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *NetworkManagerDirectConnectGatewayAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerDirectConnectGatewayAttachmentProposedSegmentChange is a nested property type of AWS::NetworkManager::DirectConnectGatewayAttachment.
 type NetworkManagerDirectConnectGatewayAttachmentProposedSegmentChange struct {
@@ -1043,7 +1058,8 @@ func (o *NetworkManagerGlobalNetwork) CloudControlSpec() interface{} { return &o
 func (o *NetworkManagerGlobalNetwork) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerGlobalNetwork) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerGlobalNetwork) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerGlobalNetwork) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerLinkSpec is the desired state of AWS::NetworkManager::Link.
 type NetworkManagerLinkSpec struct {
@@ -1138,7 +1154,8 @@ func (o *NetworkManagerLink) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NetworkManagerLink) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerLink) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerLink) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerLink) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerLinkBandwidth is a nested property type of AWS::NetworkManager::Link.
 type NetworkManagerLinkBandwidth struct {
@@ -1214,6 +1231,9 @@ func (o *NetworkManagerLinkAssociation) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkManagerLinkAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerLinkAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerSiteSpec is the desired state of AWS::NetworkManager::Site.
 type NetworkManagerSiteSpec struct {
@@ -1296,7 +1316,8 @@ func (o *NetworkManagerSite) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NetworkManagerSite) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerSite) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerSite) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerSite) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerSiteLocation is a nested property type of AWS::NetworkManager::Site.
 type NetworkManagerSiteLocation struct {
@@ -1453,6 +1474,9 @@ func (o *NetworkManagerSiteToSiteVpnAttachment) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkManagerSiteToSiteVpnAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerSiteToSiteVpnAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerSiteToSiteVpnAttachmentProposedSegmentChange is a nested property type of AWS::NetworkManager::SiteToSiteVpnAttachment.
 type NetworkManagerSiteToSiteVpnAttachmentProposedSegmentChange struct {
@@ -1597,6 +1621,9 @@ func (o *NetworkManagerTransitGatewayPeering) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *NetworkManagerTransitGatewayPeering) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerTransitGatewayPeering) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NetworkManagerTransitGatewayRegistrationSpec is the desired state of AWS::NetworkManager::TransitGatewayRegistration.
 type NetworkManagerTransitGatewayRegistrationSpec struct {
@@ -1660,6 +1687,9 @@ func (o *NetworkManagerTransitGatewayRegistration) CloudControlStatusRef() *Clou
 }
 func (o *NetworkManagerTransitGatewayRegistration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NetworkManagerTransitGatewayRegistration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // NetworkManagerTransitGatewayRouteTableAttachmentSpec is the desired state of AWS::NetworkManager::TransitGatewayRouteTableAttachment.
@@ -1811,6 +1841,9 @@ func (o *NetworkManagerTransitGatewayRouteTableAttachment) CloudControlStatusRef
 }
 func (o *NetworkManagerTransitGatewayRouteTableAttachment) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *NetworkManagerTransitGatewayRouteTableAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // NetworkManagerTransitGatewayRouteTableAttachmentProposedSegmentChange is a nested property type of AWS::NetworkManager::TransitGatewayRouteTableAttachment.
@@ -1988,7 +2021,8 @@ func (o *NetworkManagerVpcAttachment) CloudControlSpec() interface{} { return &o
 func (o *NetworkManagerVpcAttachment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NetworkManagerVpcAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *NetworkManagerVpcAttachment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NetworkManagerVpcAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NetworkManagerVpcAttachmentProposedSegmentChange is a nested property type of AWS::NetworkManager::VpcAttachment.
 type NetworkManagerVpcAttachmentProposedSegmentChange struct {

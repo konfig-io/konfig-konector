@@ -144,6 +144,7 @@ func (r *CloudControlResourceReconciler) pollRequest(ctx context.Context, obj *a
 		}
 		msg := fmt.Sprintf("%s %s: %s (%s)", obj.Status.Operation, ev.OperationStatus, aws.ToString(ev.StatusMessage), ev.ErrorCode)
 		obj.Status.RequestToken, obj.Status.Operation = "", ""
+		obj.Status.Attempt++ // next retry must use a fresh idempotency token
 		if err := persistStatus(ctx, r.Client, obj); err != nil {
 			return false, err
 		}
@@ -246,6 +247,8 @@ func (r *CloudControlResourceReconciler) trackOperation(ctx context.Context, obj
 	}
 	if ev.OperationStatus == cctypes.OperationStatusFailed {
 		obj.Status.RequestToken, obj.Status.Operation = "", ""
+		obj.Status.Attempt++
+		_ = persistStatus(ctx, r.Client, obj)
 		return fmt.Errorf("%s failed: %s (%s)", op, aws.ToString(ev.StatusMessage), ev.ErrorCode)
 	}
 	if ev.OperationStatus == cctypes.OperationStatusSuccess {

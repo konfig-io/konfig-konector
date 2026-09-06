@@ -129,3 +129,28 @@ func TestCloudControlKindDeleteNotFoundCompletes(t *testing.T) {
 		t.Fatal("finalizer should have been removed and object deleted")
 	}
 }
+
+// A failed create must not be retried with the same idempotency token, or
+// Cloud Control replays the cached failure forever.
+func TestCloudControlKindFailedCreateRotatesToken(t *testing.T) {
+	s := crossAccountScheme(t)
+	kind := CloudControlKind{Kind: "LogsLogStream", TypeName: "AWS::Logs::LogStream", New: func() cfn.CloudControlObject { return &awsv1alpha1.LogsLogStream{} }}
+	obj := &awsv1alpha1.LogsLogStream{
+		ObjectMeta: metav1.ObjectMeta{Name: "ls", Namespace: "ns", UID: "u1", Generation: 1, Finalizers: []string{awsv1alpha1.FinalizerName}},
+		Spec:       awsv1alpha1.LogsLogStreamSpec{LogGroupName: "/missing", LogStreamName: "web"},
+	}
+	c := fake.NewClientBuilder().WithScheme(s).WithStatusSubresource(&awsv1alpha1.LogsLogStream{}).WithObjects(obj).Build()
+	f := &fakeCC{live: map[string]string{}, status: cctypes.OperationStatusFailed}
+	r := &CloudControlKindReconciler{Client: c, Scheme: s, CCClient: f, Kind: kind}
+	key := k8stypes.NamespacedName{Name: "ls", Namespace: "ns"}
+	if _, err := r.Reconcile(context.Background(), ctrl.Request{NamespacedName: key}); err == nil {
+		t.Fatal("expected the failed create to surface as an error")
+	}
+	first := f.createToken
+	if _, err := r.Reconcile(context.Background(), ctrl.Request{NamespacedName: key}); err == nil {
+		t.Fatal("expected the second failed create to surface as an error")
+	}
+	if f.created != 2 || f.createToken == first {
+		t.Fatalf("retry must use a fresh token: created=%d first=%q second=%q", f.created, first, f.createToken)
+	}
+}

@@ -88,7 +88,8 @@ func (o *TimestreamDatabase) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TimestreamDatabase) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TimestreamDatabase) CloudControlObserved() interface{} { return &o.Status }
+func (o *TimestreamDatabase) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TimestreamDatabase) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TimestreamInfluxDBClusterSpec is the desired state of AWS::Timestream::InfluxDBCluster.
 type TimestreamInfluxDBClusterSpec struct {
@@ -283,7 +284,8 @@ func (o *TimestreamInfluxDBCluster) CloudControlSpec() interface{} { return &o.S
 func (o *TimestreamInfluxDBCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TimestreamInfluxDBCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *TimestreamInfluxDBCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TimestreamInfluxDBCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TimestreamInfluxDBClusterLogDeliveryConfiguration is a nested property type of AWS::Timestream::InfluxDBCluster.
 type TimestreamInfluxDBClusterLogDeliveryConfiguration struct {
@@ -499,7 +501,8 @@ func (o *TimestreamInfluxDBInstance) CloudControlSpec() interface{} { return &o.
 func (o *TimestreamInfluxDBInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TimestreamInfluxDBInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *TimestreamInfluxDBInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TimestreamInfluxDBInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TimestreamInfluxDBInstanceLogDeliveryConfiguration is a nested property type of AWS::Timestream::InfluxDBInstance.
 type TimestreamInfluxDBInstanceLogDeliveryConfiguration struct {
@@ -671,7 +674,8 @@ func (o *TimestreamScheduledQuery) CloudControlSpec() interface{} { return &o.Sp
 func (o *TimestreamScheduledQuery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TimestreamScheduledQuery) CloudControlObserved() interface{} { return &o.Status }
+func (o *TimestreamScheduledQuery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TimestreamScheduledQuery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TimestreamScheduledQueryScheduleConfiguration is a nested property type of AWS::Timestream::ScheduledQuery.
 type TimestreamScheduledQueryScheduleConfiguration struct {
@@ -872,7 +876,8 @@ func (o *TimestreamTable) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TimestreamTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TimestreamTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *TimestreamTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TimestreamTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TimestreamTableRetentionProperties is a nested property type of AWS::Timestream::Table.
 type TimestreamTableRetentionProperties struct {

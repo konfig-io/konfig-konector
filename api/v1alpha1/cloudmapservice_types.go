@@ -93,6 +93,9 @@ type CloudMapServiceSpec struct {
 
 // CloudMapServiceStatus defines the observed state of CloudMapService.
 type CloudMapServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ServiceID is the ID of the service.
 	// +optional
 	ServiceID string `json:"serviceId,omitempty"`

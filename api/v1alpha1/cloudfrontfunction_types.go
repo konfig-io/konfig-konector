@@ -47,6 +47,9 @@ type CloudFrontFunctionSpec struct {
 
 // CloudFrontFunctionStatus defines the observed state of CloudFrontFunction.
 type CloudFrontFunctionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionARN is the ARN of the function.
 	// +optional
 	FunctionARN string `json:"functionArn,omitempty"`

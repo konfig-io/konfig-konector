@@ -84,6 +84,9 @@ func (o *ResourceExplorer2DefaultViewAssociation) CloudControlStatusRef() *Cloud
 func (o *ResourceExplorer2DefaultViewAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ResourceExplorer2DefaultViewAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ResourceExplorer2IndexSpec is the desired state of AWS::ResourceExplorer2::Index.
 type ResourceExplorer2IndexSpec struct {
@@ -146,7 +149,8 @@ func (o *ResourceExplorer2Index) CloudControlSpec() interface{} { return &o.Spec
 func (o *ResourceExplorer2Index) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResourceExplorer2Index) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResourceExplorer2Index) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResourceExplorer2Index) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResourceExplorer2ViewSpec is the desired state of AWS::ResourceExplorer2::View.
 type ResourceExplorer2ViewSpec struct {
@@ -213,7 +217,8 @@ func (o *ResourceExplorer2View) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ResourceExplorer2View) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResourceExplorer2View) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResourceExplorer2View) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResourceExplorer2View) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResourceExplorer2ViewSearchFilter is a nested property type of AWS::ResourceExplorer2::View.
 type ResourceExplorer2ViewSearchFilter struct {

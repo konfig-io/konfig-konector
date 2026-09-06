@@ -153,7 +153,8 @@ func (o *DataZoneConnection) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneConnection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneConnection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneConnectionAwsLocation is a nested property type of AWS::DataZone::Connection.
 type DataZoneConnectionAwsLocation struct {
@@ -348,7 +349,8 @@ func (o *DataZoneDataSource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneDataSource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneDataSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneDataSource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneDataSource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneDataSourceFormInput is a nested property type of AWS::DataZone::DataSource.
 type DataZoneDataSourceFormInput struct {
@@ -516,7 +518,8 @@ func (o *DataZoneDomain) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneDomain) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneDomain) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneDomain) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneDomainSingleSignOn is a nested property type of AWS::DataZone::Domain.
 type DataZoneDomainSingleSignOn struct {
@@ -632,7 +635,8 @@ func (o *DataZoneDomainUnit) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneDomainUnit) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneDomainUnit) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneDomainUnit) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneDomainUnit) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneEnvironmentSpec is the desired state of AWS::DataZone::Environment.
 type DataZoneEnvironmentSpec struct {
@@ -802,7 +806,8 @@ func (o *DataZoneEnvironment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneEnvironment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneEnvironment) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneEnvironment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneEnvironmentEnvironmentParameter is a nested property type of AWS::DataZone::Environment.
 type DataZoneEnvironmentEnvironmentParameter struct {
@@ -908,7 +913,8 @@ func (o *DataZoneEnvironmentActions) CloudControlSpec() interface{} { return &o.
 func (o *DataZoneEnvironmentActions) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneEnvironmentActions) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneEnvironmentActions) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneEnvironmentActions) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneEnvironmentActionsAwsConsoleLinkParameters is a nested property type of AWS::DataZone::EnvironmentActions.
 type DataZoneEnvironmentActionsAwsConsoleLinkParameters struct {
@@ -1012,6 +1018,9 @@ func (o *DataZoneEnvironmentBlueprintConfiguration) CloudControlStatusRef() *Clo
 }
 func (o *DataZoneEnvironmentBlueprintConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *DataZoneEnvironmentBlueprintConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // DataZoneEnvironmentBlueprintConfigurationRegionalParameter is a nested property type of AWS::DataZone::EnvironmentBlueprintConfiguration.
@@ -1140,7 +1149,8 @@ func (o *DataZoneEnvironmentProfile) CloudControlSpec() interface{} { return &o.
 func (o *DataZoneEnvironmentProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneEnvironmentProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneEnvironmentProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneEnvironmentProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneEnvironmentProfileEnvironmentParameter is a nested property type of AWS::DataZone::EnvironmentProfile.
 type DataZoneEnvironmentProfileEnvironmentParameter struct {
@@ -1257,7 +1267,8 @@ func (o *DataZoneFormType) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneFormType) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneFormType) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneFormType) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneFormType) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneFormTypeModel is a nested property type of AWS::DataZone::FormType.
 type DataZoneFormTypeModel struct {
@@ -1356,7 +1367,8 @@ func (o *DataZoneGroupProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneGroupProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneGroupProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneGroupProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneGroupProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneOwnerSpec is the desired state of AWS::DataZone::Owner.
 type DataZoneOwnerSpec struct {
@@ -1432,7 +1444,8 @@ func (o *DataZoneOwner) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneOwner) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneOwner) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneOwner) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneOwner) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZonePolicyGrantSpec is the desired state of AWS::DataZone::PolicyGrant.
 type DataZonePolicyGrantSpec struct {
@@ -1523,7 +1536,8 @@ func (o *DataZonePolicyGrant) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZonePolicyGrant) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZonePolicyGrant) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZonePolicyGrant) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZonePolicyGrant) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneProjectSpec is the desired state of AWS::DataZone::Project.
 type DataZoneProjectSpec struct {
@@ -1657,7 +1671,8 @@ func (o *DataZoneProject) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneProject) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneProject) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneProject) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneProjectEnvironmentConfigurationUserParameter is a nested property type of AWS::DataZone::Project.
 type DataZoneProjectEnvironmentConfigurationUserParameter struct {
@@ -1768,7 +1783,8 @@ func (o *DataZoneProjectMembership) CloudControlSpec() interface{} { return &o.S
 func (o *DataZoneProjectMembership) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneProjectMembership) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneProjectMembership) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneProjectMembership) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneProjectProfileSpec is the desired state of AWS::DataZone::ProjectProfile.
 type DataZoneProjectProfileSpec struct {
@@ -1882,7 +1898,8 @@ func (o *DataZoneProjectProfile) CloudControlSpec() interface{} { return &o.Spec
 func (o *DataZoneProjectProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneProjectProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneProjectProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneProjectProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneProjectProfileEnvironmentConfiguration is a nested property type of AWS::DataZone::ProjectProfile.
 type DataZoneProjectProfileEnvironmentConfiguration struct {
@@ -2087,7 +2104,8 @@ func (o *DataZoneSubscriptionTarget) CloudControlSpec() interface{} { return &o.
 func (o *DataZoneSubscriptionTarget) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneSubscriptionTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneSubscriptionTarget) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneSubscriptionTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataZoneSubscriptionTargetSubscriptionTargetForm is a nested property type of AWS::DataZone::SubscriptionTarget.
 type DataZoneSubscriptionTargetSubscriptionTargetForm struct {
@@ -2190,7 +2208,8 @@ func (o *DataZoneUserProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataZoneUserProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataZoneUserProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataZoneUserProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataZoneUserProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&DataZoneConnection{}, &DataZoneConnectionList{})

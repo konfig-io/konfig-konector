@@ -112,6 +112,9 @@ type GlueTriggerSpec struct {
 
 // GlueTriggerStatus defines the observed state of GlueTrigger.
 type GlueTriggerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TriggerName is the name of the trigger in AWS.
 	// +optional
 	TriggerName string `json:"triggerName,omitempty"`

@@ -51,6 +51,9 @@ type LambdaProvisionedConcurrencySpec struct {
 // LambdaProvisionedConcurrencyStatus defines the observed state of
 // LambdaProvisionedConcurrency.
 type LambdaProvisionedConcurrencyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionName is the resolved function name or ARN the config was applied to.
 	// +optional
 	FunctionName string `json:"functionName,omitempty"`

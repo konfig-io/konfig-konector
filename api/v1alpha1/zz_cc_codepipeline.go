@@ -113,7 +113,8 @@ func (o *CodePipelineCustomActionType) CloudControlSpec() interface{} { return &
 func (o *CodePipelineCustomActionType) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodePipelineCustomActionType) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodePipelineCustomActionType) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodePipelineCustomActionType) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodePipelineCustomActionTypeConfigurationProperties is a nested property type of AWS::CodePipeline::CustomActionType.
 type CodePipelineCustomActionTypeConfigurationProperties struct {
@@ -272,7 +273,8 @@ func (o *CodePipelineWebhook) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CodePipelineWebhook) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodePipelineWebhook) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodePipelineWebhook) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodePipelineWebhook) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodePipelineWebhookWebhookAuthConfiguration is a nested property type of AWS::CodePipeline::Webhook.
 type CodePipelineWebhookWebhookAuthConfiguration struct {

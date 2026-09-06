@@ -85,6 +85,9 @@ func (o *ServiceCatalogAcceptedPortfolioShare) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogAcceptedPortfolioShare) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogAcceptedPortfolioShare) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogCloudFormationProvisionedProductSpec is the desired state of AWS::ServiceCatalog::CloudFormationProvisionedProduct.
 type ServiceCatalogCloudFormationProvisionedProductSpec struct {
@@ -204,6 +207,9 @@ func (o *ServiceCatalogCloudFormationProvisionedProduct) CloudControlStatusRef()
 func (o *ServiceCatalogCloudFormationProvisionedProduct) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ServiceCatalogCloudFormationProvisionedProduct) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogCloudFormationProvisionedProductProvisioningPreferences is a nested property type of AWS::ServiceCatalog::CloudFormationProvisionedProduct.
 type ServiceCatalogCloudFormationProvisionedProductProvisioningPreferences struct {
@@ -308,6 +314,9 @@ func (o *ServiceCatalogLaunchNotificationConstraint) CloudControlStatusRef() *Cl
 func (o *ServiceCatalogLaunchNotificationConstraint) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ServiceCatalogLaunchNotificationConstraint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogLaunchRoleConstraintSpec is the desired state of AWS::ServiceCatalog::LaunchRoleConstraint.
 type ServiceCatalogLaunchRoleConstraintSpec struct {
@@ -387,6 +396,9 @@ func (o *ServiceCatalogLaunchRoleConstraint) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogLaunchRoleConstraint) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogLaunchRoleConstraint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogLaunchTemplateConstraintSpec is the desired state of AWS::ServiceCatalog::LaunchTemplateConstraint.
 type ServiceCatalogLaunchTemplateConstraintSpec struct {
@@ -463,6 +475,9 @@ func (o *ServiceCatalogLaunchTemplateConstraint) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogLaunchTemplateConstraint) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogLaunchTemplateConstraint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogPortfolioPrincipalAssociationSpec is the desired state of AWS::ServiceCatalog::PortfolioPrincipalAssociation.
 type ServiceCatalogPortfolioPrincipalAssociationSpec struct {
@@ -536,6 +551,9 @@ func (o *ServiceCatalogPortfolioPrincipalAssociation) CloudControlStatusRef() *C
 func (o *ServiceCatalogPortfolioPrincipalAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ServiceCatalogPortfolioPrincipalAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogPortfolioShareSpec is the desired state of AWS::ServiceCatalog::PortfolioShare.
 type ServiceCatalogPortfolioShareSpec struct {
@@ -601,7 +619,8 @@ func (o *ServiceCatalogPortfolioShare) CloudControlSpec() interface{} { return &
 func (o *ServiceCatalogPortfolioShare) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ServiceCatalogPortfolioShare) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogPortfolioShare) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ServiceCatalogPortfolioShare) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ServiceCatalogResourceUpdateConstraintSpec is the desired state of AWS::ServiceCatalog::ResourceUpdateConstraint.
 type ServiceCatalogResourceUpdateConstraintSpec struct {
@@ -679,6 +698,9 @@ func (o *ServiceCatalogResourceUpdateConstraint) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogResourceUpdateConstraint) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogResourceUpdateConstraint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogServiceActionSpec is the desired state of AWS::ServiceCatalog::ServiceAction.
 type ServiceCatalogServiceActionSpec struct {
@@ -748,7 +770,8 @@ func (o *ServiceCatalogServiceAction) CloudControlSpec() interface{} { return &o
 func (o *ServiceCatalogServiceAction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ServiceCatalogServiceAction) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogServiceAction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ServiceCatalogServiceAction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ServiceCatalogServiceActionAssociationSpec is the desired state of AWS::ServiceCatalog::ServiceActionAssociation.
 type ServiceCatalogServiceActionAssociationSpec struct {
@@ -817,6 +840,9 @@ func (o *ServiceCatalogServiceActionAssociation) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogServiceActionAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogServiceActionAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogStackSetConstraintSpec is the desired state of AWS::ServiceCatalog::StackSetConstraint.
 type ServiceCatalogStackSetConstraintSpec struct {
@@ -902,6 +928,9 @@ func (o *ServiceCatalogStackSetConstraint) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogStackSetConstraint) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogStackSetConstraint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ServiceCatalogTagOptionSpec is the desired state of AWS::ServiceCatalog::TagOption.
 type ServiceCatalogTagOptionSpec struct {
@@ -968,7 +997,8 @@ func (o *ServiceCatalogTagOption) CloudControlSpec() interface{} { return &o.Spe
 func (o *ServiceCatalogTagOption) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ServiceCatalogTagOption) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogTagOption) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ServiceCatalogTagOption) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ServiceCatalogTagOptionAssociationSpec is the desired state of AWS::ServiceCatalog::TagOptionAssociation.
 type ServiceCatalogTagOptionAssociationSpec struct {
@@ -1027,6 +1057,9 @@ func (o *ServiceCatalogTagOptionAssociation) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *ServiceCatalogTagOptionAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ServiceCatalogTagOptionAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&ServiceCatalogAcceptedPortfolioShare{}, &ServiceCatalogAcceptedPortfolioShareList{})

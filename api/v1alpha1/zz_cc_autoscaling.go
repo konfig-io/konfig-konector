@@ -171,6 +171,9 @@ func (o *AutoScalingLaunchConfiguration) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *AutoScalingLaunchConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *AutoScalingLaunchConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AutoScalingLaunchConfigurationMetadataOptions is a nested property type of AWS::AutoScaling::LaunchConfiguration.
 type AutoScalingLaunchConfigurationMetadataOptions struct {
@@ -325,7 +328,8 @@ func (o *AutoScalingLifecycleHook) CloudControlSpec() interface{} { return &o.Sp
 func (o *AutoScalingLifecycleHook) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AutoScalingLifecycleHook) CloudControlObserved() interface{} { return &o.Status }
+func (o *AutoScalingLifecycleHook) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AutoScalingLifecycleHook) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AutoScalingScheduledActionSpec is the desired state of AWS::AutoScaling::ScheduledAction.
 type AutoScalingScheduledActionSpec struct {
@@ -416,7 +420,8 @@ func (o *AutoScalingScheduledAction) CloudControlSpec() interface{} { return &o.
 func (o *AutoScalingScheduledAction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AutoScalingScheduledAction) CloudControlObserved() interface{} { return &o.Status }
+func (o *AutoScalingScheduledAction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AutoScalingScheduledAction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AutoScalingWarmPoolSpec is the desired state of AWS::AutoScaling::WarmPool.
 type AutoScalingWarmPoolSpec struct {
@@ -478,7 +483,8 @@ func (o *AutoScalingWarmPool) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AutoScalingWarmPool) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AutoScalingWarmPool) CloudControlObserved() interface{} { return &o.Status }
+func (o *AutoScalingWarmPool) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AutoScalingWarmPool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AutoScalingWarmPoolInstanceReusePolicy is a nested property type of AWS::AutoScaling::WarmPool.
 type AutoScalingWarmPoolInstanceReusePolicy struct {

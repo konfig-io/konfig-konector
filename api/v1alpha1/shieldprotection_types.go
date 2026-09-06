@@ -43,6 +43,9 @@ type ShieldProtectionSpec struct {
 
 // ShieldProtectionStatus defines the observed state of ShieldProtection.
 type ShieldProtectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ProtectionID is the unique identifier of the Shield protection.
 	// +optional
 	ProtectionID string `json:"protectionID,omitempty"`

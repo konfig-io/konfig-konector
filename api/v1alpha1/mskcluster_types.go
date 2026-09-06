@@ -65,6 +65,9 @@ type MSKClusterSpec struct {
 
 // MSKClusterStatus defines the observed state of MSKCluster.
 type MSKClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterARN is the ARN of the MSK cluster.
 	// +optional
 	ClusterARN string `json:"clusterARN,omitempty"`

@@ -138,7 +138,8 @@ func (o *InternetMonitorMonitor) CloudControlSpec() interface{} { return &o.Spec
 func (o *InternetMonitorMonitor) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InternetMonitorMonitor) CloudControlObserved() interface{} { return &o.Status }
+func (o *InternetMonitorMonitor) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InternetMonitorMonitor) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // InternetMonitorMonitorInternetMeasurementsLogDelivery is a nested property type of AWS::InternetMonitor::Monitor.
 type InternetMonitorMonitorInternetMeasurementsLogDelivery struct {

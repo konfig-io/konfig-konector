@@ -170,6 +170,9 @@ type DBClusterSpec struct {
 
 // DBClusterStatus defines the observed state of DBCluster.
 type DBClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DBClusterARN is the Amazon Resource Name of the DB cluster.
 	// +optional
 	DBClusterARN string `json:"dbClusterArn,omitempty"`

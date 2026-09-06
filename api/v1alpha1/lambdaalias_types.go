@@ -60,6 +60,9 @@ type LambdaAliasSpec struct {
 
 // LambdaAliasStatus defines the observed state of LambdaAlias.
 type LambdaAliasStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AliasARN is the ARN of the alias.
 	// +optional
 	AliasARN string `json:"aliasArn,omitempty"`

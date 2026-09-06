@@ -50,6 +50,9 @@ type ResourceShareInvitationSpec struct {
 
 // ResourceShareInvitationStatus defines the observed state of ResourceShareInvitation.
 type ResourceShareInvitationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// InvitationARN is the accepted invitation, when one existed.
 	// +optional
 	InvitationARN string `json:"invitationArn,omitempty"`

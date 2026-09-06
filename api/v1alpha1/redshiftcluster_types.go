@@ -97,6 +97,9 @@ type RedshiftClusterSpec struct {
 
 // RedshiftClusterStatus defines the observed state of RedshiftCluster.
 type RedshiftClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterIdentifier is the identifier of the cluster in AWS.
 	// +optional
 	ClusterIdentifier string `json:"clusterIdentifier,omitempty"`

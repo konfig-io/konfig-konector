@@ -247,7 +247,8 @@ func (o *NeptuneDBCluster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NeptuneDBCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneDBCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneDBCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneDBCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NeptuneDBClusterDBClusterRole is a nested property type of AWS::Neptune::DBCluster.
 type NeptuneDBClusterDBClusterRole struct {
@@ -344,6 +345,9 @@ func (o *NeptuneDBClusterParameterGroup) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *NeptuneDBClusterParameterGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneDBClusterParameterGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NeptuneDBInstanceSpec is the desired state of AWS::Neptune::DBInstance.
 type NeptuneDBInstanceSpec struct {
@@ -465,7 +469,8 @@ func (o *NeptuneDBInstance) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NeptuneDBInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneDBInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneDBInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneDBInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NeptuneDBParameterGroupSpec is the desired state of AWS::Neptune::DBParameterGroup.
 type NeptuneDBParameterGroupSpec struct {
@@ -541,7 +546,8 @@ func (o *NeptuneDBParameterGroup) CloudControlSpec() interface{} { return &o.Spe
 func (o *NeptuneDBParameterGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneDBParameterGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneDBParameterGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneDBParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NeptuneDBSubnetGroupSpec is the desired state of AWS::Neptune::DBSubnetGroup.
 type NeptuneDBSubnetGroupSpec struct {
@@ -604,7 +610,8 @@ func (o *NeptuneDBSubnetGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NeptuneDBSubnetGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneDBSubnetGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneDBSubnetGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneDBSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NeptuneEventSubscriptionSpec is the desired state of AWS::Neptune::EventSubscription.
 type NeptuneEventSubscriptionSpec struct {
@@ -691,7 +698,8 @@ func (o *NeptuneEventSubscription) CloudControlSpec() interface{} { return &o.Sp
 func (o *NeptuneEventSubscription) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneEventSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneEventSubscription) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneEventSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // NeptuneGlobalClusterSpec is the desired state of AWS::Neptune::GlobalCluster.
 type NeptuneGlobalClusterSpec struct {
@@ -772,7 +780,8 @@ func (o *NeptuneGlobalCluster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *NeptuneGlobalCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *NeptuneGlobalCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *NeptuneGlobalCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *NeptuneGlobalCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&NeptuneDBCluster{}, &NeptuneDBClusterList{})

@@ -99,6 +99,9 @@ type VPNConnectionSpec struct {
 
 // VPNConnectionStatus defines the observed state of VPNConnection.
 type VPNConnectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VPNConnectionID is the AWS VPN connection identifier.
 	// +optional
 	VPNConnectionID string `json:"vpnConnectionId,omitempty"`

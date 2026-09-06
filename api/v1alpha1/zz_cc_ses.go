@@ -85,6 +85,9 @@ func (o *SESConfigurationSetEventDestination) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *SESConfigurationSetEventDestination) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESConfigurationSetEventDestination) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SESConfigurationSetEventDestinationEventDestination is a nested property type of AWS::SES::ConfigurationSetEventDestination.
 type SESConfigurationSetEventDestinationEventDestination struct {
@@ -235,7 +238,8 @@ func (o *SESContactList) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESContactList) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESContactList) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESContactList) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESContactList) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESContactListTopic is a nested property type of AWS::SES::ContactList.
 type SESContactListTopic struct {
@@ -330,6 +334,9 @@ func (o *SESCustomVerificationEmailTemplate) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *SESCustomVerificationEmailTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESCustomVerificationEmailTemplate) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SESDedicatedIpPoolSpec is the desired state of AWS::SES::DedicatedIpPool.
 type SESDedicatedIpPoolSpec struct {
@@ -388,7 +395,8 @@ func (o *SESDedicatedIpPool) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESDedicatedIpPool) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESDedicatedIpPool) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESDedicatedIpPool) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESDedicatedIpPool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerAddonInstanceSpec is the desired state of AWS::SES::MailManagerAddonInstance.
 type SESMailManagerAddonInstanceSpec struct {
@@ -458,7 +466,8 @@ func (o *SESMailManagerAddonInstance) CloudControlSpec() interface{} { return &o
 func (o *SESMailManagerAddonInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerAddonInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerAddonInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerAddonInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerAddonSubscriptionSpec is the desired state of AWS::SES::MailManagerAddonSubscription.
 type SESMailManagerAddonSubscriptionSpec struct {
@@ -523,6 +532,9 @@ func (o *SESMailManagerAddonSubscription) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *SESMailManagerAddonSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerAddonSubscription) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SESMailManagerAddressListSpec is the desired state of AWS::SES::MailManagerAddressList.
 type SESMailManagerAddressListSpec struct {
@@ -587,7 +599,8 @@ func (o *SESMailManagerAddressList) CloudControlSpec() interface{} { return &o.S
 func (o *SESMailManagerAddressList) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerAddressList) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerAddressList) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerAddressList) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerArchiveSpec is the desired state of AWS::SES::MailManagerArchive.
 type SESMailManagerArchiveSpec struct {
@@ -662,7 +675,8 @@ func (o *SESMailManagerArchive) CloudControlSpec() interface{} { return &o.Spec 
 func (o *SESMailManagerArchive) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerArchive) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerArchive) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerArchive) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerIngressPointSpec is the desired state of AWS::SES::MailManagerIngressPoint.
 type SESMailManagerIngressPointSpec struct {
@@ -765,7 +779,8 @@ func (o *SESMailManagerIngressPoint) CloudControlSpec() interface{} { return &o.
 func (o *SESMailManagerIngressPoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerIngressPoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerIngressPoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerIngressPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerRelaySpec is the desired state of AWS::SES::MailManagerRelay.
 type SESMailManagerRelaySpec struct {
@@ -836,7 +851,8 @@ func (o *SESMailManagerRelay) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESMailManagerRelay) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerRelay) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerRelay) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerRelay) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerRuleSetSpec is the desired state of AWS::SES::MailManagerRuleSet.
 type SESMailManagerRuleSetSpec struct {
@@ -900,7 +916,8 @@ func (o *SESMailManagerRuleSet) CloudControlSpec() interface{} { return &o.Spec 
 func (o *SESMailManagerRuleSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerRuleSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerRuleSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerRuleSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerRuleSetRule is a nested property type of AWS::SES::MailManagerRuleSet.
 type SESMailManagerRuleSetRule struct {
@@ -987,7 +1004,8 @@ func (o *SESMailManagerTrafficPolicy) CloudControlSpec() interface{} { return &o
 func (o *SESMailManagerTrafficPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMailManagerTrafficPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMailManagerTrafficPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMailManagerTrafficPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMailManagerTrafficPolicyPolicyStatement is a nested property type of AWS::SES::MailManagerTrafficPolicy.
 type SESMailManagerTrafficPolicyPolicyStatement struct {
@@ -1056,7 +1074,8 @@ func (o *SESMultiRegionEndpoint) CloudControlSpec() interface{} { return &o.Spec
 func (o *SESMultiRegionEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESMultiRegionEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESMultiRegionEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESMultiRegionEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESMultiRegionEndpointDetails is a nested property type of AWS::SES::MultiRegionEndpoint.
 type SESMultiRegionEndpointDetails struct {
@@ -1119,7 +1138,8 @@ func (o *SESReceiptFilter) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESReceiptFilter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESReceiptFilter) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESReceiptFilter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESReceiptFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESReceiptFilterFilter is a nested property type of AWS::SES::ReceiptFilter.
 type SESReceiptFilterFilter struct {
@@ -1202,7 +1222,8 @@ func (o *SESReceiptRule) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESReceiptRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESReceiptRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESReceiptRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESReceiptRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESReceiptRuleRule is a nested property type of AWS::SES::ReceiptRule.
 type SESReceiptRuleRule struct {
@@ -1446,7 +1467,8 @@ func (o *SESReceiptRuleSet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESReceiptRuleSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESReceiptRuleSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESReceiptRuleSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESReceiptRuleSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESTemplateSpec is the desired state of AWS::SES::Template.
 type SESTemplateSpec struct {
@@ -1503,7 +1525,8 @@ func (o *SESTemplate) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESTemplate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESTemplate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESTemplate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESTemplateTemplate is a nested property type of AWS::SES::Template.
 type SESTemplateTemplate struct {
@@ -1587,6 +1610,7 @@ func (o *SESTenant) CloudControlTypeName() string               { return "AWS::S
 func (o *SESTenant) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *SESTenant) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *SESTenant) CloudControlObserved() interface{}          { return &o.Status }
+func (o *SESTenant) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // SESTenantResourceAssociation is a nested property type of AWS::SES::Tenant.
 type SESTenantResourceAssociation struct {
@@ -1650,7 +1674,8 @@ func (o *SESVdmAttributes) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SESVdmAttributes) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SESVdmAttributes) CloudControlObserved() interface{} { return &o.Status }
+func (o *SESVdmAttributes) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SESVdmAttributes) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SESVdmAttributesDashboardAttributes is a nested property type of AWS::SES::VdmAttributes.
 type SESVdmAttributesDashboardAttributes struct {

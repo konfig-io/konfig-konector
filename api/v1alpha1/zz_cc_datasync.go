@@ -110,7 +110,8 @@ func (o *DataSyncAgent) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncAgent) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncAgent) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncAgent) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncAgent) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationAzureBlobSpec is the desired state of AWS::DataSync::LocationAzureBlob.
 type DataSyncLocationAzureBlobSpec struct {
@@ -218,7 +219,8 @@ func (o *DataSyncLocationAzureBlob) CloudControlSpec() interface{} { return &o.S
 func (o *DataSyncLocationAzureBlob) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationAzureBlob) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationAzureBlob) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationAzureBlob) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationAzureBlobAzureBlobSasConfiguration is a nested property type of AWS::DataSync::LocationAzureBlob.
 type DataSyncLocationAzureBlobAzureBlobSasConfiguration struct {
@@ -354,7 +356,8 @@ func (o *DataSyncLocationEFS) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncLocationEFS) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationEFS) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationEFS) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationEFS) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationEFSEc2Config is a nested property type of AWS::DataSync::LocationEFS.
 type DataSyncLocationEFSEc2Config struct {
@@ -443,7 +446,8 @@ func (o *DataSyncLocationFSxLustre) CloudControlSpec() interface{} { return &o.S
 func (o *DataSyncLocationFSxLustre) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationFSxLustre) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationFSxLustre) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationFSxLustre) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationFSxONTAPSpec is the desired state of AWS::DataSync::LocationFSxONTAP.
 type DataSyncLocationFSxONTAPSpec struct {
@@ -531,7 +535,8 @@ func (o *DataSyncLocationFSxONTAP) CloudControlSpec() interface{} { return &o.Sp
 func (o *DataSyncLocationFSxONTAP) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationFSxONTAP) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationFSxONTAP) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationFSxONTAP) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationFSxONTAPProtocol is a nested property type of AWS::DataSync::LocationFSxONTAP.
 type DataSyncLocationFSxONTAPProtocol struct {
@@ -704,7 +709,8 @@ func (o *DataSyncLocationFSxOpenZFS) CloudControlSpec() interface{} { return &o.
 func (o *DataSyncLocationFSxOpenZFS) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationFSxOpenZFS) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationFSxOpenZFS) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationFSxOpenZFS) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationFSxOpenZFSProtocol is a nested property type of AWS::DataSync::LocationFSxOpenZFS.
 type DataSyncLocationFSxOpenZFSProtocol struct {
@@ -827,7 +833,8 @@ func (o *DataSyncLocationFSxWindows) CloudControlSpec() interface{} { return &o.
 func (o *DataSyncLocationFSxWindows) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationFSxWindows) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationFSxWindows) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationFSxWindows) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationFSxWindowsCmkSecretConfig is a nested property type of AWS::DataSync::LocationFSxWindows.
 type DataSyncLocationFSxWindowsCmkSecretConfig struct {
@@ -990,7 +997,8 @@ func (o *DataSyncLocationHDFS) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncLocationHDFS) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationHDFS) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationHDFS) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationHDFS) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationHDFSNameNode is a nested property type of AWS::DataSync::LocationHDFS.
 type DataSyncLocationHDFSNameNode struct {
@@ -1126,7 +1134,8 @@ func (o *DataSyncLocationNFS) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncLocationNFS) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationNFS) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationNFS) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationNFS) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationNFSMountOptions is a nested property type of AWS::DataSync::LocationNFS.
 type DataSyncLocationNFSMountOptions struct {
@@ -1264,6 +1273,9 @@ func (o *DataSyncLocationObjectStorage) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *DataSyncLocationObjectStorage) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationObjectStorage) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // DataSyncLocationObjectStorageCmkSecretConfig is a nested property type of AWS::DataSync::LocationObjectStorage.
 type DataSyncLocationObjectStorageCmkSecretConfig struct {
@@ -1377,7 +1389,8 @@ func (o *DataSyncLocationS3) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncLocationS3) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationS3) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationS3) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationS3) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationS3S3Config is a nested property type of AWS::DataSync::LocationS3.
 type DataSyncLocationS3S3Config struct {
@@ -1524,7 +1537,8 @@ func (o *DataSyncLocationSMB) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncLocationSMB) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncLocationSMB) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncLocationSMB) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncLocationSMB) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncLocationSMBMountOptions is a nested property type of AWS::DataSync::LocationSMB.
 type DataSyncLocationSMBMountOptions struct {
@@ -1681,7 +1695,8 @@ func (o *DataSyncTask) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DataSyncTask) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DataSyncTask) CloudControlObserved() interface{} { return &o.Status }
+func (o *DataSyncTask) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DataSyncTask) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DataSyncTaskFilterRule is a nested property type of AWS::DataSync::Task.
 type DataSyncTaskFilterRule struct {

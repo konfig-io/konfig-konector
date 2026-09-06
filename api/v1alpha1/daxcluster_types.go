@@ -70,6 +70,9 @@ type DAXClusterSpec struct {
 
 // DAXClusterStatus defines the observed state of DAXCluster.
 type DAXClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterARN is the ARN of the cluster.
 	// +optional
 	ClusterARN string `json:"clusterArn,omitempty"`

@@ -114,7 +114,8 @@ func (o *LakeFormationDataCellsFilter) CloudControlSpec() interface{} { return &
 func (o *LakeFormationDataCellsFilter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LakeFormationDataCellsFilter) CloudControlObserved() interface{} { return &o.Status }
+func (o *LakeFormationDataCellsFilter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LakeFormationDataCellsFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LakeFormationDataCellsFilterRowFilter is a nested property type of AWS::LakeFormation::DataCellsFilter.
 type LakeFormationDataCellsFilterRowFilter struct {
@@ -216,6 +217,9 @@ func (o *LakeFormationPrincipalPermissions) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *LakeFormationPrincipalPermissions) CloudControlObserved() interface{} { return &o.Status }
+func (o *LakeFormationPrincipalPermissions) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // LakeFormationPrincipalPermissionsDataLakePrincipal is a nested property type of AWS::LakeFormation::PrincipalPermissions.
 type LakeFormationPrincipalPermissionsDataLakePrincipal struct {
@@ -487,7 +491,8 @@ func (o *LakeFormationTag) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LakeFormationTag) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LakeFormationTag) CloudControlObserved() interface{} { return &o.Status }
+func (o *LakeFormationTag) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LakeFormationTag) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LakeFormationTagAssociationSpec is the desired state of AWS::LakeFormation::TagAssociation.
 type LakeFormationTagAssociationSpec struct {
@@ -554,7 +559,8 @@ func (o *LakeFormationTagAssociation) CloudControlSpec() interface{} { return &o
 func (o *LakeFormationTagAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LakeFormationTagAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *LakeFormationTagAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LakeFormationTagAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LakeFormationTagAssociationResource is a nested property type of AWS::LakeFormation::TagAssociation.
 type LakeFormationTagAssociationResource struct {

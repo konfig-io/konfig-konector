@@ -52,6 +52,9 @@ type VPNConnectionRouteSpec struct {
 
 // VPNConnectionRouteStatus defines the observed state of VPNConnectionRoute.
 type VPNConnectionRouteStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VPNConnectionID is the resolved VPN connection the route was created on.
 	// +optional
 	VPNConnectionID string `json:"vpnConnectionId,omitempty"`

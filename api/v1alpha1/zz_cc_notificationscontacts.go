@@ -95,6 +95,9 @@ func (o *NotificationsContactsEmailContact) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *NotificationsContactsEmailContact) CloudControlObserved() interface{} { return &o.Status }
+func (o *NotificationsContactsEmailContact) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // NotificationsContactsEmailContactEmailContact is a nested property type of AWS::NotificationsContacts::EmailContact.
 type NotificationsContactsEmailContactEmailContact struct {

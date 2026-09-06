@@ -130,6 +130,9 @@ type ECSTaskDefinitionSpec struct {
 
 // ECSTaskDefinitionStatus defines the observed state of ECSTaskDefinition.
 type ECSTaskDefinitionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TaskDefinitionARN is the full ARN including revision of the latest registered task definition.
 	// +optional
 	TaskDefinitionARN string `json:"taskDefinitionArn,omitempty"`

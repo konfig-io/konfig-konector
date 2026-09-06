@@ -52,6 +52,9 @@ type SubnetSpec struct {
 
 // SubnetStatus defines the observed state of Subnet.
 type SubnetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SubnetID is the AWS Subnet identifier.
 	// +optional
 	SubnetID string `json:"subnetId,omitempty"`

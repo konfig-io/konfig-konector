@@ -92,6 +92,9 @@ func (o *ConfigAggregationAuthorization) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ConfigAggregationAuthorization) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigAggregationAuthorization) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ConfigConfigurationAggregatorSpec is the desired state of AWS::Config::ConfigurationAggregator.
 type ConfigConfigurationAggregatorSpec struct {
@@ -161,6 +164,9 @@ func (o *ConfigConfigurationAggregator) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *ConfigConfigurationAggregator) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigConfigurationAggregator) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ConfigConfigurationAggregatorAccountAggregationSource is a nested property type of AWS::Config::ConfigurationAggregator.
 type ConfigConfigurationAggregatorAccountAggregationSource struct {
@@ -276,7 +282,8 @@ func (o *ConfigConformancePack) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ConfigConformancePack) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ConfigConformancePack) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigConformancePack) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ConfigConformancePack) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ConfigConformancePackTemplateSSMDocumentDetails is a nested property type of AWS::Config::ConformancePack.
 type ConfigConformancePackTemplateSSMDocumentDetails struct {
@@ -366,7 +373,8 @@ func (o *ConfigConnector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ConfigConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ConfigConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ConfigConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ConfigConnectorConnectorConfiguration is a nested property type of AWS::Config::Connector.
 type ConfigConnectorConnectorConfiguration struct {
@@ -482,6 +490,9 @@ func (o *ConfigOrganizationConformancePack) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *ConfigOrganizationConformancePack) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigOrganizationConformancePack) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ConfigOrganizationConformancePackConformancePackInputParameter is a nested property type of AWS::Config::OrganizationConformancePack.
 type ConfigOrganizationConformancePackConformancePackInputParameter struct {
@@ -569,6 +580,9 @@ func (o *ConfigRemediationConfiguration) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ConfigRemediationConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigRemediationConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ConfigRemediationConfigurationExecutionControls is a nested property type of AWS::Config::RemediationConfiguration.
 type ConfigRemediationConfigurationExecutionControls struct {
@@ -657,7 +671,8 @@ func (o *ConfigStoredQuery) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ConfigStoredQuery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ConfigStoredQuery) CloudControlObserved() interface{} { return &o.Status }
+func (o *ConfigStoredQuery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ConfigStoredQuery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ConfigAggregationAuthorization{}, &ConfigAggregationAuthorizationList{})

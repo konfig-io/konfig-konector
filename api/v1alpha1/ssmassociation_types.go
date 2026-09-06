@@ -78,6 +78,9 @@ type SSMAssociationSpec struct {
 
 // SSMAssociationStatus defines the observed state of SSMAssociation.
 type SSMAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AssociationID is the AWS association ID.
 	// +optional
 	AssociationID string `json:"associationId,omitempty"`

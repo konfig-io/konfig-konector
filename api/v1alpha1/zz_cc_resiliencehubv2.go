@@ -120,7 +120,8 @@ func (o *ResilienceHubV2Policy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ResilienceHubV2Policy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResilienceHubV2Policy) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubV2Policy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResilienceHubV2Policy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResilienceHubV2PolicyAvailabilitySlo is a nested property type of AWS::ResilienceHubV2::Policy.
 type ResilienceHubV2PolicyAvailabilitySlo struct {
@@ -293,7 +294,8 @@ func (o *ResilienceHubV2Service) CloudControlSpec() interface{} { return &o.Spec
 func (o *ResilienceHubV2Service) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResilienceHubV2Service) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubV2Service) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResilienceHubV2Service) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResilienceHubV2ServiceAssociatedSystem is a nested property type of AWS::ResilienceHubV2::Service.
 type ResilienceHubV2ServiceAssociatedSystem struct {
@@ -546,6 +548,9 @@ func (o *ResilienceHubV2ServiceFunction) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ResilienceHubV2ServiceFunction) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubV2ServiceFunction) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ResilienceHubV2SystemSpec is the desired state of AWS::ResilienceHubV2::System.
 type ResilienceHubV2SystemSpec struct {
@@ -636,7 +641,8 @@ func (o *ResilienceHubV2System) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ResilienceHubV2System) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResilienceHubV2System) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubV2System) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResilienceHubV2System) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResilienceHubV2UserJourneySpec is the desired state of AWS::ResilienceHubV2::UserJourney.
 type ResilienceHubV2UserJourneySpec struct {
@@ -720,7 +726,8 @@ func (o *ResilienceHubV2UserJourney) CloudControlSpec() interface{} { return &o.
 func (o *ResilienceHubV2UserJourney) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResilienceHubV2UserJourney) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubV2UserJourney) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResilienceHubV2UserJourney) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ResilienceHubV2Policy{}, &ResilienceHubV2PolicyList{})

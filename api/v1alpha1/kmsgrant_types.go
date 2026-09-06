@@ -51,6 +51,9 @@ type KMSGrantSpec struct {
 
 // KMSGrantStatus defines the observed state of KMSGrant.
 type KMSGrantStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// GrantID is the ID of the grant.
 	// +optional
 	GrantID string `json:"grantId,omitempty"`

@@ -63,6 +63,9 @@ type IAMRoleSpec struct {
 
 // IAMRoleStatus defines the observed state of IAMRole.
 type IAMRoleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM role.
 	// +optional
 	ARN string `json:"arn,omitempty"`

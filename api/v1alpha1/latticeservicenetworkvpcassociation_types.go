@@ -58,6 +58,9 @@ type LatticeServiceNetworkVpcAssociationSpec struct {
 // LatticeServiceNetworkVpcAssociationStatus defines the observed state of
 // LatticeServiceNetworkVpcAssociation.
 type LatticeServiceNetworkVpcAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the association.
 	// +optional
 	ARN string `json:"arn,omitempty"`

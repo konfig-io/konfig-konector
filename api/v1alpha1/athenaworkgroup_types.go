@@ -86,6 +86,9 @@ type AthenaWorkGroupSpec struct {
 
 // AthenaWorkGroupStatus defines the observed state of AthenaWorkGroup.
 type AthenaWorkGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WorkGroupName is the name of the workgroup in AWS.
 	// +optional
 	WorkGroupName string `json:"workGroupName,omitempty"`

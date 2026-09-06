@@ -89,6 +89,9 @@ type ScalingPolicySpec struct {
 
 // ScalingPolicyStatus defines the observed state of ScalingPolicy.
 type ScalingPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyARN is the ARN of the scaling policy.
 	// +optional
 	PolicyARN string `json:"policyArn,omitempty"`

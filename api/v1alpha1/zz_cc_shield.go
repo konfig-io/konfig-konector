@@ -85,7 +85,8 @@ func (o *ShieldDRTAccess) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ShieldDRTAccess) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ShieldDRTAccess) CloudControlObserved() interface{} { return &o.Status }
+func (o *ShieldDRTAccess) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ShieldDRTAccess) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ShieldProactiveEngagementSpec is the desired state of AWS::Shield::ProactiveEngagement.
 type ShieldProactiveEngagementSpec struct {
@@ -149,7 +150,8 @@ func (o *ShieldProactiveEngagement) CloudControlSpec() interface{} { return &o.S
 func (o *ShieldProactiveEngagement) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ShieldProactiveEngagement) CloudControlObserved() interface{} { return &o.Status }
+func (o *ShieldProactiveEngagement) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ShieldProactiveEngagement) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ShieldProactiveEngagementEmergencyContact is a nested property type of AWS::Shield::ProactiveEngagement.
 type ShieldProactiveEngagementEmergencyContact struct {
@@ -256,7 +258,8 @@ func (o *ShieldProtectionGroup) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ShieldProtectionGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ShieldProtectionGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *ShieldProtectionGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ShieldProtectionGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ShieldDRTAccess{}, &ShieldDRTAccessList{})

@@ -75,7 +75,8 @@ func (o *MSKBatchScramSecret) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MSKBatchScramSecret) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MSKBatchScramSecret) CloudControlObserved() interface{} { return &o.Status }
+func (o *MSKBatchScramSecret) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MSKBatchScramSecret) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MSKChannelSpec is the desired state of AWS::MSK::Channel.
 type MSKChannelSpec struct {
@@ -166,6 +167,7 @@ func (o *MSKChannel) CloudControlTypeName() string               { return "AWS::
 func (o *MSKChannel) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *MSKChannel) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *MSKChannel) CloudControlObserved() interface{}          { return &o.Status }
+func (o *MSKChannel) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // MSKChannelTopicConfiguration is a nested property type of AWS::MSK::Channel.
 type MSKChannelTopicConfiguration struct {
@@ -447,7 +449,8 @@ func (o *MSKClusterPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MSKClusterPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MSKClusterPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *MSKClusterPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MSKClusterPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MSKReplicatorSpec is the desired state of AWS::MSK::Replicator.
 type MSKReplicatorSpec struct {
@@ -537,7 +540,8 @@ func (o *MSKReplicator) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MSKReplicator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MSKReplicator) CloudControlObserved() interface{} { return &o.Status }
+func (o *MSKReplicator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MSKReplicator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MSKReplicatorKafkaCluster is a nested property type of AWS::MSK::Replicator.
 type MSKReplicatorKafkaCluster struct {
@@ -928,6 +932,7 @@ func (o *MSKTopic) CloudControlTypeName() string               { return "AWS::MS
 func (o *MSKTopic) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *MSKTopic) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *MSKTopic) CloudControlObserved() interface{}          { return &o.Status }
+func (o *MSKTopic) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // MSKVpcConnectionSpec is the desired state of AWS::MSK::VpcConnection.
 type MSKVpcConnectionSpec struct {
@@ -1002,7 +1007,8 @@ func (o *MSKVpcConnection) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MSKVpcConnection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MSKVpcConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *MSKVpcConnection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MSKVpcConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&MSKBatchScramSecret{}, &MSKBatchScramSecretList{})

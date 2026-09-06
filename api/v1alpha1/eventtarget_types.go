@@ -71,6 +71,9 @@ type EventTargetSpec struct {
 
 // EventTargetStatus defines the observed state of EventTarget.
 type EventTargetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

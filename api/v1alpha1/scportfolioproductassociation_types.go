@@ -62,6 +62,9 @@ type SCPortfolioProductAssociationSpec struct {
 // SCPortfolioProductAssociationStatus defines the observed state of
 // SCPortfolioProductAssociation.
 type SCPortfolioProductAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ProductID is the resolved product ID.
 	// +optional
 	ProductID string `json:"productId,omitempty"`

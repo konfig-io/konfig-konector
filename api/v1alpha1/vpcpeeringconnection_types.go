@@ -66,6 +66,9 @@ type VPCPeeringConnectionSpec struct {
 
 // VPCPeeringConnectionStatus defines the observed state of VPCPeeringConnection.
 type VPCPeeringConnectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PeeringID is the VPC peering connection ID.
 	// +optional
 	PeeringID string `json:"peeringId,omitempty"`

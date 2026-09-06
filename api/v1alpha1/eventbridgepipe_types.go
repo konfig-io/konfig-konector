@@ -62,6 +62,9 @@ type EventBridgePipeSpec struct {
 
 // EventBridgePipeStatus defines the observed state of EventBridgePipe.
 type EventBridgePipeStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PipeARN is the ARN of the pipe.
 	// +optional
 	PipeARN string `json:"pipeArn,omitempty"`

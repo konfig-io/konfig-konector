@@ -95,6 +95,9 @@ func (o *ApiGatewayV2ApiGatewayManagedOverrides) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *ApiGatewayV2ApiGatewayManagedOverrides) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2ApiGatewayManagedOverrides) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ApiGatewayV2ApiGatewayManagedOverridesStageOverrides is a nested property type of AWS::ApiGatewayV2::ApiGatewayManagedOverrides.
 type ApiGatewayV2ApiGatewayManagedOverridesStageOverrides struct {
@@ -262,7 +265,8 @@ func (o *ApiGatewayV2Deployment) CloudControlSpec() interface{} { return &o.Spec
 func (o *ApiGatewayV2Deployment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayV2Deployment) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2Deployment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayV2Deployment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayV2IntegrationResponseSpec is the desired state of AWS::ApiGatewayV2::IntegrationResponse.
 type ApiGatewayV2IntegrationResponseSpec struct {
@@ -356,6 +360,9 @@ func (o *ApiGatewayV2IntegrationResponse) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *ApiGatewayV2IntegrationResponse) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2IntegrationResponse) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ApiGatewayV2ModelSpec is the desired state of AWS::ApiGatewayV2::Model.
 type ApiGatewayV2ModelSpec struct {
@@ -428,7 +435,8 @@ func (o *ApiGatewayV2Model) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ApiGatewayV2Model) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayV2Model) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2Model) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayV2Model) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayV2PortalProductSpec is the desired state of AWS::ApiGatewayV2::PortalProduct.
 type ApiGatewayV2PortalProductSpec struct {
@@ -508,7 +516,8 @@ func (o *ApiGatewayV2PortalProduct) CloudControlSpec() interface{} { return &o.S
 func (o *ApiGatewayV2PortalProduct) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayV2PortalProduct) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2PortalProduct) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayV2PortalProduct) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayV2RouteResponseSpec is the desired state of AWS::ApiGatewayV2::RouteResponse.
 type ApiGatewayV2RouteResponseSpec struct {
@@ -590,7 +599,8 @@ func (o *ApiGatewayV2RouteResponse) CloudControlSpec() interface{} { return &o.S
 func (o *ApiGatewayV2RouteResponse) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayV2RouteResponse) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2RouteResponse) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayV2RouteResponse) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayV2RoutingRuleSpec is the desired state of AWS::ApiGatewayV2::RoutingRule.
 type ApiGatewayV2RoutingRuleSpec struct {
@@ -662,7 +672,8 @@ func (o *ApiGatewayV2RoutingRule) CloudControlSpec() interface{} { return &o.Spe
 func (o *ApiGatewayV2RoutingRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApiGatewayV2RoutingRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApiGatewayV2RoutingRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApiGatewayV2RoutingRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApiGatewayV2RoutingRuleCondition is a nested property type of AWS::ApiGatewayV2::RoutingRule.
 type ApiGatewayV2RoutingRuleCondition struct {

@@ -104,6 +104,9 @@ type BudgetSpec struct {
 
 // BudgetStatus defines the observed state of Budget.
 type BudgetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// BudgetName is the name of the budget in AWS (its primary identifier
 	// together with the account ID).
 	// +optional

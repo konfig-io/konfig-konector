@@ -94,7 +94,8 @@ func (o *WAFv2LoggingConfiguration) CloudControlSpec() interface{} { return &o.S
 func (o *WAFv2LoggingConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *WAFv2LoggingConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *WAFv2LoggingConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *WAFv2LoggingConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // WAFv2LoggingConfigurationFieldToMatch is a nested property type of AWS::WAFv2::LoggingConfiguration.
 type WAFv2LoggingConfigurationFieldToMatch struct {
@@ -237,7 +238,8 @@ func (o *WAFv2WebACLAssociation) CloudControlSpec() interface{} { return &o.Spec
 func (o *WAFv2WebACLAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *WAFv2WebACLAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *WAFv2WebACLAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *WAFv2WebACLAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&WAFv2LoggingConfiguration{}, &WAFv2LoggingConfigurationList{})

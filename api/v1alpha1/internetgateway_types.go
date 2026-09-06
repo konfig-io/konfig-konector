@@ -38,6 +38,9 @@ type InternetGatewaySpec struct {
 
 // InternetGatewayStatus defines the observed state of InternetGateway.
 type InternetGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// InternetGatewayID is the AWS Internet Gateway identifier.
 	// +optional
 	InternetGatewayID string `json:"internetGatewayId,omitempty"`

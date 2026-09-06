@@ -107,7 +107,8 @@ func (o *S3ObjectLambdaAccessPoint) CloudControlSpec() interface{} { return &o.S
 func (o *S3ObjectLambdaAccessPoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3ObjectLambdaAccessPoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3ObjectLambdaAccessPoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3ObjectLambdaAccessPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3ObjectLambdaAccessPointAlias is a nested property type of AWS::S3ObjectLambda::AccessPoint.
 type S3ObjectLambdaAccessPointAlias struct {
@@ -242,6 +243,9 @@ func (o *S3ObjectLambdaAccessPointPolicy) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *S3ObjectLambdaAccessPointPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3ObjectLambdaAccessPointPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&S3ObjectLambdaAccessPoint{}, &S3ObjectLambdaAccessPointList{})

@@ -9,7 +9,8 @@
 #   ./scripts/local-dev.sh deploy      # rebuild the operator image and restart it
 #   ./scripts/local-dev.sh chart       # repackage + push the operator chart, bump Argo
 #   ./scripts/local-dev.sh bundles S.. # install generated CRD bundles (e.g. logs ec2 iam)
-#   ./scripts/local-dev.sh smoke       # install the konfig-smoke chart as an Argo app
+#   ./scripts/local-dev.sh smoke [PROVIDER]  # install the konfig-smoke chart as an Argo app,
+#                                            # optionally scoped to an AWSProvider (multi-account proof)
 #   ./scripts/local-dev.sh status      # Ready condition of every konfig CR
 #   ./scripts/local-dev.sh unsmoke     # delete the smoke app + namespace (deletes AWS resources)
 #   ./scripts/local-dev.sh argo-ui     # port-forward Argo CD and print the login
@@ -195,6 +196,7 @@ bundles() {
 }
 
 smoke() {
+  local provider="${1:-}"
   local acct; acct=$(aws sts get-caller-identity --query Account --output text)
   local ami; ami=$(aws ssm get-parameter --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 \
     --query Parameter.Value --output text --region "${AWS_REGION}")
@@ -220,8 +222,9 @@ spec:
     chart: konfig-smoke
     targetRevision: "${ver}"
     helm:
-      valuesObject: {accountId: "${acct}", region: ${AWS_REGION}, amiId: ${ami}}
+      valuesObject: {accountId: "${acct}", region: ${AWS_REGION}, amiId: ${ami}, providerRef: "${provider}"}
 EOF
+  [ -n "$provider" ] && echo ">> every smoke resource is scoped to AWSProvider ${provider}; check status.awsProvider on the CRs"
   echo ">> watch convergence in the Argo UI (argo-ui) or with: $0 status"
 }
 
@@ -267,7 +270,7 @@ case "${1:-}" in
             kubectl -n "${NAMESPACE}" rollout status deployment/konfig-controller --timeout=300s ;;
   chart)    push_chart konfig-konector; operator_app ;;
   bundles)  shift; bundles "$@" ;;
-  smoke)    check_aws; smoke ;;
+  smoke)    check_aws; smoke "${2:-}" ;;
   unsmoke)  unsmoke ;;
   status)   status ;;
   argo-ui)  argo_ui ;;

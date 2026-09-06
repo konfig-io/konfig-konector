@@ -46,6 +46,9 @@ type KeyPairSpec struct {
 
 // KeyPairStatus defines the observed state of KeyPair.
 type KeyPairStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// KeyPairID is the AWS Key Pair identifier.
 	// +optional
 	KeyPairID string `json:"keyPairId,omitempty"`

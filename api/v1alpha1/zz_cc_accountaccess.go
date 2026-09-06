@@ -105,7 +105,8 @@ func (o *AccountAccessApplication) CloudControlSpec() interface{} { return &o.Sp
 func (o *AccountAccessApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AccountAccessApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *AccountAccessApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AccountAccessApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AccountAccessApplicationIdentitySource is a nested property type of AWS::AccountAccess::Application.
 type AccountAccessApplicationIdentitySource struct {
@@ -190,7 +191,8 @@ func (o *AccountAccessEntitlement) CloudControlSpec() interface{} { return &o.Sp
 func (o *AccountAccessEntitlement) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AccountAccessEntitlement) CloudControlObserved() interface{} { return &o.Status }
+func (o *AccountAccessEntitlement) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AccountAccessEntitlement) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AccountAccessEntitlementEntitlement is a nested property type of AWS::AccountAccess::Entitlement.
 type AccountAccessEntitlementEntitlement struct {

@@ -114,7 +114,8 @@ func (o *CodeConnectionsConnection) CloudControlSpec() interface{} { return &o.S
 func (o *CodeConnectionsConnection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeConnectionsConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeConnectionsConnection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeConnectionsConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeConnectionsHostSpec is the desired state of AWS::CodeConnections::Host.
 type CodeConnectionsHostSpec struct {
@@ -203,7 +204,8 @@ func (o *CodeConnectionsHost) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CodeConnectionsHost) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeConnectionsHost) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeConnectionsHost) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeConnectionsHost) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeConnectionsHostVpcConfiguration is a nested property type of AWS::CodeConnections::Host.
 type CodeConnectionsHostVpcConfiguration struct {

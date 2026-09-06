@@ -40,6 +40,21 @@ type ProviderRef struct {
 	Region string `json:"region,omitempty"`
 }
 
+// ProviderStatus records which AWS account and region a resource was
+// reconciled against. Every kind exposes it as status.awsProvider so the
+// target account is confirmed on the object itself, not just on the provider.
+type ProviderStatus struct {
+	// Name of the AWSProvider used; empty when the operator's own credentials were used.
+	// +optional
+	Name string `json:"name,omitempty"`
+	// AccountID the resource lives in.
+	// +optional
+	AccountID string `json:"accountId,omitempty"`
+	// Region the resource lives in (empty for global services).
+	// +optional
+	Region string `json:"region,omitempty"`
+}
+
 // AWSProviderSpec defines how the operator obtains credentials for one AWS
 // account (and optionally one region).
 type AWSProviderSpec struct {

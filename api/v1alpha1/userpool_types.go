@@ -74,6 +74,9 @@ type UserPoolSpec struct {
 
 // UserPoolStatus defines the observed state of UserPool.
 type UserPoolStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// UserPoolID is the AWS Cognito user pool ID.
 	// +optional
 	UserPoolID string `json:"userPoolId,omitempty"`

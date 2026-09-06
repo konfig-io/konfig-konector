@@ -71,6 +71,9 @@ type GrafanaWorkspaceSpec struct {
 
 // GrafanaWorkspaceStatus defines the observed state of GrafanaWorkspace.
 type GrafanaWorkspaceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WorkspaceID is the unique ID of the workspace (g-...).
 	// +optional
 	WorkspaceID string `json:"workspaceId,omitempty"`

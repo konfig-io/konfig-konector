@@ -46,6 +46,9 @@ type DelegationSignerRecordSpec struct {
 
 // DelegationSignerRecordStatus defines the observed state of DelegationSignerRecord.
 type DelegationSignerRecordStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ChangeID is the Route53 change ID for the DS record change.
 	// +optional
 	ChangeID string `json:"changeID,omitempty"`

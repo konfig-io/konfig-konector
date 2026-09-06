@@ -140,7 +140,8 @@ func (o *ImageBuilderComponent) CloudControlSpec() interface{} { return &o.Spec 
 func (o *ImageBuilderComponent) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderComponent) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderComponent) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderComponent) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderComponentLatestVersion is a nested property type of AWS::ImageBuilder::Component.
 type ImageBuilderComponentLatestVersion struct {
@@ -295,7 +296,8 @@ func (o *ImageBuilderContainerRecipe) CloudControlSpec() interface{} { return &o
 func (o *ImageBuilderContainerRecipe) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderContainerRecipe) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderContainerRecipe) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderContainerRecipe) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderContainerRecipeComponentConfiguration is a nested property type of AWS::ImageBuilder::ContainerRecipe.
 type ImageBuilderContainerRecipeComponentConfiguration struct {
@@ -486,6 +488,9 @@ func (o *ImageBuilderDistributionConfiguration) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *ImageBuilderDistributionConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderDistributionConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ImageBuilderDistributionConfigurationDistribution is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
 type ImageBuilderDistributionConfigurationDistribution struct {
@@ -789,7 +794,8 @@ func (o *ImageBuilderImagePipeline) CloudControlSpec() interface{} { return &o.S
 func (o *ImageBuilderImagePipeline) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderImagePipeline) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderImagePipeline) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderImagePipeline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderImagePipelineImageTestsConfiguration is a nested property type of AWS::ImageBuilder::ImagePipeline.
 type ImageBuilderImagePipelineImageTestsConfiguration struct {
@@ -1011,7 +1017,8 @@ func (o *ImageBuilderImageRecipe) CloudControlSpec() interface{} { return &o.Spe
 func (o *ImageBuilderImageRecipe) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderImageRecipe) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderImageRecipe) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderImageRecipe) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderImageRecipeComponentConfiguration is a nested property type of AWS::ImageBuilder::ImageRecipe.
 type ImageBuilderImageRecipeComponentConfiguration struct {
@@ -1239,6 +1246,9 @@ func (o *ImageBuilderInfrastructureConfiguration) CloudControlStatusRef() *Cloud
 func (o *ImageBuilderInfrastructureConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ImageBuilderInfrastructureConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ImageBuilderInfrastructureConfigurationLogging is a nested property type of AWS::ImageBuilder::InfrastructureConfiguration.
 type ImageBuilderInfrastructureConfigurationLogging struct {
@@ -1372,7 +1382,8 @@ func (o *ImageBuilderLifecyclePolicy) CloudControlSpec() interface{} { return &o
 func (o *ImageBuilderLifecyclePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderLifecyclePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderLifecyclePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderLifecyclePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderLifecyclePolicyPolicyDetail is a nested property type of AWS::ImageBuilder::LifecyclePolicy.
 type ImageBuilderLifecyclePolicyPolicyDetail struct {
@@ -1591,7 +1602,8 @@ func (o *ImageBuilderWorkflow) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ImageBuilderWorkflow) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ImageBuilderWorkflow) CloudControlObserved() interface{} { return &o.Status }
+func (o *ImageBuilderWorkflow) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ImageBuilderWorkflow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ImageBuilderWorkflowLatestVersion is a nested property type of AWS::ImageBuilder::Workflow.
 type ImageBuilderWorkflowLatestVersion struct {

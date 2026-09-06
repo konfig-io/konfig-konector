@@ -93,6 +93,9 @@ type APIGatewayV2APISpec struct {
 
 // APIGatewayV2APIStatus defines the observed state of APIGatewayV2API.
 type APIGatewayV2APIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// APIID is the API identifier.
 	// +optional
 	APIID string `json:"apiId,omitempty"`

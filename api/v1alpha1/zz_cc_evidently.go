@@ -117,7 +117,8 @@ func (o *EvidentlyExperiment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EvidentlyExperiment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EvidentlyExperiment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EvidentlyExperiment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EvidentlyExperiment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EvidentlyExperimentRunningStatusObject is a nested property type of AWS::Evidently::Experiment.
 type EvidentlyExperimentRunningStatusObject struct {
@@ -281,7 +282,8 @@ func (o *EvidentlyFeature) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EvidentlyFeature) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EvidentlyFeature) CloudControlObserved() interface{} { return &o.Status }
+func (o *EvidentlyFeature) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EvidentlyFeature) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EvidentlyFeatureVariationObject is a nested property type of AWS::Evidently::Feature.
 type EvidentlyFeatureVariationObject struct {
@@ -395,7 +397,8 @@ func (o *EvidentlyLaunch) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EvidentlyLaunch) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EvidentlyLaunch) CloudControlObserved() interface{} { return &o.Status }
+func (o *EvidentlyLaunch) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EvidentlyLaunch) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EvidentlyLaunchStepConfig is a nested property type of AWS::Evidently::Launch.
 type EvidentlyLaunchStepConfig struct {
@@ -547,7 +550,8 @@ func (o *EvidentlyProject) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EvidentlyProject) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EvidentlyProject) CloudControlObserved() interface{} { return &o.Status }
+func (o *EvidentlyProject) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EvidentlyProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EvidentlyProjectDataDeliveryObject is a nested property type of AWS::Evidently::Project.
 type EvidentlyProjectDataDeliveryObject struct {
@@ -642,7 +646,8 @@ func (o *EvidentlySegment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EvidentlySegment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EvidentlySegment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EvidentlySegment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EvidentlySegment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&EvidentlyExperiment{}, &EvidentlyExperimentList{})

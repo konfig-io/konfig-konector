@@ -120,6 +120,9 @@ type PrivateCASpec struct {
 
 // PrivateCAStatus defines the observed state of PrivateCA.
 type PrivateCAStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN of the certificate authority.
 	// +optional
 	ARN string `json:"arn,omitempty"`

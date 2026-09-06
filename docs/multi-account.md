@@ -233,7 +233,22 @@ it, `status.pendingConnections` shows how many are waiting.
 
 ## Confirmation and audit
 
+- Every resource records the account and region it was reconciled against in
+  `status.awsProvider` (`name`, `accountId`, `region`); an empty name means
+  the operator's own credentials were used.
 - Every `AWSProvider` reports the verified account ID and caller ARN.
+- An `AWSProvider` cannot be deleted while any resource or namespace
+  annotation references it: it carries a finalizer and reports
+  `Ready=False` with reason `InUse` listing the first references.
+- With `webhook.enabled=true` in the Helm values, a validating admission
+  webhook rejects resources whose `providerRef` names a missing provider or a
+  provider whose `allowedNamespaces` exclude the namespace, at apply time.
+  It needs cert-manager (default) or a supplied TLS Secret.
+- `internal/controller/scope_guard_test.go` fails the build if a controller
+  reads the operator's region or account instead of the provider scope.
+- `helm/konfig-smoke --set providerRef=<provider>` reconciles all 93 smoke
+  kinds under that provider; `test/smoke/spoke-provider.yaml` creates a
+  same-account spoke role for that proof.
 - Two-sided kinds expose both sides' identifiers and the AWS state in status.
 - Reconcile errors from the wrong account surface as `AccessDenied` in the
   `Ready` condition message, naming the operation that failed.

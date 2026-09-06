@@ -44,6 +44,9 @@ type CodeDeployApplicationSpec struct {
 
 // CodeDeployApplicationStatus defines the observed state of CodeDeployApplication.
 type CodeDeployApplicationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ApplicationID is the CodeDeploy application ID.
 	// +optional
 	ApplicationID string `json:"applicationID,omitempty"`

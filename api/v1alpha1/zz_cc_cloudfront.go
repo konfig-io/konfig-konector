@@ -115,7 +115,8 @@ func (o *CloudFrontAnycastIpList) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudFrontAnycastIpList) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontAnycastIpList) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontAnycastIpList) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontAnycastIpList) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontAnycastIpListAnycastIpList is a nested property type of AWS::CloudFront::AnycastIpList.
 type CloudFrontAnycastIpListAnycastIpList struct {
@@ -252,6 +253,9 @@ func (o *CloudFrontCloudFrontOriginAccessIdentity) CloudControlStatusRef() *Clou
 func (o *CloudFrontCloudFrontOriginAccessIdentity) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *CloudFrontCloudFrontOriginAccessIdentity) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFrontCloudFrontOriginAccessIdentityCloudFrontOriginAccessIdentityConfig is a nested property type of AWS::CloudFront::CloudFrontOriginAccessIdentity.
 type CloudFrontCloudFrontOriginAccessIdentityCloudFrontOriginAccessIdentityConfig struct {
@@ -355,7 +359,8 @@ func (o *CloudFrontConnectionFunction) CloudControlSpec() interface{} { return &
 func (o *CloudFrontConnectionFunction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontConnectionFunction) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontConnectionFunction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontConnectionFunction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontConnectionFunctionConnectionFunctionConfig is a nested property type of AWS::CloudFront::ConnectionFunction.
 type CloudFrontConnectionFunctionConnectionFunctionConfig struct {
@@ -478,7 +483,8 @@ func (o *CloudFrontConnectionGroup) CloudControlSpec() interface{} { return &o.S
 func (o *CloudFrontConnectionGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontConnectionGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontConnectionGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontConnectionGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontContinuousDeploymentPolicySpec is the desired state of AWS::CloudFront::ContinuousDeploymentPolicy.
 type CloudFrontContinuousDeploymentPolicySpec struct {
@@ -542,6 +548,9 @@ func (o *CloudFrontContinuousDeploymentPolicy) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFrontContinuousDeploymentPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontContinuousDeploymentPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFrontContinuousDeploymentPolicyContinuousDeploymentPolicyConfig is a nested property type of AWS::CloudFront::ContinuousDeploymentPolicy.
 type CloudFrontContinuousDeploymentPolicyContinuousDeploymentPolicyConfig struct {
@@ -765,7 +774,8 @@ func (o *CloudFrontDistributionTenant) CloudControlSpec() interface{} { return &
 func (o *CloudFrontDistributionTenant) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontDistributionTenant) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontDistributionTenant) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontDistributionTenant) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontDistributionTenantDomainResult is a nested property type of AWS::CloudFront::DistributionTenant.
 type CloudFrontDistributionTenantDomainResult struct {
@@ -920,7 +930,8 @@ func (o *CloudFrontKeyGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudFrontKeyGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontKeyGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontKeyGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontKeyGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontKeyGroupKeyGroupConfig is a nested property type of AWS::CloudFront::KeyGroup.
 type CloudFrontKeyGroupKeyGroupConfig struct {
@@ -1013,7 +1024,8 @@ func (o *CloudFrontKeyValueStore) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudFrontKeyValueStore) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontKeyValueStore) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontKeyValueStore) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontKeyValueStore) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontKeyValueStoreImportSource is a nested property type of AWS::CloudFront::KeyValueStore.
 type CloudFrontKeyValueStoreImportSource struct {
@@ -1080,6 +1092,9 @@ func (o *CloudFrontMonitoringSubscription) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFrontMonitoringSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontMonitoringSubscription) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFrontMonitoringSubscriptionMonitoringSubscription is a nested property type of AWS::CloudFront::MonitoringSubscription.
 type CloudFrontMonitoringSubscriptionMonitoringSubscription struct {
@@ -1155,6 +1170,9 @@ func (o *CloudFrontOriginRequestPolicy) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFrontOriginRequestPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontOriginRequestPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFrontOriginRequestPolicyOriginRequestPolicyConfig is a nested property type of AWS::CloudFront::OriginRequestPolicy.
 type CloudFrontOriginRequestPolicyOriginRequestPolicyConfig struct {
@@ -1277,7 +1295,8 @@ func (o *CloudFrontPublicKey) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudFrontPublicKey) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontPublicKey) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontPublicKey) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontPublicKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontPublicKeyPublicKeyConfig is a nested property type of AWS::CloudFront::PublicKey.
 type CloudFrontPublicKeyPublicKeyConfig struct {
@@ -1369,7 +1388,8 @@ func (o *CloudFrontRealtimeLogConfig) CloudControlSpec() interface{} { return &o
 func (o *CloudFrontRealtimeLogConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontRealtimeLogConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontRealtimeLogConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontRealtimeLogConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontRealtimeLogConfigEndPoint is a nested property type of AWS::CloudFront::RealtimeLogConfig.
 type CloudFrontRealtimeLogConfigEndPoint struct {
@@ -1453,6 +1473,9 @@ func (o *CloudFrontResponseHeadersPolicy) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CloudFrontResponseHeadersPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontResponseHeadersPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CloudFrontResponseHeadersPolicyResponseHeadersPolicyConfig is a nested property type of AWS::CloudFront::ResponseHeadersPolicy.
 type CloudFrontResponseHeadersPolicyResponseHeadersPolicyConfig struct {
@@ -1826,7 +1849,8 @@ func (o *CloudFrontTrustStore) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudFrontTrustStore) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontTrustStore) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontTrustStore) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontTrustStore) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontTrustStoreCaCertificatesBundleSource is a nested property type of AWS::CloudFront::TrustStore.
 type CloudFrontTrustStoreCaCertificatesBundleSource struct {
@@ -1925,7 +1949,8 @@ func (o *CloudFrontVpcOrigin) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudFrontVpcOrigin) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudFrontVpcOrigin) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudFrontVpcOrigin) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudFrontVpcOrigin) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudFrontVpcOriginVpcOriginEndpointConfig is a nested property type of AWS::CloudFront::VpcOrigin.
 type CloudFrontVpcOriginVpcOriginEndpointConfig struct {

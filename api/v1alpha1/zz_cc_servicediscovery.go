@@ -113,7 +113,8 @@ func (o *CloudMapPrivateDnsNamespace) CloudControlSpec() interface{} { return &o
 func (o *CloudMapPrivateDnsNamespace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudMapPrivateDnsNamespace) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudMapPrivateDnsNamespace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudMapPrivateDnsNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudMapPrivateDnsNamespaceProperties is a nested property type of AWS::ServiceDiscovery::PrivateDnsNamespace.
 type CloudMapPrivateDnsNamespaceProperties struct {
@@ -216,7 +217,8 @@ func (o *CloudMapPublicDnsNamespace) CloudControlSpec() interface{} { return &o.
 func (o *CloudMapPublicDnsNamespace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudMapPublicDnsNamespace) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudMapPublicDnsNamespace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudMapPublicDnsNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudMapPublicDnsNamespaceProperties is a nested property type of AWS::ServiceDiscovery::PublicDnsNamespace.
 type CloudMapPublicDnsNamespaceProperties struct {

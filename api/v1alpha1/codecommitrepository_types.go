@@ -43,6 +43,9 @@ type CodeCommitRepositorySpec struct {
 
 // CodeCommitRepositoryStatus defines the observed state of CodeCommitRepository.
 type CodeCommitRepositoryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RepositoryID is the CodeCommit repository ID.
 	// +optional
 	RepositoryID string `json:"repositoryID,omitempty"`

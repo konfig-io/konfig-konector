@@ -132,7 +132,8 @@ func (o *GlobalAcceleratorAccelerator) CloudControlSpec() interface{} { return &
 func (o *GlobalAcceleratorAccelerator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlobalAcceleratorAccelerator) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlobalAcceleratorAccelerator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlobalAcceleratorAccelerator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlobalAcceleratorCrossAccountAttachmentSpec is the desired state of AWS::GlobalAccelerator::CrossAccountAttachment.
 type GlobalAcceleratorCrossAccountAttachmentSpec struct {
@@ -205,6 +206,9 @@ func (o *GlobalAcceleratorCrossAccountAttachment) CloudControlStatusRef() *Cloud
 }
 func (o *GlobalAcceleratorCrossAccountAttachment) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *GlobalAcceleratorCrossAccountAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // GlobalAcceleratorCrossAccountAttachmentResource is a nested property type of AWS::GlobalAccelerator::CrossAccountAttachment.
@@ -314,6 +318,9 @@ func (o *GlobalAcceleratorEndpointGroup) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *GlobalAcceleratorEndpointGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlobalAcceleratorEndpointGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GlobalAcceleratorEndpointGroupEndpointConfiguration is a nested property type of AWS::GlobalAccelerator::EndpointGroup.
 type GlobalAcceleratorEndpointGroupEndpointConfiguration struct {
@@ -415,7 +422,8 @@ func (o *GlobalAcceleratorListener) CloudControlSpec() interface{} { return &o.S
 func (o *GlobalAcceleratorListener) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GlobalAcceleratorListener) CloudControlObserved() interface{} { return &o.Status }
+func (o *GlobalAcceleratorListener) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GlobalAcceleratorListener) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GlobalAcceleratorListenerPortRange is a nested property type of AWS::GlobalAccelerator::Listener.
 type GlobalAcceleratorListenerPortRange struct {

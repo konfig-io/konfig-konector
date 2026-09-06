@@ -97,6 +97,9 @@ func (o *ObservabilityAdminOrganizationCentralizationRule) CloudControlStatusRef
 func (o *ObservabilityAdminOrganizationCentralizationRule) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ObservabilityAdminOrganizationCentralizationRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ObservabilityAdminOrganizationCentralizationRuleCentralizationRule is a nested property type of AWS::ObservabilityAdmin::OrganizationCentralizationRule.
 type ObservabilityAdminOrganizationCentralizationRuleCentralizationRule struct {
@@ -308,6 +311,9 @@ func (o *ObservabilityAdminOrganizationTelemetryRule) CloudControlStatusRef() *C
 }
 func (o *ObservabilityAdminOrganizationTelemetryRule) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *ObservabilityAdminOrganizationTelemetryRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // ObservabilityAdminOrganizationTelemetryRuleTelemetryRule is a nested property type of AWS::ObservabilityAdmin::OrganizationTelemetryRule.
@@ -639,6 +645,9 @@ func (o *ObservabilityAdminS3TableIntegration) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *ObservabilityAdminS3TableIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ObservabilityAdminS3TableIntegration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ObservabilityAdminS3TableIntegrationEncryptionConfig is a nested property type of AWS::ObservabilityAdmin::S3TableIntegration.
 type ObservabilityAdminS3TableIntegrationEncryptionConfig struct {
@@ -730,6 +739,9 @@ func (o *ObservabilityAdminTelemetryEnrichment) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *ObservabilityAdminTelemetryEnrichment) CloudControlObserved() interface{} { return &o.Status }
+func (o *ObservabilityAdminTelemetryEnrichment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ObservabilityAdminTelemetryPipelinesSpec is the desired state of AWS::ObservabilityAdmin::TelemetryPipelines.
 type ObservabilityAdminTelemetryPipelinesSpec struct {
@@ -814,6 +826,9 @@ func (o *ObservabilityAdminTelemetryPipelines) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *ObservabilityAdminTelemetryPipelines) CloudControlObserved() interface{} { return &o.Status }
+func (o *ObservabilityAdminTelemetryPipelines) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ObservabilityAdminTelemetryPipelinesTelemetryPipelineConfiguration is a nested property type of AWS::ObservabilityAdmin::TelemetryPipelines.
 type ObservabilityAdminTelemetryPipelinesTelemetryPipelineConfiguration struct {
@@ -932,6 +947,9 @@ func (o *ObservabilityAdminTelemetryRule) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *ObservabilityAdminTelemetryRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *ObservabilityAdminTelemetryRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ObservabilityAdminTelemetryRuleTelemetryRule is a nested property type of AWS::ObservabilityAdmin::TelemetryRule.
 type ObservabilityAdminTelemetryRuleTelemetryRule struct {

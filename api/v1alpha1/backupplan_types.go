@@ -95,6 +95,9 @@ type BackupPlanSpec struct {
 
 // BackupPlanStatus defines the observed state of BackupPlan.
 type BackupPlanStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PlanID uniquely identifies the backup plan.
 	// +optional
 	PlanID string `json:"planId,omitempty"`

@@ -136,7 +136,8 @@ func (o *TransferAgreement) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferAgreement) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferAgreement) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferAgreement) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferAgreement) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferAgreementCustomDirectories is a nested property type of AWS::Transfer::Agreement.
 type TransferAgreementCustomDirectories struct {
@@ -280,7 +281,8 @@ func (o *TransferCertificate) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferCertificate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferCertificate) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferCertificate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferCertificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferConnectorSpec is the desired state of AWS::Transfer::Connector.
 type TransferConnectorSpec struct {
@@ -401,7 +403,8 @@ func (o *TransferConnector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferConnectorAs2Config is a nested property type of AWS::Transfer::Connector.
 type TransferConnectorAs2Config struct {
@@ -602,7 +605,8 @@ func (o *TransferHostKey) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferHostKey) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferHostKey) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferHostKey) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferHostKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferProfileSpec is the desired state of AWS::Transfer::Profile.
 type TransferProfileSpec struct {
@@ -680,7 +684,8 @@ func (o *TransferProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferServerSpec is the desired state of AWS::Transfer::Server.
 type TransferServerSpec struct {
@@ -810,7 +815,8 @@ func (o *TransferServer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferServer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferServer) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferServer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferServer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferServerEndpointDetails is a nested property type of AWS::Transfer::Server.
 type TransferServerEndpointDetails struct {
@@ -989,7 +995,8 @@ func (o *TransferUser) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferUser) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferUser) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferUser) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferUserHomeDirectoryMapEntry is a nested property type of AWS::Transfer::User.
 type TransferUserHomeDirectoryMapEntry struct {
@@ -1102,7 +1109,8 @@ func (o *TransferWebApp) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferWebApp) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferWebApp) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferWebApp) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferWebApp) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferWebAppIdentityProviderDetails is a nested property type of AWS::Transfer::WebApp.
 type TransferWebAppIdentityProviderDetails struct {
@@ -1239,7 +1247,8 @@ func (o *TransferWorkflow) CloudControlSpec() interface{} { return &o.Spec }
 func (o *TransferWorkflow) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *TransferWorkflow) CloudControlObserved() interface{} { return &o.Status }
+func (o *TransferWorkflow) CloudControlObserved() interface{}   { return &o.Status }
+func (o *TransferWorkflow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // TransferWorkflowWorkflowStep is a nested property type of AWS::Transfer::Workflow.
 type TransferWorkflowWorkflowStep struct {

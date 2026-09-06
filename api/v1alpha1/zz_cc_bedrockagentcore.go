@@ -129,6 +129,9 @@ func (o *BedrockAgentCoreApiKeyCredentialProvider) CloudControlStatusRef() *Clou
 func (o *BedrockAgentCoreApiKeyCredentialProvider) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *BedrockAgentCoreApiKeyCredentialProvider) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreApiKeyCredentialProviderSecretReference is a nested property type of AWS::BedrockAgentCore::ApiKeyCredentialProvider.
 type BedrockAgentCoreApiKeyCredentialProviderSecretReference struct {
@@ -269,6 +272,9 @@ func (o *BedrockAgentCoreBrowserCustom) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreBrowserCustom) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreBrowserCustom) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreBrowserCustomBrowserNetworkConfiguration is a nested property type of AWS::BedrockAgentCore::BrowserCustom.
 type BedrockAgentCoreBrowserCustomBrowserNetworkConfiguration struct {
@@ -423,6 +429,9 @@ func (o *BedrockAgentCoreBrowserProfile) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreBrowserProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreBrowserProfile) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreCapacityProviderSpec is the desired state of AWS::BedrockAgentCore::CapacityProvider.
 type BedrockAgentCoreCapacityProviderSpec struct {
@@ -521,6 +530,9 @@ func (o *BedrockAgentCoreCapacityProvider) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreCapacityProvider) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreCapacityProvider) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreCapacityProviderPermissionsConfiguration is a nested property type of AWS::BedrockAgentCore::CapacityProvider.
 type BedrockAgentCoreCapacityProviderPermissionsConfiguration struct {
@@ -925,6 +937,9 @@ func (o *BedrockAgentCoreCodeInterpreterCustom) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreCodeInterpreterCustom) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreCodeInterpreterCustom) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreCodeInterpreterCustomCodeInterpreterNetworkConfiguration is a nested property type of AWS::BedrockAgentCore::CodeInterpreterCustom.
 type BedrockAgentCoreCodeInterpreterCustomCodeInterpreterNetworkConfiguration struct {
@@ -1067,6 +1082,9 @@ func (o *BedrockAgentCoreConfigurationBundle) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreConfigurationBundle) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreConfigurationBundle) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreConfigurationBundleComponentConfiguration is a nested property type of AWS::BedrockAgentCore::ConfigurationBundle.
 type BedrockAgentCoreConfigurationBundleComponentConfiguration struct {
@@ -1212,7 +1230,8 @@ func (o *BedrockAgentCoreDataset) CloudControlSpec() interface{} { return &o.Spe
 func (o *BedrockAgentCoreDataset) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreDataset) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreDataset) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreDataset) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreDatasetDataSourceType is a nested property type of AWS::BedrockAgentCore::Dataset.
 type BedrockAgentCoreDatasetDataSourceType struct {
@@ -1334,7 +1353,8 @@ func (o *BedrockAgentCoreEvaluator) CloudControlSpec() interface{} { return &o.S
 func (o *BedrockAgentCoreEvaluator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreEvaluator) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreEvaluator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreEvaluator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreEvaluatorEvaluatorConfig is a nested property type of AWS::BedrockAgentCore::Evaluator.
 type BedrockAgentCoreEvaluatorEvaluatorConfig struct {
@@ -1605,7 +1625,8 @@ func (o *BedrockAgentCoreGateway) CloudControlSpec() interface{} { return &o.Spe
 func (o *BedrockAgentCoreGateway) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreGateway) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreGateway) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreGatewayGatewayInterceptorConfiguration is a nested property type of AWS::BedrockAgentCore::Gateway.
 type BedrockAgentCoreGatewayGatewayInterceptorConfiguration struct {
@@ -1739,6 +1760,9 @@ func (o *BedrockAgentCoreGatewayRateLimit) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreGatewayRateLimit) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreGatewayRateLimit) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreGatewayRateLimitLimitEntry is a nested property type of AWS::BedrockAgentCore::GatewayRateLimit.
 type BedrockAgentCoreGatewayRateLimitLimitEntry struct {
@@ -1852,7 +1876,8 @@ func (o *BedrockAgentCoreGatewayRule) CloudControlSpec() interface{} { return &o
 func (o *BedrockAgentCoreGatewayRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreGatewayRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreGatewayRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreGatewayRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreGatewayRuleSystemManagedBlock is a nested property type of AWS::BedrockAgentCore::GatewayRule.
 type BedrockAgentCoreGatewayRuleSystemManagedBlock struct {
@@ -1973,6 +1998,9 @@ func (o *BedrockAgentCoreGatewayTarget) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreGatewayTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreGatewayTarget) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreGatewayTargetCredentialProviderConfiguration is a nested property type of AWS::BedrockAgentCore::GatewayTarget.
 type BedrockAgentCoreGatewayTargetCredentialProviderConfiguration struct {
@@ -2156,7 +2184,8 @@ func (o *BedrockAgentCoreHarness) CloudControlSpec() interface{} { return &o.Spe
 func (o *BedrockAgentCoreHarness) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreHarness) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreHarness) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreHarness) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreHarnessHarnessEnvironmentProvider is a nested property type of AWS::BedrockAgentCore::Harness.
 type BedrockAgentCoreHarnessHarnessEnvironmentProvider struct {
@@ -2862,6 +2891,9 @@ func (o *BedrockAgentCoreHarnessEndpoint) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreHarnessEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreHarnessEndpoint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreMemorySpec is the desired state of AWS::BedrockAgentCore::Memory.
 type BedrockAgentCoreMemorySpec struct {
@@ -2965,7 +2997,8 @@ func (o *BedrockAgentCoreMemory) CloudControlSpec() interface{} { return &o.Spec
 func (o *BedrockAgentCoreMemory) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreMemory) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreMemory) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreMemory) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreMemoryMemoryStrategy is a nested property type of AWS::BedrockAgentCore::Memory.
 type BedrockAgentCoreMemoryMemoryStrategy struct {
@@ -3635,6 +3668,9 @@ func (o *BedrockAgentCoreOAuth2CredentialProvider) CloudControlStatusRef() *Clou
 func (o *BedrockAgentCoreOAuth2CredentialProvider) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *BedrockAgentCoreOAuth2CredentialProvider) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreOAuth2CredentialProviderOauth2ProviderConfigInput is a nested property type of AWS::BedrockAgentCore::OAuth2CredentialProvider.
 type BedrockAgentCoreOAuth2CredentialProviderOauth2ProviderConfigInput struct {
@@ -4171,6 +4207,9 @@ func (o *BedrockAgentCoreOnlineEvaluationConfig) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreOnlineEvaluationConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreOnlineEvaluationConfig) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreOnlineEvaluationConfigDataSourceConfig is a nested property type of AWS::BedrockAgentCore::OnlineEvaluationConfig.
 type BedrockAgentCoreOnlineEvaluationConfigDataSourceConfig struct {
@@ -4383,7 +4422,8 @@ func (o *BedrockAgentCorePolicy) CloudControlSpec() interface{} { return &o.Spec
 func (o *BedrockAgentCorePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCorePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCorePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCorePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCorePolicyPolicyDefinition is a nested property type of AWS::BedrockAgentCore::Policy.
 type BedrockAgentCorePolicyPolicyDefinition struct {
@@ -4511,7 +4551,8 @@ func (o *BedrockAgentCorePolicyEngine) CloudControlSpec() interface{} { return &
 func (o *BedrockAgentCorePolicyEngine) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCorePolicyEngine) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCorePolicyEngine) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCorePolicyEngine) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreResourcePolicySpec is the desired state of AWS::BedrockAgentCore::ResourcePolicy.
 type BedrockAgentCoreResourcePolicySpec struct {
@@ -4572,6 +4613,9 @@ func (o *BedrockAgentCoreResourcePolicy) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreResourcePolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreRuntimeSpec is the desired state of AWS::BedrockAgentCore::Runtime.
 type BedrockAgentCoreRuntimeSpec struct {
@@ -4714,7 +4758,8 @@ func (o *BedrockAgentCoreRuntime) CloudControlSpec() interface{} { return &o.Spe
 func (o *BedrockAgentCoreRuntime) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentCoreRuntime) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreRuntime) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentCoreRuntime) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentCoreRuntimeAgentRuntimeArtifact is a nested property type of AWS::BedrockAgentCore::Runtime.
 type BedrockAgentCoreRuntimeAgentRuntimeArtifact struct {
@@ -5072,6 +5117,9 @@ func (o *BedrockAgentCoreRuntimeEndpoint) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreRuntimeEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreRuntimeEndpoint) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAgentCoreWorkloadIdentitySpec is the desired state of AWS::BedrockAgentCore::WorkloadIdentity.
 type BedrockAgentCoreWorkloadIdentitySpec struct {
@@ -5151,6 +5199,9 @@ func (o *BedrockAgentCoreWorkloadIdentity) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAgentCoreWorkloadIdentity) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentCoreWorkloadIdentity) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&BedrockAgentCoreApiKeyCredentialProvider{}, &BedrockAgentCoreApiKeyCredentialProviderList{})

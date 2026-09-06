@@ -86,7 +86,8 @@ func (o *SSMIncidentsReplicationSet) CloudControlSpec() interface{} { return &o.
 func (o *SSMIncidentsReplicationSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMIncidentsReplicationSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMIncidentsReplicationSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMIncidentsReplicationSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMIncidentsReplicationSetReplicationRegion is a nested property type of AWS::SSMIncidents::ReplicationSet.
 type SSMIncidentsReplicationSetReplicationRegion struct {
@@ -190,7 +191,8 @@ func (o *SSMIncidentsResponsePlan) CloudControlSpec() interface{} { return &o.Sp
 func (o *SSMIncidentsResponsePlan) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSMIncidentsResponsePlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMIncidentsResponsePlan) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSMIncidentsResponsePlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSMIncidentsResponsePlanChatChannel is a nested property type of AWS::SSMIncidents::ResponsePlan.
 type SSMIncidentsResponsePlanChatChannel struct {

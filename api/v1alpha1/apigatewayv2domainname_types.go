@@ -54,6 +54,9 @@ type APIGatewayV2DomainNameSpec struct {
 
 // APIGatewayV2DomainNameStatus defines the observed state of APIGatewayV2DomainName.
 type APIGatewayV2DomainNameStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DomainName is the domain name in AWS (also the primary identifier).
 	// +optional
 	DomainName string `json:"domainName,omitempty"`

@@ -124,7 +124,8 @@ func (o *CloudWatchAlarmMuteRule) CloudControlSpec() interface{} { return &o.Spe
 func (o *CloudWatchAlarmMuteRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudWatchAlarmMuteRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudWatchAlarmMuteRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudWatchAlarmMuteRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudWatchAlarmMuteRuleRule is a nested property type of AWS::CloudWatch::AlarmMuteRule.
 type CloudWatchAlarmMuteRuleRule struct {
@@ -220,7 +221,8 @@ func (o *CloudWatchInsightRule) CloudControlSpec() interface{} { return &o.Spec 
 func (o *CloudWatchInsightRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudWatchInsightRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudWatchInsightRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudWatchInsightRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudWatchLogAlarmSpec is the desired state of AWS::CloudWatch::LogAlarm.
 type CloudWatchLogAlarmSpec struct {
@@ -340,7 +342,8 @@ func (o *CloudWatchLogAlarm) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudWatchLogAlarm) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudWatchLogAlarm) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudWatchLogAlarm) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudWatchLogAlarm) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudWatchLogAlarmScheduledQueryConfiguration is a nested property type of AWS::CloudWatch::LogAlarm.
 type CloudWatchLogAlarmScheduledQueryConfiguration struct {
@@ -522,7 +525,8 @@ func (o *CloudWatchMetricStream) CloudControlSpec() interface{} { return &o.Spec
 func (o *CloudWatchMetricStream) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudWatchMetricStream) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudWatchMetricStream) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudWatchMetricStream) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudWatchMetricStreamMetricStreamFilter is a nested property type of AWS::CloudWatch::MetricStream.
 type CloudWatchMetricStreamMetricStreamFilter struct {
@@ -615,7 +619,8 @@ func (o *CloudWatchOTelEnrichment) CloudControlSpec() interface{} { return &o.Sp
 func (o *CloudWatchOTelEnrichment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudWatchOTelEnrichment) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudWatchOTelEnrichment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudWatchOTelEnrichment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&CloudWatchAlarmMuteRule{}, &CloudWatchAlarmMuteRuleList{})

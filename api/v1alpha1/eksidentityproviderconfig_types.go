@@ -79,6 +79,9 @@ type EKSIdentityProviderConfigSpec struct {
 
 // EKSIdentityProviderConfigStatus defines the observed state of EKSIdentityProviderConfig.
 type EKSIdentityProviderConfigStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the identity provider configuration.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -132,6 +132,9 @@ func (o *ApplicationInsightsApplication) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *ApplicationInsightsApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApplicationInsightsApplication) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ApplicationInsightsApplicationCustomComponent is a nested property type of AWS::ApplicationInsights::Application.
 type ApplicationInsightsApplicationCustomComponent struct {

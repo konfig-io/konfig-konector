@@ -80,7 +80,8 @@ func (o *FMSNotificationChannel) CloudControlSpec() interface{} { return &o.Spec
 func (o *FMSNotificationChannel) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *FMSNotificationChannel) CloudControlObserved() interface{} { return &o.Status }
+func (o *FMSNotificationChannel) CloudControlObserved() interface{}   { return &o.Status }
+func (o *FMSNotificationChannel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // FMSPolicySpec is the desired state of AWS::FMS::Policy.
 type FMSPolicySpec struct {
@@ -180,6 +181,7 @@ func (o *FMSPolicy) CloudControlTypeName() string               { return "AWS::F
 func (o *FMSPolicy) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *FMSPolicy) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *FMSPolicy) CloudControlObserved() interface{}          { return &o.Status }
+func (o *FMSPolicy) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // FMSPolicyIEMap is a nested property type of AWS::FMS::Policy.
 type FMSPolicyIEMap struct {
@@ -365,7 +367,8 @@ func (o *FMSResourceSet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *FMSResourceSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *FMSResourceSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *FMSResourceSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *FMSResourceSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&FMSNotificationChannel{}, &FMSNotificationChannelList{})

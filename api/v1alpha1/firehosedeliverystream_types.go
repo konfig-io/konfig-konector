@@ -69,6 +69,9 @@ type FirehoseDeliveryStreamSpec struct {
 
 // FirehoseDeliveryStreamStatus defines the observed state of FirehoseDeliveryStream.
 type FirehoseDeliveryStreamStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DeliveryStreamARN is the ARN of the delivery stream.
 	// +optional
 	DeliveryStreamARN string `json:"deliveryStreamARN,omitempty"`

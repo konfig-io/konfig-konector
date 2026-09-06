@@ -96,7 +96,8 @@ func (o *ResourceGroupsGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ResourceGroupsGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResourceGroupsGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResourceGroupsGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResourceGroupsGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResourceGroupsGroupResourceQuery is a nested property type of AWS::ResourceGroups::Group.
 type ResourceGroupsGroupResourceQuery struct {
@@ -246,7 +247,8 @@ func (o *ResourceGroupsTagSyncTask) CloudControlSpec() interface{} { return &o.S
 func (o *ResourceGroupsTagSyncTask) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResourceGroupsTagSyncTask) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResourceGroupsTagSyncTask) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResourceGroupsTagSyncTask) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ResourceGroupsGroup{}, &ResourceGroupsGroupList{})

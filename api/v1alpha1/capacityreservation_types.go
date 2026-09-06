@@ -70,6 +70,9 @@ type CapacityReservationSpec struct {
 
 // CapacityReservationStatus defines the observed state of CapacityReservation.
 type CapacityReservationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CapacityReservationID is the AWS capacity reservation identifier.
 	// +optional
 	CapacityReservationID string `json:"capacityReservationId,omitempty"`

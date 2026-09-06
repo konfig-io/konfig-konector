@@ -19,16 +19,21 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awssts "github.com/aws/aws-sdk-go-v2/service/sts"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	corev1 "k8s.io/api/core/v1"
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	"github.com/konfig-io/konfig-konector/internal/aws/provider"
@@ -46,11 +51,15 @@ type AWSProviderReconciler struct {
 	Scheme    *runtime.Scheme
 	STSClient AWSProviderSTSAPI
 	Resolver  *provider.Resolver
+	// Reader is an uncached reader (mgr.GetAPIReader()) used to scan for
+	// references on deletion without starting informers for every kind.
+	Reader client.Reader
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=awsproviders,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=awsproviders/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups="",resources=namespaces,verbs=get;list;watch
+// +kubebuilder:rbac:groups=aws.konfig.io,resources=awsproviders/finalizers,verbs=update
 
 func (r *AWSProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := log.FromContext(ctx)
@@ -65,7 +74,34 @@ func (r *AWSProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if r.Resolver != nil {
 			r.Resolver.Invalidate(p.Name)
 		}
-		return ctrl.Result{}, nil
+		if !controllerutil.ContainsFinalizer(p, awsv1alpha1.FinalizerName) {
+			return ctrl.Result{}, nil
+		}
+		// Refuse to disappear while resources still depend on this provider:
+		// they could neither reconcile nor delete their AWS resources.
+		users, err := r.referencingResources(ctx, p.Name)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		if len(users) > 0 {
+			msg := fmt.Sprintf("deletion blocked: %d resource(s) still reference this provider (e.g. %s)", len(users), strings.Join(users[:min(3, len(users))], ", "))
+			meta.SetStatusCondition(&p.Status.Conditions, metav1.Condition{
+				Type: awsv1alpha1.ConditionReady, Status: metav1.ConditionFalse,
+				ObservedGeneration: p.Generation, Reason: "InUse", Message: msg,
+			})
+			_ = persistStatus(ctx, r.Client, p)
+			logger.Info(msg)
+			return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+		}
+		controllerutil.RemoveFinalizer(p, awsv1alpha1.FinalizerName)
+		return ctrl.Result{}, r.Update(ctx, p)
+	}
+	if !controllerutil.ContainsFinalizer(p, awsv1alpha1.FinalizerName) {
+		controllerutil.AddFinalizer(p, awsv1alpha1.FinalizerName)
+		if err := r.Update(ctx, p); err != nil {
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true}, nil
 	}
 	if p.Generation != p.Status.ObservedGeneration && r.Resolver != nil {
 		r.Resolver.Invalidate(p.Name)
@@ -91,6 +127,42 @@ func (r *AWSProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 	return requeueResult(), nil
+}
+
+// referencingResources lists "kind namespace/name" for every aws.konfig.io
+// resource whose spec.providerRef names the provider, plus namespaces whose
+// annotation selects it. Uses unstructured lists over the installed kinds.
+func (r *AWSProviderReconciler) referencingResources(ctx context.Context, name string) ([]string, error) {
+	var users []string
+	nsList := &corev1.NamespaceList{}
+	if err := r.List(ctx, nsList); err == nil {
+		for _, ns := range nsList.Items {
+			if ns.Annotations[awsv1alpha1.ProviderAnnotation] == name {
+				users = append(users, "Namespace "+ns.Name)
+			}
+		}
+	}
+	reader := r.Reader
+	if reader == nil {
+		reader = r.Client
+	}
+	for gvk := range r.Scheme.AllKnownTypes() {
+		if gvk.Group != awsv1alpha1.GroupVersion.Group || gvk.Kind == "AWSProvider" || strings.HasSuffix(gvk.Kind, "List") {
+			continue
+		}
+		ul := &unstructured.UnstructuredList{}
+		ul.SetGroupVersionKind(gvk.GroupVersion().WithKind(gvk.Kind + "List"))
+		if err := reader.List(ctx, ul); err != nil {
+			continue // CRD not installed in this cluster
+		}
+		for _, item := range ul.Items {
+			ref, _, _ := unstructured.NestedString(item.Object, "spec", "providerRef", "name")
+			if ref == name {
+				users = append(users, fmt.Sprintf("%s %s/%s", item.GetKind(), item.GetNamespace(), item.GetName()))
+			}
+		}
+	}
+	return users, nil
 }
 
 func (r *AWSProviderReconciler) verify(ctx context.Context, p *awsv1alpha1.AWSProvider) error {

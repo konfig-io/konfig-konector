@@ -82,6 +82,9 @@ type SCProductSpec struct {
 
 // SCProductStatus defines the observed state of SCProduct.
 type SCProductStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ProductID is the Service Catalog product identifier (prod-...).
 	// +optional
 	ProductID string `json:"productId,omitempty"`

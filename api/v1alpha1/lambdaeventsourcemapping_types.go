@@ -73,6 +73,9 @@ type LambdaEventSourceMappingSpec struct {
 
 // LambdaEventSourceMappingStatus defines the observed state of LambdaEventSourceMapping.
 type LambdaEventSourceMappingStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// UUID is the identifier of the event source mapping.
 	// +optional
 	UUID string `json:"uuid,omitempty"`

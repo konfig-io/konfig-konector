@@ -63,6 +63,9 @@ type KMSKeySpec struct {
 
 // KMSKeyStatus defines the observed state of KMSKey.
 type KMSKeyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// KeyID is the AWS KMS key ID.
 	// +optional
 	KeyID string `json:"keyId,omitempty"`

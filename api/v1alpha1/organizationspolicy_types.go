@@ -57,6 +57,9 @@ type OrganizationsPolicySpec struct {
 
 // OrganizationsPolicyStatus defines the observed state of OrganizationsPolicy.
 type OrganizationsPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyID is the unique identifier (p-...) of the policy.
 	// +optional
 	PolicyID string `json:"policyId,omitempty"`

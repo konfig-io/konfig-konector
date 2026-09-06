@@ -43,6 +43,9 @@ type SESEmailIdentitySpec struct {
 
 // SESEmailIdentityStatus defines the observed state of SESEmailIdentity.
 type SESEmailIdentityStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// IdentityType is the type of email identity (EMAIL_ADDRESS or DOMAIN).
 	// +optional
 	IdentityType string `json:"identityType,omitempty"`

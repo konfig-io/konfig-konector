@@ -85,7 +85,8 @@ func (o *ElasticBeanstalkApplication) CloudControlSpec() interface{} { return &o
 func (o *ElasticBeanstalkApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ElasticBeanstalkApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElasticBeanstalkApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ElasticBeanstalkApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ElasticBeanstalkApplicationApplicationResourceLifecycleConfig is a nested property type of AWS::ElasticBeanstalk::Application.
 type ElasticBeanstalkApplicationApplicationResourceLifecycleConfig struct {
@@ -209,6 +210,9 @@ func (o *ElasticBeanstalkApplicationVersion) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *ElasticBeanstalkApplicationVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElasticBeanstalkApplicationVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ElasticBeanstalkApplicationVersionSourceBundle is a nested property type of AWS::ElasticBeanstalk::ApplicationVersion.
 type ElasticBeanstalkApplicationVersionSourceBundle struct {
@@ -319,6 +323,9 @@ func (o *ElasticBeanstalkConfigurationTemplate) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *ElasticBeanstalkConfigurationTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElasticBeanstalkConfigurationTemplate) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ElasticBeanstalkConfigurationTemplateConfigurationOptionSetting is a nested property type of AWS::ElasticBeanstalk::ConfigurationTemplate.
 type ElasticBeanstalkConfigurationTemplateConfigurationOptionSetting struct {
@@ -452,7 +459,8 @@ func (o *ElasticBeanstalkEnvironment) CloudControlSpec() interface{} { return &o
 func (o *ElasticBeanstalkEnvironment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ElasticBeanstalkEnvironment) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElasticBeanstalkEnvironment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ElasticBeanstalkEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ElasticBeanstalkEnvironmentTier is a nested property type of AWS::ElasticBeanstalk::Environment.
 type ElasticBeanstalkEnvironmentTier struct {

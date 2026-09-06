@@ -122,6 +122,9 @@ type BatchJobDefinitionSpec struct {
 
 // BatchJobDefinitionStatus defines the observed state of BatchJobDefinition.
 type BatchJobDefinitionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// JobDefinitionARN is the ARN of the active job definition revision.
 	// +optional
 	JobDefinitionARN string `json:"jobDefinitionArn,omitempty"`

@@ -42,6 +42,9 @@ type ScheduleGroupSpec struct {
 
 // ScheduleGroupStatus defines the observed state of ScheduleGroup.
 type ScheduleGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the schedule group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -89,7 +89,8 @@ func (o *Route53CidrCollection) CloudControlSpec() interface{} { return &o.Spec 
 func (o *Route53CidrCollection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *Route53CidrCollection) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53CidrCollection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *Route53CidrCollection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // Route53CidrCollectionLocation is a nested property type of AWS::Route53::CidrCollection.
 type Route53CidrCollectionLocation struct {
@@ -151,7 +152,8 @@ func (o *Route53DNSSEC) CloudControlSpec() interface{} { return &o.Spec }
 func (o *Route53DNSSEC) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *Route53DNSSEC) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53DNSSEC) CloudControlObserved() interface{}   { return &o.Status }
+func (o *Route53DNSSEC) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&Route53CidrCollection{}, &Route53CidrCollectionList{})

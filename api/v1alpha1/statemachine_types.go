@@ -50,6 +50,9 @@ type StateMachineSpec struct {
 
 // StateMachineStatus defines the observed state of StateMachine.
 type StateMachineStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StateMachineARN is the ARN of the state machine.
 	// +optional
 	StateMachineARN string `json:"stateMachineARN,omitempty"`

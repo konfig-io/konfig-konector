@@ -88,7 +88,8 @@ func (o *DMSCertificate) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSCertificate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSCertificate) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSCertificate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSCertificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSDataMigrationSpec is the desired state of AWS::DMS::DataMigration.
 type DMSDataMigrationSpec struct {
@@ -183,7 +184,8 @@ func (o *DMSDataMigration) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSDataMigration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSDataMigration) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSDataMigration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSDataMigration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSDataMigrationDataMigrationSettings is a nested property type of AWS::DMS::DataMigration.
 type DMSDataMigrationDataMigrationSettings struct {
@@ -317,7 +319,8 @@ func (o *DMSDataProvider) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSDataProvider) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSDataProvider) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSDataProvider) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSDataProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSDataProviderSettings is a nested property type of AWS::DMS::DataProvider.
 type DMSDataProviderSettings struct {
@@ -736,7 +739,8 @@ func (o *DMSEndpoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSEndpointDocDbSettings is a nested property type of AWS::DMS::Endpoint.
 type DMSEndpointDocDbSettings struct {
@@ -1956,7 +1960,8 @@ func (o *DMSEventSubscription) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSEventSubscription) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSEventSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSEventSubscription) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSEventSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSInstanceProfileSpec is the desired state of AWS::DMS::InstanceProfile.
 type DMSInstanceProfileSpec struct {
@@ -2062,7 +2067,8 @@ func (o *DMSInstanceProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSInstanceProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSInstanceProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSInstanceProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSInstanceProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSMigrationProjectSpec is the desired state of AWS::DMS::MigrationProject.
 type DMSMigrationProjectSpec struct {
@@ -2170,7 +2176,8 @@ func (o *DMSMigrationProject) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSMigrationProject) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSMigrationProject) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSMigrationProject) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSMigrationProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSMigrationProjectSchemaConversionApplicationAttributes is a nested property type of AWS::DMS::MigrationProject.
 type DMSMigrationProjectSchemaConversionApplicationAttributes struct {
@@ -2288,7 +2295,8 @@ func (o *DMSReplicationConfig) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSReplicationConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSReplicationConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSReplicationConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSReplicationConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSReplicationConfigComputeConfig is a nested property type of AWS::DMS::ReplicationConfig.
 type DMSReplicationConfigComputeConfig struct {
@@ -2380,7 +2388,8 @@ func (o *DMSReplicationSubnetGroup) CloudControlSpec() interface{} { return &o.S
 func (o *DMSReplicationSubnetGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSReplicationSubnetGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSReplicationSubnetGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSReplicationSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DMSReplicationTaskSpec is the desired state of AWS::DMS::ReplicationTask.
 type DMSReplicationTaskSpec struct {
@@ -2492,7 +2501,8 @@ func (o *DMSReplicationTask) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DMSReplicationTask) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DMSReplicationTask) CloudControlObserved() interface{} { return &o.Status }
+func (o *DMSReplicationTask) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DMSReplicationTask) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&DMSCertificate{}, &DMSCertificateList{})

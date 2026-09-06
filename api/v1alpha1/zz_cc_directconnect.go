@@ -117,7 +117,8 @@ func (o *DirectConnectConnection) CloudControlSpec() interface{} { return &o.Spe
 func (o *DirectConnectConnection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DirectConnectConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectConnection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DirectConnectConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DirectConnectDirectConnectGatewaySpec is the desired state of AWS::DirectConnect::DirectConnectGateway.
 type DirectConnectDirectConnectGatewaySpec struct {
@@ -188,6 +189,9 @@ func (o *DirectConnectDirectConnectGateway) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *DirectConnectDirectConnectGateway) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectDirectConnectGateway) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // DirectConnectDirectConnectGatewayAssociationSpec is the desired state of AWS::DirectConnect::DirectConnectGatewayAssociation.
 type DirectConnectDirectConnectGatewayAssociationSpec struct {
@@ -266,6 +270,9 @@ func (o *DirectConnectDirectConnectGatewayAssociation) CloudControlStatusRef() *
 }
 func (o *DirectConnectDirectConnectGatewayAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *DirectConnectDirectConnectGatewayAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // DirectConnectLagSpec is the desired state of AWS::DirectConnect::Lag.
@@ -359,7 +366,8 @@ func (o *DirectConnectLag) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DirectConnectLag) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DirectConnectLag) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectLag) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DirectConnectLag) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DirectConnectPrivateVirtualInterfaceSpec is the desired state of AWS::DirectConnect::PrivateVirtualInterface.
 type DirectConnectPrivateVirtualInterfaceSpec struct {
@@ -474,6 +482,9 @@ func (o *DirectConnectPrivateVirtualInterface) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *DirectConnectPrivateVirtualInterface) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectPrivateVirtualInterface) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // DirectConnectPrivateVirtualInterfaceBgpPeer is a nested property type of AWS::DirectConnect::PrivateVirtualInterface.
 type DirectConnectPrivateVirtualInterfaceBgpPeer struct {
@@ -598,6 +609,9 @@ func (o *DirectConnectPublicVirtualInterface) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *DirectConnectPublicVirtualInterface) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectPublicVirtualInterface) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // DirectConnectPublicVirtualInterfaceBgpPeer is a nested property type of AWS::DirectConnect::PublicVirtualInterface.
 type DirectConnectPublicVirtualInterfaceBgpPeer struct {
@@ -731,6 +745,9 @@ func (o *DirectConnectTransitVirtualInterface) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *DirectConnectTransitVirtualInterface) CloudControlObserved() interface{} { return &o.Status }
+func (o *DirectConnectTransitVirtualInterface) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // DirectConnectTransitVirtualInterfaceBgpPeer is a nested property type of AWS::DirectConnect::TransitVirtualInterface.
 type DirectConnectTransitVirtualInterfaceBgpPeer struct {

@@ -155,7 +155,8 @@ func (o *EMRServerlessApplication) CloudControlSpec() interface{} { return &o.Sp
 func (o *EMRServerlessApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRServerlessApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRServerlessApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRServerlessApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EMRServerlessApplicationInitialCapacityConfigKeyValuePair is a nested property type of AWS::EMRServerless::Application.
 type EMRServerlessApplicationInitialCapacityConfigKeyValuePair struct {

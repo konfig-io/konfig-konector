@@ -119,13 +119,15 @@ func (r *CloudFrontOriginAccessControlReconciler) reconcileOAC(ctx context.Conte
 		}
 		if err == nil && getOut.OriginAccessControl != nil {
 			obj.Status.ETag = aws.ToString(getOut.ETag)
-			_, err := r.CloudFrontClient.UpdateOriginAccessControl(ctx, &awscf.UpdateOriginAccessControlInput{
-				Id:                        aws.String(obj.Status.ID),
-				IfMatch:                   aws.String(obj.Status.ETag),
-				OriginAccessControlConfig: buildOACConfig(obj),
-			})
-			if err != nil {
-				return fmt.Errorf("update cloudfront oac: %w", err)
+			// CloudFront control-plane APIs are rate limited; only update on spec change.
+			if obj.Status.ObservedGeneration != obj.Generation {
+				if _, err := r.CloudFrontClient.UpdateOriginAccessControl(ctx, &awscf.UpdateOriginAccessControlInput{
+					Id:                        aws.String(obj.Status.ID),
+					IfMatch:                   aws.String(obj.Status.ETag),
+					OriginAccessControlConfig: buildOACConfig(obj),
+				}); err != nil {
+					return fmt.Errorf("update cloudfront oac: %w", err)
+				}
 			}
 			obj.Status.ObservedGeneration = obj.Generation
 			now := metav1.Now()

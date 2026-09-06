@@ -57,6 +57,9 @@ type PlacementGroupSpec struct {
 
 // PlacementGroupStatus defines the observed state of PlacementGroup.
 type PlacementGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// GroupID is the AWS placement group ID.
 	// +optional
 	GroupID string `json:"groupId,omitempty"`

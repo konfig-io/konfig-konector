@@ -104,7 +104,8 @@ func (o *RAMPermission) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RAMPermission) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RAMPermission) CloudControlObserved() interface{} { return &o.Status }
+func (o *RAMPermission) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RAMPermission) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&RAMPermission{}, &RAMPermissionList{})

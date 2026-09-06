@@ -119,6 +119,9 @@ func (o *GuardDutyCustomDetectionRuleAssociation) CloudControlStatusRef() *Cloud
 func (o *GuardDutyCustomDetectionRuleAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *GuardDutyCustomDetectionRuleAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GuardDutyFilterSpec is the desired state of AWS::GuardDuty::Filter.
 type GuardDutyFilterSpec struct {
@@ -192,7 +195,8 @@ func (o *GuardDutyFilter) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GuardDutyFilter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyFilter) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyFilter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyFilterFindingCriteria is a nested property type of AWS::GuardDuty::Filter.
 type GuardDutyFilterFindingCriteria struct {
@@ -319,7 +323,8 @@ func (o *GuardDutyIPSet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GuardDutyIPSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyIPSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyIPSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyIPSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyMalwareProtectionPlanSpec is the desired state of AWS::GuardDuty::MalwareProtectionPlan.
 type GuardDutyMalwareProtectionPlanSpec struct {
@@ -409,6 +414,9 @@ func (o *GuardDutyMalwareProtectionPlan) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *GuardDutyMalwareProtectionPlan) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyMalwareProtectionPlan) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GuardDutyMalwareProtectionPlanCFNProtectedResource is a nested property type of AWS::GuardDuty::MalwareProtectionPlan.
 type GuardDutyMalwareProtectionPlanCFNProtectedResource struct {
@@ -514,7 +522,8 @@ func (o *GuardDutyMaster) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GuardDutyMaster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyMaster) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyMaster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyMaster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyMemberSpec is the desired state of AWS::GuardDuty::Member.
 type GuardDutyMemberSpec struct {
@@ -579,7 +588,8 @@ func (o *GuardDutyMember) CloudControlSpec() interface{} { return &o.Spec }
 func (o *GuardDutyMember) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyMember) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyMember) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyMember) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyPublishingDestinationSpec is the desired state of AWS::GuardDuty::PublishingDestination.
 type GuardDutyPublishingDestinationSpec struct {
@@ -659,6 +669,9 @@ func (o *GuardDutyPublishingDestination) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *GuardDutyPublishingDestination) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyPublishingDestination) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // GuardDutyPublishingDestinationCFNDestinationProperties is a nested property type of AWS::GuardDuty::PublishingDestination.
 type GuardDutyPublishingDestinationCFNDestinationProperties struct {
@@ -765,7 +778,8 @@ func (o *GuardDutyThreatEntitySet) CloudControlSpec() interface{} { return &o.Sp
 func (o *GuardDutyThreatEntitySet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyThreatEntitySet) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyThreatEntitySet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyThreatEntitySet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyThreatIntelSetSpec is the desired state of AWS::GuardDuty::ThreatIntelSet.
 type GuardDutyThreatIntelSetSpec struct {
@@ -844,7 +858,8 @@ func (o *GuardDutyThreatIntelSet) CloudControlSpec() interface{} { return &o.Spe
 func (o *GuardDutyThreatIntelSet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyThreatIntelSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyThreatIntelSet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyThreatIntelSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // GuardDutyTrustedEntitySetSpec is the desired state of AWS::GuardDuty::TrustedEntitySet.
 type GuardDutyTrustedEntitySetSpec struct {
@@ -940,7 +955,8 @@ func (o *GuardDutyTrustedEntitySet) CloudControlSpec() interface{} { return &o.S
 func (o *GuardDutyTrustedEntitySet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *GuardDutyTrustedEntitySet) CloudControlObserved() interface{} { return &o.Status }
+func (o *GuardDutyTrustedEntitySet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *GuardDutyTrustedEntitySet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&GuardDutyCustomDetectionRuleAssociation{}, &GuardDutyCustomDetectionRuleAssociationList{})

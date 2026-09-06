@@ -91,6 +91,9 @@ type EKSAccessEntrySpec struct {
 
 // EKSAccessEntryStatus defines the observed state of EKSAccessEntry.
 type EKSAccessEntryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccessEntryArn is the ARN of the access entry.
 	// +optional
 	AccessEntryArn string `json:"accessEntryArn,omitempty"`

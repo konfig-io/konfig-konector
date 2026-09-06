@@ -70,6 +70,9 @@ type FirewallSpec struct {
 
 // FirewallStatus defines the observed state of Firewall.
 type FirewallStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the firewall.
 	// +optional
 	ARN string `json:"arn,omitempty"`

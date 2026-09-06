@@ -155,7 +155,8 @@ func (o *EC2ApplicationStatusCheck) CloudControlSpec() interface{} { return &o.S
 func (o *EC2ApplicationStatusCheck) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2ApplicationStatusCheck) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2ApplicationStatusCheck) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2ApplicationStatusCheck) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2ApplicationStatusCheckHealthCheckPath is a nested property type of AWS::EC2::ApplicationStatusCheck.
 type EC2ApplicationStatusCheckHealthCheckPath struct {
@@ -265,7 +266,8 @@ func (o *EC2CapacityManagerDataExport) CloudControlSpec() interface{} { return &
 func (o *EC2CapacityManagerDataExport) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2CapacityManagerDataExport) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2CapacityManagerDataExport) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2CapacityManagerDataExport) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2CapacityReservationFleetSpec is the desired state of AWS::EC2::CapacityReservationFleet.
 type EC2CapacityReservationFleetSpec struct {
@@ -354,7 +356,8 @@ func (o *EC2CapacityReservationFleet) CloudControlSpec() interface{} { return &o
 func (o *EC2CapacityReservationFleet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2CapacityReservationFleet) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2CapacityReservationFleet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2CapacityReservationFleet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2CapacityReservationFleetTagSpecification is a nested property type of AWS::EC2::CapacityReservationFleet.
 type EC2CapacityReservationFleetTagSpecification struct {
@@ -459,7 +462,8 @@ func (o *EC2CarrierGateway) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2CarrierGateway) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2CarrierGateway) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2CarrierGateway) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2CarrierGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2DHCPOptionsSpec is the desired state of AWS::EC2::DHCPOptions.
 type EC2DHCPOptionsSpec struct {
@@ -543,7 +547,8 @@ func (o *EC2DHCPOptions) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2DHCPOptions) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2DHCPOptions) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2DHCPOptions) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2DHCPOptions) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2EC2FleetSpec is the desired state of AWS::EC2::EC2Fleet.
 type EC2EC2FleetSpec struct {
@@ -642,7 +647,8 @@ func (o *EC2EC2Fleet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2EC2Fleet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2EC2Fleet) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2EC2Fleet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2EC2Fleet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2EC2FleetTargetCapacitySpecificationRequest is a nested property type of AWS::EC2::EC2Fleet.
 type EC2EC2FleetTargetCapacitySpecificationRequest struct {
@@ -1262,6 +1268,9 @@ func (o *EC2EnclaveCertificateIamRoleAssociation) CloudControlStatusRef() *Cloud
 func (o *EC2EnclaveCertificateIamRoleAssociation) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *EC2EnclaveCertificateIamRoleAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2FpgaImageSpec is the desired state of AWS::EC2::FpgaImage.
 type EC2FpgaImageSpec struct {
@@ -1374,7 +1383,8 @@ func (o *EC2FpgaImage) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2FpgaImage) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2FpgaImage) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2FpgaImage) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2FpgaImage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2FpgaImageStorageLocation is a nested property type of AWS::EC2::FpgaImage.
 type EC2FpgaImageStorageLocation struct {
@@ -1449,6 +1459,9 @@ func (o *EC2GatewayRouteTableAssociation) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2GatewayRouteTableAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2GatewayRouteTableAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2HostSpec is the desired state of AWS::EC2::Host.
 type EC2HostSpec struct {
@@ -1546,6 +1559,7 @@ func (o *EC2Host) CloudControlTypeName() string               { return "AWS::EC2
 func (o *EC2Host) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *EC2Host) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *EC2Host) CloudControlObserved() interface{}          { return &o.Status }
+func (o *EC2Host) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // EC2IPAMSpec is the desired state of AWS::EC2::IPAM.
 type EC2IPAMSpec struct {
@@ -1659,6 +1673,7 @@ func (o *EC2IPAM) CloudControlTypeName() string               { return "AWS::EC2
 func (o *EC2IPAM) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *EC2IPAM) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *EC2IPAM) CloudControlObserved() interface{}          { return &o.Status }
+func (o *EC2IPAM) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // EC2IPAMIpamOperatingRegion is a nested property type of AWS::EC2::IPAM.
 type EC2IPAMIpamOperatingRegion struct {
@@ -1742,7 +1757,8 @@ func (o *EC2IPAMAllocation) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2IPAMAllocation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMAllocation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMAllocation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMAllocation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMPoolSpec is the desired state of AWS::EC2::IPAMPool.
 type EC2IPAMPoolSpec struct {
@@ -1909,7 +1925,8 @@ func (o *EC2IPAMPool) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2IPAMPool) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMPool) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMPool) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMPool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMPoolProvisionedCidr is a nested property type of AWS::EC2::IPAMPool.
 type EC2IPAMPoolProvisionedCidr struct {
@@ -1997,7 +2014,8 @@ func (o *EC2IPAMPoolCidr) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2IPAMPoolCidr) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMPoolCidr) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMPoolCidr) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMPoolCidr) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMPrefixListResolverSpec is the desired state of AWS::EC2::IPAMPrefixListResolver.
 type EC2IPAMPrefixListResolverSpec struct {
@@ -2081,7 +2099,8 @@ func (o *EC2IPAMPrefixListResolver) CloudControlSpec() interface{} { return &o.S
 func (o *EC2IPAMPrefixListResolver) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMPrefixListResolver) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMPrefixListResolver) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMPrefixListResolver) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMPrefixListResolverIpamPrefixListResolverRule is a nested property type of AWS::EC2::IPAMPrefixListResolver.
 type EC2IPAMPrefixListResolverIpamPrefixListResolverRule struct {
@@ -2229,6 +2248,9 @@ func (o *EC2IPAMPrefixListResolverTarget) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2IPAMPrefixListResolverTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMPrefixListResolverTarget) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2IPAMResourceDiscoverySpec is the desired state of AWS::EC2::IPAMResourceDiscovery.
 type EC2IPAMResourceDiscoverySpec struct {
@@ -2323,7 +2345,8 @@ func (o *EC2IPAMResourceDiscovery) CloudControlSpec() interface{} { return &o.Sp
 func (o *EC2IPAMResourceDiscovery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMResourceDiscovery) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMResourceDiscovery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMResourceDiscovery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMResourceDiscoveryIpamResourceDiscoveryOrganizationalUnitExclusion is a nested property type of AWS::EC2::IPAMResourceDiscovery.
 type EC2IPAMResourceDiscoveryIpamResourceDiscoveryOrganizationalUnitExclusion struct {
@@ -2442,6 +2465,9 @@ func (o *EC2IPAMResourceDiscoveryAssociation) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2IPAMResourceDiscoveryAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMResourceDiscoveryAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2IPAMScopeSpec is the desired state of AWS::EC2::IPAMScope.
 type EC2IPAMScopeSpec struct {
@@ -2533,7 +2559,8 @@ func (o *EC2IPAMScope) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2IPAMScope) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2IPAMScope) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IPAMScope) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2IPAMScope) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2IPAMScopeIpamScopeExternalAuthorityConfiguration is a nested property type of AWS::EC2::IPAMScope.
 type EC2IPAMScopeIpamScopeExternalAuthorityConfiguration struct {
@@ -2672,7 +2699,8 @@ func (o *EC2InstanceConnectEndpoint) CloudControlSpec() interface{} { return &o.
 func (o *EC2InstanceConnectEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2InstanceConnectEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2InstanceConnectEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2InstanceConnectEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2InstanceConnectEndpointInstanceConnectEndpointPublicDnsNames is a nested property type of AWS::EC2::InstanceConnectEndpoint.
 type EC2InstanceConnectEndpointInstanceConnectEndpointPublicDnsNames struct {
@@ -2759,6 +2787,9 @@ func (o *EC2IpPoolRouteTableAssociation) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2IpPoolRouteTableAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2IpPoolRouteTableAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2IpamExternalResourceVerificationTokenSpec is the desired state of AWS::EC2::IpamExternalResourceVerificationToken.
 type EC2IpamExternalResourceVerificationTokenSpec struct {
@@ -2871,6 +2902,9 @@ func (o *EC2IpamExternalResourceVerificationToken) CloudControlStatusRef() *Clou
 func (o *EC2IpamExternalResourceVerificationToken) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *EC2IpamExternalResourceVerificationToken) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2LocalGatewayRouteSpec is the desired state of AWS::EC2::LocalGatewayRoute.
 type EC2LocalGatewayRouteSpec struct {
@@ -2944,7 +2978,8 @@ func (o *EC2LocalGatewayRoute) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2LocalGatewayRoute) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2LocalGatewayRoute) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2LocalGatewayRoute) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2LocalGatewayRoute) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2LocalGatewayRouteTableSpec is the desired state of AWS::EC2::LocalGatewayRouteTable.
 type EC2LocalGatewayRouteTableSpec struct {
@@ -3031,7 +3066,8 @@ func (o *EC2LocalGatewayRouteTable) CloudControlSpec() interface{} { return &o.S
 func (o *EC2LocalGatewayRouteTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2LocalGatewayRouteTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2LocalGatewayRouteTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2LocalGatewayRouteTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2LocalGatewayRouteTableVPCAssociationSpec is the desired state of AWS::EC2::LocalGatewayRouteTableVPCAssociation.
 type EC2LocalGatewayRouteTableVPCAssociationSpec struct {
@@ -3113,6 +3149,9 @@ func (o *EC2LocalGatewayRouteTableVPCAssociation) CloudControlStatusRef() *Cloud
 }
 func (o *EC2LocalGatewayRouteTableVPCAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *EC2LocalGatewayRouteTableVPCAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // EC2LocalGatewayRouteTableVirtualInterfaceGroupAssociationSpec is the desired state of AWS::EC2::LocalGatewayRouteTableVirtualInterfaceGroupAssociation.
@@ -3208,6 +3247,9 @@ func (o *EC2LocalGatewayRouteTableVirtualInterfaceGroupAssociation) CloudControl
 }
 func (o *EC2LocalGatewayRouteTableVirtualInterfaceGroupAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *EC2LocalGatewayRouteTableVirtualInterfaceGroupAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // EC2LocalGatewayVirtualInterfaceSpec is the desired state of AWS::EC2::LocalGatewayVirtualInterface.
@@ -3322,6 +3364,9 @@ func (o *EC2LocalGatewayVirtualInterface) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2LocalGatewayVirtualInterface) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2LocalGatewayVirtualInterface) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2LocalGatewayVirtualInterfaceGroupSpec is the desired state of AWS::EC2::LocalGatewayVirtualInterfaceGroup.
 type EC2LocalGatewayVirtualInterfaceGroupSpec struct {
@@ -3417,6 +3462,9 @@ func (o *EC2LocalGatewayVirtualInterfaceGroup) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2LocalGatewayVirtualInterfaceGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2LocalGatewayVirtualInterfaceGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2NetworkInsightsAccessScopeSpec is the desired state of AWS::EC2::NetworkInsightsAccessScope.
 type EC2NetworkInsightsAccessScopeSpec struct {
@@ -3492,6 +3540,9 @@ func (o *EC2NetworkInsightsAccessScope) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2NetworkInsightsAccessScope) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInsightsAccessScope) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2NetworkInsightsAccessScopeAccessScopePathRequest is a nested property type of AWS::EC2::NetworkInsightsAccessScope.
 type EC2NetworkInsightsAccessScopeAccessScopePathRequest struct {
@@ -3643,6 +3694,9 @@ func (o *EC2NetworkInsightsAccessScopeAnalysis) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2NetworkInsightsAccessScopeAnalysis) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInsightsAccessScopeAnalysis) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2NetworkInsightsAnalysisSpec is the desired state of AWS::EC2::NetworkInsightsAnalysis.
 type EC2NetworkInsightsAnalysisSpec struct {
@@ -3753,7 +3807,8 @@ func (o *EC2NetworkInsightsAnalysis) CloudControlSpec() interface{} { return &o.
 func (o *EC2NetworkInsightsAnalysis) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2NetworkInsightsAnalysis) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInsightsAnalysis) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2NetworkInsightsAnalysis) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2NetworkInsightsAnalysisPathComponent is a nested property type of AWS::EC2::NetworkInsightsAnalysis.
 type EC2NetworkInsightsAnalysisPathComponent struct {
@@ -4253,7 +4308,8 @@ func (o *EC2NetworkInsightsPath) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2NetworkInsightsPath) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2NetworkInsightsPath) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInsightsPath) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2NetworkInsightsPath) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2NetworkInsightsPathPathFilter is a nested property type of AWS::EC2::NetworkInsightsPath.
 type EC2NetworkInsightsPathPathFilter struct {
@@ -4452,7 +4508,8 @@ func (o *EC2NetworkInterface) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2NetworkInterface) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2NetworkInterface) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInterface) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2NetworkInterface) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2NetworkInterfacePrivateIpAddressSpecification is a nested property type of AWS::EC2::NetworkInterface.
 type EC2NetworkInterfacePrivateIpAddressSpecification struct {
@@ -4584,6 +4641,9 @@ func (o *EC2NetworkInterfaceAttachment) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2NetworkInterfaceAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2NetworkInterfaceAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2NetworkInterfaceAttachmentEnaSrdSpecification is a nested property type of AWS::EC2::NetworkInterfaceAttachment.
 type EC2NetworkInterfaceAttachmentEnaSrdSpecification struct {
@@ -4672,6 +4732,9 @@ func (o *EC2NetworkPerformanceMetricSubscription) CloudControlStatusRef() *Cloud
 }
 func (o *EC2NetworkPerformanceMetricSubscription) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *EC2NetworkPerformanceMetricSubscription) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // EC2RouteSpec is the desired state of AWS::EC2::Route.
@@ -4796,6 +4859,7 @@ func (o *EC2Route) CloudControlTypeName() string               { return "AWS::EC
 func (o *EC2Route) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *EC2Route) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *EC2Route) CloudControlObserved() interface{}          { return &o.Status }
+func (o *EC2Route) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // EC2RouteServerSpec is the desired state of AWS::EC2::RouteServer.
 type EC2RouteServerSpec struct {
@@ -4876,7 +4940,8 @@ func (o *EC2RouteServer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2RouteServer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2RouteServer) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2RouteServer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2RouteServer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2RouteServerAssociationSpec is the desired state of AWS::EC2::RouteServerAssociation.
 type EC2RouteServerAssociationSpec struct {
@@ -4934,7 +4999,8 @@ func (o *EC2RouteServerAssociation) CloudControlSpec() interface{} { return &o.S
 func (o *EC2RouteServerAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2RouteServerAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2RouteServerAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2RouteServerAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2RouteServerEndpointSpec is the desired state of AWS::EC2::RouteServerEndpoint.
 type EC2RouteServerEndpointSpec struct {
@@ -5021,7 +5087,8 @@ func (o *EC2RouteServerEndpoint) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2RouteServerEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2RouteServerEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2RouteServerEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2RouteServerEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2RouteServerPeerSpec is the desired state of AWS::EC2::RouteServerPeer.
 type EC2RouteServerPeerSpec struct {
@@ -5118,7 +5185,8 @@ func (o *EC2RouteServerPeer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2RouteServerPeer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2RouteServerPeer) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2RouteServerPeer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2RouteServerPeer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2RouteServerPeerBgpOptions is a nested property type of AWS::EC2::RouteServerPeer.
 type EC2RouteServerPeerBgpOptions struct {
@@ -5190,7 +5258,8 @@ func (o *EC2RouteServerPropagation) CloudControlSpec() interface{} { return &o.S
 func (o *EC2RouteServerPropagation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2RouteServerPropagation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2RouteServerPropagation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2RouteServerPropagation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2SecurityGroupEgressSpec is the desired state of AWS::EC2::SecurityGroupEgress.
 type EC2SecurityGroupEgressSpec struct {
@@ -5305,7 +5374,8 @@ func (o *EC2SecurityGroupEgress) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2SecurityGroupEgress) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2SecurityGroupEgress) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SecurityGroupEgress) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2SecurityGroupEgress) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2SecurityGroupIngressSpec is the desired state of AWS::EC2::SecurityGroupIngress.
 type EC2SecurityGroupIngressSpec struct {
@@ -5433,7 +5503,8 @@ func (o *EC2SecurityGroupIngress) CloudControlSpec() interface{} { return &o.Spe
 func (o *EC2SecurityGroupIngress) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2SecurityGroupIngress) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SecurityGroupIngress) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2SecurityGroupIngress) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2SecurityGroupVpcAssociationSpec is the desired state of AWS::EC2::SecurityGroupVpcAssociation.
 type EC2SecurityGroupVpcAssociationSpec struct {
@@ -5508,6 +5579,9 @@ func (o *EC2SecurityGroupVpcAssociation) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2SecurityGroupVpcAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SecurityGroupVpcAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2SnapshotBlockPublicAccessSpec is the desired state of AWS::EC2::SnapshotBlockPublicAccess.
 type EC2SnapshotBlockPublicAccessSpec struct {
@@ -5566,7 +5640,8 @@ func (o *EC2SnapshotBlockPublicAccess) CloudControlSpec() interface{} { return &
 func (o *EC2SnapshotBlockPublicAccess) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2SnapshotBlockPublicAccess) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SnapshotBlockPublicAccess) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2SnapshotBlockPublicAccess) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2SqlHaStandbyDetectedInstanceSpec is the desired state of AWS::EC2::SqlHaStandbyDetectedInstance.
 type EC2SqlHaStandbyDetectedInstanceSpec struct {
@@ -5636,6 +5711,9 @@ func (o *EC2SqlHaStandbyDetectedInstance) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2SqlHaStandbyDetectedInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SqlHaStandbyDetectedInstance) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2SubnetCidrBlockSpec is the desired state of AWS::EC2::SubnetCidrBlock.
 type EC2SubnetCidrBlockSpec struct {
@@ -5719,7 +5797,8 @@ func (o *EC2SubnetCidrBlock) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2SubnetCidrBlock) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2SubnetCidrBlock) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SubnetCidrBlock) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2SubnetCidrBlock) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2SubnetNetworkAclAssociationSpec is the desired state of AWS::EC2::SubnetNetworkAclAssociation.
 type EC2SubnetNetworkAclAssociationSpec struct {
@@ -5782,6 +5861,9 @@ func (o *EC2SubnetNetworkAclAssociation) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2SubnetNetworkAclAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SubnetNetworkAclAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2SubnetRouteTableAssociationSpec is the desired state of AWS::EC2::SubnetRouteTableAssociation.
 type EC2SubnetRouteTableAssociationSpec struct {
@@ -5846,6 +5928,9 @@ func (o *EC2SubnetRouteTableAssociation) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2SubnetRouteTableAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2SubnetRouteTableAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TrafficMirrorFilterSpec is the desired state of AWS::EC2::TrafficMirrorFilter.
 type EC2TrafficMirrorFilterSpec struct {
@@ -5911,7 +5996,8 @@ func (o *EC2TrafficMirrorFilter) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2TrafficMirrorFilter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TrafficMirrorFilter) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TrafficMirrorFilter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TrafficMirrorFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TrafficMirrorFilterRuleSpec is the desired state of AWS::EC2::TrafficMirrorFilterRule.
 type EC2TrafficMirrorFilterRuleSpec struct {
@@ -6004,7 +6090,8 @@ func (o *EC2TrafficMirrorFilterRule) CloudControlSpec() interface{} { return &o.
 func (o *EC2TrafficMirrorFilterRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TrafficMirrorFilterRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TrafficMirrorFilterRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TrafficMirrorFilterRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TrafficMirrorFilterRuleTrafficMirrorPortRange is a nested property type of AWS::EC2::TrafficMirrorFilterRule.
 type EC2TrafficMirrorFilterRuleTrafficMirrorPortRange struct {
@@ -6099,7 +6186,8 @@ func (o *EC2TrafficMirrorSession) CloudControlSpec() interface{} { return &o.Spe
 func (o *EC2TrafficMirrorSession) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TrafficMirrorSession) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TrafficMirrorSession) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TrafficMirrorSession) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TrafficMirrorTargetSpec is the desired state of AWS::EC2::TrafficMirrorTarget.
 type EC2TrafficMirrorTargetSpec struct {
@@ -6175,7 +6263,8 @@ func (o *EC2TrafficMirrorTarget) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2TrafficMirrorTarget) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TrafficMirrorTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TrafficMirrorTarget) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TrafficMirrorTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayConnectSpec is the desired state of AWS::EC2::TransitGatewayConnect.
 type EC2TransitGatewayConnectSpec struct {
@@ -6256,7 +6345,8 @@ func (o *EC2TransitGatewayConnect) CloudControlSpec() interface{} { return &o.Sp
 func (o *EC2TransitGatewayConnect) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TransitGatewayConnect) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayConnect) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TransitGatewayConnect) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayConnectTransitGatewayConnectOptions is a nested property type of AWS::EC2::TransitGatewayConnect.
 type EC2TransitGatewayConnectTransitGatewayConnectOptions struct {
@@ -6339,7 +6429,8 @@ func (o *EC2TransitGatewayConnectPeer) CloudControlSpec() interface{} { return &
 func (o *EC2TransitGatewayConnectPeer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TransitGatewayConnectPeer) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayConnectPeer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TransitGatewayConnectPeer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayConnectPeerTransitGatewayConnectPeerConfiguration is a nested property type of AWS::EC2::TransitGatewayConnectPeer.
 type EC2TransitGatewayConnectPeerTransitGatewayConnectPeerConfiguration struct {
@@ -6459,6 +6550,9 @@ func (o *EC2TransitGatewayMeteringPolicy) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayMeteringPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayMeteringPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayMeteringPolicyEntrySpec is the desired state of AWS::EC2::TransitGatewayMeteringPolicyEntry.
 type EC2TransitGatewayMeteringPolicyEntrySpec struct {
@@ -6583,6 +6677,9 @@ func (o *EC2TransitGatewayMeteringPolicyEntry) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayMeteringPolicyEntry) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayMeteringPolicyEntry) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayMulticastDomainSpec is the desired state of AWS::EC2::TransitGatewayMulticastDomain.
 type EC2TransitGatewayMulticastDomainSpec struct {
@@ -6664,6 +6761,9 @@ func (o *EC2TransitGatewayMulticastDomain) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayMulticastDomain) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayMulticastDomain) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayMulticastDomainOptions is a nested property type of AWS::EC2::TransitGatewayMulticastDomain.
 type EC2TransitGatewayMulticastDomainOptions struct {
@@ -6763,6 +6863,9 @@ func (o *EC2TransitGatewayMulticastDomainAssociation) CloudControlStatusRef() *C
 }
 func (o *EC2TransitGatewayMulticastDomainAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *EC2TransitGatewayMulticastDomainAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // EC2TransitGatewayMulticastGroupMemberSpec is the desired state of AWS::EC2::TransitGatewayMulticastGroupMember.
@@ -6865,6 +6968,9 @@ func (o *EC2TransitGatewayMulticastGroupMember) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayMulticastGroupMember) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayMulticastGroupMember) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayMulticastGroupSourceSpec is the desired state of AWS::EC2::TransitGatewayMulticastGroupSource.
 type EC2TransitGatewayMulticastGroupSourceSpec struct {
@@ -6966,6 +7072,9 @@ func (o *EC2TransitGatewayMulticastGroupSource) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayMulticastGroupSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayMulticastGroupSource) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayPeeringAttachmentSpec is the desired state of AWS::EC2::TransitGatewayPeeringAttachment.
 type EC2TransitGatewayPeeringAttachmentSpec struct {
@@ -7058,6 +7167,9 @@ func (o *EC2TransitGatewayPeeringAttachment) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayPeeringAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayPeeringAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayPeeringAttachmentPeeringAttachmentStatus is a nested property type of AWS::EC2::TransitGatewayPeeringAttachment.
 type EC2TransitGatewayPeeringAttachmentPeeringAttachmentStatus struct {
@@ -7139,7 +7251,8 @@ func (o *EC2TransitGatewayPolicyTable) CloudControlSpec() interface{} { return &
 func (o *EC2TransitGatewayPolicyTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TransitGatewayPolicyTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayPolicyTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TransitGatewayPolicyTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayPolicyTableAssociationSpec is the desired state of AWS::EC2::TransitGatewayPolicyTableAssociation.
 type EC2TransitGatewayPolicyTableAssociationSpec struct {
@@ -7206,6 +7319,9 @@ func (o *EC2TransitGatewayPolicyTableAssociation) CloudControlStatusRef() *Cloud
 }
 func (o *EC2TransitGatewayPolicyTableAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *EC2TransitGatewayPolicyTableAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // EC2TransitGatewayPolicyTableEntrySpec is the desired state of AWS::EC2::TransitGatewayPolicyTableEntry.
@@ -7276,6 +7392,9 @@ func (o *EC2TransitGatewayPolicyTableEntry) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayPolicyTableEntry) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayPolicyTableEntry) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayPolicyTableEntryTransitGatewayPolicyRule is a nested property type of AWS::EC2::TransitGatewayPolicyTableEntry.
 type EC2TransitGatewayPolicyTableEntryTransitGatewayPolicyRule struct {
@@ -7366,7 +7485,8 @@ func (o *EC2TransitGatewayRoute) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2TransitGatewayRoute) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TransitGatewayRoute) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayRoute) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TransitGatewayRoute) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayRouteTableSpec is the desired state of AWS::EC2::TransitGatewayRouteTable.
 type EC2TransitGatewayRouteTableSpec struct {
@@ -7429,7 +7549,8 @@ func (o *EC2TransitGatewayRouteTable) CloudControlSpec() interface{} { return &o
 func (o *EC2TransitGatewayRouteTable) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2TransitGatewayRouteTable) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayRouteTable) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2TransitGatewayRouteTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2TransitGatewayRouteTableAssociationSpec is the desired state of AWS::EC2::TransitGatewayRouteTableAssociation.
 type EC2TransitGatewayRouteTableAssociationSpec struct {
@@ -7490,6 +7611,9 @@ func (o *EC2TransitGatewayRouteTableAssociation) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayRouteTableAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayRouteTableAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2TransitGatewayRouteTablePropagationSpec is the desired state of AWS::EC2::TransitGatewayRouteTablePropagation.
 type EC2TransitGatewayRouteTablePropagationSpec struct {
@@ -7550,6 +7674,9 @@ func (o *EC2TransitGatewayRouteTablePropagation) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2TransitGatewayRouteTablePropagation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2TransitGatewayRouteTablePropagation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VPCBlockPublicAccessExclusionSpec is the desired state of AWS::EC2::VPCBlockPublicAccessExclusion.
 type EC2VPCBlockPublicAccessExclusionSpec struct {
@@ -7623,6 +7750,9 @@ func (o *EC2VPCBlockPublicAccessExclusion) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2VPCBlockPublicAccessExclusion) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCBlockPublicAccessExclusion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VPCBlockPublicAccessOptionsSpec is the desired state of AWS::EC2::VPCBlockPublicAccessOptions.
 type EC2VPCBlockPublicAccessOptionsSpec struct {
@@ -7689,6 +7819,9 @@ func (o *EC2VPCBlockPublicAccessOptions) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2VPCBlockPublicAccessOptions) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCBlockPublicAccessOptions) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VPCCidrBlockSpec is the desired state of AWS::EC2::VPCCidrBlock.
 type EC2VPCCidrBlockSpec struct {
@@ -7802,7 +7935,8 @@ func (o *EC2VPCCidrBlock) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2VPCCidrBlock) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VPCCidrBlock) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCCidrBlock) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VPCCidrBlock) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VPCDHCPOptionsAssociationSpec is the desired state of AWS::EC2::VPCDHCPOptionsAssociation.
 type EC2VPCDHCPOptionsAssociationSpec struct {
@@ -7860,7 +7994,8 @@ func (o *EC2VPCDHCPOptionsAssociation) CloudControlSpec() interface{} { return &
 func (o *EC2VPCDHCPOptionsAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VPCDHCPOptionsAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCDHCPOptionsAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VPCDHCPOptionsAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VPCEncryptionControlSpec is the desired state of AWS::EC2::VPCEncryptionControl.
 type EC2VPCEncryptionControlSpec struct {
@@ -7983,7 +8118,8 @@ func (o *EC2VPCEncryptionControl) CloudControlSpec() interface{} { return &o.Spe
 func (o *EC2VPCEncryptionControl) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VPCEncryptionControl) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCEncryptionControl) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VPCEncryptionControl) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VPCEncryptionControlResourceExclusions is a nested property type of AWS::EC2::VPCEncryptionControl.
 type EC2VPCEncryptionControlResourceExclusions struct {
@@ -8091,6 +8227,9 @@ func (o *EC2VPCEndpointConnectionNotification) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2VPCEndpointConnectionNotification) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCEndpointConnectionNotification) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VPCEndpointServicePermissionsSpec is the desired state of AWS::EC2::VPCEndpointServicePermissions.
 type EC2VPCEndpointServicePermissionsSpec struct {
@@ -8146,6 +8285,9 @@ func (o *EC2VPCEndpointServicePermissions) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2VPCEndpointServicePermissions) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCEndpointServicePermissions) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VPCGatewayAttachmentSpec is the desired state of AWS::EC2::VPCGatewayAttachment.
 type EC2VPCGatewayAttachmentSpec struct {
@@ -8212,7 +8354,8 @@ func (o *EC2VPCGatewayAttachment) CloudControlSpec() interface{} { return &o.Spe
 func (o *EC2VPCGatewayAttachment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VPCGatewayAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPCGatewayAttachment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VPCGatewayAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VPNConcentratorSpec is the desired state of AWS::EC2::VPNConcentrator.
 type EC2VPNConcentratorSpec struct {
@@ -8280,7 +8423,8 @@ func (o *EC2VPNConcentrator) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2VPNConcentrator) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VPNConcentrator) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VPNConcentrator) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VPNConcentrator) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VerifiedAccessEndpointSpec is the desired state of AWS::EC2::VerifiedAccessEndpoint.
 type EC2VerifiedAccessEndpointSpec struct {
@@ -8436,7 +8580,8 @@ func (o *EC2VerifiedAccessEndpoint) CloudControlSpec() interface{} { return &o.S
 func (o *EC2VerifiedAccessEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VerifiedAccessEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VerifiedAccessEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VerifiedAccessEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VerifiedAccessEndpointNetworkInterfaceOptions is a nested property type of AWS::EC2::VerifiedAccessEndpoint.
 type EC2VerifiedAccessEndpointNetworkInterfaceOptions struct {
@@ -8656,7 +8801,8 @@ func (o *EC2VerifiedAccessGroup) CloudControlSpec() interface{} { return &o.Spec
 func (o *EC2VerifiedAccessGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VerifiedAccessGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VerifiedAccessGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VerifiedAccessGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VerifiedAccessGroupSseSpecification is a nested property type of AWS::EC2::VerifiedAccessGroup.
 type EC2VerifiedAccessGroupSseSpecification struct {
@@ -8764,7 +8910,8 @@ func (o *EC2VerifiedAccessInstance) CloudControlSpec() interface{} { return &o.S
 func (o *EC2VerifiedAccessInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VerifiedAccessInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VerifiedAccessInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VerifiedAccessInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EC2VerifiedAccessInstanceVerifiedAccessTrustProvider is a nested property type of AWS::EC2::VerifiedAccessInstance.
 type EC2VerifiedAccessInstanceVerifiedAccessTrustProvider struct {
@@ -8957,6 +9104,9 @@ func (o *EC2VerifiedAccessTrustProvider) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *EC2VerifiedAccessTrustProvider) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VerifiedAccessTrustProvider) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EC2VerifiedAccessTrustProviderOidcOptions is a nested property type of AWS::EC2::VerifiedAccessTrustProvider.
 type EC2VerifiedAccessTrustProviderOidcOptions struct {
@@ -9119,7 +9269,8 @@ func (o *EC2VolumeAttachment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EC2VolumeAttachment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EC2VolumeAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *EC2VolumeAttachment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EC2VolumeAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&EC2ApplicationStatusCheck{}, &EC2ApplicationStatusCheckList{})

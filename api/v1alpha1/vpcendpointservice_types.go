@@ -68,6 +68,9 @@ type VPCEndpointServiceSpec struct {
 
 // VPCEndpointServiceStatus defines the observed state of VPCEndpointService.
 type VPCEndpointServiceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ServiceID is the endpoint service configuration ID (vpce-svc-...).
 	// +optional
 	ServiceID string `json:"serviceId,omitempty"`

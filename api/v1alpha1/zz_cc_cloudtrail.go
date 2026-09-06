@@ -93,7 +93,8 @@ func (o *CloudTrailChannel) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudTrailChannel) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudTrailChannel) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudTrailChannel) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudTrailChannel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudTrailChannelDestination is a nested property type of AWS::CloudTrail::Channel.
 type CloudTrailChannelDestination struct {
@@ -201,7 +202,8 @@ func (o *CloudTrailDashboard) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CloudTrailDashboard) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudTrailDashboard) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudTrailDashboard) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudTrailDashboard) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudTrailDashboardWidget is a nested property type of AWS::CloudTrail::Dashboard.
 type CloudTrailDashboardWidget struct {
@@ -387,7 +389,8 @@ func (o *CloudTrailEventDataStore) CloudControlSpec() interface{} { return &o.Sp
 func (o *CloudTrailEventDataStore) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudTrailEventDataStore) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudTrailEventDataStore) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudTrailEventDataStore) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CloudTrailEventDataStoreAdvancedEventSelector is a nested property type of AWS::CloudTrail::EventDataStore.
 type CloudTrailEventDataStoreAdvancedEventSelector struct {
@@ -516,7 +519,8 @@ func (o *CloudTrailResourcePolicy) CloudControlSpec() interface{} { return &o.Sp
 func (o *CloudTrailResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CloudTrailResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *CloudTrailResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CloudTrailResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&CloudTrailChannel{}, &CloudTrailChannelList{})

@@ -46,6 +46,9 @@ type PrometheusWorkspaceSpec struct {
 
 // PrometheusWorkspaceStatus defines the observed state of PrometheusWorkspace.
 type PrometheusWorkspaceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WorkspaceID is the unique ID of the workspace (ws-...).
 	// +optional
 	WorkspaceID string `json:"workspaceId,omitempty"`

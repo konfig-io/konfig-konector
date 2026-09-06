@@ -122,7 +122,8 @@ func (o *AuditManagerAssessment) CloudControlSpec() interface{} { return &o.Spec
 func (o *AuditManagerAssessment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AuditManagerAssessment) CloudControlObserved() interface{} { return &o.Status }
+func (o *AuditManagerAssessment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AuditManagerAssessment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AuditManagerAssessmentAWSAccount is a nested property type of AWS::AuditManager::Assessment.
 type AuditManagerAssessmentAWSAccount struct {
@@ -331,6 +332,9 @@ func (o *AuditManagerAssessmentFramework) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *AuditManagerAssessmentFramework) CloudControlObserved() interface{} { return &o.Status }
+func (o *AuditManagerAssessmentFramework) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AuditManagerAssessmentFrameworkControlSet is a nested property type of AWS::AuditManager::AssessmentFramework.
 type AuditManagerAssessmentFrameworkControlSet struct {

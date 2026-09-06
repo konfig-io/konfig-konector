@@ -49,6 +49,9 @@ type CloudFrontCachePolicySpec struct {
 
 // CloudFrontCachePolicyStatus defines the observed state of CloudFrontCachePolicy.
 type CloudFrontCachePolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyID is the ID of the cache policy.
 	// +optional
 	PolicyID string `json:"policyId,omitempty"`

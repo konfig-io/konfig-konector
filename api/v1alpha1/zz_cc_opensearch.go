@@ -100,7 +100,8 @@ func (o *OpenSearchDataSource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *OpenSearchDataSource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OpenSearchDataSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchDataSource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OpenSearchDataSource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // OpenSearchDataSourceDataSourceType is a nested property type of AWS::OpenSearch::DataSource.
 type OpenSearchDataSourceDataSourceType struct {

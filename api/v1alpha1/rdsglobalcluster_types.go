@@ -59,6 +59,9 @@ type RDSGlobalClusterSpec struct {
 
 // RDSGlobalClusterStatus defines the observed state of RDSGlobalCluster.
 type RDSGlobalClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the global cluster.
 	// +optional
 	ARN string `json:"arn,omitempty"`

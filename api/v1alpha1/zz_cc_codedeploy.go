@@ -97,7 +97,8 @@ func (o *CodeDeployDeploymentConfig) CloudControlSpec() interface{} { return &o.
 func (o *CodeDeployDeploymentConfig) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeDeployDeploymentConfig) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeDeployDeploymentConfig) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeDeployDeploymentConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeDeployDeploymentConfigMinimumHealthyHosts is a nested property type of AWS::CodeDeploy::DeploymentConfig.
 type CodeDeployDeploymentConfigMinimumHealthyHosts struct {

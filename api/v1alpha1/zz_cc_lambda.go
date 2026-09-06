@@ -120,7 +120,8 @@ func (o *LambdaCapacityProvider) CloudControlSpec() interface{} { return &o.Spec
 func (o *LambdaCapacityProvider) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LambdaCapacityProvider) CloudControlObserved() interface{} { return &o.Status }
+func (o *LambdaCapacityProvider) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LambdaCapacityProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LambdaCapacityProviderCapacityProviderScalingConfig is a nested property type of AWS::Lambda::CapacityProvider.
 type LambdaCapacityProviderCapacityProviderScalingConfig struct {
@@ -291,7 +292,8 @@ func (o *LambdaLayerVersionPermission) CloudControlSpec() interface{} { return &
 func (o *LambdaLayerVersionPermission) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LambdaLayerVersionPermission) CloudControlObserved() interface{} { return &o.Status }
+func (o *LambdaLayerVersionPermission) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LambdaLayerVersionPermission) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LambdaMicrovmImageSpec is the desired state of AWS::Lambda::MicrovmImage.
 type LambdaMicrovmImageSpec struct {
@@ -414,7 +416,8 @@ func (o *LambdaMicrovmImage) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LambdaMicrovmImage) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LambdaMicrovmImage) CloudControlObserved() interface{} { return &o.Status }
+func (o *LambdaMicrovmImage) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LambdaMicrovmImage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LambdaMicrovmImageCodeArtifact is a nested property type of AWS::Lambda::MicrovmImage.
 type LambdaMicrovmImageCodeArtifact struct {
@@ -600,7 +603,8 @@ func (o *LambdaNetworkConnector) CloudControlSpec() interface{} { return &o.Spec
 func (o *LambdaNetworkConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LambdaNetworkConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *LambdaNetworkConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LambdaNetworkConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LambdaNetworkConnectorConfig is a nested property type of AWS::Lambda::NetworkConnector.
 type LambdaNetworkConnectorConfig struct {
@@ -689,7 +693,8 @@ func (o *LambdaResourcePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LambdaResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LambdaResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *LambdaResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LambdaResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&LambdaCapacityProvider{}, &LambdaCapacityProviderList{})

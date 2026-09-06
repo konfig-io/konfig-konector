@@ -38,6 +38,9 @@ type DynamoDBTablePolicySpec struct {
 
 // DynamoDBTablePolicyStatus defines the observed state of DynamoDBTablePolicy.
 type DynamoDBTablePolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RevisionID is the policy revision ID.
 	// +optional
 	RevisionID string `json:"revisionID,omitempty"`

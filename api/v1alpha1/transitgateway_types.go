@@ -65,6 +65,9 @@ type TransitGatewaySpec struct {
 
 // TransitGatewayStatus defines the observed state of TransitGateway.
 type TransitGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TransitGatewayID is the AWS Transit Gateway ID.
 	// +optional
 	TransitGatewayID string `json:"transitGatewayId,omitempty"`

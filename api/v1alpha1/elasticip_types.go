@@ -40,6 +40,9 @@ type ElasticIPSpec struct {
 
 // ElasticIPStatus defines the observed state of ElasticIP.
 type ElasticIPStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AllocationID is the AWS allocation ID of the Elastic IP.
 	// +optional
 	AllocationID string `json:"allocationId,omitempty"`

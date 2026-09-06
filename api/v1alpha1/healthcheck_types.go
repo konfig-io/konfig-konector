@@ -73,6 +73,9 @@ type HealthCheckSpec struct {
 
 // HealthCheckStatus defines the observed state of HealthCheck.
 type HealthCheckStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HealthCheckID is the Route53 health check identifier.
 	// +optional
 	HealthCheckID string `json:"healthCheckId,omitempty"`

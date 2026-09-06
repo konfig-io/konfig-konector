@@ -111,6 +111,9 @@ func (o *CodeStarNotificationsNotificationRule) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeStarNotificationsNotificationRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeStarNotificationsNotificationRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CodeStarNotificationsNotificationRuleTarget is a nested property type of AWS::CodeStarNotifications::NotificationRule.
 type CodeStarNotificationsNotificationRuleTarget struct {

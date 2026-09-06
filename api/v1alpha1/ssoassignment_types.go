@@ -80,6 +80,9 @@ type SSOAssignmentSpec struct {
 
 // SSOAssignmentStatus defines the observed state of SSOAssignment.
 type SSOAssignmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PermissionSetArn is the resolved permission set ARN that was assigned.
 	// +optional
 	PermissionSetArn string `json:"permissionSetArn,omitempty"`

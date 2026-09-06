@@ -105,6 +105,9 @@ func (o *Route53RecoveryControlCluster) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryControlCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryControlCluster) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryControlClusterClusterEndpoint is a nested property type of AWS::Route53RecoveryControl::Cluster.
 type Route53RecoveryControlClusterClusterEndpoint struct {
@@ -204,6 +207,9 @@ func (o *Route53RecoveryControlControlPanel) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryControlControlPanel) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryControlControlPanel) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryControlRoutingControlSpec is the desired state of AWS::Route53RecoveryControl::RoutingControl.
 type Route53RecoveryControlRoutingControlSpec struct {
@@ -281,6 +287,9 @@ func (o *Route53RecoveryControlRoutingControl) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryControlRoutingControl) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryControlRoutingControl) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryControlSafetyRuleSpec is the desired state of AWS::Route53RecoveryControl::SafetyRule.
 type Route53RecoveryControlSafetyRuleSpec struct {
@@ -361,6 +370,9 @@ func (o *Route53RecoveryControlSafetyRule) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryControlSafetyRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryControlSafetyRule) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryControlSafetyRuleAssertionRule is a nested property type of AWS::Route53RecoveryControl::SafetyRule.
 type Route53RecoveryControlSafetyRuleAssertionRule struct {

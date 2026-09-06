@@ -34,6 +34,9 @@ type CertificateValidationSpec struct {
 
 // CertificateValidationStatus defines the observed state of CertificateValidation.
 type CertificateValidationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ValidationStatus is the ACM certificate status (e.g. ISSUED, PENDING_VALIDATION).
 	// +optional
 	ValidationStatus string `json:"validationStatus,omitempty"`

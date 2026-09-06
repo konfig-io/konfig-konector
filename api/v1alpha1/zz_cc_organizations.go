@@ -112,7 +112,8 @@ func (o *OrganizationsOrganization) CloudControlSpec() interface{} { return &o.S
 func (o *OrganizationsOrganization) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OrganizationsOrganization) CloudControlObserved() interface{} { return &o.Status }
+func (o *OrganizationsOrganization) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OrganizationsOrganization) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // OrganizationsResourcePolicySpec is the desired state of AWS::Organizations::ResourcePolicy.
 type OrganizationsResourcePolicySpec struct {
@@ -182,7 +183,8 @@ func (o *OrganizationsResourcePolicy) CloudControlSpec() interface{} { return &o
 func (o *OrganizationsResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OrganizationsResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *OrganizationsResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OrganizationsResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&OrganizationsOrganization{}, &OrganizationsOrganizationList{})

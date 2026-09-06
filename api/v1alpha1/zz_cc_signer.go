@@ -90,7 +90,8 @@ func (o *SignerProfilePermission) CloudControlSpec() interface{} { return &o.Spe
 func (o *SignerProfilePermission) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SignerProfilePermission) CloudControlObserved() interface{} { return &o.Status }
+func (o *SignerProfilePermission) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SignerProfilePermission) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SignerSigningProfileSpec is the desired state of AWS::Signer::SigningProfile.
 type SignerSigningProfileSpec struct {
@@ -174,7 +175,8 @@ func (o *SignerSigningProfile) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SignerSigningProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SignerSigningProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *SignerSigningProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SignerSigningProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SignerSigningProfileSignatureValidityPeriod is a nested property type of AWS::Signer::SigningProfile.
 type SignerSigningProfileSignatureValidityPeriod struct {

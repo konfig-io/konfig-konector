@@ -114,7 +114,8 @@ func (o *CognitoIdentityPool) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CognitoIdentityPool) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoIdentityPool) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoIdentityPool) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoIdentityPool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoIdentityPoolPushSync is a nested property type of AWS::Cognito::IdentityPool.
 type CognitoIdentityPoolPushSync struct {
@@ -209,6 +210,9 @@ func (o *CognitoIdentityPoolPrincipalTag) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoIdentityPoolPrincipalTag) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoIdentityPoolPrincipalTag) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoIdentityPoolRoleAttachmentSpec is the desired state of AWS::Cognito::IdentityPoolRoleAttachment.
 type CognitoIdentityPoolRoleAttachmentSpec struct {
@@ -273,6 +277,9 @@ func (o *CognitoIdentityPoolRoleAttachment) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoIdentityPoolRoleAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoIdentityPoolRoleAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoLogDeliveryConfigurationSpec is the desired state of AWS::Cognito::LogDeliveryConfiguration.
 type CognitoLogDeliveryConfigurationSpec struct {
@@ -332,6 +339,9 @@ func (o *CognitoLogDeliveryConfiguration) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoLogDeliveryConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoLogDeliveryConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoLogDeliveryConfigurationLogConfiguration is a nested property type of AWS::Cognito::LogDeliveryConfiguration.
 type CognitoLogDeliveryConfigurationLogConfiguration struct {
@@ -440,7 +450,8 @@ func (o *CognitoManagedLoginBranding) CloudControlSpec() interface{} { return &o
 func (o *CognitoManagedLoginBranding) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoManagedLoginBranding) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoManagedLoginBranding) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoManagedLoginBranding) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoManagedLoginBrandingAssetType is a nested property type of AWS::Cognito::ManagedLoginBranding.
 type CognitoManagedLoginBrandingAssetType struct {
@@ -528,7 +539,8 @@ func (o *CognitoTerms) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CognitoTerms) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoTerms) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoTerms) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoTerms) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoUserPoolDomainSpec is the desired state of AWS::Cognito::UserPoolDomain.
 type CognitoUserPoolDomainSpec struct {
@@ -595,7 +607,8 @@ func (o *CognitoUserPoolDomain) CloudControlSpec() interface{} { return &o.Spec 
 func (o *CognitoUserPoolDomain) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoUserPoolDomain) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolDomain) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoUserPoolDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoUserPoolDomainCustomDomainConfigType is a nested property type of AWS::Cognito::UserPoolDomain.
 type CognitoUserPoolDomainCustomDomainConfigType struct {
@@ -682,7 +695,8 @@ func (o *CognitoUserPoolGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CognitoUserPoolGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoUserPoolGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoUserPoolGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoUserPoolIdentityProviderSpec is the desired state of AWS::Cognito::UserPoolIdentityProvider.
 type CognitoUserPoolIdentityProviderSpec struct {
@@ -751,6 +765,9 @@ func (o *CognitoUserPoolIdentityProvider) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoUserPoolIdentityProvider) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolIdentityProvider) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoUserPoolRegionalConfigurationAttachmentSpec is the desired state of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
 type CognitoUserPoolRegionalConfigurationAttachmentSpec struct {
@@ -825,6 +842,9 @@ func (o *CognitoUserPoolRegionalConfigurationAttachment) CloudControlStatusRef()
 }
 func (o *CognitoUserPoolRegionalConfigurationAttachment) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *CognitoUserPoolRegionalConfigurationAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // CognitoUserPoolRegionalConfigurationAttachmentEmailConfiguration is a nested property type of AWS::Cognito::UserPoolRegionalConfigurationAttachment.
@@ -1027,7 +1047,8 @@ func (o *CognitoUserPoolReplica) CloudControlSpec() interface{} { return &o.Spec
 func (o *CognitoUserPoolReplica) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoUserPoolReplica) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolReplica) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoUserPoolReplica) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoUserPoolResourceServerSpec is the desired state of AWS::Cognito::UserPoolResourceServer.
 type CognitoUserPoolResourceServerSpec struct {
@@ -1089,6 +1110,9 @@ func (o *CognitoUserPoolResourceServer) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoUserPoolResourceServer) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolResourceServer) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoUserPoolResourceServerResourceServerScopeType is a nested property type of AWS::Cognito::UserPoolResourceServer.
 type CognitoUserPoolResourceServerResourceServerScopeType struct {
@@ -1164,6 +1188,9 @@ func (o *CognitoUserPoolRiskConfigurationAttachment) CloudControlStatusRef() *Cl
 }
 func (o *CognitoUserPoolRiskConfigurationAttachment) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *CognitoUserPoolRiskConfigurationAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // CognitoUserPoolRiskConfigurationAttachmentRiskExceptionConfigurationType is a nested property type of AWS::Cognito::UserPoolRiskConfigurationAttachment.
@@ -1308,6 +1335,9 @@ func (o *CognitoUserPoolUICustomizationAttachment) CloudControlStatusRef() *Clou
 func (o *CognitoUserPoolUICustomizationAttachment) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *CognitoUserPoolUICustomizationAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CognitoUserPoolUserSpec is the desired state of AWS::Cognito::UserPoolUser.
 type CognitoUserPoolUserSpec struct {
@@ -1385,7 +1415,8 @@ func (o *CognitoUserPoolUser) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CognitoUserPoolUser) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CognitoUserPoolUser) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolUser) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CognitoUserPoolUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CognitoUserPoolUserAttributeType is a nested property type of AWS::Cognito::UserPoolUser.
 type CognitoUserPoolUserAttributeType struct {
@@ -1457,6 +1488,9 @@ func (o *CognitoUserPoolUserToGroupAttachment) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *CognitoUserPoolUserToGroupAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *CognitoUserPoolUserToGroupAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&CognitoIdentityPool{}, &CognitoIdentityPoolList{})

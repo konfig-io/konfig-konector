@@ -59,6 +59,9 @@ type ResolverEndpointSpec struct {
 
 // ResolverEndpointStatus defines the observed state of ResolverEndpoint.
 type ResolverEndpointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// EndpointID is the unique identifier of the endpoint.
 	// +optional
 	EndpointID string `json:"endpointID,omitempty"`

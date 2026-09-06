@@ -99,6 +99,9 @@ type CodeBuildProjectSpec struct {
 
 // CodeBuildProjectStatus defines the observed state of CodeBuildProject.
 type CodeBuildProjectStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ProjectARN is the ARN of the CodeBuild project.
 	// +optional
 	ProjectARN string `json:"projectARN,omitempty"`

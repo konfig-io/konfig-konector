@@ -114,7 +114,8 @@ func (o *OpenSearchApplication) CloudControlSpec() interface{} { return &o.Spec 
 func (o *OpenSearchApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *OpenSearchApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *OpenSearchApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *OpenSearchApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // OpenSearchApplicationIamIdentityCenterOptions is a nested property type of AWS::OpenSearchService::Application.
 type OpenSearchApplicationIamIdentityCenterOptions struct {

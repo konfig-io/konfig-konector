@@ -81,7 +81,8 @@ func (o *EMRSecurityConfiguration) CloudControlSpec() interface{} { return &o.Sp
 func (o *EMRSecurityConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRSecurityConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRSecurityConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRSecurityConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EMRStepSpec is the desired state of AWS::EMR::Step.
 type EMRStepSpec struct {
@@ -164,6 +165,7 @@ func (o *EMRStep) CloudControlTypeName() string               { return "AWS::EMR
 func (o *EMRStep) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *EMRStep) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *EMRStep) CloudControlObserved() interface{}          { return &o.Status }
+func (o *EMRStep) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // EMRStepHadoopJarStepConfig is a nested property type of AWS::EMR::Step.
 type EMRStepHadoopJarStepConfig struct {
@@ -337,6 +339,7 @@ func (o *EMRStudio) CloudControlTypeName() string               { return "AWS::E
 func (o *EMRStudio) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *EMRStudio) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *EMRStudio) CloudControlObserved() interface{}          { return &o.Status }
+func (o *EMRStudio) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // EMRStudioSessionMappingSpec is the desired state of AWS::EMR::StudioSessionMapping.
 type EMRStudioSessionMappingSpec struct {
@@ -407,7 +410,8 @@ func (o *EMRStudioSessionMapping) CloudControlSpec() interface{} { return &o.Spe
 func (o *EMRStudioSessionMapping) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRStudioSessionMapping) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRStudioSessionMapping) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRStudioSessionMapping) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EMRWALWorkspaceSpec is the desired state of AWS::EMR::WALWorkspace.
 type EMRWALWorkspaceSpec struct {
@@ -463,7 +467,8 @@ func (o *EMRWALWorkspace) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EMRWALWorkspace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRWALWorkspace) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRWALWorkspace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRWALWorkspace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&EMRSecurityConfiguration{}, &EMRSecurityConfigurationList{})

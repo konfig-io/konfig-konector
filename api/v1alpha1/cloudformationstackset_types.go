@@ -59,6 +59,9 @@ type CloudFormationStackSetSpec struct {
 
 // CloudFormationStackSetStatus defines the observed state of CloudFormationStackSet.
 type CloudFormationStackSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StackSetID is the unique identifier of the StackSet.
 	// +optional
 	StackSetID string `json:"stackSetID,omitempty"`

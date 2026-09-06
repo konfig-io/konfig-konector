@@ -102,7 +102,8 @@ func (o *EventSchemasDiscoverer) CloudControlSpec() interface{} { return &o.Spec
 func (o *EventSchemasDiscoverer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventSchemasDiscoverer) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventSchemasDiscoverer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventSchemasDiscoverer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventSchemasRegistrySpec is the desired state of AWS::EventSchemas::Registry.
 type EventSchemasRegistrySpec struct {
@@ -166,7 +167,8 @@ func (o *EventSchemasRegistry) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EventSchemasRegistry) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventSchemasRegistry) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventSchemasRegistry) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventSchemasRegistry) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventSchemasRegistryPolicySpec is the desired state of AWS::EventSchemas::RegistryPolicy.
 type EventSchemasRegistryPolicySpec struct {
@@ -226,7 +228,8 @@ func (o *EventSchemasRegistryPolicy) CloudControlSpec() interface{} { return &o.
 func (o *EventSchemasRegistryPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventSchemasRegistryPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventSchemasRegistryPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventSchemasRegistryPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventSchemasSchemaSpec is the desired state of AWS::EventSchemas::Schema.
 type EventSchemasSchemaSpec struct {
@@ -316,7 +319,8 @@ func (o *EventSchemasSchema) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EventSchemasSchema) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventSchemasSchema) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventSchemasSchema) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventSchemasSchema) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&EventSchemasDiscoverer{}, &EventSchemasDiscovererList{})

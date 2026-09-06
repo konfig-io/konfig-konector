@@ -49,6 +49,9 @@ type DBSubnetGroupSpec struct {
 
 // DBSubnetGroupStatus defines the observed state of DBSubnetGroup.
 type DBSubnetGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the DB subnet group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

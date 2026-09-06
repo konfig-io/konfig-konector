@@ -69,6 +69,9 @@ type RestAPIStageSpec struct {
 
 // RestAPIStageStatus defines the observed state of RestAPIStage.
 type RestAPIStageStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StageName is the stage name in AWS (also the primary identifier
 	// together with the API ID).
 	// +optional

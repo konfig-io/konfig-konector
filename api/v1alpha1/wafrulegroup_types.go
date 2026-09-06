@@ -52,6 +52,9 @@ type WAFRuleGroupSpec struct {
 
 // WAFRuleGroupStatus defines the observed state of WAFRuleGroup.
 type WAFRuleGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the identifier of the rule group.
 	// +optional
 	ID string `json:"id,omitempty"`

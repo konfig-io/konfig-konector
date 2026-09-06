@@ -109,6 +109,9 @@ func (o *VpcLatticeAccessLogSubscription) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *VpcLatticeAccessLogSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeAccessLogSubscription) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // VpcLatticeAuthPolicySpec is the desired state of AWS::VpcLattice::AuthPolicy.
 type VpcLatticeAuthPolicySpec struct {
@@ -168,7 +171,8 @@ func (o *VpcLatticeAuthPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *VpcLatticeAuthPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VpcLatticeAuthPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeAuthPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VpcLatticeAuthPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VpcLatticeDomainVerificationSpec is the desired state of AWS::VpcLattice::DomainVerification.
 type VpcLatticeDomainVerificationSpec struct {
@@ -244,7 +248,8 @@ func (o *VpcLatticeDomainVerification) CloudControlSpec() interface{} { return &
 func (o *VpcLatticeDomainVerification) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VpcLatticeDomainVerification) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeDomainVerification) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VpcLatticeDomainVerification) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VpcLatticeDomainVerificationTxtMethodConfig is a nested property type of AWS::VpcLattice::DomainVerification.
 type VpcLatticeDomainVerificationTxtMethodConfig struct {
@@ -367,6 +372,9 @@ func (o *VpcLatticeResourceConfiguration) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *VpcLatticeResourceConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeResourceConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // VpcLatticeResourceGatewaySpec is the desired state of AWS::VpcLattice::ResourceGateway.
 type VpcLatticeResourceGatewaySpec struct {
@@ -461,7 +469,8 @@ func (o *VpcLatticeResourceGateway) CloudControlSpec() interface{} { return &o.S
 func (o *VpcLatticeResourceGateway) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VpcLatticeResourceGateway) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeResourceGateway) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VpcLatticeResourceGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VpcLatticeResourcePolicySpec is the desired state of AWS::VpcLattice::ResourcePolicy.
 type VpcLatticeResourcePolicySpec struct {
@@ -519,7 +528,8 @@ func (o *VpcLatticeResourcePolicy) CloudControlSpec() interface{} { return &o.Sp
 func (o *VpcLatticeResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VpcLatticeResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VpcLatticeResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VpcLatticeRuleSpec is the desired state of AWS::VpcLattice::Rule.
 type VpcLatticeRuleSpec struct {
@@ -602,7 +612,8 @@ func (o *VpcLatticeRule) CloudControlSpec() interface{} { return &o.Spec }
 func (o *VpcLatticeRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *VpcLatticeRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *VpcLatticeRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *VpcLatticeRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // VpcLatticeRuleAction is a nested property type of AWS::VpcLattice::Rule.
 type VpcLatticeRuleAction struct {
@@ -778,6 +789,9 @@ func (o *VpcLatticeServiceNetworkResourceAssociation) CloudControlStatusRef() *C
 }
 func (o *VpcLatticeServiceNetworkResourceAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *VpcLatticeServiceNetworkResourceAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 func init() {

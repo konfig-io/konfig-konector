@@ -756,3 +756,754 @@ func (o *VPCEndpointService) GetProviderRef() *ProviderRef { return o.Spec.Provi
 
 // GetProviderRef implements ProviderScoped.
 func (o *CloudControlResource) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AMI) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2API) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2ApiMapping) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2Authorizer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2DomainName) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2Integration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2Route) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2Stage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *APIGatewayV2VpcLink) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Activity) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AppRunnerAutoScaling) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AppRunnerService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AppScalingPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AthenaDataCatalog) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AthenaNamedQuery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AthenaWorkGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *AutoScalingGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BackupPlan) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BackupSelection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BackupVault) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BatchComputeEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BatchJobDefinition) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *BatchJobQueue) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Budget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CTEnabledControl) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CapacityReservation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Certificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CertificateValidation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFormationStack) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFormationStackSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFrontCachePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFrontDistribution) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFrontFunction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudFrontOriginAccessControl) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudMapNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudMapService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudWatchAlarm) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudWatchDashboard) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeArtifactDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeArtifactRepository) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeBuildProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeCommitRepository) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeDeployApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodeDeployDeploymentGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CodePipeline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CompositeAlarm) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ConfigDeliveryChannel) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ConfigRecorder) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ConfigRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CostAnomalyMonitor) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CostAnomalySubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CustomerGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DAXCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBClusterParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBOptionGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBProxy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBSnapshot) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DBSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DelegationSignerRecord) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DynamoDBBackup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DynamoDBGlobalTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DynamoDBTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *DynamoDBTablePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EBSVolume) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EC2Instance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECRLifecyclePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECRRepository) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECRRepositoryPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECSCapacityProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECSCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECSScheduledTask) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECSService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ECSTaskDefinition) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EFSAccessPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EFSFileSystem) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EFSMountTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EIPAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSAccessEntry) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSAddon) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSFargateProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSIdentityProviderConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EKSNodeGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EgressOnlyIGW) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ElastiCacheParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ElastiCacheReplicationGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ElastiCacheServerlessCache) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ElastiCacheSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ElasticIP) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EventBridgePipe) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EventBus) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EventRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *EventTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *FirehoseDeliveryStream) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Firewall) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *FirewallPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *FirewallRuleGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *FlowLog) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GlueConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GlueCrawler) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GlueDatabase) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GlueJob) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GlueTrigger) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GrafanaWorkspace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *GuardDutyDetector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *HealthCheck) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *HostedZone) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMGroupMembership) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMGroupPolicyAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMInstanceProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMOIDCProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMPolicyAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMRole) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMRolePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMSAMLProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IAMUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IPSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *IdentityProvider) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *InspectorEnabler) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *InternetGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KMSAlias) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KMSGrant) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KMSKey) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KMSKeyPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KeyPair) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KinesisStream) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *KinesisStreamConsumer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaAlias) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaCodeSigningConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaEventInvokeConfig) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaEventSourceMapping) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaFunction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaFunctionURL) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaLayerVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaPermission) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LambdaProvisionedConcurrency) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeListener) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeServiceNetwork) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeServiceNetworkServiceAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeServiceNetworkVpcAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LatticeTargetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LaunchTemplate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Listener) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ListenerRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LoadBalancer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *LogGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MQBroker) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MQConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MSKCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MSKConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MSKServerlessCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MemoryDBCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *MetricFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *NatGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *NetworkACL) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OpenSearchAccessPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OpenSearchDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OpenSearchServerlessCollection) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OrganizationsAccount) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OrganizationsOU) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OrganizationsPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *OrganizationsPolicyAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PermissionSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PlacementGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PodIdentityAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PrivateCA) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PrometheusAlertManagerDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PrometheusRuleGroupsNamespace) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *PrometheusWorkspace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RDSEventSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RDSGlobalCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RecordSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RedshiftCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RedshiftParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RedshiftSubnetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ResolverEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ResolverRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ResourceShare) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RestAPI) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RestAPIDeployment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RestAPIStage) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *RouteTable) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3AccessPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3Bucket) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3BucketCORS) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3BucketLifecycle) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3BucketNotification) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3BucketPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *S3BucketReplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SCPortfolio) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SCPortfolioProductAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SCProduct) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SESConfigurationSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SESEmailIdentity) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SNSSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SNSTopic) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SQSQueue) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSMAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSMDocument) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSMMaintenanceWindow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSMParameter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSMPatchBaseline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SSOAssignment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ScalableTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ScalingPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Schedule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ScheduleGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Secret) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SecretRotation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SecurityGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SecurityHubAccount) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SecurityHubStandard) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ShieldProtection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SpotFleet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *StateMachine) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Subnet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *SubscriptionFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *TargetGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *Trail) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *TransitGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *TransitGatewayVpcAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *UserPool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *UserPoolClient) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPC) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPCEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPCPeeringConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPNConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPNConnectionRoute) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPNGateway) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *WAFRegexPatternSet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *WAFRuleGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *WebACL) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *XRayGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *XRaySamplingRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ManagedPrefixList) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *ResourceShareInvitation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *HostedZoneVPCAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *VPCEndpointService) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
+
+// SetProviderStatus implements ProviderStatusSetter.
+func (o *CloudControlResource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }

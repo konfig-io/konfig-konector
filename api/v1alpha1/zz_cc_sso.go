@@ -115,7 +115,8 @@ func (o *SSOAdminApplication) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSOAdminApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSOAdminApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSOAdminApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSOAdminApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSOAdminApplicationPortalOptionsConfiguration is a nested property type of AWS::SSO::Application.
 type SSOAdminApplicationPortalOptionsConfiguration struct {
@@ -209,6 +210,9 @@ func (o *SSOAdminApplicationAssignment) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *SSOAdminApplicationAssignment) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSOAdminApplicationAssignment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SSOAdminInstanceSpec is the desired state of AWS::SSO::Instance.
 type SSOAdminInstanceSpec struct {
@@ -288,7 +292,8 @@ func (o *SSOAdminInstance) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SSOAdminInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SSOAdminInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSOAdminInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SSOAdminInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SSOAdminInstanceAccessControlAttributeConfigurationSpec is the desired state of AWS::SSO::InstanceAccessControlAttributeConfiguration.
 type SSOAdminInstanceAccessControlAttributeConfigurationSpec struct {
@@ -360,6 +365,9 @@ func (o *SSOAdminInstanceAccessControlAttributeConfiguration) CloudControlStatus
 }
 func (o *SSOAdminInstanceAccessControlAttributeConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *SSOAdminInstanceAccessControlAttributeConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // SSOAdminInstanceAccessControlAttributeConfigurationInstanceAccessControlAttributeConfiguration is a nested property type of AWS::SSO::InstanceAccessControlAttributeConfiguration.

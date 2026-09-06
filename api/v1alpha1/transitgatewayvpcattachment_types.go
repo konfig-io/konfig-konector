@@ -74,6 +74,9 @@ type TransitGatewayVpcAttachmentSpec struct {
 
 // TransitGatewayVpcAttachmentStatus defines the observed state of TransitGatewayVpcAttachment.
 type TransitGatewayVpcAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AttachmentID is the AWS TGW VPC attachment ID.
 	// +optional
 	AttachmentID string `json:"attachmentId,omitempty"`

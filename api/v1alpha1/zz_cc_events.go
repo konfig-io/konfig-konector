@@ -103,7 +103,8 @@ func (o *EventBridgeApiDestination) CloudControlSpec() interface{} { return &o.S
 func (o *EventBridgeApiDestination) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventBridgeApiDestination) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventBridgeApiDestination) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventBridgeApiDestination) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventBridgeArchiveSpec is the desired state of AWS::Events::Archive.
 type EventBridgeArchiveSpec struct {
@@ -176,7 +177,8 @@ func (o *EventBridgeArchive) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EventBridgeArchive) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventBridgeArchive) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventBridgeArchive) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventBridgeArchive) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventBridgeConnectionSpec is the desired state of AWS::Events::Connection.
 type EventBridgeConnectionSpec struct {
@@ -263,7 +265,8 @@ func (o *EventBridgeConnection) CloudControlSpec() interface{} { return &o.Spec 
 func (o *EventBridgeConnection) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventBridgeConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventBridgeConnection) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventBridgeConnection) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventBridgeConnectionAuthParameters is a nested property type of AWS::Events::Connection.
 type EventBridgeConnectionAuthParameters struct {
@@ -450,7 +453,8 @@ func (o *EventBridgeEndpoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *EventBridgeEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventBridgeEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventBridgeEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventBridgeEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventBridgeEndpointRoutingConfig is a nested property type of AWS::Events::Endpoint.
 type EventBridgeEndpointRoutingConfig struct {
@@ -570,7 +574,8 @@ func (o *EventBridgeEventBusPolicy) CloudControlSpec() interface{} { return &o.S
 func (o *EventBridgeEventBusPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EventBridgeEventBusPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *EventBridgeEventBusPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EventBridgeEventBusPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EventBridgeEventBusPolicyCondition is a nested property type of AWS::Events::EventBusPolicy.
 type EventBridgeEventBusPolicyCondition struct {

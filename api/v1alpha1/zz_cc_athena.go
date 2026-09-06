@@ -112,7 +112,8 @@ func (o *AthenaCapacityReservation) CloudControlSpec() interface{} { return &o.S
 func (o *AthenaCapacityReservation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AthenaCapacityReservation) CloudControlObserved() interface{} { return &o.Status }
+func (o *AthenaCapacityReservation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AthenaCapacityReservation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AthenaCapacityReservationCapacityAssignmentConfiguration is a nested property type of AWS::Athena::CapacityReservation.
 type AthenaCapacityReservationCapacityAssignmentConfiguration struct {
@@ -194,7 +195,8 @@ func (o *AthenaPreparedStatement) CloudControlSpec() interface{} { return &o.Spe
 func (o *AthenaPreparedStatement) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AthenaPreparedStatement) CloudControlObserved() interface{} { return &o.Status }
+func (o *AthenaPreparedStatement) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AthenaPreparedStatement) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&AthenaCapacityReservation{}, &AthenaCapacityReservationList{})

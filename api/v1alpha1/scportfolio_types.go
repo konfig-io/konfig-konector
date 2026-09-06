@@ -47,6 +47,9 @@ type SCPortfolioSpec struct {
 
 // SCPortfolioStatus defines the observed state of SCPortfolio.
 type SCPortfolioStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PortfolioID is the Service Catalog portfolio identifier (port-...).
 	// +optional
 	PortfolioID string `json:"portfolioId,omitempty"`

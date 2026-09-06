@@ -83,6 +83,9 @@ type ECSCapacityProviderSpec struct {
 
 // ECSCapacityProviderStatus defines the observed state of ECSCapacityProvider.
 type ECSCapacityProviderStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CapacityProviderARN is the ARN of the capacity provider.
 	// +optional
 	CapacityProviderARN string `json:"capacityProviderArn,omitempty"`

@@ -122,18 +122,22 @@ func (r *CloudFrontFunctionReconciler) reconcileCFFunction(ctx context.Context, 
 			obj.Status.FunctionStatus = string(descOut.FunctionSummary.FunctionMetadata.Stage)
 		}
 
-		_, err := r.CloudFrontClient.UpdateFunction(ctx, &awscf.UpdateFunctionInput{
-			Name:         aws.String(obj.Spec.Name),
-			IfMatch:      aws.String(obj.Status.ETag),
-			FunctionCode: []byte(obj.Spec.FunctionCode),
-			FunctionConfig: &cftypes.FunctionConfig{
-				Comment: aws.String(comment),
-				Runtime: cfFunctionRuntime(obj),
-			},
-		})
-		if err != nil {
-			return fmt.Errorf("update cloudfront function: %w", err)
+		// CloudFront control-plane APIs are rate limited; only update on spec change.
+		if obj.Status.ObservedGeneration != obj.Generation {
+			_, err := r.CloudFrontClient.UpdateFunction(ctx, &awscf.UpdateFunctionInput{
+				Name:         aws.String(obj.Spec.Name),
+				IfMatch:      aws.String(obj.Status.ETag),
+				FunctionCode: []byte(obj.Spec.FunctionCode),
+				FunctionConfig: &cftypes.FunctionConfig{
+					Comment: aws.String(comment),
+					Runtime: cfFunctionRuntime(obj),
+				},
+			})
+			if err != nil {
+				return fmt.Errorf("update cloudfront function: %w", err)
+			}
 		}
+
 		obj.Status.ObservedGeneration = obj.Generation
 		now := metav1.Now()
 		obj.Status.LastSyncTime = &now

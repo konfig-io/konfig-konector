@@ -47,6 +47,9 @@ type OpenSearchAccessPolicySpec struct {
 
 // OpenSearchAccessPolicyStatus defines the observed state of OpenSearchAccessPolicy.
 type OpenSearchAccessPolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyVersion is the current version of the policy.
 	// +optional
 	PolicyVersion string `json:"policyVersion,omitempty"`

@@ -192,7 +192,8 @@ func (o *ElastiCacheCacheCluster) CloudControlSpec() interface{} { return &o.Spe
 func (o *ElastiCacheCacheCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ElastiCacheCacheCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElastiCacheCacheCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ElastiCacheCacheCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ElastiCacheCacheClusterLogDeliveryConfigurationRequest is a nested property type of AWS::ElastiCache::CacheCluster.
 type ElastiCacheCacheClusterLogDeliveryConfigurationRequest struct {
@@ -341,6 +342,9 @@ func (o *ElastiCacheGlobalReplicationGroup) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *ElastiCacheGlobalReplicationGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElastiCacheGlobalReplicationGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ElastiCacheGlobalReplicationGroupGlobalReplicationGroupMember is a nested property type of AWS::ElastiCache::GlobalReplicationGroup.
 type ElastiCacheGlobalReplicationGroupGlobalReplicationGroupMember struct {
@@ -493,6 +497,9 @@ func (o *ElastiCacheServerlessCacheSnapshot) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *ElastiCacheServerlessCacheSnapshot) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElastiCacheServerlessCacheSnapshot) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ElastiCacheServerlessCacheSnapshotServerlessCacheConfiguration is a nested property type of AWS::ElastiCache::ServerlessCacheSnapshot.
 type ElastiCacheServerlessCacheSnapshotServerlessCacheConfiguration struct {
@@ -596,7 +603,8 @@ func (o *ElastiCacheUser) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ElastiCacheUser) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ElastiCacheUser) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElastiCacheUser) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ElastiCacheUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ElastiCacheUserAuthenticationMode is a nested property type of AWS::ElastiCache::User.
 type ElastiCacheUserAuthenticationMode struct {
@@ -679,7 +687,8 @@ func (o *ElastiCacheUserGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ElastiCacheUserGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ElastiCacheUserGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *ElastiCacheUserGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ElastiCacheUserGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ElastiCacheCacheCluster{}, &ElastiCacheCacheClusterList{})

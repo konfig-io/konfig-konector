@@ -104,7 +104,8 @@ func (o *LogsAccountPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsAccountPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsAccountPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsAccountPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsAccountPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsDeliverySpec is the desired state of AWS::Logs::Delivery.
 type LogsDeliverySpec struct {
@@ -213,7 +214,8 @@ func (o *LogsDelivery) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsDelivery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsDelivery) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsDelivery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsDelivery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsDeliveryDestinationSpec is the desired state of AWS::Logs::DeliveryDestination.
 type LogsDeliveryDestinationSpec struct {
@@ -305,7 +307,8 @@ func (o *LogsDeliveryDestination) CloudControlSpec() interface{} { return &o.Spe
 func (o *LogsDeliveryDestination) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsDeliveryDestination) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsDeliveryDestination) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsDeliveryDestination) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsDeliveryDestinationDestinationPolicy is a nested property type of AWS::Logs::DeliveryDestination.
 type LogsDeliveryDestinationDestinationPolicy struct {
@@ -423,7 +426,8 @@ func (o *LogsDeliverySource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsDeliverySource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsDeliverySource) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsDeliverySource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsDeliverySource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsDestinationSpec is the desired state of AWS::Logs::Destination.
 type LogsDestinationSpec struct {
@@ -498,7 +502,8 @@ func (o *LogsDestination) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsDestination) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsDestination) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsDestination) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsDestination) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsIntegrationSpec is the desired state of AWS::Logs::Integration.
 type LogsIntegrationSpec struct {
@@ -567,7 +572,8 @@ func (o *LogsIntegration) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsIntegration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsIntegration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsIntegration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsIntegrationResourceConfig is a nested property type of AWS::Logs::Integration.
 type LogsIntegrationResourceConfig struct {
@@ -691,7 +697,8 @@ func (o *LogsLogAnomalyDetector) CloudControlSpec() interface{} { return &o.Spec
 func (o *LogsLogAnomalyDetector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsLogAnomalyDetector) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsLogAnomalyDetector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsLogAnomalyDetector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsLogStreamSpec is the desired state of AWS::Logs::LogStream.
 type LogsLogStreamSpec struct {
@@ -747,7 +754,8 @@ func (o *LogsLogStream) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsLogStream) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsLogStream) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsLogStream) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsLogStream) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsQueryDefinitionSpec is the desired state of AWS::Logs::QueryDefinition.
 type LogsQueryDefinitionSpec struct {
@@ -825,7 +833,8 @@ func (o *LogsQueryDefinition) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsQueryDefinition) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsQueryDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsQueryDefinition) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsQueryDefinition) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsQueryDefinitionQueryParameter is a nested property type of AWS::Logs::QueryDefinition.
 type LogsQueryDefinitionQueryParameter struct {
@@ -900,7 +909,8 @@ func (o *LogsResourcePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsScheduledQuerySpec is the desired state of AWS::Logs::ScheduledQuery.
 type LogsScheduledQuerySpec struct {
@@ -1013,7 +1023,8 @@ func (o *LogsScheduledQuery) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsScheduledQuery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsScheduledQuery) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsScheduledQuery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsScheduledQuery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsScheduledQueryDestinationConfiguration is a nested property type of AWS::Logs::ScheduledQuery.
 type LogsScheduledQueryDestinationConfiguration struct {
@@ -1098,7 +1109,8 @@ func (o *LogsStorageTierPolicy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *LogsStorageTierPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsStorageTierPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsStorageTierPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsStorageTierPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsTransformerSpec is the desired state of AWS::Logs::Transformer.
 type LogsTransformerSpec struct {
@@ -1154,7 +1166,8 @@ func (o *LogsTransformer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LogsTransformer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LogsTransformer) CloudControlObserved() interface{} { return &o.Status }
+func (o *LogsTransformer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LogsTransformer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LogsTransformerProcessor is a nested property type of AWS::Logs::Transformer.
 type LogsTransformerProcessor struct {

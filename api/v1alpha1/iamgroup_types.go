@@ -41,6 +41,9 @@ type IAMGroupSpec struct {
 
 // IAMGroupStatus defines the observed state of IAMGroup.
 type IAMGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM group.
 	// +optional
 	ARN string `json:"arn,omitempty"`

@@ -118,7 +118,8 @@ func (o *RUMAppMonitor) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RUMAppMonitor) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RUMAppMonitor) CloudControlObserved() interface{} { return &o.Status }
+func (o *RUMAppMonitor) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RUMAppMonitor) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RUMAppMonitorAppMonitorConfiguration is a nested property type of AWS::RUM::AppMonitor.
 type RUMAppMonitorAppMonitorConfiguration struct {

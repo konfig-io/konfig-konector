@@ -75,6 +75,9 @@ type FlowLogSpec struct {
 
 // FlowLogStatus defines the observed state of FlowLog.
 type FlowLogStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FlowLogID is the ID of the flow log.
 	// +optional
 	FlowLogID string `json:"flowLogId,omitempty"`

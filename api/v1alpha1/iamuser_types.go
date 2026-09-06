@@ -49,6 +49,9 @@ type IAMUserSpec struct {
 
 // IAMUserStatus defines the observed state of IAMUser.
 type IAMUserStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the IAM user.
 	// +optional
 	ARN string `json:"arn,omitempty"`

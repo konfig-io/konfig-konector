@@ -127,6 +127,9 @@ type GlueCrawlerSpec struct {
 
 // GlueCrawlerStatus defines the observed state of GlueCrawler.
 type GlueCrawlerStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CrawlerName is the name of the crawler in AWS.
 	// +optional
 	CrawlerName string `json:"crawlerName,omitempty"`

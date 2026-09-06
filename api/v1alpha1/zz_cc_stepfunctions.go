@@ -97,7 +97,8 @@ func (o *SFNStateMachineAlias) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SFNStateMachineAlias) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SFNStateMachineAlias) CloudControlObserved() interface{} { return &o.Status }
+func (o *SFNStateMachineAlias) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SFNStateMachineAlias) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SFNStateMachineAliasRoutingConfigurationVersion is a nested property type of AWS::StepFunctions::StateMachineAlias.
 type SFNStateMachineAliasRoutingConfigurationVersion struct {
@@ -209,7 +210,8 @@ func (o *SFNStateMachineVersion) CloudControlSpec() interface{} { return &o.Spec
 func (o *SFNStateMachineVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SFNStateMachineVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *SFNStateMachineVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SFNStateMachineVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&SFNStateMachineAlias{}, &SFNStateMachineAliasList{})

@@ -162,7 +162,8 @@ func (o *EMRContainersEndpoint) CloudControlSpec() interface{} { return &o.Spec 
 func (o *EMRContainersEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRContainersEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRContainersEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRContainersEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EMRContainersEndpointConfigurationOverrides is a nested property type of AWS::EMRContainers::Endpoint.
 type EMRContainersEndpointConfigurationOverrides struct {
@@ -305,6 +306,9 @@ func (o *EMRContainersSecurityConfiguration) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *EMRContainersSecurityConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRContainersSecurityConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // EMRContainersSecurityConfigurationContainerProvider is a nested property type of AWS::EMRContainers::SecurityConfiguration.
 type EMRContainersSecurityConfigurationContainerProvider struct {
@@ -559,7 +563,8 @@ func (o *EMRContainersVirtualCluster) CloudControlSpec() interface{} { return &o
 func (o *EMRContainersVirtualCluster) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *EMRContainersVirtualCluster) CloudControlObserved() interface{} { return &o.Status }
+func (o *EMRContainersVirtualCluster) CloudControlObserved() interface{}   { return &o.Status }
+func (o *EMRContainersVirtualCluster) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // EMRContainersVirtualClusterContainerProvider is a nested property type of AWS::EMRContainers::VirtualCluster.
 type EMRContainersVirtualClusterContainerProvider struct {

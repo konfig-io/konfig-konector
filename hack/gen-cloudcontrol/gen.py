@@ -443,6 +443,7 @@ func (o *%(k)s) CloudControlTypeName() string              { return %(tn)r }
 func (o *%(k)s) CloudControlSpec() interface{}             { return &o.Spec }
 func (o *%(k)s) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *%(k)s) CloudControlObserved() interface{}         { return &o.Status }
+func (o *%(k)s) SetProviderStatus(p *ProviderStatus)      { o.Status.AWSProvider = p }
 """ % {"k": k, "tn": s["typeName"]})
         out.extend(v for v in self.structs.values() if isinstance(v, str))
         return "\n".join(out).replace("%r" % s["typeName"], '"%s"' % s["typeName"])

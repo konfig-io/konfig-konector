@@ -93,7 +93,8 @@ func (o *AppFlowConnector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppFlowConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppFlowConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppFlowConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppFlowConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppFlowConnectorConnectorProvisioningConfig is a nested property type of AWS::AppFlow::Connector.
 type AppFlowConnectorConnectorProvisioningConfig struct {
@@ -201,7 +202,8 @@ func (o *AppFlowConnectorProfile) CloudControlSpec() interface{} { return &o.Spe
 func (o *AppFlowConnectorProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppFlowConnectorProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppFlowConnectorProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppFlowConnectorProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppFlowConnectorProfileConnectorProfileConfig is a nested property type of AWS::AppFlow::ConnectorProfile.
 type AppFlowConnectorProfileConnectorProfileConfig struct {
@@ -1017,7 +1019,8 @@ func (o *AppFlowFlow) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppFlowFlow) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppFlowFlow) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppFlowFlow) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppFlowFlow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppFlowFlowTriggerConfig is a nested property type of AWS::AppFlow::Flow.
 type AppFlowFlowTriggerConfig struct {

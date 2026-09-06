@@ -118,6 +118,9 @@ func (o *KinesisAnalyticsV2Application) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *KinesisAnalyticsV2Application) CloudControlObserved() interface{} { return &o.Status }
+func (o *KinesisAnalyticsV2Application) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // KinesisAnalyticsV2ApplicationApplicationConfiguration is a nested property type of AWS::KinesisAnalyticsV2::Application.
 type KinesisAnalyticsV2ApplicationApplicationConfiguration struct {

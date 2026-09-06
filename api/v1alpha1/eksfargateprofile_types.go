@@ -76,6 +76,9 @@ type EKSFargateProfileSpec struct {
 
 // EKSFargateProfileStatus defines the observed state of EKSFargateProfile.
 type EKSFargateProfileStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FargateProfileArn is the ARN of the Fargate profile.
 	// +optional
 	FargateProfileArn string `json:"fargateProfileArn,omitempty"`

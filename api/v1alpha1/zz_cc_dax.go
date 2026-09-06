@@ -84,7 +84,8 @@ func (o *DAXParameterGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DAXParameterGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DAXParameterGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *DAXParameterGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DAXParameterGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&DAXParameterGroup{}, &DAXParameterGroupList{})

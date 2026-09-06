@@ -150,6 +150,7 @@ func (o *AmplifyApp) CloudControlTypeName() string               { return "AWS::
 func (o *AmplifyApp) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *AmplifyApp) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *AmplifyApp) CloudControlObserved() interface{}          { return &o.Status }
+func (o *AmplifyApp) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // AmplifyAppAutoBranchCreationConfig is a nested property type of AWS::Amplify::App.
 type AmplifyAppAutoBranchCreationConfig struct {
@@ -355,7 +356,8 @@ func (o *AmplifyBranch) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AmplifyBranch) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AmplifyBranch) CloudControlObserved() interface{} { return &o.Status }
+func (o *AmplifyBranch) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AmplifyBranch) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AmplifyBranchBasicAuthConfig is a nested property type of AWS::Amplify::Branch.
 type AmplifyBranchBasicAuthConfig struct {
@@ -484,7 +486,8 @@ func (o *AmplifyDomain) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AmplifyDomain) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AmplifyDomain) CloudControlObserved() interface{} { return &o.Status }
+func (o *AmplifyDomain) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AmplifyDomain) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AmplifyDomainCertificate is a nested property type of AWS::Amplify::Domain.
 type AmplifyDomainCertificate struct {
@@ -602,7 +605,8 @@ func (o *AmplifyWebhook) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AmplifyWebhook) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AmplifyWebhook) CloudControlObserved() interface{} { return &o.Status }
+func (o *AmplifyWebhook) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AmplifyWebhook) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&AmplifyApp{}, &AmplifyAppList{})

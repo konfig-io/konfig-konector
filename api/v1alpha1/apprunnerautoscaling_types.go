@@ -58,6 +58,9 @@ type AppRunnerAutoScalingSpec struct {
 
 // AppRunnerAutoScalingStatus defines the observed state of AppRunnerAutoScaling.
 type AppRunnerAutoScalingStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AutoScalingConfigurationARN is the ARN of the configuration revision.
 	// +optional
 	AutoScalingConfigurationARN string `json:"autoScalingConfigurationArn,omitempty"`

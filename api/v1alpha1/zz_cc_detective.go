@@ -81,7 +81,8 @@ func (o *DetectiveGraph) CloudControlSpec() interface{} { return &o.Spec }
 func (o *DetectiveGraph) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DetectiveGraph) CloudControlObserved() interface{} { return &o.Status }
+func (o *DetectiveGraph) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DetectiveGraph) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DetectiveMemberInvitationSpec is the desired state of AWS::Detective::MemberInvitation.
 type DetectiveMemberInvitationSpec struct {
@@ -153,7 +154,8 @@ func (o *DetectiveMemberInvitation) CloudControlSpec() interface{} { return &o.S
 func (o *DetectiveMemberInvitation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DetectiveMemberInvitation) CloudControlObserved() interface{} { return &o.Status }
+func (o *DetectiveMemberInvitation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DetectiveMemberInvitation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // DetectiveOrganizationAdminSpec is the desired state of AWS::Detective::OrganizationAdmin.
 type DetectiveOrganizationAdminSpec struct {
@@ -214,7 +216,8 @@ func (o *DetectiveOrganizationAdmin) CloudControlSpec() interface{} { return &o.
 func (o *DetectiveOrganizationAdmin) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *DetectiveOrganizationAdmin) CloudControlObserved() interface{} { return &o.Status }
+func (o *DetectiveOrganizationAdmin) CloudControlObserved() interface{}   { return &o.Status }
+func (o *DetectiveOrganizationAdmin) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&DetectiveGraph{}, &DetectiveGraphList{})

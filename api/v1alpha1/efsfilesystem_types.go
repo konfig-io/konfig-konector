@@ -57,6 +57,9 @@ type EFSFileSystemSpec struct {
 
 // EFSFileSystemStatus defines the observed state of EFSFileSystem.
 type EFSFileSystemStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FileSystemID is the ID of the EFS file system.
 	// +optional
 	FileSystemID string `json:"fileSystemId,omitempty"`

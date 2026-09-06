@@ -202,7 +202,8 @@ func (o *MWAAEnvironment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MWAAEnvironment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MWAAEnvironment) CloudControlObserved() interface{} { return &o.Status }
+func (o *MWAAEnvironment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MWAAEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MWAAEnvironmentNetworkConfiguration is a nested property type of AWS::MWAA::Environment.
 type MWAAEnvironmentNetworkConfiguration struct {

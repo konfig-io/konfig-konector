@@ -95,7 +95,8 @@ func (o *IAMGroupPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IAMGroupPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IAMGroupPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *IAMGroupPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IAMGroupPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IAMServerCertificateSpec is the desired state of AWS::IAM::ServerCertificate.
 type IAMServerCertificateSpec struct {
@@ -175,7 +176,8 @@ func (o *IAMServerCertificate) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IAMServerCertificate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IAMServerCertificate) CloudControlObserved() interface{} { return &o.Status }
+func (o *IAMServerCertificate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IAMServerCertificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IAMServiceLinkedRoleSpec is the desired state of AWS::IAM::ServiceLinkedRole.
 type IAMServiceLinkedRoleSpec struct {
@@ -240,7 +242,8 @@ func (o *IAMServiceLinkedRole) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IAMServiceLinkedRole) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IAMServiceLinkedRole) CloudControlObserved() interface{} { return &o.Status }
+func (o *IAMServiceLinkedRole) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IAMServiceLinkedRole) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IAMUserPolicySpec is the desired state of AWS::IAM::UserPolicy.
 type IAMUserPolicySpec struct {
@@ -313,7 +316,8 @@ func (o *IAMUserPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IAMUserPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IAMUserPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *IAMUserPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IAMUserPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IAMVirtualMFADeviceSpec is the desired state of AWS::IAM::VirtualMFADevice.
 type IAMVirtualMFADeviceSpec struct {
@@ -379,7 +383,8 @@ func (o *IAMVirtualMFADevice) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IAMVirtualMFADevice) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IAMVirtualMFADevice) CloudControlObserved() interface{} { return &o.Status }
+func (o *IAMVirtualMFADevice) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IAMVirtualMFADevice) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&IAMGroupPolicy{}, &IAMGroupPolicyList{})

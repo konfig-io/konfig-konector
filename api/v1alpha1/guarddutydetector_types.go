@@ -64,6 +64,9 @@ type GuardDutyDetectorSpec struct {
 
 // GuardDutyDetectorStatus defines the observed state of GuardDutyDetector.
 type GuardDutyDetectorStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DetectorID is the unique ID of the detector.
 	// +optional
 	DetectorID string `json:"detectorId,omitempty"`

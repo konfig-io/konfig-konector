@@ -83,6 +83,9 @@ type XRaySamplingRuleSpec struct {
 
 // XRaySamplingRuleStatus defines the observed state of XRaySamplingRule.
 type XRaySamplingRuleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the sampling rule.
 	// +optional
 	ARN string `json:"arn,omitempty"`

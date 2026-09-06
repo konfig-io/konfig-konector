@@ -97,7 +97,8 @@ func (o *ControlTowerEnabledBaseline) CloudControlSpec() interface{} { return &o
 func (o *ControlTowerEnabledBaseline) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ControlTowerEnabledBaseline) CloudControlObserved() interface{} { return &o.Status }
+func (o *ControlTowerEnabledBaseline) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ControlTowerEnabledBaseline) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ControlTowerEnabledBaselineParameter is a nested property type of AWS::ControlTower::EnabledBaseline.
 type ControlTowerEnabledBaselineParameter struct {
@@ -195,7 +196,8 @@ func (o *ControlTowerLandingZone) CloudControlSpec() interface{} { return &o.Spe
 func (o *ControlTowerLandingZone) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ControlTowerLandingZone) CloudControlObserved() interface{} { return &o.Status }
+func (o *ControlTowerLandingZone) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ControlTowerLandingZone) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ControlTowerEnabledBaseline{}, &ControlTowerEnabledBaselineList{})

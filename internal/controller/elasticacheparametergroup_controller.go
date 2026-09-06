@@ -97,6 +97,18 @@ func (r *ElastiCacheParameterGroupReconciler) Reconcile(ctx context.Context, req
 
 func (r *ElastiCacheParameterGroupReconciler) reconcileParameterGroup(ctx context.Context, obj *awsv1alpha1.ElastiCacheParameterGroup) error {
 	if obj.Status.ARN == "" {
+		// Adopt an existing group with this name instead of failing on
+		// CacheParameterGroupAlreadyExists.
+		if found, err := r.ElastiCacheClient.DescribeCacheParameterGroups(ctx, &awselasticache.DescribeCacheParameterGroupsInput{
+			CacheParameterGroupName: aws.String(obj.Spec.CacheParameterGroupName),
+		}); err == nil && len(found.CacheParameterGroups) > 0 {
+			obj.Status.ARN = aws.ToString(found.CacheParameterGroups[0].ARN)
+			if err := persistStatus(ctx, r.Client, obj); err != nil {
+				return fmt.Errorf("persist adopted parameter group ARN: %w", err)
+			}
+		}
+	}
+	if obj.Status.ARN == "" {
 		desc := obj.Spec.Description
 		if desc == "" {
 			desc = "Managed by konfig-konector"

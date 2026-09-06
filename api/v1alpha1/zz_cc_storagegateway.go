@@ -111,7 +111,8 @@ func (o *StorageGatewayTapePool) CloudControlSpec() interface{} { return &o.Spec
 func (o *StorageGatewayTapePool) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *StorageGatewayTapePool) CloudControlObserved() interface{} { return &o.Status }
+func (o *StorageGatewayTapePool) CloudControlObserved() interface{}   { return &o.Status }
+func (o *StorageGatewayTapePool) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&StorageGatewayTapePool{}, &StorageGatewayTapePoolList{})

@@ -44,6 +44,9 @@ type NatGatewaySpec struct {
 
 // NatGatewayStatus defines the observed state of NatGateway.
 type NatGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NatGatewayID is the AWS NAT Gateway identifier.
 	// +optional
 	NatGatewayID string `json:"natGatewayId,omitempty"`

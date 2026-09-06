@@ -165,7 +165,8 @@ func (o *SyntheticsCanary) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SyntheticsCanary) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SyntheticsCanary) CloudControlObserved() interface{} { return &o.Status }
+func (o *SyntheticsCanary) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SyntheticsCanary) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SyntheticsCanaryCode is a nested property type of AWS::Synthetics::Canary.
 type SyntheticsCanaryCode struct {
@@ -413,7 +414,8 @@ func (o *SyntheticsGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SyntheticsGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SyntheticsGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *SyntheticsGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SyntheticsGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&SyntheticsCanary{}, &SyntheticsCanaryList{})

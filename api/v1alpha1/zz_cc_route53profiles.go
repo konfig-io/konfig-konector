@@ -103,7 +103,8 @@ func (o *Route53ProfilesProfile) CloudControlSpec() interface{} { return &o.Spec
 func (o *Route53ProfilesProfile) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *Route53ProfilesProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ProfilesProfile) CloudControlObserved() interface{}   { return &o.Status }
+func (o *Route53ProfilesProfile) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // Route53ProfilesProfileAssociationSpec is the desired state of AWS::Route53Profiles::ProfileAssociation.
 type Route53ProfilesProfileAssociationSpec struct {
@@ -180,6 +181,9 @@ func (o *Route53ProfilesProfileAssociation) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53ProfilesProfileAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53ProfilesProfileAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53ProfilesProfileResourceAssociationSpec is the desired state of AWS::Route53Profiles::ProfileResourceAssociation.
 type Route53ProfilesProfileResourceAssociationSpec struct {
@@ -260,6 +264,9 @@ func (o *Route53ProfilesProfileResourceAssociation) CloudControlStatusRef() *Clo
 }
 func (o *Route53ProfilesProfileResourceAssociation) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *Route53ProfilesProfileResourceAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 func init() {

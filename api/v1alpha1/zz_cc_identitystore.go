@@ -91,7 +91,8 @@ func (o *IdentityStoreGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IdentityStoreGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IdentityStoreGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *IdentityStoreGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IdentityStoreGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IdentityStoreGroupMembershipSpec is the desired state of AWS::IdentityStore::GroupMembership.
 type IdentityStoreGroupMembershipSpec struct {
@@ -163,7 +164,8 @@ func (o *IdentityStoreGroupMembership) CloudControlSpec() interface{} { return &
 func (o *IdentityStoreGroupMembership) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IdentityStoreGroupMembership) CloudControlObserved() interface{} { return &o.Status }
+func (o *IdentityStoreGroupMembership) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IdentityStoreGroupMembership) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IdentityStoreGroupMembershipMemberId is a nested property type of AWS::IdentityStore::GroupMembership.
 type IdentityStoreGroupMembershipMemberId struct {
@@ -346,7 +348,8 @@ func (o *IdentityStoreUser) CloudControlSpec() interface{} { return &o.Spec }
 func (o *IdentityStoreUser) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *IdentityStoreUser) CloudControlObserved() interface{} { return &o.Status }
+func (o *IdentityStoreUser) CloudControlObserved() interface{}   { return &o.Status }
+func (o *IdentityStoreUser) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // IdentityStoreUserName is a nested property type of AWS::IdentityStore::User.
 type IdentityStoreUserName struct {

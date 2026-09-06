@@ -69,6 +69,9 @@ type EKSAddonSpec struct {
 
 // EKSAddonStatus defines the observed state of EKSAddon.
 type EKSAddonStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AddonArn is the ARN of the EKS add-on.
 	// +optional
 	AddonArn string `json:"addonArn,omitempty"`

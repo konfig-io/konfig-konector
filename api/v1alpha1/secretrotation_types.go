@@ -52,6 +52,9 @@ type SecretRotationSpec struct {
 
 // SecretRotationStatus defines the observed state of SecretRotation.
 type SecretRotationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RotationEnabled indicates whether rotation is enabled.
 	// +optional
 	RotationEnabled bool `json:"rotationEnabled,omitempty"`

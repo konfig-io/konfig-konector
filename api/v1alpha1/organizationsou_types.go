@@ -53,6 +53,9 @@ type OrganizationsOUSpec struct {
 
 // OrganizationsOUStatus defines the observed state of OrganizationsOU.
 type OrganizationsOUStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// OUID is the unique identifier (ou-...) of the organizational unit.
 	// +optional
 	OUID string `json:"ouId,omitempty"`

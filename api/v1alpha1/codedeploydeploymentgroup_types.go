@@ -53,6 +53,9 @@ type CodeDeployDeploymentGroupSpec struct {
 
 // CodeDeployDeploymentGroupStatus defines the observed state of CodeDeployDeploymentGroup.
 type CodeDeployDeploymentGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DeploymentGroupID is the CodeDeploy deployment group ID.
 	// +optional
 	DeploymentGroupID string `json:"deploymentGroupID,omitempty"`

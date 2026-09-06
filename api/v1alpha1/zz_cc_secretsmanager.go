@@ -90,7 +90,8 @@ func (o *SecretsManagerResourcePolicy) CloudControlSpec() interface{} { return &
 func (o *SecretsManagerResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SecretsManagerResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecretsManagerResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SecretsManagerResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // SecretsManagerSecretTargetAttachmentSpec is the desired state of AWS::SecretsManager::SecretTargetAttachment.
 type SecretsManagerSecretTargetAttachmentSpec struct {
@@ -153,6 +154,9 @@ func (o *SecretsManagerSecretTargetAttachment) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *SecretsManagerSecretTargetAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *SecretsManagerSecretTargetAttachment) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&SecretsManagerResourcePolicy{}, &SecretsManagerResourcePolicyList{})

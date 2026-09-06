@@ -85,6 +85,9 @@ type EFSAccessPointSpec struct {
 
 // EFSAccessPointStatus defines the observed state of EFSAccessPoint.
 type EFSAccessPointStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccessPointID is the ID of the access point.
 	// +optional
 	AccessPointID string `json:"accessPointId,omitempty"`

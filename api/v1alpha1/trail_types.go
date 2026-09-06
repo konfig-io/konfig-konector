@@ -80,6 +80,9 @@ type TrailSpec struct {
 
 // TrailStatus defines the observed state of Trail.
 type TrailStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// TrailARN is the ARN of the trail.
 	// +optional
 	TrailARN string `json:"trailArn,omitempty"`

@@ -64,6 +64,9 @@ type HostedZoneSpec struct {
 
 // HostedZoneStatus defines the observed state of HostedZone.
 type HostedZoneStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HostedZoneID is the Route53 hosted zone identifier (e.g. "Z1234567890").
 	// +optional
 	HostedZoneID string `json:"hostedZoneId,omitempty"`

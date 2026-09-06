@@ -70,6 +70,9 @@ type LambdaLayerVersionSpec struct {
 
 // LambdaLayerVersionStatus defines the observed state of LambdaLayerVersion.
 type LambdaLayerVersionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// LayerVersionARN is the ARN of the layer version.
 	// +optional
 	LayerVersionARN string `json:"layerVersionArn,omitempty"`

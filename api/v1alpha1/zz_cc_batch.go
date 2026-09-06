@@ -105,7 +105,8 @@ func (o *BatchConsumableResource) CloudControlSpec() interface{} { return &o.Spe
 func (o *BatchConsumableResource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BatchConsumableResource) CloudControlObserved() interface{} { return &o.Status }
+func (o *BatchConsumableResource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BatchConsumableResource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BatchQuotaShareSpec is the desired state of AWS::Batch::QuotaShare.
 type BatchQuotaShareSpec struct {
@@ -192,7 +193,8 @@ func (o *BatchQuotaShare) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BatchQuotaShare) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BatchQuotaShare) CloudControlObserved() interface{} { return &o.Status }
+func (o *BatchQuotaShare) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BatchQuotaShare) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BatchQuotaShareQuotaShareCapacityLimit is a nested property type of AWS::Batch::QuotaShare.
 type BatchQuotaShareQuotaShareCapacityLimit struct {
@@ -294,7 +296,8 @@ func (o *BatchSchedulingPolicy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *BatchSchedulingPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BatchSchedulingPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BatchSchedulingPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BatchSchedulingPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BatchSchedulingPolicyFairsharePolicy is a nested property type of AWS::Batch::SchedulingPolicy.
 type BatchSchedulingPolicyFairsharePolicy struct {
@@ -392,7 +395,8 @@ func (o *BatchServiceEnvironment) CloudControlSpec() interface{} { return &o.Spe
 func (o *BatchServiceEnvironment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BatchServiceEnvironment) CloudControlObserved() interface{} { return &o.Status }
+func (o *BatchServiceEnvironment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BatchServiceEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BatchServiceEnvironmentCapacityLimit is a nested property type of AWS::Batch::ServiceEnvironment.
 type BatchServiceEnvironmentCapacityLimit struct {

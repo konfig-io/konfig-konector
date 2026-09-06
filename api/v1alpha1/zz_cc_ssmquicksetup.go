@@ -98,6 +98,9 @@ func (o *SSMQuickSetupConfigurationManager) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *SSMQuickSetupConfigurationManager) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMQuickSetupConfigurationManager) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // SSMQuickSetupConfigurationManagerConfigurationDefinition is a nested property type of AWS::SSMQuickSetup::ConfigurationManager.
 type SSMQuickSetupConfigurationManagerConfigurationDefinition struct {
@@ -209,6 +212,9 @@ func (o *SSMQuickSetupLifecycleAutomation) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *SSMQuickSetupLifecycleAutomation) CloudControlObserved() interface{} { return &o.Status }
+func (o *SSMQuickSetupLifecycleAutomation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&SSMQuickSetupConfigurationManager{}, &SSMQuickSetupConfigurationManagerList{})

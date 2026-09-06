@@ -123,7 +123,8 @@ func (o *ACMPCACertificate) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ACMPCACertificate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ACMPCACertificate) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMPCACertificate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ACMPCACertificate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ACMPCACertificateApiPassthrough is a nested property type of AWS::ACMPCA::Certificate.
 type ACMPCACertificateApiPassthrough struct {
@@ -482,6 +483,9 @@ func (o *ACMPCACertificateAuthorityActivation) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *ACMPCACertificateAuthorityActivation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMPCACertificateAuthorityActivation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ACMPCAPermissionSpec is the desired state of AWS::ACMPCA::Permission.
 type ACMPCAPermissionSpec struct {
@@ -548,7 +552,8 @@ func (o *ACMPCAPermission) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ACMPCAPermission) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ACMPCAPermission) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMPCAPermission) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ACMPCAPermission) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&ACMPCACertificate{}, &ACMPCACertificateList{})

@@ -91,6 +91,9 @@ type SecurityGroupSpec struct {
 
 // SecurityGroupStatus defines the observed state of SecurityGroup.
 type SecurityGroupStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// GroupID is the AWS Security Group identifier.
 	// +optional
 	GroupID string `json:"groupId,omitempty"`

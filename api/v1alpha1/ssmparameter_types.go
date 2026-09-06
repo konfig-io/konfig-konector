@@ -70,6 +70,9 @@ type SSMParameterSpec struct {
 
 // SSMParameterStatus defines the observed state of SSMParameter.
 type SSMParameterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the SSM parameter.
 	// +optional
 	ARN string `json:"arn,omitempty"`

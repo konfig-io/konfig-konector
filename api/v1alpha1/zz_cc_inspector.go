@@ -81,7 +81,8 @@ func (o *InspectorAssessmentTarget) CloudControlSpec() interface{} { return &o.S
 func (o *InspectorAssessmentTarget) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InspectorAssessmentTarget) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorAssessmentTarget) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InspectorAssessmentTarget) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // InspectorAssessmentTemplateSpec is the desired state of AWS::Inspector::AssessmentTemplate.
 type InspectorAssessmentTemplateSpec struct {
@@ -152,7 +153,8 @@ func (o *InspectorAssessmentTemplate) CloudControlSpec() interface{} { return &o
 func (o *InspectorAssessmentTemplate) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InspectorAssessmentTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorAssessmentTemplate) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InspectorAssessmentTemplate) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // InspectorResourceGroupSpec is the desired state of AWS::Inspector::ResourceGroup.
 type InspectorResourceGroupSpec struct {
@@ -207,7 +209,8 @@ func (o *InspectorResourceGroup) CloudControlSpec() interface{} { return &o.Spec
 func (o *InspectorResourceGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InspectorResourceGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorResourceGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InspectorResourceGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&InspectorAssessmentTarget{}, &InspectorAssessmentTargetList{})

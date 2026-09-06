@@ -118,6 +118,9 @@ func (o *CodeGuruReviewerRepositoryAssociation) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeGuruReviewerRepositoryAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeGuruReviewerRepositoryAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&CodeGuruReviewerRepositoryAssociation{}, &CodeGuruReviewerRepositoryAssociationList{})

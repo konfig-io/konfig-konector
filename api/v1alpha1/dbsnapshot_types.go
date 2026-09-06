@@ -45,6 +45,9 @@ type DBSnapshotSpec struct {
 
 // DBSnapshotStatus defines the observed state of DBSnapshot.
 type DBSnapshotStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SnapshotARN is the ARN of the snapshot.
 	// +optional
 	SnapshotARN string `json:"snapshotArn,omitempty"`

@@ -44,6 +44,9 @@ type RestAPIDeploymentSpec struct {
 
 // RestAPIDeploymentStatus defines the observed state of RestAPIDeployment.
 type RestAPIDeploymentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DeploymentID is the deployment identifier.
 	// +optional
 	DeploymentID string `json:"deploymentId,omitempty"`

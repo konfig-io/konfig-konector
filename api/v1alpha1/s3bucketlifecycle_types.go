@@ -40,6 +40,9 @@ type S3BucketLifecycleSpec struct {
 
 // S3BucketLifecycleStatus defines the observed state of S3BucketLifecycle.
 type S3BucketLifecycleStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

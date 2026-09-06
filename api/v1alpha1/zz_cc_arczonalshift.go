@@ -92,6 +92,9 @@ func (o *ARCZonalShiftAutoshiftObserverNotificationStatus) CloudControlStatusRef
 func (o *ARCZonalShiftAutoshiftObserverNotificationStatus) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ARCZonalShiftAutoshiftObserverNotificationStatus) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ARCZonalShiftZonalAutoshiftConfigurationSpec is the desired state of AWS::ARCZonalShift::ZonalAutoshiftConfiguration.
 type ARCZonalShiftZonalAutoshiftConfigurationSpec struct {
@@ -155,6 +158,9 @@ func (o *ARCZonalShiftZonalAutoshiftConfiguration) CloudControlStatusRef() *Clou
 }
 func (o *ARCZonalShiftZonalAutoshiftConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *ARCZonalShiftZonalAutoshiftConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // ARCZonalShiftZonalAutoshiftConfigurationPracticeRunConfiguration is a nested property type of AWS::ARCZonalShift::ZonalAutoshiftConfiguration.

@@ -159,7 +159,8 @@ func (o *ELBLoadBalancer) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ELBLoadBalancer) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ELBLoadBalancer) CloudControlObserved() interface{} { return &o.Status }
+func (o *ELBLoadBalancer) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ELBLoadBalancer) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ELBLoadBalancerAccessLoggingPolicy is a nested property type of AWS::ElasticLoadBalancing::LoadBalancer.
 type ELBLoadBalancerAccessLoggingPolicy struct {

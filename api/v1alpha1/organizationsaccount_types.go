@@ -89,6 +89,9 @@ type OrganizationsAccountSpec struct {
 
 // OrganizationsAccountStatus defines the observed state of OrganizationsAccount.
 type OrganizationsAccountStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AccountID is the 12-digit AWS account ID once creation succeeds.
 	// +optional
 	AccountID string `json:"accountId,omitempty"`

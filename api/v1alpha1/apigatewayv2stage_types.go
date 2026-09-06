@@ -75,6 +75,9 @@ type APIGatewayV2StageSpec struct {
 
 // APIGatewayV2StageStatus defines the observed state of APIGatewayV2Stage.
 type APIGatewayV2StageStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StageName is the stage name in AWS (also the primary identifier
 	// together with the API ID).
 	// +optional

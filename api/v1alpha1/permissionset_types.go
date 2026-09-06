@@ -74,6 +74,9 @@ type PermissionSetSpec struct {
 
 // PermissionSetStatus defines the observed state of PermissionSet.
 type PermissionSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PermissionSetArn is the ARN of the permission set.
 	// +optional
 	PermissionSetArn string `json:"permissionSetArn,omitempty"`

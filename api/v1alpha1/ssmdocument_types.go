@@ -56,6 +56,9 @@ type SSMDocumentSpec struct {
 
 // SSMDocumentStatus defines the observed state of SSMDocument.
 type SSMDocumentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DocumentVersion is the current version of the document.
 	// +optional
 	DocumentVersion string `json:"documentVersion,omitempty"`

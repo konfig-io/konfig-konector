@@ -52,6 +52,9 @@ type MSKServerlessClusterSpec struct {
 
 // MSKServerlessClusterStatus defines the observed state of MSKServerlessCluster.
 type MSKServerlessClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ClusterARN is the ARN of the serverless MSK cluster.
 	// +optional
 	ClusterARN string `json:"clusterARN,omitempty"`

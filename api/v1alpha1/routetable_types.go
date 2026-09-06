@@ -60,6 +60,9 @@ type RouteTableSpec struct {
 
 // RouteTableStatus defines the observed state of RouteTable.
 type RouteTableStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RouteTableID is the AWS Route Table identifier.
 	// +optional
 	RouteTableID string `json:"routeTableId,omitempty"`

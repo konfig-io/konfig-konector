@@ -112,6 +112,9 @@ type CloudWatchAlarmSpec struct {
 
 // CloudWatchAlarmStatus defines the observed state of CloudWatchAlarm.
 type CloudWatchAlarmStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// AlarmARN is the ARN of the alarm.
 	// +optional
 	AlarmARN string `json:"alarmArn,omitempty"`

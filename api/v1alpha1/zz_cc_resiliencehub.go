@@ -115,7 +115,8 @@ func (o *ResilienceHubApp) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ResilienceHubApp) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ResilienceHubApp) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubApp) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ResilienceHubApp) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ResilienceHubAppResourceMapping is a nested property type of AWS::ResilienceHub::App.
 type ResilienceHubAppResourceMapping struct {
@@ -258,6 +259,9 @@ func (o *ResilienceHubResiliencyPolicy) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *ResilienceHubResiliencyPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *ResilienceHubResiliencyPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ResilienceHubResiliencyPolicyPolicyMap is a nested property type of AWS::ResilienceHub::ResiliencyPolicy.
 type ResilienceHubResiliencyPolicyPolicyMap struct {

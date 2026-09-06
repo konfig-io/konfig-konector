@@ -97,6 +97,9 @@ type S3BucketNotificationSpec struct {
 
 // S3BucketNotificationStatus defines the observed state of S3BucketNotification.
 type S3BucketNotificationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

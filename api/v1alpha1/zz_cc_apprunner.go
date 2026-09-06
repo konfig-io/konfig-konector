@@ -112,6 +112,9 @@ func (o *AppRunnerObservabilityConfiguration) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *AppRunnerObservabilityConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppRunnerObservabilityConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppRunnerObservabilityConfigurationTraceConfiguration is a nested property type of AWS::AppRunner::ObservabilityConfiguration.
 type AppRunnerObservabilityConfigurationTraceConfiguration struct {
@@ -201,7 +204,8 @@ func (o *AppRunnerVpcConnector) CloudControlSpec() interface{} { return &o.Spec 
 func (o *AppRunnerVpcConnector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppRunnerVpcConnector) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppRunnerVpcConnector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppRunnerVpcConnector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppRunnerVpcIngressConnectionSpec is the desired state of AWS::AppRunner::VpcIngressConnection.
 type AppRunnerVpcIngressConnectionSpec struct {
@@ -288,6 +292,9 @@ func (o *AppRunnerVpcIngressConnection) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *AppRunnerVpcIngressConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppRunnerVpcIngressConnection) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppRunnerVpcIngressConnectionIngressVpcConfiguration is a nested property type of AWS::AppRunner::VpcIngressConnection.
 type AppRunnerVpcIngressConnectionIngressVpcConfiguration struct {

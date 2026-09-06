@@ -57,6 +57,9 @@ type CustomerGatewaySpec struct {
 
 // CustomerGatewayStatus defines the observed state of CustomerGateway.
 type CustomerGatewayStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CustomerGatewayID is the AWS customer gateway identifier.
 	// +optional
 	CustomerGatewayID string `json:"customerGatewayId,omitempty"`

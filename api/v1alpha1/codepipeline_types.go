@@ -107,6 +107,9 @@ type CodePipelineSpec struct {
 
 // CodePipelineStatus defines the observed state of CodePipeline.
 type CodePipelineStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PipelineARN is the ARN of the pipeline.
 	// +optional
 	PipelineARN string `json:"pipelineARN,omitempty"`

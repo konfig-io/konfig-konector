@@ -97,7 +97,8 @@ func (o *Route53RecoveryReadinessCell) CloudControlSpec() interface{} { return &
 func (o *Route53RecoveryReadinessCell) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *Route53RecoveryReadinessCell) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryReadinessCell) CloudControlObserved() interface{}   { return &o.Status }
+func (o *Route53RecoveryReadinessCell) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // Route53RecoveryReadinessReadinessCheckSpec is the desired state of AWS::Route53RecoveryReadiness::ReadinessCheck.
 type Route53RecoveryReadinessReadinessCheckSpec struct {
@@ -169,6 +170,9 @@ func (o *Route53RecoveryReadinessReadinessCheck) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryReadinessReadinessCheck) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryReadinessReadinessCheck) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryReadinessRecoveryGroupSpec is the desired state of AWS::Route53RecoveryReadiness::RecoveryGroup.
 type Route53RecoveryReadinessRecoveryGroupSpec struct {
@@ -239,6 +243,9 @@ func (o *Route53RecoveryReadinessRecoveryGroup) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryReadinessRecoveryGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryReadinessRecoveryGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryReadinessResourceSetSpec is the desired state of AWS::Route53RecoveryReadiness::ResourceSet.
 type Route53RecoveryReadinessResourceSetSpec struct {
@@ -315,6 +322,9 @@ func (o *Route53RecoveryReadinessResourceSet) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *Route53RecoveryReadinessResourceSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *Route53RecoveryReadinessResourceSet) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // Route53RecoveryReadinessResourceSetResource is a nested property type of AWS::Route53RecoveryReadiness::ResourceSet.
 type Route53RecoveryReadinessResourceSetResource struct {

@@ -44,6 +44,9 @@ type IAMRolePolicySpec struct {
 
 // IAMRolePolicyStatus defines the observed state of IAMRolePolicy.
 type IAMRolePolicyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RoleARN is the resolved IAM role ARN.
 	// +optional
 	RoleARN string `json:"roleArn,omitempty"`

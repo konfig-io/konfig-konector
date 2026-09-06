@@ -62,6 +62,9 @@ type VPCSpec struct {
 
 // VPCStatus defines the observed state of VPC.
 type VPCStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VPCID is the AWS VPC identifier.
 	// +optional
 	VPCID string `json:"vpcId,omitempty"`

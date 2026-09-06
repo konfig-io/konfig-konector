@@ -96,6 +96,9 @@ type GlueJobSpec struct {
 
 // GlueJobStatus defines the observed state of GlueJob.
 type GlueJobStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// JobName is the name of the job in AWS.
 	// +optional
 	JobName string `json:"jobName,omitempty"`

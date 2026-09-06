@@ -353,6 +353,9 @@ type S3BucketSpec struct {
 
 // S3BucketStatus defines the observed state of S3Bucket.
 type S3BucketStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the Amazon Resource Name of the bucket.
 	// +optional
 	ARN string `json:"arn,omitempty"`

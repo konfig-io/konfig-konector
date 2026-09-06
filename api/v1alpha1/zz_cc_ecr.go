@@ -102,7 +102,8 @@ func (o *ECRPublicRepository) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ECRPublicRepository) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRPublicRepository) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRPublicRepository) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRPublicRepository) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRPublicRepositoryRepositoryCatalogData is a nested property type of AWS::ECR::PublicRepository.
 type ECRPublicRepositoryRepositoryCatalogData struct {
@@ -206,7 +207,8 @@ func (o *ECRPullThroughCacheRule) CloudControlSpec() interface{} { return &o.Spe
 func (o *ECRPullThroughCacheRule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRPullThroughCacheRule) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRPullThroughCacheRule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRPullThroughCacheRule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRPullTimeUpdateExclusionSpec is the desired state of AWS::ECR::PullTimeUpdateExclusion.
 type ECRPullTimeUpdateExclusionSpec struct {
@@ -260,7 +262,8 @@ func (o *ECRPullTimeUpdateExclusion) CloudControlSpec() interface{} { return &o.
 func (o *ECRPullTimeUpdateExclusion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRPullTimeUpdateExclusion) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRPullTimeUpdateExclusion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRPullTimeUpdateExclusion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRRegistryPolicySpec is the desired state of AWS::ECR::RegistryPolicy.
 type ECRRegistryPolicySpec struct {
@@ -317,7 +320,8 @@ func (o *ECRRegistryPolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ECRRegistryPolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRRegistryPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRRegistryPolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRRegistryPolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRRegistryScanningConfigurationSpec is the desired state of AWS::ECR::RegistryScanningConfiguration.
 type ECRRegistryScanningConfigurationSpec struct {
@@ -377,6 +381,9 @@ func (o *ECRRegistryScanningConfiguration) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *ECRRegistryScanningConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRRegistryScanningConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ECRRegistryScanningConfigurationScanningRule is a nested property type of AWS::ECR::RegistryScanningConfiguration.
 type ECRRegistryScanningConfigurationScanningRule struct {
@@ -458,7 +465,8 @@ func (o *ECRReplicationConfiguration) CloudControlSpec() interface{} { return &o
 func (o *ECRReplicationConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRReplicationConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRReplicationConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRReplicationConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRReplicationConfigurationReplicationConfiguration is a nested property type of AWS::ECR::ReplicationConfiguration.
 type ECRReplicationConfigurationReplicationConfiguration struct {
@@ -610,6 +618,9 @@ func (o *ECRRepositoryCreationTemplate) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *ECRRepositoryCreationTemplate) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRRepositoryCreationTemplate) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ECRRepositoryCreationTemplateImageTagMutabilityExclusionFilter is a nested property type of AWS::ECR::RepositoryCreationTemplate.
 type ECRRepositoryCreationTemplateImageTagMutabilityExclusionFilter struct {
@@ -693,7 +704,8 @@ func (o *ECRSigningConfiguration) CloudControlSpec() interface{} { return &o.Spe
 func (o *ECRSigningConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ECRSigningConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ECRSigningConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ECRSigningConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ECRSigningConfigurationRule is a nested property type of AWS::ECR::SigningConfiguration.
 type ECRSigningConfigurationRule struct {

@@ -177,6 +177,9 @@ type DBInstanceSpec struct {
 
 // DBInstanceStatus defines the observed state of DBInstance.
 type DBInstanceStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DBInstanceARN is the Amazon Resource Name of the DB instance.
 	// +optional
 	DBInstanceARN string `json:"dbInstanceArn,omitempty"`

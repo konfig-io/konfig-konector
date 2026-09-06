@@ -51,6 +51,9 @@ type CloudFrontOriginAccessControlSpec struct {
 
 // CloudFrontOriginAccessControlStatus defines the observed state of CloudFrontOriginAccessControl.
 type CloudFrontOriginAccessControlStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the ID of the origin access control.
 	// +optional
 	ID string `json:"id,omitempty"`

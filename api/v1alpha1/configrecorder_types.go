@@ -73,6 +73,9 @@ type ConfigRecorderSpec struct {
 
 // ConfigRecorderStatus defines the observed state of ConfigRecorder.
 type ConfigRecorderStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// RecorderName is the name of the recorder in AWS.
 	// +optional
 	RecorderName string `json:"recorderName,omitempty"`

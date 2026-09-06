@@ -77,7 +77,8 @@ func (o *SNSTopicInlinePolicy) CloudControlSpec() interface{} { return &o.Spec }
 func (o *SNSTopicInlinePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *SNSTopicInlinePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *SNSTopicInlinePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *SNSTopicInlinePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&SNSTopicInlinePolicy{}, &SNSTopicInlinePolicyList{})

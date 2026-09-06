@@ -63,6 +63,9 @@ type SNSSubscriptionSpec struct {
 
 // SNSSubscriptionStatus defines the observed state of SNSSubscription.
 type SNSSubscriptionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SubscriptionARN is the ARN of the subscription.
 	// +optional
 	SubscriptionARN string `json:"subscriptionArn,omitempty"`

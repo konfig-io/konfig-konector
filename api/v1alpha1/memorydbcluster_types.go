@@ -80,6 +80,9 @@ type MemoryDBClusterSpec struct {
 
 // MemoryDBClusterStatus defines the observed state of MemoryDBCluster.
 type MemoryDBClusterStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the cluster.
 	// +optional
 	ARN string `json:"arn,omitempty"`

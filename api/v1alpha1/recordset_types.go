@@ -97,6 +97,9 @@ type RecordSetSpec struct {
 
 // RecordSetStatus defines the observed state of RecordSet.
 type RecordSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ChangeID is the Route53 change ID for the last applied change.
 	// +optional
 	ChangeID string `json:"changeId,omitempty"`

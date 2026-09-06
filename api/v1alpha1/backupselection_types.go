@@ -67,6 +67,9 @@ type BackupSelectionSpec struct {
 
 // BackupSelectionStatus defines the observed state of BackupSelection.
 type BackupSelectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SelectionID uniquely identifies the backup selection.
 	// +optional
 	SelectionID string `json:"selectionId,omitempty"`

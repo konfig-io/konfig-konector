@@ -113,7 +113,8 @@ func (o *CodeBuildFleet) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CodeBuildFleet) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeBuildFleet) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeBuildFleet) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeBuildFleet) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeBuildFleetVpcConfig is a nested property type of AWS::CodeBuild::Fleet.
 type CodeBuildFleetVpcConfig struct {
@@ -259,7 +260,8 @@ func (o *CodeBuildReportGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *CodeBuildReportGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeBuildReportGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeBuildReportGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeBuildReportGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // CodeBuildReportGroupReportExportConfig is a nested property type of AWS::CodeBuild::ReportGroup.
 type CodeBuildReportGroupReportExportConfig struct {
@@ -364,7 +366,8 @@ func (o *CodeBuildSourceCredential) CloudControlSpec() interface{} { return &o.S
 func (o *CodeBuildSourceCredential) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *CodeBuildSourceCredential) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeBuildSourceCredential) CloudControlObserved() interface{}   { return &o.Status }
+func (o *CodeBuildSourceCredential) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&CodeBuildFleet{}, &CodeBuildFleetList{})

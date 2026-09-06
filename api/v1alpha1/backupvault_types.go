@@ -45,6 +45,9 @@ type BackupVaultSpec struct {
 
 // BackupVaultStatus defines the observed state of BackupVault.
 type BackupVaultStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// VaultARN is the ARN of the backup vault.
 	// +optional
 	VaultARN string `json:"vaultArn,omitempty"`

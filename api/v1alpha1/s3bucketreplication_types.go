@@ -81,6 +81,9 @@ type S3BucketReplicationSpec struct {
 
 // S3BucketReplicationStatus defines the observed state of S3BucketReplication.
 type S3BucketReplicationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// Conditions describe the current state of the resource.
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`

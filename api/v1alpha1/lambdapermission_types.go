@@ -61,6 +61,9 @@ type LambdaPermissionSpec struct {
 
 // LambdaPermissionStatus defines the observed state of LambdaPermission.
 type LambdaPermissionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StatementExists is true when the permission statement is confirmed in AWS.
 	// +optional
 	StatementExists bool `json:"statementExists,omitempty"`

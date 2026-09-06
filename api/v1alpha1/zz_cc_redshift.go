@@ -125,7 +125,8 @@ func (o *RedshiftEndpointAccess) CloudControlSpec() interface{} { return &o.Spec
 func (o *RedshiftEndpointAccess) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftEndpointAccess) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftEndpointAccess) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftEndpointAccess) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftEndpointAccessVpcEndpoint is a nested property type of AWS::Redshift::EndpointAccess.
 type RedshiftEndpointAccessVpcEndpoint struct {
@@ -279,6 +280,9 @@ func (o *RedshiftEndpointAuthorization) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *RedshiftEndpointAuthorization) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftEndpointAuthorization) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // RedshiftEventSubscriptionSpec is the desired state of AWS::Redshift::EventSubscription.
 type RedshiftEventSubscriptionSpec struct {
@@ -393,7 +397,8 @@ func (o *RedshiftEventSubscription) CloudControlSpec() interface{} { return &o.S
 func (o *RedshiftEventSubscription) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftEventSubscription) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftEventSubscription) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftEventSubscription) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftIntegrationSpec is the desired state of AWS::Redshift::Integration.
 type RedshiftIntegrationSpec struct {
@@ -478,7 +483,8 @@ func (o *RedshiftIntegration) CloudControlSpec() interface{} { return &o.Spec }
 func (o *RedshiftIntegration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftIntegration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftIntegration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftScheduledActionSpec is the desired state of AWS::Redshift::ScheduledAction.
 type RedshiftScheduledActionSpec struct {
@@ -571,7 +577,8 @@ func (o *RedshiftScheduledAction) CloudControlSpec() interface{} { return &o.Spe
 func (o *RedshiftScheduledAction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftScheduledAction) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftScheduledAction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftScheduledAction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // RedshiftSnapshotScheduleSpec is the desired state of AWS::Redshift::SnapshotSchedule.
 type RedshiftSnapshotScheduleSpec struct {
@@ -648,7 +655,8 @@ func (o *RedshiftSnapshotSchedule) CloudControlSpec() interface{} { return &o.Sp
 func (o *RedshiftSnapshotSchedule) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *RedshiftSnapshotSchedule) CloudControlObserved() interface{} { return &o.Status }
+func (o *RedshiftSnapshotSchedule) CloudControlObserved() interface{}   { return &o.Status }
+func (o *RedshiftSnapshotSchedule) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&RedshiftEndpointAccess{}, &RedshiftEndpointAccessList{})

@@ -93,6 +93,9 @@ type BatchComputeEnvironmentSpec struct {
 
 // BatchComputeEnvironmentStatus defines the observed state of BatchComputeEnvironment.
 type BatchComputeEnvironmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ComputeEnvironmentARN is the ARN of the compute environment.
 	// +optional
 	ComputeEnvironmentARN string `json:"computeEnvironmentArn,omitempty"`

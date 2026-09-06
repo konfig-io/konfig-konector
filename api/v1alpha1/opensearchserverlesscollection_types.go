@@ -48,6 +48,9 @@ type OpenSearchServerlessCollectionSpec struct {
 
 // OpenSearchServerlessCollectionStatus defines the observed state of OpenSearchServerlessCollection.
 type OpenSearchServerlessCollectionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// CollectionID is the unique identifier of the collection.
 	// +optional
 	CollectionID string `json:"collectionID,omitempty"`

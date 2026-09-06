@@ -52,6 +52,9 @@ type KinesisStreamSpec struct {
 
 // KinesisStreamStatus defines the observed state of KinesisStream.
 type KinesisStreamStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// StreamARN is the ARN of the stream.
 	// +optional
 	StreamARN string `json:"streamARN,omitempty"`

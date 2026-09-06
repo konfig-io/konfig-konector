@@ -68,6 +68,9 @@ type SSMMaintenanceWindowSpec struct {
 
 // SSMMaintenanceWindowStatus defines the observed state of SSMMaintenanceWindow.
 type SSMMaintenanceWindowStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// WindowID is the AWS maintenance window ID (mw-...).
 	// +optional
 	WindowID string `json:"windowId,omitempty"`

@@ -40,6 +40,9 @@ type SecurityHubStandardSpec struct {
 
 // SecurityHubStandardStatus defines the observed state of SecurityHubStandard.
 type SecurityHubStandardStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SubscriptionARN is the ARN of the standards subscription.
 	// +optional
 	SubscriptionARN string `json:"subscriptionArn,omitempty"`

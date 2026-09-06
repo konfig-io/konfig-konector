@@ -103,6 +103,9 @@ func (o *CodeGuruProfilerProfilingGroup) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeGuruProfilerProfilingGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeGuruProfilerProfilingGroup) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CodeGuruProfilerProfilingGroupAgentPermissions is a nested property type of AWS::CodeGuruProfiler::ProfilingGroup.
 type CodeGuruProfilerProfilingGroupAgentPermissions struct {

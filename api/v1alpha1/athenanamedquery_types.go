@@ -55,6 +55,9 @@ type AthenaNamedQuerySpec struct {
 
 // AthenaNamedQueryStatus defines the observed state of AthenaNamedQuery.
 type AthenaNamedQueryStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// NamedQueryID is the unique ID of the query in AWS.
 	// +optional
 	NamedQueryID string `json:"namedQueryId,omitempty"`

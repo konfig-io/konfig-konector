@@ -105,7 +105,8 @@ func (o *LicenseManagerGrant) CloudControlSpec() interface{} { return &o.Spec }
 func (o *LicenseManagerGrant) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LicenseManagerGrant) CloudControlObserved() interface{} { return &o.Status }
+func (o *LicenseManagerGrant) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LicenseManagerGrant) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LicenseManagerLicenseSpec is the desired state of AWS::LicenseManager::License.
 type LicenseManagerLicenseSpec struct {
@@ -197,7 +198,8 @@ func (o *LicenseManagerLicense) CloudControlSpec() interface{} { return &o.Spec 
 func (o *LicenseManagerLicense) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *LicenseManagerLicense) CloudControlObserved() interface{} { return &o.Status }
+func (o *LicenseManagerLicense) CloudControlObserved() interface{}   { return &o.Status }
+func (o *LicenseManagerLicense) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // LicenseManagerLicenseIssuerData is a nested property type of AWS::LicenseManager::License.
 type LicenseManagerLicenseIssuerData struct {
@@ -335,6 +337,9 @@ func (o *LicenseManagerLicenseAssetRuleSet) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *LicenseManagerLicenseAssetRuleSet) CloudControlObserved() interface{} { return &o.Status }
+func (o *LicenseManagerLicenseAssetRuleSet) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // LicenseManagerLicenseAssetRuleSetLicenseAssetRule is a nested property type of AWS::LicenseManager::LicenseAssetRuleSet.
 type LicenseManagerLicenseAssetRuleSetLicenseAssetRule struct {

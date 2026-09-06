@@ -38,6 +38,9 @@ type CloudWatchDashboardSpec struct {
 
 // CloudWatchDashboardStatus defines the observed state of CloudWatchDashboard.
 type CloudWatchDashboardStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DashboardARN is the ARN of the dashboard.
 	// +optional
 	DashboardARN string `json:"dashboardArn,omitempty"`

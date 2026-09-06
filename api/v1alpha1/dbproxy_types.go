@@ -93,6 +93,9 @@ type DBProxySpec struct {
 
 // DBProxyStatus defines the observed state of DBProxy.
 type DBProxyStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// DBProxyARN is the ARN of the RDS proxy.
 	// +optional
 	DBProxyARN string `json:"dbProxyArn,omitempty"`

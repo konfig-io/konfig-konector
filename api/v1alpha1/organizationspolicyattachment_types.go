@@ -56,6 +56,9 @@ type OrganizationsPolicyAttachmentSpec struct {
 // OrganizationsPolicyAttachmentStatus defines the observed state of
 // OrganizationsPolicyAttachment.
 type OrganizationsPolicyAttachmentStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PolicyID is the resolved AWS policy ID that was attached.
 	// +optional
 	PolicyID string `json:"policyId,omitempty"`

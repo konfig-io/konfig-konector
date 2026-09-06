@@ -118,6 +118,7 @@ func (o *RbinRule) CloudControlTypeName() string               { return "AWS::Rb
 func (o *RbinRule) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *RbinRule) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *RbinRule) CloudControlObserved() interface{}          { return &o.Status }
+func (o *RbinRule) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // RbinRuleResourceTag is a nested property type of AWS::Rbin::Rule.
 type RbinRuleResourceTag struct {

@@ -92,6 +92,9 @@ func (o *InspectorV2CisScanConfiguration) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *InspectorV2CisScanConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorV2CisScanConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // InspectorV2CodeSecurityIntegrationSpec is the desired state of AWS::InspectorV2::CodeSecurityIntegration.
 type InspectorV2CodeSecurityIntegrationSpec struct {
@@ -193,6 +196,9 @@ func (o *InspectorV2CodeSecurityIntegration) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *InspectorV2CodeSecurityIntegration) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorV2CodeSecurityIntegration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // InspectorV2CodeSecurityIntegrationCreateDetails is a nested property type of AWS::InspectorV2::CodeSecurityIntegration.
 type InspectorV2CodeSecurityIntegrationCreateDetails struct {
@@ -312,6 +318,9 @@ func (o *InspectorV2CodeSecurityScanConfiguration) CloudControlStatusRef() *Clou
 }
 func (o *InspectorV2CodeSecurityScanConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *InspectorV2CodeSecurityScanConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // InspectorV2CodeSecurityScanConfigurationCodeSecurityScanConfiguration is a nested property type of AWS::InspectorV2::CodeSecurityScanConfiguration.
@@ -449,7 +458,8 @@ func (o *InspectorV2Connector) CloudControlSpec() interface{} { return &o.Spec }
 func (o *InspectorV2Connector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InspectorV2Connector) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorV2Connector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InspectorV2Connector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // InspectorV2ConnectorProviderConfiguration is a nested property type of AWS::InspectorV2::Connector.
 type InspectorV2ConnectorProviderConfiguration struct {
@@ -586,7 +596,8 @@ func (o *InspectorV2Filter) CloudControlSpec() interface{} { return &o.Spec }
 func (o *InspectorV2Filter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *InspectorV2Filter) CloudControlObserved() interface{} { return &o.Status }
+func (o *InspectorV2Filter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *InspectorV2Filter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // InspectorV2FilterFilterCriteria is a nested property type of AWS::InspectorV2::Filter.
 type InspectorV2FilterFilterCriteria struct {

@@ -191,7 +191,8 @@ func (o *BedrockAgent) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockAgent) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgent) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgent) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgent) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentAgentActionGroup is a nested property type of AWS::Bedrock::Agent.
 type BedrockAgentAgentActionGroup struct {
@@ -514,7 +515,8 @@ func (o *BedrockAgentAlias) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockAgentAlias) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockAgentAlias) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAgentAlias) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockAgentAlias) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockAgentAliasAgentAliasHistoryEvent is a nested property type of AWS::Bedrock::AgentAlias.
 type BedrockAgentAliasAgentAliasHistoryEvent struct {
@@ -648,6 +650,9 @@ func (o *BedrockApplicationInferenceProfile) CloudControlStatusRef() *CloudContr
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockApplicationInferenceProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockApplicationInferenceProfile) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockApplicationInferenceProfileInferenceProfileModel is a nested property type of AWS::Bedrock::ApplicationInferenceProfile.
 type BedrockApplicationInferenceProfileInferenceProfileModel struct {
@@ -757,6 +762,9 @@ func (o *BedrockAutomatedReasoningPolicy) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAutomatedReasoningPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAutomatedReasoningPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockAutomatedReasoningPolicyPolicyDefinition is a nested property type of AWS::Bedrock::AutomatedReasoningPolicy.
 type BedrockAutomatedReasoningPolicyPolicyDefinition struct {
@@ -937,6 +945,9 @@ func (o *BedrockAutomatedReasoningPolicyVersion) CloudControlStatusRef() *CloudC
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockAutomatedReasoningPolicyVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockAutomatedReasoningPolicyVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockBlueprintSpec is the desired state of AWS::Bedrock::Blueprint.
 type BedrockBlueprintSpec struct {
@@ -1034,7 +1045,8 @@ func (o *BedrockBlueprint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockBlueprint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockBlueprint) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockBlueprint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockBlueprint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockDataAutomationLibrarySpec is the desired state of AWS::Bedrock::DataAutomationLibrary.
 type BedrockDataAutomationLibrarySpec struct {
@@ -1123,7 +1135,8 @@ func (o *BedrockDataAutomationLibrary) CloudControlSpec() interface{} { return &
 func (o *BedrockDataAutomationLibrary) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockDataAutomationLibrary) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockDataAutomationLibrary) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockDataAutomationLibrary) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockDataAutomationLibraryEncryptionConfiguration is a nested property type of AWS::Bedrock::DataAutomationLibrary.
 type BedrockDataAutomationLibraryEncryptionConfiguration struct {
@@ -1257,7 +1270,8 @@ func (o *BedrockDataAutomationProject) CloudControlSpec() interface{} { return &
 func (o *BedrockDataAutomationProject) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockDataAutomationProject) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockDataAutomationProject) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockDataAutomationProject) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockDataAutomationProjectCustomOutputConfiguration is a nested property type of AWS::Bedrock::DataAutomationProject.
 type BedrockDataAutomationProjectCustomOutputConfiguration struct {
@@ -1717,7 +1731,8 @@ func (o *BedrockDataSource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockDataSource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockDataSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockDataSource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockDataSource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockDataSourceDataSourceConfiguration is a nested property type of AWS::Bedrock::DataSource.
 type BedrockDataSourceDataSourceConfiguration struct {
@@ -2313,6 +2328,9 @@ func (o *BedrockEnforcedGuardrailConfiguration) CloudControlStatusRef() *CloudCo
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockEnforcedGuardrailConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockEnforcedGuardrailConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockEnforcedGuardrailConfigurationSelectiveContentGuarding is a nested property type of AWS::Bedrock::EnforcedGuardrailConfiguration.
 type BedrockEnforcedGuardrailConfigurationSelectiveContentGuarding struct {
@@ -2454,7 +2472,8 @@ func (o *BedrockFlow) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockFlow) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockFlow) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockFlow) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockFlow) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockFlowFlowDefinition is a nested property type of AWS::Bedrock::Flow.
 type BedrockFlowFlowDefinition struct {
@@ -2652,7 +2671,8 @@ func (o *BedrockFlowAlias) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockFlowAlias) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockFlowAlias) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockFlowAlias) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockFlowAlias) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockFlowAliasFlowAliasConcurrencyConfiguration is a nested property type of AWS::Bedrock::FlowAlias.
 type BedrockFlowAliasFlowAliasConcurrencyConfiguration struct {
@@ -2768,7 +2788,8 @@ func (o *BedrockFlowVersion) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockFlowVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockFlowVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockFlowVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockFlowVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockFlowVersionFlowDefinition is a nested property type of AWS::Bedrock::FlowVersion.
 type BedrockFlowVersionFlowDefinition struct {
@@ -2980,7 +3001,8 @@ func (o *BedrockGuardrail) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockGuardrail) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockGuardrail) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockGuardrail) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockGuardrail) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockGuardrailAutomatedReasoningPolicyConfig is a nested property type of AWS::Bedrock::Guardrail.
 type BedrockGuardrailAutomatedReasoningPolicyConfig struct {
@@ -3317,7 +3339,8 @@ func (o *BedrockGuardrailVersion) CloudControlSpec() interface{} { return &o.Spe
 func (o *BedrockGuardrailVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockGuardrailVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockGuardrailVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockGuardrailVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockIntelligentPromptRouterSpec is the desired state of AWS::Bedrock::IntelligentPromptRouter.
 type BedrockIntelligentPromptRouterSpec struct {
@@ -3419,6 +3442,9 @@ func (o *BedrockIntelligentPromptRouter) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *BedrockIntelligentPromptRouter) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockIntelligentPromptRouter) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // BedrockIntelligentPromptRouterPromptRouterTargetModel is a nested property type of AWS::Bedrock::IntelligentPromptRouter.
 type BedrockIntelligentPromptRouterPromptRouterTargetModel struct {
@@ -3530,7 +3556,8 @@ func (o *BedrockKnowledgeBase) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockKnowledgeBase) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockKnowledgeBase) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockKnowledgeBase) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockKnowledgeBase) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockKnowledgeBaseKnowledgeBaseConfiguration is a nested property type of AWS::Bedrock::KnowledgeBase.
 type BedrockKnowledgeBaseKnowledgeBaseConfiguration struct {
@@ -4139,7 +4166,8 @@ func (o *BedrockKnowledgeBasePolicy) CloudControlSpec() interface{} { return &o.
 func (o *BedrockKnowledgeBasePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockKnowledgeBasePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockKnowledgeBasePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockKnowledgeBasePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockPromptSpec is the desired state of AWS::Bedrock::Prompt.
 type BedrockPromptSpec struct {
@@ -4236,7 +4264,8 @@ func (o *BedrockPrompt) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockPrompt) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockPrompt) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockPrompt) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockPrompt) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockPromptPromptVariant is a nested property type of AWS::Bedrock::Prompt.
 type BedrockPromptPromptVariant struct {
@@ -4391,7 +4420,8 @@ func (o *BedrockPromptVersion) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockPromptVersion) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockPromptVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockPromptVersion) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockPromptVersion) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockPromptVersionPromptVariant is a nested property type of AWS::Bedrock::PromptVersion.
 type BedrockPromptVersionPromptVariant struct {
@@ -4492,7 +4522,8 @@ func (o *BedrockResourcePolicy) CloudControlSpec() interface{} { return &o.Spec 
 func (o *BedrockResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // BedrockSessionSpec is the desired state of AWS::Bedrock::Session.
 type BedrockSessionSpec struct {
@@ -4578,7 +4609,8 @@ func (o *BedrockSession) CloudControlSpec() interface{} { return &o.Spec }
 func (o *BedrockSession) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *BedrockSession) CloudControlObserved() interface{} { return &o.Status }
+func (o *BedrockSession) CloudControlObserved() interface{}   { return &o.Status }
+func (o *BedrockSession) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&BedrockAgent{}, &BedrockAgentList{})

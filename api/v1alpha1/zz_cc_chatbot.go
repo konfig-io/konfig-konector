@@ -91,7 +91,8 @@ func (o *ChatbotCustomAction) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ChatbotCustomAction) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ChatbotCustomAction) CloudControlObserved() interface{} { return &o.Status }
+func (o *ChatbotCustomAction) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ChatbotCustomAction) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ChatbotCustomActionCustomActionAttachment is a nested property type of AWS::Chatbot::CustomAction.
 type ChatbotCustomActionCustomActionAttachment struct {
@@ -245,6 +246,9 @@ func (o *ChatbotMicrosoftTeamsChannelConfiguration) CloudControlStatusRef() *Clo
 func (o *ChatbotMicrosoftTeamsChannelConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
 }
+func (o *ChatbotMicrosoftTeamsChannelConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ChatbotSlackChannelConfigurationSpec is the desired state of AWS::Chatbot::SlackChannelConfiguration.
 type ChatbotSlackChannelConfigurationSpec struct {
@@ -346,6 +350,9 @@ func (o *ChatbotSlackChannelConfiguration) CloudControlStatusRef() *CloudControl
 	return &o.Status.CloudControlStatus
 }
 func (o *ChatbotSlackChannelConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *ChatbotSlackChannelConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&ChatbotCustomAction{}, &ChatbotCustomActionList{})

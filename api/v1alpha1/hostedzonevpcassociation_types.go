@@ -63,6 +63,9 @@ type HostedZoneVPCAssociationSpec struct {
 
 // HostedZoneVPCAssociationStatus defines the observed state.
 type HostedZoneVPCAssociationStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// HostedZoneID and VPCID are the resolved identifiers.
 	// +optional
 	HostedZoneID string `json:"hostedZoneId,omitempty"`

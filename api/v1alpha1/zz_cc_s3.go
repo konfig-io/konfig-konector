@@ -114,7 +114,8 @@ func (o *S3AccessGrant) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3AccessGrant) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3AccessGrant) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3AccessGrant) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3AccessGrant) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3AccessGrantGrantee is a nested property type of AWS::S3::AccessGrant.
 type S3AccessGrantGrantee struct {
@@ -197,7 +198,8 @@ func (o *S3AccessGrantsInstance) CloudControlSpec() interface{} { return &o.Spec
 func (o *S3AccessGrantsInstance) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3AccessGrantsInstance) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3AccessGrantsInstance) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3AccessGrantsInstance) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3AccessGrantsLocationSpec is the desired state of AWS::S3::AccessGrantsLocation.
 type S3AccessGrantsLocationSpec struct {
@@ -266,7 +268,8 @@ func (o *S3AccessGrantsLocation) CloudControlSpec() interface{} { return &o.Spec
 func (o *S3AccessGrantsLocation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3AccessGrantsLocation) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3AccessGrantsLocation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3AccessGrantsLocation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3MultiRegionAccessPointSpec is the desired state of AWS::S3::MultiRegionAccessPoint.
 type S3MultiRegionAccessPointSpec struct {
@@ -344,7 +347,8 @@ func (o *S3MultiRegionAccessPoint) CloudControlSpec() interface{} { return &o.Sp
 func (o *S3MultiRegionAccessPoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3MultiRegionAccessPoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3MultiRegionAccessPoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3MultiRegionAccessPoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3MultiRegionAccessPointPublicAccessBlockConfiguration is a nested property type of AWS::S3::MultiRegionAccessPoint.
 type S3MultiRegionAccessPointPublicAccessBlockConfiguration struct {
@@ -450,6 +454,9 @@ func (o *S3MultiRegionAccessPointPolicy) CloudControlStatusRef() *CloudControlSt
 	return &o.Status.CloudControlStatus
 }
 func (o *S3MultiRegionAccessPointPolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3MultiRegionAccessPointPolicy) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // S3MultiRegionAccessPointPolicyPolicyStatus is a nested property type of AWS::S3::MultiRegionAccessPointPolicy.
 type S3MultiRegionAccessPointPolicyPolicyStatus struct {
@@ -508,7 +515,8 @@ func (o *S3StorageLens) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3StorageLens) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3StorageLens) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3StorageLens) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3StorageLens) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3StorageLensStorageLensConfiguration is a nested property type of AWS::S3::StorageLens.
 type S3StorageLensStorageLensConfiguration struct {
@@ -807,7 +815,8 @@ func (o *S3StorageLensGroup) CloudControlSpec() interface{} { return &o.Spec }
 func (o *S3StorageLensGroup) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *S3StorageLensGroup) CloudControlObserved() interface{} { return &o.Status }
+func (o *S3StorageLensGroup) CloudControlObserved() interface{}   { return &o.Status }
+func (o *S3StorageLensGroup) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // S3StorageLensGroupFilter is a nested property type of AWS::S3::StorageLensGroup.
 type S3StorageLensGroupFilter struct {

@@ -95,6 +95,7 @@ func (o *OAMLink) CloudControlTypeName() string               { return "AWS::Oam
 func (o *OAMLink) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *OAMLink) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *OAMLink) CloudControlObserved() interface{}          { return &o.Status }
+func (o *OAMLink) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // OAMLinkLinkConfiguration is a nested property type of AWS::Oam::Link.
 type OAMLinkLinkConfiguration struct {
@@ -176,6 +177,7 @@ func (o *OAMSink) CloudControlTypeName() string               { return "AWS::Oam
 func (o *OAMSink) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *OAMSink) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *OAMSink) CloudControlObserved() interface{}          { return &o.Status }
+func (o *OAMSink) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&OAMLink{}, &OAMLinkList{})

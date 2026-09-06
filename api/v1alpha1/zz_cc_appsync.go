@@ -94,6 +94,7 @@ func (o *AppSyncApi) CloudControlTypeName() string               { return "AWS::
 func (o *AppSyncApi) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *AppSyncApi) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *AppSyncApi) CloudControlObserved() interface{}          { return &o.Status }
+func (o *AppSyncApi) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // AppSyncApiDnsMap is a nested property type of AWS::AppSync::Api.
 type AppSyncApiDnsMap struct {
@@ -268,7 +269,8 @@ func (o *AppSyncChannelNamespace) CloudControlSpec() interface{} { return &o.Spe
 func (o *AppSyncChannelNamespace) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncChannelNamespace) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncChannelNamespace) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncChannelNamespace) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncChannelNamespaceAuthMode is a nested property type of AWS::AppSync::ChannelNamespace.
 type AppSyncChannelNamespaceAuthMode struct {
@@ -418,7 +420,8 @@ func (o *AppSyncDataSource) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppSyncDataSource) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncDataSource) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncDataSource) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncDataSource) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncDataSourceDynamoDBConfig is a nested property type of AWS::AppSync::DataSource.
 type AppSyncDataSourceDynamoDBConfig struct {
@@ -620,7 +623,8 @@ func (o *AppSyncDomainName) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppSyncDomainName) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncDomainName) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncDomainName) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncDomainName) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncDomainNameApiAssociationSpec is the desired state of AWS::AppSync::DomainNameApiAssociation.
 type AppSyncDomainNameApiAssociationSpec struct {
@@ -681,6 +685,9 @@ func (o *AppSyncDomainNameApiAssociation) CloudControlStatusRef() *CloudControlS
 	return &o.Status.CloudControlStatus
 }
 func (o *AppSyncDomainNameApiAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncDomainNameApiAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppSyncFunctionConfigurationSpec is the desired state of AWS::AppSync::FunctionConfiguration.
 type AppSyncFunctionConfigurationSpec struct {
@@ -801,7 +808,8 @@ func (o *AppSyncFunctionConfiguration) CloudControlSpec() interface{} { return &
 func (o *AppSyncFunctionConfiguration) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncFunctionConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncFunctionConfiguration) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncFunctionConfiguration) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncFunctionConfigurationAppSyncRuntime is a nested property type of AWS::AppSync::FunctionConfiguration.
 type AppSyncFunctionConfigurationAppSyncRuntime struct {
@@ -989,7 +997,8 @@ func (o *AppSyncGraphQLApi) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppSyncGraphQLApi) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncGraphQLApi) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncGraphQLApi) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncGraphQLApi) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncGraphQLApiAdditionalAuthenticationProvider is a nested property type of AWS::AppSync::GraphQLApi.
 type AppSyncGraphQLApiAdditionalAuthenticationProvider struct {
@@ -1236,7 +1245,8 @@ func (o *AppSyncResolver) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppSyncResolver) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncResolver) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncResolver) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncResolver) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncResolverCachingConfig is a nested property type of AWS::AppSync::Resolver.
 type AppSyncResolverCachingConfig struct {
@@ -1401,7 +1411,8 @@ func (o *AppSyncSourceApiAssociation) CloudControlSpec() interface{} { return &o
 func (o *AppSyncSourceApiAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncSourceApiAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncSourceApiAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncSourceApiAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppSyncTypeSpec is the desired state of AWS::AppSync::Type.
 type AppSyncTypeSpec struct {
@@ -1470,7 +1481,8 @@ func (o *AppSyncType) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppSyncType) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppSyncType) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppSyncType) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppSyncType) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&AppSyncApi{}, &AppSyncApiList{})

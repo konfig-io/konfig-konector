@@ -131,13 +131,15 @@ func (r *CloudFrontCachePolicyReconciler) reconcileCachePolicy(ctx context.Conte
 		}
 		if err == nil && getOut.CachePolicy != nil {
 			obj.Status.ETag = aws.ToString(getOut.ETag)
-			_, err := r.CloudFrontClient.UpdateCachePolicy(ctx, &awscf.UpdateCachePolicyInput{
-				Id:                aws.String(obj.Status.PolicyID),
-				IfMatch:           aws.String(obj.Status.ETag),
-				CachePolicyConfig: buildCachePolicyConfig(obj),
-			})
-			if err != nil {
-				return fmt.Errorf("update cloudfront cache policy: %w", err)
+			// CloudFront control-plane APIs are rate limited; only update on spec change.
+			if obj.Status.ObservedGeneration != obj.Generation {
+				if _, err := r.CloudFrontClient.UpdateCachePolicy(ctx, &awscf.UpdateCachePolicyInput{
+					Id:                aws.String(obj.Status.PolicyID),
+					IfMatch:           aws.String(obj.Status.ETag),
+					CachePolicyConfig: buildCachePolicyConfig(obj),
+				}); err != nil {
+					return fmt.Errorf("update cloudfront cache policy: %w", err)
+				}
 			}
 			obj.Status.ObservedGeneration = obj.Generation
 			now := metav1.Now()

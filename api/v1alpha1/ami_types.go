@@ -105,6 +105,9 @@ type AMISpec struct {
 
 // AMIStatus defines the observed state of AMI.
 type AMIStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ImageID is the AMI ID.
 	// +optional
 	ImageID string `json:"imageId,omitempty"`

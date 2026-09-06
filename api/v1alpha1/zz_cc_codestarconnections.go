@@ -115,6 +115,9 @@ func (o *CodeStarConnectionsConnection) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeStarConnectionsConnection) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeStarConnectionsConnection) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CodeStarConnectionsRepositoryLinkSpec is the desired state of AWS::CodeStarConnections::RepositoryLink.
 type CodeStarConnectionsRepositoryLinkSpec struct {
@@ -203,6 +206,9 @@ func (o *CodeStarConnectionsRepositoryLink) CloudControlStatusRef() *CloudContro
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeStarConnectionsRepositoryLink) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeStarConnectionsRepositoryLink) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // CodeStarConnectionsSyncConfigurationSpec is the desired state of AWS::CodeStarConnections::SyncConfiguration.
 type CodeStarConnectionsSyncConfigurationSpec struct {
@@ -302,6 +308,9 @@ func (o *CodeStarConnectionsSyncConfiguration) CloudControlStatusRef() *CloudCon
 	return &o.Status.CloudControlStatus
 }
 func (o *CodeStarConnectionsSyncConfiguration) CloudControlObserved() interface{} { return &o.Status }
+func (o *CodeStarConnectionsSyncConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&CodeStarConnectionsConnection{}, &CodeStarConnectionsConnectionList{})

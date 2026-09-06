@@ -58,6 +58,9 @@ type IPSetSpec struct {
 
 // IPSetStatus defines the observed state of IPSet.
 type IPSetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ID is the IPSet ID.
 	// +optional
 	ID string `json:"id,omitempty"`

@@ -96,6 +96,9 @@ type SpotFleetSpec struct {
 
 // SpotFleetStatus defines the observed state of SpotFleet.
 type SpotFleetStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// SpotFleetRequestID is the ID of the Spot Fleet request.
 	// +optional
 	SpotFleetRequestID string `json:"spotFleetRequestId,omitempty"`

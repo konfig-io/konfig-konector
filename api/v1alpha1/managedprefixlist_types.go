@@ -63,6 +63,9 @@ type ManagedPrefixListSpec struct {
 
 // ManagedPrefixListStatus defines the observed state of ManagedPrefixList.
 type ManagedPrefixListStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// PrefixListID is the AWS prefix list identifier.
 	// +optional
 	PrefixListID string `json:"prefixListId,omitempty"`

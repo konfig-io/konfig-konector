@@ -104,7 +104,8 @@ func (o *PrometheusAnomalyDetector) CloudControlSpec() interface{} { return &o.S
 func (o *PrometheusAnomalyDetector) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *PrometheusAnomalyDetector) CloudControlObserved() interface{} { return &o.Status }
+func (o *PrometheusAnomalyDetector) CloudControlObserved() interface{}   { return &o.Status }
+func (o *PrometheusAnomalyDetector) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // PrometheusAnomalyDetectorMissingDataAction is a nested property type of AWS::APS::AnomalyDetector.
 type PrometheusAnomalyDetectorMissingDataAction struct {
@@ -212,7 +213,8 @@ func (o *PrometheusResourcePolicy) CloudControlSpec() interface{} { return &o.Sp
 func (o *PrometheusResourcePolicy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *PrometheusResourcePolicy) CloudControlObserved() interface{} { return &o.Status }
+func (o *PrometheusResourcePolicy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *PrometheusResourcePolicy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // PrometheusScraperSpec is the desired state of AWS::APS::Scraper.
 type PrometheusScraperSpec struct {
@@ -297,7 +299,8 @@ func (o *PrometheusScraper) CloudControlSpec() interface{} { return &o.Spec }
 func (o *PrometheusScraper) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *PrometheusScraper) CloudControlObserved() interface{} { return &o.Status }
+func (o *PrometheusScraper) CloudControlObserved() interface{}   { return &o.Status }
+func (o *PrometheusScraper) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // PrometheusScraperScraperLoggingConfiguration is a nested property type of AWS::APS::Scraper.
 type PrometheusScraperScraperLoggingConfiguration struct {

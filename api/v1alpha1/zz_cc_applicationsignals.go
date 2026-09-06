@@ -75,7 +75,8 @@ func (o *ApplicationSignalsDiscovery) CloudControlSpec() interface{} { return &o
 func (o *ApplicationSignalsDiscovery) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ApplicationSignalsDiscovery) CloudControlObserved() interface{} { return &o.Status }
+func (o *ApplicationSignalsDiscovery) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ApplicationSignalsDiscovery) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ApplicationSignalsGroupingConfigurationSpec is the desired state of AWS::ApplicationSignals::GroupingConfiguration.
 type ApplicationSignalsGroupingConfigurationSpec struct {
@@ -138,6 +139,9 @@ func (o *ApplicationSignalsGroupingConfiguration) CloudControlStatusRef() *Cloud
 }
 func (o *ApplicationSignalsGroupingConfiguration) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *ApplicationSignalsGroupingConfiguration) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // ApplicationSignalsGroupingConfigurationGroupingAttributeDefinition is a nested property type of AWS::ApplicationSignals::GroupingConfiguration.
@@ -254,6 +258,9 @@ func (o *ApplicationSignalsServiceLevelObjective) CloudControlStatusRef() *Cloud
 }
 func (o *ApplicationSignalsServiceLevelObjective) CloudControlObserved() interface{} {
 	return &o.Status
+}
+func (o *ApplicationSignalsServiceLevelObjective) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
 }
 
 // ApplicationSignalsServiceLevelObjectiveSli is a nested property type of AWS::ApplicationSignals::ServiceLevelObjective.

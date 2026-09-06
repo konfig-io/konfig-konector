@@ -85,7 +85,8 @@ func (o *AppConfigApplication) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppConfigApplication) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigApplication) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigApplication) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigApplication) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigConfigurationProfileSpec is the desired state of AWS::AppConfig::ConfigurationProfile.
 type AppConfigConfigurationProfileSpec struct {
@@ -203,6 +204,9 @@ func (o *AppConfigConfigurationProfile) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *AppConfigConfigurationProfile) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigConfigurationProfile) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppConfigConfigurationProfileValidators is a nested property type of AWS::AppConfig::ConfigurationProfile.
 type AppConfigConfigurationProfileValidators struct {
@@ -318,7 +322,8 @@ func (o *AppConfigDeployment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppConfigDeployment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigDeployment) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigDeployment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigDeployment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigDeploymentDynamicExtensionParameters is a nested property type of AWS::AppConfig::Deployment.
 type AppConfigDeploymentDynamicExtensionParameters struct {
@@ -425,7 +430,8 @@ func (o *AppConfigDeploymentStrategy) CloudControlSpec() interface{} { return &o
 func (o *AppConfigDeploymentStrategy) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigDeploymentStrategy) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigDeploymentStrategy) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigDeploymentStrategy) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigEnvironmentSpec is the desired state of AWS::AppConfig::Environment.
 type AppConfigEnvironmentSpec struct {
@@ -507,7 +513,8 @@ func (o *AppConfigEnvironment) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppConfigEnvironment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigEnvironment) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigEnvironment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigEnvironment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigEnvironmentMonitor is a nested property type of AWS::AppConfig::Environment.
 type AppConfigEnvironmentMonitor struct {
@@ -659,6 +666,9 @@ func (o *AppConfigExperimentDefinition) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *AppConfigExperimentDefinition) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigExperimentDefinition) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppConfigExperimentDefinitionTreatment is a nested property type of AWS::AppConfig::ExperimentDefinition.
 type AppConfigExperimentDefinitionTreatment struct {
@@ -810,7 +820,8 @@ func (o *AppConfigExperimentRun) CloudControlSpec() interface{} { return &o.Spec
 func (o *AppConfigExperimentRun) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigExperimentRun) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigExperimentRun) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigExperimentRun) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigExperimentRunTreatmentOverrides is a nested property type of AWS::AppConfig::ExperimentRun.
 type AppConfigExperimentRunTreatmentOverrides struct {
@@ -897,7 +908,8 @@ func (o *AppConfigExtension) CloudControlSpec() interface{} { return &o.Spec }
 func (o *AppConfigExtension) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *AppConfigExtension) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigExtension) CloudControlObserved() interface{}   { return &o.Status }
+func (o *AppConfigExtension) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // AppConfigExtensionAction is a nested property type of AWS::AppConfig::Extension.
 type AppConfigExtensionAction struct {
@@ -1017,6 +1029,9 @@ func (o *AppConfigExtensionAssociation) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *AppConfigExtensionAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigExtensionAssociation) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // AppConfigHostedConfigurationVersionSpec is the desired state of AWS::AppConfig::HostedConfigurationVersion.
 type AppConfigHostedConfigurationVersionSpec struct {
@@ -1113,6 +1128,9 @@ func (o *AppConfigHostedConfigurationVersion) CloudControlStatusRef() *CloudCont
 	return &o.Status.CloudControlStatus
 }
 func (o *AppConfigHostedConfigurationVersion) CloudControlObserved() interface{} { return &o.Status }
+func (o *AppConfigHostedConfigurationVersion) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 func init() {
 	SchemeBuilder.Register(&AppConfigApplication{}, &AppConfigApplicationList{})

@@ -311,6 +311,11 @@ func withProviderScope(ctx context.Context, obj provider.ProviderScoped) (contex
 	if err != nil {
 		return ctx, fmt.Errorf("resolve AWS provider: %w", err)
 	}
+	// Record the target account/region on the object; it is persisted with
+	// the next status write of the reconcile.
+	if setter, ok := obj.(provider.ProviderStatusSetter); ok {
+		setter.SetProviderStatus(providerResolver.StatusFor(s))
+	}
 	if s == nil {
 		return ctx, nil
 	}

@@ -39,6 +39,25 @@ type STSAPI interface {
 	GetCallerIdentity(ctx context.Context, params *sts.GetCallerIdentityInput, optFns ...func(*sts.Options)) (*sts.GetCallerIdentityOutput, error)
 }
 
+// ProviderStatusSetter is implemented by every kind (generated accessors) so
+// the resolved account/region can be written to status.awsProvider.
+type ProviderStatusSetter interface {
+	SetProviderStatus(*awsv1alpha1.ProviderStatus)
+}
+
+// StatusFor renders the ProviderStatus for a resolved scope (nil scope means
+// the operator's own account and region).
+func (r *Resolver) StatusFor(s *Scope) *awsv1alpha1.ProviderStatus {
+	if s == nil {
+		return &awsv1alpha1.ProviderStatus{AccountID: r.BaseAccountID, Region: r.BaseRegion}
+	}
+	acct := s.AccountID
+	if acct == "" && s.Credentials == nil {
+		acct = r.BaseAccountID
+	}
+	return &awsv1alpha1.ProviderStatus{Name: s.Name, AccountID: acct, Region: s.Region}
+}
+
 // ProviderScoped is implemented by every namespaced resource kind (generated
 // GetProviderRef accessors) so controllers can resolve its AWSProvider.
 type ProviderScoped interface {
@@ -59,6 +78,8 @@ type Resolver struct {
 	BaseCredentials aws.CredentialsProvider
 	// BaseRegion is the operator's own region.
 	BaseRegion string
+	// BaseAccountID is the operator's own account (from sts:GetCallerIdentity).
+	BaseAccountID string
 
 	mu    sync.Mutex
 	cache map[string]cacheEntry

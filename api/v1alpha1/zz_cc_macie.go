@@ -99,7 +99,8 @@ func (o *MacieAllowList) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MacieAllowList) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MacieAllowList) CloudControlObserved() interface{} { return &o.Status }
+func (o *MacieAllowList) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MacieAllowList) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MacieCustomDataIdentifierSpec is the desired state of AWS::Macie::CustomDataIdentifier.
 type MacieCustomDataIdentifierSpec struct {
@@ -191,7 +192,8 @@ func (o *MacieCustomDataIdentifier) CloudControlSpec() interface{} { return &o.S
 func (o *MacieCustomDataIdentifier) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MacieCustomDataIdentifier) CloudControlObserved() interface{} { return &o.Status }
+func (o *MacieCustomDataIdentifier) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MacieCustomDataIdentifier) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MacieFindingsFilterSpec is the desired state of AWS::Macie::FindingsFilter.
 type MacieFindingsFilterSpec struct {
@@ -270,7 +272,8 @@ func (o *MacieFindingsFilter) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MacieFindingsFilter) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MacieFindingsFilter) CloudControlObserved() interface{} { return &o.Status }
+func (o *MacieFindingsFilter) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MacieFindingsFilter) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // MacieFindingsFilterFindingCriteria is a nested property type of AWS::Macie::FindingsFilter.
 type MacieFindingsFilterFindingCriteria struct {
@@ -371,7 +374,8 @@ func (o *MacieSession) CloudControlSpec() interface{} { return &o.Spec }
 func (o *MacieSession) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *MacieSession) CloudControlObserved() interface{} { return &o.Status }
+func (o *MacieSession) CloudControlObserved() interface{}   { return &o.Status }
+func (o *MacieSession) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 func init() {
 	SchemeBuilder.Register(&MacieAllowList{}, &MacieAllowListList{})

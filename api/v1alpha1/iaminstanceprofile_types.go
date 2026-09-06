@@ -50,6 +50,9 @@ type IAMInstanceProfileSpec struct {
 
 // IAMInstanceProfileStatus defines the observed state of IAMInstanceProfile.
 type IAMInstanceProfileStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// ARN is the ARN of the instance profile.
 	// +optional
 	ARN string `json:"arn,omitempty"`

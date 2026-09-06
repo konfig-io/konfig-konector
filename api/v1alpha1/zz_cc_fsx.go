@@ -123,7 +123,8 @@ func (o *FSxDataRepositoryAssociation) CloudControlSpec() interface{} { return &
 func (o *FSxDataRepositoryAssociation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *FSxDataRepositoryAssociation) CloudControlObserved() interface{} { return &o.Status }
+func (o *FSxDataRepositoryAssociation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *FSxDataRepositoryAssociation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // FSxDataRepositoryAssociationS3 is a nested property type of AWS::FSx::DataRepositoryAssociation.
 type FSxDataRepositoryAssociationS3 struct {
@@ -224,7 +225,8 @@ func (o *FSxS3AccessPointAttachment) CloudControlSpec() interface{} { return &o.
 func (o *FSxS3AccessPointAttachment) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *FSxS3AccessPointAttachment) CloudControlObserved() interface{} { return &o.Status }
+func (o *FSxS3AccessPointAttachment) CloudControlObserved() interface{}   { return &o.Status }
+func (o *FSxS3AccessPointAttachment) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // FSxS3AccessPointAttachmentS3AccessPointOntapConfiguration is a nested property type of AWS::FSx::S3AccessPointAttachment.
 type FSxS3AccessPointAttachmentS3AccessPointOntapConfiguration struct {
@@ -421,6 +423,7 @@ func (o *FSxVolume) CloudControlTypeName() string               { return "AWS::F
 func (o *FSxVolume) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *FSxVolume) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *FSxVolume) CloudControlObserved() interface{}          { return &o.Status }
+func (o *FSxVolume) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // FSxVolumeOntapConfiguration is a nested property type of AWS::FSx::Volume.
 type FSxVolumeOntapConfiguration struct {

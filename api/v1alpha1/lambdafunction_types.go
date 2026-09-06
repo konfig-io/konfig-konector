@@ -222,6 +222,9 @@ type LambdaFunctionSpec struct {
 
 // LambdaFunctionStatus defines the observed state of LambdaFunction.
 type LambdaFunctionStatus struct {
+	// AWSProvider confirms the account and region this resource was reconciled against.
+	// +optional
+	AWSProvider *ProviderStatus `json:"awsProvider,omitempty"`
 	// FunctionARN is the ARN of the Lambda function.
 	// +optional
 	FunctionARN string `json:"functionArn,omitempty"`

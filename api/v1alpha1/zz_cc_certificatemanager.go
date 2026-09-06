@@ -75,6 +75,7 @@ func (o *ACMAccount) CloudControlTypeName() string               { return "AWS::
 func (o *ACMAccount) CloudControlSpec() interface{}              { return &o.Spec }
 func (o *ACMAccount) CloudControlStatusRef() *CloudControlStatus { return &o.Status.CloudControlStatus }
 func (o *ACMAccount) CloudControlObserved() interface{}          { return &o.Status }
+func (o *ACMAccount) SetProviderStatus(p *ProviderStatus)        { o.Status.AWSProvider = p }
 
 // ACMAccountExpiryEventsConfiguration is a nested property type of AWS::CertificateManager::Account.
 type ACMAccountExpiryEventsConfiguration struct {
@@ -151,7 +152,8 @@ func (o *ACMAcmeDomainValidation) CloudControlSpec() interface{} { return &o.Spe
 func (o *ACMAcmeDomainValidation) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ACMAcmeDomainValidation) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMAcmeDomainValidation) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ACMAcmeDomainValidation) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ACMAcmeDomainValidationPrevalidationOptions is a nested property type of AWS::CertificateManager::AcmeDomainValidation.
 type ACMAcmeDomainValidationPrevalidationOptions struct {
@@ -270,7 +272,8 @@ func (o *ACMAcmeEndpoint) CloudControlSpec() interface{} { return &o.Spec }
 func (o *ACMAcmeEndpoint) CloudControlStatusRef() *CloudControlStatus {
 	return &o.Status.CloudControlStatus
 }
-func (o *ACMAcmeEndpoint) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMAcmeEndpoint) CloudControlObserved() interface{}   { return &o.Status }
+func (o *ACMAcmeEndpoint) SetProviderStatus(p *ProviderStatus) { o.Status.AWSProvider = p }
 
 // ACMAcmeEndpointCertificateAuthority is a nested property type of AWS::CertificateManager::AcmeEndpoint.
 type ACMAcmeEndpointCertificateAuthority struct {
@@ -366,6 +369,9 @@ func (o *ACMAcmeExternalAccountBinding) CloudControlStatusRef() *CloudControlSta
 	return &o.Status.CloudControlStatus
 }
 func (o *ACMAcmeExternalAccountBinding) CloudControlObserved() interface{} { return &o.Status }
+func (o *ACMAcmeExternalAccountBinding) SetProviderStatus(p *ProviderStatus) {
+	o.Status.AWSProvider = p
+}
 
 // ACMAcmeExternalAccountBindingExpiration is a nested property type of AWS::CertificateManager::AcmeExternalAccountBinding.
 type ACMAcmeExternalAccountBindingExpiration struct {
