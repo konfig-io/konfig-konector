@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lambda — konfig-konector Docs</title>
-  <meta name="description" content="API reference for LambdaAlias, LambdaCodeSigningConfig, LambdaEventInvokeConfig, LambdaEventSourceMapping, LambdaFunction, LambdaFunctionURL, LambdaLayerVersion, LambdaPermission, LambdaProvisionedConcurrency." />
+  <meta name="description" content="API reference for LambdaAlias, LambdaCapacityProvider, LambdaCodeSigningConfig, LambdaEventInvokeConfig, LambdaEventSourceMapping, LambdaFunction, LambdaFunctionURL, LambdaLayerVersion, LambdaLayerVersionPermission, LambdaMicrovmImage, LambdaNetworkConnector, LambdaPermission, LambdaProvisionedConcurrency, LambdaResourcePolicy." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
@@ -41,7 +41,7 @@
     </div>
 
     <h1 class="docs-page-title">Lambda</h1>
-    <p class="docs-page-subtitle">9 resource kinds. Generated from the operator's CRD schemas.</p>
+    <p class="docs-page-subtitle">14 resource kinds. Generated from the operator's CRD schemas.</p>
 
     <div class="api-group-notice">
       <span>API Group:</span>
@@ -102,6 +102,119 @@ spec:
 <tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="lambdacapacityprovider" class="resource-section">
+      <h2>LambdaCapacityProvider <a href="#lambdacapacityprovider" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Lambda::CapacityProvider</span></h2>
+      <p class="resource-desc">LambdaCapacityProvider manages AWS::Lambda::CapacityProvider through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get lambdacapacityproviders</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/lambda/lambdacapacityprovider.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LambdaCapacityProvider — Lambda
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/lambda.html#lambdacapacityprovider
+apiVersion: aws.konfig.io/v1alpha1
+kind: LambdaCapacityProvider
+metadata:
+  name: example-lambdacapacityprovider
+  namespace: default
+spec:
+  capacityProviderName: example-lambdacapacityprovider
+  capacityProviderScalingConfig:
+    maxVCpuCount: 2
+    scalingMode: Auto
+    scalingPolicies:
+    - predefinedMetricType: LambdaCapacityProviderAverageCPUUtilization
+      targetValue: 1
+  instanceRequirements:
+    allowedInstanceTypes:
+    - example
+    architectures:
+    - example
+    excludedInstanceTypes:
+    - example
+  kmsKeyArn: arn:aws:iam::123456789012:role/example-role
+  permissionsConfig:
+    capacityProviderOperatorRoleArn: arn:aws:iam::123456789012:role/example-role
+  propagateTags:
+    explicitTags:
+    - key: example
+      value: example
+    mode: None
+  providerRef:
+    name: example-lambdacapacityprovider
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+  telemetryConfig:
+    loggingConfig:
+      logGroup: example
+      systemLogLevel: DEBUG
+  vpcConfig:
+    securityGroupIds:
+    - example
+    subnetIds:
+    - example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>capacityProviderName</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>capacityProviderScalingConfig</code></td><td>object</td><td>—</td><td>The scaling configuration for the capacity provider.</td></tr>
+<tr><td><code>capacityProviderScalingConfig.maxVCpuCount</code></td><td>integer</td><td>—</td><td>The maximum number of vCPUs that the capacity provider can provision across all compute instances.</td></tr>
+<tr><td><code>capacityProviderScalingConfig.scalingMode</code></td><td>enum</td><td>—</td><td>The scaling mode that determines how the capacity provider responds to changes in demand. Allowed: <code>Auto, Manual</code></td></tr>
+<tr><td><code>capacityProviderScalingConfig.scalingPolicies</code></td><td>array&lt;object&gt;</td><td>—</td><td>A list of target tracking scaling policies for the capacity provider.</td></tr>
+<tr><td><code>capacityProviderScalingConfig.scalingPolicies[].predefinedMetricType</code></td><td>enum</td><td><span class="req">yes</span></td><td>The predefined metric type to track for scaling decisions. Allowed: <code>LambdaCapacityProviderAverageCPUUtilization, LambdaCapacityProviderAverageGPUUtilization</code></td></tr>
+<tr><td><code>capacityProviderScalingConfig.scalingPolicies[].targetValue</code></td><td>number</td><td><span class="req">yes</span></td><td>The target value for the metric that the scaling policy attempts to maintain through scaling actions.</td></tr>
+<tr><td><code>instanceRequirements</code></td><td>object</td><td>—</td><td>The instance requirements for compute resources managed by the capacity provider.</td></tr>
+<tr><td><code>instanceRequirements.allowedInstanceTypes</code></td><td>array&lt;string&gt;</td><td>—</td><td>A list of EC2 instance types that the capacity provider is allowed to use.</td></tr>
+<tr><td><code>instanceRequirements.architectures</code></td><td>array&lt;string&gt;</td><td>—</td><td>A list of supported CPU architectures for compute instances.</td></tr>
+<tr><td><code>instanceRequirements.excludedInstanceTypes</code></td><td>array&lt;string&gt;</td><td>—</td><td>A list of EC2 instance types that the capacity provider should not use, even if they meet other requirements.</td></tr>
+<tr><td><code>kmsKeyArn</code></td><td>string</td><td>—</td><td>The ARN of the KMS key used to encrypt the capacity provider's resources.</td></tr>
+<tr><td><code>permissionsConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>The permissions configuration for the capacity provider.</td></tr>
+<tr><td><code>permissionsConfig.capacityProviderOperatorRoleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The ARN of the IAM role that the capacity provider uses to manage compute instances and other AWS resources.</td></tr>
+<tr><td><code>propagateTags</code></td><td>object</td><td>—</td><td>Configuration for tag propagation to managed resources launched by the capacity provider.</td></tr>
+<tr><td><code>propagateTags.explicitTags</code></td><td>array&lt;object&gt;</td><td>—</td><td>A list of tags to explicitly propagate to managed resources.</td></tr>
+<tr><td><code>propagateTags.explicitTags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>propagateTags.explicitTags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>propagateTags.mode</code></td><td>enum</td><td>—</td><td>The mode for tag propagation. Allowed: <code>None, Explicit</code></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>A key-value pair that provides metadata for the capacity provider.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>telemetryConfig</code></td><td>object</td><td>—</td><td>The telemetry configuration for the capacity provider, including logging settings.</td></tr>
+<tr><td><code>telemetryConfig.loggingConfig</code></td><td>object</td><td>—</td><td>The capacity provider's Amazon CloudWatch Logs configuration settings.</td></tr>
+<tr><td><code>telemetryConfig.loggingConfig.logGroup</code></td><td>string</td><td>—</td><td>The name of the Amazon CloudWatch log group the capacity provider sends logs to.</td></tr>
+<tr><td><code>telemetryConfig.loggingConfig.systemLogLevel</code></td><td>enum</td><td>—</td><td>Set this property to filter the system logs for your capacity provider that Lambda sends to CloudWatch. Allowed: <code>DEBUG, INFO, WARN</code></td></tr>
+<tr><td><code>vpcConfig</code></td><td>object</td><td><span class="req">yes</span></td><td>The VPC configuration for the capacity provider.</td></tr>
+<tr><td><code>vpcConfig.securityGroupIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>A list of security group IDs that control network access for compute instances managed by the capacity provider.</td></tr>
+<tr><td><code>vpcConfig.subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>A list of subnet IDs where the capacity provider launches compute instances.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>Read-only: reported by AWS after creation. Allowed: <code>Pending, Active, Failed, Deleting</code></td></tr>
 </tbody></table></div>
     </section>
 
@@ -572,6 +685,273 @@ spec:
 </tbody></table></div>
     </section>
 
+    <section id="lambdalayerversionpermission" class="resource-section">
+      <h2>LambdaLayerVersionPermission <a href="#lambdalayerversionpermission" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Lambda::LayerVersionPermission</span></h2>
+      <p class="resource-desc">LambdaLayerVersionPermission manages AWS::Lambda::LayerVersionPermission through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get lambdalayerversionpermissions</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/lambda/lambdalayerversionpermission.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LambdaLayerVersionPermission — Lambda
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/lambda.html#lambdalayerversionpermission
+apiVersion: aws.konfig.io/v1alpha1
+kind: LambdaLayerVersionPermission
+metadata:
+  name: example-lambdalayerversionpermission
+  namespace: default
+spec:
+  action: example
+  layerVersionArn: arn:aws:iam::123456789012:role/example-role
+  principal: example
+  providerRef:
+    name: example-lambdalayerversionpermission
+    region: us-east-1
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>action</code></td><td>string</td><td><span class="req">yes</span></td><td>The API action that grants access to the layer.</td></tr>
+<tr><td><code>layerVersionArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The name or Amazon Resource Name (ARN) of the layer.</td></tr>
+<tr><td><code>organizationId</code></td><td>string</td><td>—</td><td>With the principal set to *, grant permission to all accounts in the specified organization.</td></tr>
+<tr><td><code>principal</code></td><td>string</td><td><span class="req">yes</span></td><td>An account ID, or * to grant layer usage permission to all accounts in an organization, or all AWS accounts (if organizationId is not specified).</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>id</code></td><td>string</td><td>—</td><td>ID generated by service Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="lambdamicrovmimage" class="resource-section">
+      <h2>LambdaMicrovmImage <a href="#lambdamicrovmimage" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Lambda::MicrovmImage</span></h2>
+      <p class="resource-desc">LambdaMicrovmImage manages AWS::Lambda::MicrovmImage through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get lambdamicrovmimages</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/lambda/lambdamicrovmimage.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LambdaMicrovmImage — Lambda
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/lambda.html#lambdamicrovmimage
+apiVersion: aws.konfig.io/v1alpha1
+kind: LambdaMicrovmImage
+metadata:
+  name: example-lambdamicrovmimage
+  namespace: default
+spec:
+  additionalOsCapabilities:
+  - example
+  baseImageArn: arn:aws:iam::123456789012:role/example-role
+  baseImageVersion: &#x27;1.0&#x27;
+  buildRoleArn: arn:aws:iam::123456789012:role/example-role
+  codeArtifact:
+    uri: example
+  cpuConfigurations:
+  - architecture: ARM_64
+  description: Managed by konfig-konector
+  egressNetworkConnectors:
+  - example
+  environmentVariables:
+  - key: example
+    value: example
+  hooks:
+    microvmHooks:
+      resume: DISABLED
+      resumeTimeoutInSeconds: 1
+      run: DISABLED
+      runTimeoutInSeconds: 1
+      suspend: DISABLED
+      suspendTimeoutInSeconds: 1
+      terminate: DISABLED
+      terminateTimeoutInSeconds: 1
+    microvmImageHooks:
+      ready: DISABLED
+      readyTimeoutInSeconds: 1
+      validate: DISABLED
+      validateTimeoutInSeconds: 1
+    port: 1
+  logging:
+    cloudWatch:
+      logGroup: example
+      logStream: example
+    disabled: false
+  name: example-lambdamicrovmimage
+  providerRef:
+    name: example-lambdamicrovmimage
+    region: us-east-1
+  resources:
+  - minimumMemoryInMiB: 1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>additionalOsCapabilities</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>baseImageArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ARN of the base MicroVM image.</td></tr>
+<tr><td><code>baseImageVersion</code></td><td>string</td><td><span class="req">yes</span></td><td>Specific version of the base MicroVM image to use.</td></tr>
+<tr><td><code>buildRoleArn</code></td><td>string</td><td><span class="req">yes</span></td><td>ARN of the IAM build role.</td></tr>
+<tr><td><code>codeArtifact</code></td><td>object</td><td><span class="req">yes</span></td><td>Code artifact for the active MicroVM image.</td></tr>
+<tr><td><code>codeArtifact.uri</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>cpuConfigurations</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>cpuConfigurations[].architecture</code></td><td>enum</td><td><span class="req">yes</span></td><td>Allowed: <code>ARM_64</code></td></tr>
+<tr><td><code>description</code></td><td>string</td><td><span class="req">yes</span></td><td>Human-readable description of the MicroVM image and its purpose.</td></tr>
+<tr><td><code>egressNetworkConnectors</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>environmentVariables</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td>Environment variables to set in the container during the snapshot build.</td></tr>
+<tr><td><code>environmentVariables[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>environmentVariables[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>hooks</code></td><td>object</td><td><span class="req">yes</span></td><td>LambdaMicrovmImageHooks is a nested property type of AWS::Lambda::MicrovmImage.</td></tr>
+<tr><td><code>hooks.microvmHooks</code></td><td>object</td><td>—</td><td>LambdaMicrovmImageMicrovmHooks is a nested property type of AWS::Lambda::MicrovmImage.</td></tr>
+<tr><td><code>hooks.microvmHooks.resume</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmHooks.resumeTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.microvmHooks.run</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmHooks.runTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.microvmHooks.suspend</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmHooks.suspendTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.microvmHooks.terminate</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmHooks.terminateTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.microvmImageHooks</code></td><td>object</td><td>—</td><td>LambdaMicrovmImageMicrovmImageHooks is a nested property type of AWS::Lambda::MicrovmImage.</td></tr>
+<tr><td><code>hooks.microvmImageHooks.ready</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmImageHooks.readyTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.microvmImageHooks.validate</code></td><td>enum</td><td>—</td><td>Allowed: <code>DISABLED, ENABLED</code></td></tr>
+<tr><td><code>hooks.microvmImageHooks.validateTimeoutInSeconds</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>hooks.port</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>logging</code></td><td>object</td><td><span class="req">yes</span></td><td>Configuration for MicroVM image logging.</td></tr>
+<tr><td><code>logging.cloudWatch</code></td><td>object</td><td>—</td><td>LambdaMicrovmImageCloudWatchLogging is a nested property type of AWS::Lambda::MicrovmImage.</td></tr>
+<tr><td><code>logging.cloudWatch.logGroup</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>logging.cloudWatch.logStream</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>logging.disabled</code></td><td>boolean</td><td>—</td><td></td></tr>
+<tr><td><code>name</code></td><td>string</td><td><span class="req">yes</span></td><td>Unique name for the MicroVM image within the account.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resources</code></td><td>array&lt;object&gt;</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>resources[].minimumMemoryInMiB</code></td><td>integer</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>Key-value pairs to associate with the MicroVM image for organization and management.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>createdAt</code></td><td>string</td><td>—</td><td>Timestamp when the MicroVM image was created.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>imageArn</code></td><td>string</td><td>—</td><td>ARN of the MicroVM image.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>latestActiveImageVersion</code></td><td>string</td><td>—</td><td>The latest active version of the MicroVM image.</td></tr>
+<tr><td><code>latestFailedImageVersion</code></td><td>string</td><td>—</td><td>The latest failed version of the MicroVM image.</td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>Current state of the MicroVM image. Allowed: <code>CREATING, CREATED, CREATE_FAILED, UPDATING, UPDATED, UPDATE_FAILED, DELETING, DELETE_FAILED…</code></td></tr>
+<tr><td><code>updatedAt</code></td><td>string</td><td>—</td><td>Timestamp when the MicroVM image was updated.</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="lambdanetworkconnector" class="resource-section">
+      <h2>LambdaNetworkConnector <a href="#lambdanetworkconnector" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Lambda::NetworkConnector</span></h2>
+      <p class="resource-desc">LambdaNetworkConnector manages AWS::Lambda::NetworkConnector through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get lambdanetworkconnectors</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/lambda/lambdanetworkconnector.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LambdaNetworkConnector — Lambda
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/lambda.html#lambdanetworkconnector
+apiVersion: aws.konfig.io/v1alpha1
+kind: LambdaNetworkConnector
+metadata:
+  name: example-lambdanetworkconnector
+  namespace: default
+spec:
+  configuration:
+    vpcEgressConfiguration:
+      associatedComputeResourceTypes:
+      - example
+      networkProtocol: IPv4
+      securityGroupIds:
+      - example
+      subnetIds:
+      - example
+  name: example-lambdanetworkconnector
+  operatorRole: example
+  providerRef:
+    name: example-lambdanetworkconnector
+    region: us-east-1
+  tags:
+  - key: example
+    value: example
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>configuration</code></td><td>object</td><td><span class="req">yes</span></td><td>LambdaNetworkConnectorConfig is a nested property type of AWS::Lambda::NetworkConnector.</td></tr>
+<tr><td><code>configuration.vpcEgressConfiguration</code></td><td>object</td><td><span class="req">yes</span></td><td>LambdaNetworkConnectorVpcEgressConfiguration is a nested property type of AWS::Lambda::NetworkConnector.</td></tr>
+<tr><td><code>configuration.vpcEgressConfiguration.associatedComputeResourceTypes</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>The types of Lambda compute resources that can use this connector.</td></tr>
+<tr><td><code>configuration.vpcEgressConfiguration.networkProtocol</code></td><td>enum</td><td>—</td><td>The network protocol for the connector. Allowed: <code>IPv4, DualStack</code></td></tr>
+<tr><td><code>configuration.vpcEgressConfiguration.securityGroupIds</code></td><td>array&lt;string&gt;</td><td>—</td><td>The IDs of the VPC security groups to attach to the ENIs.</td></tr>
+<tr><td><code>configuration.vpcEgressConfiguration.subnetIds</code></td><td>array&lt;string&gt;</td><td><span class="req">yes</span></td><td>The IDs of the VPC subnets where Lambda provisions elastic network interfaces (ENIs).</td></tr>
+<tr><td><code>name</code></td><td>string</td><td>—</td><td>Create-only in AWS: changing it requires replacing the resource.</td></tr>
+<tr><td><code>operatorRole</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>—</td><td>A list of tags to apply to the network connector.</td></tr>
+<tr><td><code>tags[].key</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+<tr><td><code>tags[].value</code></td><td>string</td><td><span class="req">yes</span></td><td></td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>arn</code></td><td>string</td><td>—</td><td>Read-only: reported by AWS after creation.</td></tr>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
+<tr><td><code>state</code></td><td>enum</td><td>—</td><td>Read-only: reported by AWS after creation. Allowed: <code>PENDING, ACTIVE, INACTIVE, FAILED, DELETING, DELETE_FAILED</code></td></tr>
+</tbody></table></div>
+    </section>
+
     <section id="lambdapermission" class="resource-section">
       <h2>LambdaPermission <a href="#lambdapermission" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
       <p class="resource-desc">LambdaPermission is the Schema for managing Lambda resource-based policy statements.</p>
@@ -691,6 +1071,57 @@ spec:
 <tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td>LastSyncTime is when the resource was last successfully reconciled.</td></tr>
 <tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td>ObservedGeneration is the most recent .metadata.generation reconciled.</td></tr>
 <tr><td><code>status</code></td><td>string</td><td>—</td><td>Status is the provisioned concurrency status (IN_PROGRESS, READY, FAILED).</td></tr>
+</tbody></table></div>
+    </section>
+
+    <section id="lambdaresourcepolicy" class="resource-section">
+      <h2>LambdaResourcePolicy <a href="#lambdaresourcepolicy" class="anchor">#</a> <span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">CLOUD CONTROL · AWS::Lambda::ResourcePolicy</span></h2>
+      <p class="resource-desc">LambdaResourcePolicy manages AWS::Lambda::ResourcePolicy through the AWS Cloud Control API.</p>
+      <p class="resource-desc"><code>kubectl get lambdaresourcepolicies</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/lambda/lambdaresourcepolicy.yaml">example on GitHub</a></p>
+
+      <h3>Example</h3>
+      <div class="code-wrap"><pre><code class="language-yaml"># LambdaResourcePolicy — Lambda
+# Full-options example generated from the CRD schema. Optional fields are
+# included with sample values; delete what you don&#x27;t need. Field reference:
+# https://konfig-konector.io/docs/lambda.html#lambdaresourcepolicy
+apiVersion: aws.konfig.io/v1alpha1
+kind: LambdaResourcePolicy
+metadata:
+  name: example-lambdaresourcepolicy
+  namespace: default
+spec:
+  providerRef:
+    name: example-lambdaresourcepolicy
+    region: us-east-1
+  resourceArn: arn:aws:iam::123456789012:role/example-role
+</code></pre></div>
+
+      <h3>Spec</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>policyDocument</code></td><td>object</td><td><span class="req">yes</span></td><td>The policy document you want to add to your LAM resource.</td></tr>
+<tr><td><code>providerRef</code></td><td>object</td><td>—</td><td>ProviderRef selects the AWSProvider (account/region) this resource is reconciled against.</td></tr>
+<tr><td><code>providerRef.name</code></td><td>string</td><td><span class="req">yes</span></td><td>Name of a cluster-scoped AWSProvider.</td></tr>
+<tr><td><code>providerRef.region</code></td><td>string</td><td>—</td><td>Region overrides the provider's region for this resource only.</td></tr>
+<tr><td><code>resourceArn</code></td><td>string</td><td><span class="req">yes</span></td><td>The Amazon Resource Name (ARN) of the LAM resource you want to add the policy to.</td></tr>
+</tbody></table></div>
+
+      <h3>Status</h3>
+      <div class="docs-table-wrap"><table class="docs-table">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>conditions</code></td><td>array&lt;object&gt;</td><td>—</td><td>Conditions describe the current state of the resource.</td></tr>
+<tr><td><code>conditions[].lastTransitionTime</code></td><td>string</td><td><span class="req">yes</span></td><td>lastTransitionTime is the last time the condition transitioned from one status to another.</td></tr>
+<tr><td><code>conditions[].message</code></td><td>string</td><td><span class="req">yes</span></td><td>message is a human readable message indicating details about the transition.</td></tr>
+<tr><td><code>conditions[].observedGeneration</code></td><td>integer</td><td>—</td><td>observedGeneration represents the .metadata.generation that the condition was set based upon.</td></tr>
+<tr><td><code>conditions[].reason</code></td><td>string</td><td><span class="req">yes</span></td><td>reason contains a programmatic identifier indicating the reason for the condition's last transition.</td></tr>
+<tr><td><code>conditions[].status</code></td><td>enum</td><td><span class="req">yes</span></td><td>status of the condition, one of True, False, Unknown. Allowed: <code>True, False, Unknown</code></td></tr>
+<tr><td><code>conditions[].type</code></td><td>string</td><td><span class="req">yes</span></td><td>type of condition in CamelCase or in foo.example.com/CamelCase.</td></tr>
+<tr><td><code>identifier</code></td><td>string</td><td>—</td><td>Identifier is the Cloud Control primary identifier of the resource.</td></tr>
+<tr><td><code>lastSyncTime</code></td><td>string</td><td>—</td><td></td></tr>
+<tr><td><code>observedGeneration</code></td><td>integer</td><td>—</td><td></td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>—</td><td>Operation is the in-flight operation (CREATE, UPDATE, DELETE).</td></tr>
+<tr><td><code>operationStatus</code></td><td>string</td><td>—</td><td>OperationStatus is the last reported operation status.</td></tr>
+<tr><td><code>requestToken</code></td><td>string</td><td>—</td><td>RequestToken tracks an in-flight asynchronous operation.</td></tr>
 </tbody></table></div>
     </section>
   </main>

@@ -1,0 +1,608 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: auditmanagerassessmentframeworks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AuditManagerAssessmentFramework
+    listKind: AuditManagerAssessmentFrameworkList
+    plural: auditmanagerassessmentframeworks
+    singular: auditmanagerassessmentframework
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AuditManagerAssessmentFramework manages AWS::AuditManager::AssessmentFramework through the AWS Cloud Control
+          API. Creates a custom framework in AWS Audit Manager.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuditManagerAssessmentFrameworkSpec is the desired state
+              of AWS::AuditManager::AssessmentFramework.
+            properties:
+              complianceType:
+                description: The compliance type that the framework supports, such
+                  as CIS or HIPAA.
+                maxLength: 100
+                type: string
+              controlSets:
+                description: The control sets that are associated with the framework.
+                items:
+                  description: AuditManagerAssessmentFrameworkControlSet is a nested
+                    property type of AWS::AuditManager::AssessmentFramework.
+                  properties:
+                    controls:
+                      description: The list of controls within the control set.
+                      items:
+                        description: AuditManagerAssessmentFrameworkControlSetControl
+                          is a nested property type of AWS::AuditManager::AssessmentFramework.
+                        properties:
+                          id:
+                            description: The unique identifier of the control.
+                            maxLength: 36
+                            minLength: 36
+                            type: string
+                        required:
+                        - id
+                        type: object
+                      type: array
+                    name:
+                      description: The name of the control set.
+                      maxLength: 300
+                      minLength: 1
+                      type: string
+                  required:
+                  - controls
+                  - name
+                  type: object
+                type: array
+              description:
+                description: The description of the framework.
+                maxLength: 1000
+                type: string
+              name:
+                description: The name of the framework.
+                maxLength: 300
+                minLength: 1
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: The tags associated with the framework.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - controlSets
+            - name
+            type: object
+          status:
+            description: AuditManagerAssessmentFrameworkStatus is the observed state
+              of AWS::AuditManager::AssessmentFramework.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the framework.
+                  Read-only: reported by AWS after creation.
+                maxLength: 2048
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The time when the framework was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              createdBy:
+                description: |-
+                  The user or role that created the framework.
+                  Read-only: reported by AWS after creation.
+                maxLength: 100
+                type: string
+              frameworkId:
+                description: |-
+                  The unique identifier for the framework.
+                  Read-only: reported by AWS after creation.
+                maxLength: 36
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              lastUpdatedAt:
+                description: |-
+                  The time when the framework was most recently updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastUpdatedBy:
+                description: |-
+                  The user or role that most recently updated the framework.
+                  Read-only: reported by AWS after creation.
+                maxLength: 100
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              type:
+                description: |-
+                  The framework type, such as a standard framework or a custom framework.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - Standard
+                - Custom
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: auditmanagerassessments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AuditManagerAssessment
+    listKind: AuditManagerAssessmentList
+    plural: auditmanagerassessments
+    singular: auditmanagerassessment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AuditManagerAssessment manages AWS::AuditManager::Assessment through the AWS Cloud Control API. An entity that
+          defines the scope of audit evidence collected by AWS Audit Manager.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuditManagerAssessmentSpec is the desired state of AWS::AuditManager::Assessment.
+            properties:
+              assessmentReportsDestination:
+                description: AuditManagerAssessmentAssessmentReportsDestination is
+                  a nested property type of AWS::AuditManager::Assessment.
+                properties:
+                  destination:
+                    type: string
+                  destinationType:
+                    enum:
+                    - S3
+                    type: string
+                type: object
+              awsAccount:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  emailAddress:
+                    maxLength: 320
+                    type: string
+                  id:
+                    maxLength: 12
+                    type: string
+                  name:
+                    maxLength: 50
+                    type: string
+                type: object
+              delegations:
+                description: The list of delegations.
+                items:
+                  description: AuditManagerAssessmentDelegation is a nested property
+                    type of AWS::AuditManager::Assessment.
+                  properties:
+                    assessmentId:
+                      maxLength: 36
+                      type: string
+                    assessmentName:
+                      maxLength: 127
+                      type: string
+                    comment:
+                      maxLength: 350
+                      type: string
+                    controlSetId:
+                      maxLength: 300
+                      type: string
+                    createdBy:
+                      maxLength: 2048
+                      type: string
+                    creationTime:
+                      type: number
+                    id:
+                      maxLength: 36
+                      type: string
+                    lastUpdated:
+                      type: number
+                    roleArn:
+                      maxLength: 2048
+                      type: string
+                    roleType:
+                      enum:
+                      - PROCESS_OWNER
+                      - RESOURCE_OWNER
+                      type: string
+                    status:
+                      enum:
+                      - IN_PROGRESS
+                      - UNDER_REVIEW
+                      - COMPLETE
+                      type: string
+                  type: object
+                type: array
+              description:
+                type: string
+              frameworkId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 36
+                type: string
+              name:
+                maxLength: 127
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roles:
+                description: The list of roles for the specified assessment.
+                items:
+                  description: AuditManagerAssessmentRole is a nested property type
+                    of AWS::AuditManager::Assessment.
+                  properties:
+                    roleArn:
+                      maxLength: 2048
+                      type: string
+                    roleType:
+                      enum:
+                      - PROCESS_OWNER
+                      - RESOURCE_OWNER
+                      type: string
+                  type: object
+                type: array
+              scope:
+                description: AuditManagerAssessmentScope is a nested property type
+                  of AWS::AuditManager::Assessment.
+                properties:
+                  awsAccounts:
+                    description: The AWS accounts included in scope.
+                    items:
+                      description: AuditManagerAssessmentAWSAccount is a nested property
+                        type of AWS::AuditManager::Assessment.
+                      properties:
+                        emailAddress:
+                          maxLength: 320
+                          type: string
+                        id:
+                          maxLength: 12
+                          type: string
+                        name:
+                          maxLength: 50
+                          type: string
+                      type: object
+                    type: array
+                  awsServices:
+                    description: The AWS services included in scope.
+                    items:
+                      description: AuditManagerAssessmentAWSService is a nested property
+                        type of AWS::AuditManager::Assessment.
+                      properties:
+                        serviceName:
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              status:
+                enum:
+                - ACTIVE
+                - INACTIVE
+                type: string
+              tags:
+                description: The tags associated with the assessment.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: AuditManagerAssessmentStatus is the observed state of AWS::AuditManager::Assessment.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 2048
+                type: string
+              assessmentId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 36
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              creationTime:
+                description: 'Read-only: reported by AWS after creation.'
+                type: number
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

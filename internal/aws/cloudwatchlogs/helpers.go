@@ -37,3 +37,15 @@ func IsNotFound(err error) bool {
 	}
 	return false
 }
+
+// IsAlreadyExists reports whether err is ResourceAlreadyExistsException.
+func IsAlreadyExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	var apiErr smithy.APIError
+	if errors.As(err, &apiErr) {
+		return apiErr.ErrorCode() == "ResourceAlreadyExistsException"
+	}
+	return false
+}

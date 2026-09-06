@@ -43,6 +43,7 @@ type fakeCC struct {
 	deleted     int
 	lastPatch   string
 	createToken string
+	errorCode   cctypes.HandlerErrorCode
 }
 
 func (f *fakeCC) CreateResource(_ context.Context, in *awscc.CreateResourceInput, _ ...func(*awscc.Options)) (*awscc.CreateResourceOutput, error) {
@@ -73,7 +74,7 @@ func (f *fakeCC) DeleteResource(_ context.Context, in *awscc.DeleteResourceInput
 	return &awscc.DeleteResourceOutput{ProgressEvent: &cctypes.ProgressEvent{RequestToken: aws.String("req-3"), OperationStatus: cctypes.OperationStatusSuccess}}, nil
 }
 func (f *fakeCC) GetResourceRequestStatus(context.Context, *awscc.GetResourceRequestStatusInput, ...func(*awscc.Options)) (*awscc.GetResourceRequestStatusOutput, error) {
-	return &awscc.GetResourceRequestStatusOutput{ProgressEvent: &cctypes.ProgressEvent{OperationStatus: f.status, Identifier: aws.String("id-1")}}, nil
+	return &awscc.GetResourceRequestStatusOutput{ProgressEvent: &cctypes.ProgressEvent{OperationStatus: f.status, Identifier: aws.String("id-1"), ErrorCode: f.errorCode}}, nil
 }
 
 func ccObj(desired string) *awsv1alpha1.CloudControlResource {

@@ -1345,6 +1345,13 @@ func main() {
 	// Controller families added after the round-2 expansion register
 	// themselves via controller.RegisterSetup (see internal/controller/setup.go)
 	// instead of an inline block here.
+	if started, skipped, err := controller.SetupCloudControlKinds(mgr, awsClients.CloudControl); err != nil {
+		setupLog.Error(err, "unable to set up Cloud Control kinds")
+		os.Exit(1)
+	} else {
+		setupLog.Info("Cloud Control typed kinds", "started", started, "skipped (CRD not installed)", skipped)
+	}
+
 	if err := controller.SetupRegistered(mgr, awsClients); err != nil {
 		setupLog.Error(err, "unable to create registered controllers")
 		os.Exit(1)

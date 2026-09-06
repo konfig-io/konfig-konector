@@ -1,0 +1,2695 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuildercomponents.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderComponent
+    listKind: ImageBuilderComponentList
+    plural: imagebuildercomponents
+    singular: imagebuildercomponent
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderComponent manages AWS::ImageBuilder::Component through the AWS Cloud Control API. Resource Type
+          definition for AWS::ImageBuilder::Component
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderComponentSpec is the desired state of AWS::ImageBuilder::Component.
+            properties:
+              changeDescription:
+                description: |-
+                  The change description of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              data:
+                description: |-
+                  The data of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 16000
+                type: string
+              description:
+                description: |-
+                  The description of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              kmsKeyId:
+                description: |-
+                  The KMS key identifier used to encrypt the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              name:
+                description: |-
+                  The name of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              platform:
+                description: |-
+                  The platform of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - Windows
+                - Linux
+                - macOS
+                type: string
+                x-kubernetes-validations:
+                - message: platform is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              supportedOsVersions:
+                description: |-
+                  The operating system (OS) version supported by the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags associated with the component.
+                type: object
+              uri:
+                description: |-
+                  The uri of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              version:
+                description: |-
+                  The version of the component.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: version is immutable
+                  rule: self == oldSelf
+            required:
+            - name
+            - platform
+            - version
+            type: object
+          status:
+            description: ImageBuilderComponentStatus is the observed state of AWS::ImageBuilder::Component.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the component.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              encrypted:
+                description: |-
+                  The encryption status of the component.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              latestVersion:
+                description: |-
+                  The latest version references of the component.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  arn:
+                    description: The latest version ARN of the created component.
+                    type: string
+                  major:
+                    description: The latest version ARN of the created component,
+                      with the same major version.
+                    type: string
+                  minor:
+                    description: The latest version ARN of the created component,
+                      with the same minor version.
+                    type: string
+                  patch:
+                    description: The latest version ARN of the created component,
+                      with the same patch version.
+                    type: string
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              type:
+                description: |-
+                  The type of the component denotes whether the component is used to build the image or only to test it.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - BUILD
+                - TEST
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuildercontainerrecipes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderContainerRecipe
+    listKind: ImageBuilderContainerRecipeList
+    plural: imagebuildercontainerrecipes
+    singular: imagebuildercontainerrecipe
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderContainerRecipe manages AWS::ImageBuilder::ContainerRecipe through the AWS Cloud Control API.
+          Resource Type definition for AWS::ImageBuilder::ContainerRecipe
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderContainerRecipeSpec is the desired state of AWS::ImageBuilder::ContainerRecipe.
+            properties:
+              components:
+                description: |-
+                  Components for build and test that are included in the container recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ImageBuilderContainerRecipeComponentConfiguration is
+                    a nested property type of AWS::ImageBuilder::ContainerRecipe.
+                  properties:
+                    componentArn:
+                      description: The Amazon Resource Name (ARN) of the component.
+                      type: string
+                    parameters:
+                      description: A group of parameter settings that are used to
+                        configure the component for a specific recipe.
+                      items:
+                        description: ImageBuilderContainerRecipeComponentParameter
+                          is a nested property type of AWS::ImageBuilder::ContainerRecipe.
+                        properties:
+                          name:
+                            description: The name of the component parameter to set.
+                            type: string
+                          value:
+                            description: Sets the value for the named component parameter.
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - name
+                        - value
+                        type: object
+                      type: array
+                  type: object
+                type: array
+              containerType:
+                description: |-
+                  Specifies the type of container, such as Docker.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - DOCKER
+                type: string
+              description:
+                description: |-
+                  The description of the container recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dockerfileTemplateData:
+                description: |-
+                  Dockerfiles are text documents that are used to build Docker containers, and ensure that they contain all of
+                  the elements required by the application running inside. The template data consists of contextual variables
+                  where Image Builder places build information or scripts, based on your container image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              dockerfileTemplateUri:
+                description: |-
+                  The S3 URI for the Dockerfile that will be used to build your container image.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              imageOsVersionOverride:
+                description: |-
+                  Specifies the operating system version for the source image.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              instanceConfiguration:
+                description: |-
+                  A group of options that can be used to configure an instance for building and testing container images.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  blockDeviceMappings:
+                    description: Defines the block devices to attach for building
+                      an instance from this Image Builder AMI.
+                    items:
+                      description: ImageBuilderContainerRecipeInstanceBlockDeviceMapping
+                        is a nested property type of AWS::ImageBuilder::ContainerRecipe.
+                      properties:
+                        deviceName:
+                          description: The device to which these mappings apply.
+                          type: string
+                        ebs:
+                          description: Use to manage Amazon EBS-specific configuration
+                            for this mapping.
+                          properties:
+                            deleteOnTermination:
+                              description: Use to configure delete on termination
+                                of the associated device.
+                              type: boolean
+                            encrypted:
+                              description: Use to configure device encryption.
+                              type: boolean
+                            iops:
+                              description: Use to configure device IOPS.
+                              format: int64
+                              type: integer
+                            kmsKeyId:
+                              description: Use to configure the KMS key to use when
+                                encrypting the device.
+                              type: string
+                            snapshotId:
+                              description: The snapshot that defines the device contents.
+                              type: string
+                            throughput:
+                              description: For GP3 volumes only - The throughput in
+                                MiB/s that the volume supports.
+                              format: int64
+                              type: integer
+                            volumeSize:
+                              description: Use to override the device's volume size.
+                              format: int64
+                              type: integer
+                            volumeType:
+                              description: Use to override the device's volume type.
+                              enum:
+                              - standard
+                              - io1
+                              - io2
+                              - io2a
+                              - gp2
+                              - gp3
+                              - gp3a
+                              - sc1
+                              - st1
+                              type: string
+                          type: object
+                        noDevice:
+                          description: Use to remove a mapping from the parent image.
+                          type: string
+                        virtualName:
+                          description: Use to manage instance ephemeral devices.
+                          type: string
+                      type: object
+                    type: array
+                  image:
+                    description: |-
+                      The AMI ID to use as the base image for a container build and test instance. If not specified, Image Builder
+                      will use the appropriate ECS-optimized AMI as a base image.
+                    type: string
+                type: object
+              kmsKeyId:
+                description: |-
+                  Identifies which KMS key is used to encrypt the container image.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              name:
+                description: |-
+                  The name of the container recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              parentImage:
+                description: |-
+                  The source image for the container recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              platformOverride:
+                description: |-
+                  Specifies the operating system platform when you use a custom source image.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - Windows
+                - Linux
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags that are attached to the container recipe.
+                type: object
+              targetRepository:
+                description: |-
+                  The destination repository for the container image.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  repositoryName:
+                    description: |-
+                      The name of the container repository where the output container image is stored. This name is prefixed by the
+                      repository location.
+                    type: string
+                  service:
+                    description: Specifies the service in which this image was registered.
+                    enum:
+                    - ECR
+                    type: string
+                type: object
+              version:
+                description: |-
+                  The semantic version of the container recipe (<major>.<minor>.<patch>).
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              workingDirectory:
+                description: |-
+                  The working directory to be used during build and test workflows.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            type: object
+          status:
+            description: ImageBuilderContainerRecipeStatus is the observed state of
+              AWS::ImageBuilder::ContainerRecipe.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the container recipe.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              latestVersion:
+                description: |-
+                  The latest version references of the container recipe.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  arn:
+                    description: The latest version ARN of the created container recipe.
+                    type: string
+                  major:
+                    description: The latest version ARN of the created container recipe,
+                      with the same major version.
+                    type: string
+                  minor:
+                    description: The latest version ARN of the created container recipe,
+                      with the same minor version.
+                    type: string
+                  patch:
+                    description: The latest version ARN of the created container recipe,
+                      with the same patch version.
+                    type: string
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderdistributionconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderDistributionConfiguration
+    listKind: ImageBuilderDistributionConfigurationList
+    plural: imagebuilderdistributionconfigurations
+    singular: imagebuilderdistributionconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderDistributionConfiguration manages AWS::ImageBuilder::DistributionConfiguration through the AWS
+          Cloud Control API. Resource Type definition for AWS::ImageBuilder::DistributionConfiguration
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderDistributionConfigurationSpec is the desired
+              state of AWS::ImageBuilder::DistributionConfiguration.
+            properties:
+              description:
+                description: The description of the distribution configuration.
+                type: string
+              distributions:
+                description: The distributions of the distribution configuration.
+                items:
+                  description: ImageBuilderDistributionConfigurationDistribution is
+                    a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                  properties:
+                    amiDistributionConfiguration:
+                      description: ImageBuilderDistributionConfigurationAmiDistributionConfiguration
+                        is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                      properties:
+                        amiTags:
+                          additionalProperties:
+                            type: string
+                          description: The tags to apply to AMIs distributed to this
+                            Region.
+                          type: object
+                        description:
+                          description: The description of the AMI distribution configuration.
+                          type: string
+                        kmsKeyId:
+                          description: The KMS key identifier used to encrypt the
+                            distributed image.
+                          type: string
+                        launchPermissionConfiguration:
+                          description: ImageBuilderDistributionConfigurationLaunchPermissionConfiguration
+                            is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                          properties:
+                            organizationArns:
+                              description: The ARN for an Amazon Web Services Organization
+                                that you want to share your AMI with.
+                              items:
+                                type: string
+                              type: array
+                            organizationalUnitArns:
+                              description: The ARN for an Organizations organizational
+                                unit (OU) that you want to share your AMI with.
+                              items:
+                                type: string
+                              type: array
+                            userGroups:
+                              description: The name of the group.
+                              items:
+                                type: string
+                              type: array
+                            userIds:
+                              description: The AWS account ID.
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        name:
+                          description: The name of the AMI distribution configuration.
+                          type: string
+                        targetAccountIds:
+                          description: The ID of accounts to which you want to distribute
+                            an image.
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    containerDistributionConfiguration:
+                      description: ImageBuilderDistributionConfigurationContainerDistributionConfiguration
+                        is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                      properties:
+                        containerTags:
+                          description: Tags that are attached to the container distribution
+                            configuration.
+                          items:
+                            type: string
+                          type: array
+                        description:
+                          description: The description of the container distribution
+                            configuration.
+                          type: string
+                        targetRepository:
+                          description: The destination repository for the container
+                            distribution configuration.
+                          properties:
+                            repositoryName:
+                              description: The repository name of target container
+                                repository.
+                              type: string
+                            service:
+                              description: The service of target container repository.
+                              enum:
+                              - ECR
+                              type: string
+                          type: object
+                      type: object
+                    fastLaunchConfigurations:
+                      description: The Windows faster-launching configurations to
+                        use for AMI distribution.
+                      items:
+                        description: ImageBuilderDistributionConfigurationFastLaunchConfiguration
+                          is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                        properties:
+                          accountId:
+                            description: The owner account ID for the fast-launch
+                              enabled Windows AMI.
+                            type: string
+                          enabled:
+                            description: |-
+                              A Boolean that represents the current state of faster launching for the Windows AMI. Set to true to start
+                              using Windows faster launching, or false to stop using it.
+                            type: boolean
+                          launchTemplate:
+                            description: |-
+                              The launch template that the fast-launch enabled Windows AMI uses when it launches Windows instances to create
+                              pre-provisioned snapshots.
+                            properties:
+                              launchTemplateId:
+                                description: The ID of the launch template to use
+                                  for faster launching for a Windows AMI.
+                                type: string
+                              launchTemplateName:
+                                description: The name of the launch template to use
+                                  for faster launching for a Windows AMI.
+                                type: string
+                              launchTemplateVersion:
+                                description: The version of the launch template to
+                                  use for faster launching for a Windows AMI.
+                                type: string
+                            type: object
+                          maxParallelLaunches:
+                            description: The maximum number of parallel instances
+                              that are launched for creating resources.
+                            format: int64
+                            type: integer
+                          snapshotConfiguration:
+                            description: |-
+                              Configuration settings for managing the number of snapshots that are created from pre-provisioned instances
+                              for the Windows AMI when faster launching is enabled.
+                            properties:
+                              targetResourceCount:
+                                description: The number of pre-provisioned snapshots
+                                  to keep on hand for a fast-launch enabled Windows
+                                  AMI.
+                                format: int64
+                                type: integer
+                            type: object
+                        type: object
+                      type: array
+                    launchTemplateConfigurations:
+                      description: A group of launchTemplateConfiguration settings
+                        that apply to image distribution.
+                      items:
+                        description: ImageBuilderDistributionConfigurationLaunchTemplateConfiguration
+                          is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                        properties:
+                          accountId:
+                            description: The account ID that this configuration applies
+                              to.
+                            type: string
+                          launchTemplateId:
+                            description: Identifies the EC2 launch template to use.
+                            type: string
+                          setDefaultVersion:
+                            description: Set the specified EC2 launch template as
+                              the default launch template for the specified account.
+                            type: boolean
+                        type: object
+                      type: array
+                    licenseConfigurationArns:
+                      description: The License Manager Configuration to associate
+                        with the AMI in the specified Region.
+                      items:
+                        type: string
+                      type: array
+                    region:
+                      description: region
+                      type: string
+                    ssmParameterConfigurations:
+                      description: The SSM parameter configurations to use for AMI
+                        distribution.
+                      items:
+                        description: ImageBuilderDistributionConfigurationSsmParameterConfiguration
+                          is a nested property type of AWS::ImageBuilder::DistributionConfiguration.
+                        properties:
+                          amiAccountId:
+                            description: The account ID for the AMI to update the
+                              parameter with.
+                            type: string
+                          dataType:
+                            description: The data type of the SSM parameter.
+                            type: string
+                          parameterName:
+                            description: The name of the SSM parameter.
+                            type: string
+                        required:
+                        - parameterName
+                        type: object
+                      type: array
+                  required:
+                  - region
+                  type: object
+                type: array
+              name:
+                description: |-
+                  The name of the distribution configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags associated with the component.
+                type: object
+            required:
+            - distributions
+            - name
+            type: object
+          status:
+            description: ImageBuilderDistributionConfigurationStatus is the observed
+              state of AWS::ImageBuilder::DistributionConfiguration.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the distribution configuration.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderimagepipelines.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderImagePipeline
+    listKind: ImageBuilderImagePipelineList
+    plural: imagebuilderimagepipelines
+    singular: imagebuilderimagepipeline
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderImagePipeline manages AWS::ImageBuilder::ImagePipeline through the AWS Cloud Control API. Resource
+          Type definition for AWS::ImageBuilder::ImagePipeline
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderImagePipelineSpec is the desired state of AWS::ImageBuilder::ImagePipeline.
+            properties:
+              containerRecipeArn:
+                description: The Amazon Resource Name (ARN) of the container recipe
+                  that defines how images are configured and tested.
+                type: string
+              description:
+                description: The description of the image pipeline.
+                type: string
+              distributionConfigurationArn:
+                description: The Amazon Resource Name (ARN) of the distribution configuration
+                  associated with this image pipeline.
+                type: string
+              enhancedImageMetadataEnabled:
+                description: |-
+                  Collects additional information about the image being created, including the operating system (OS) version and
+                  package list.
+                type: boolean
+              executionRole:
+                description: The execution role name/ARN for the image build, if provided
+                type: string
+              imageRecipeArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the image recipe that defines how images are configured, tested, and
+                  assessed.
+                type: string
+              imageScanningConfiguration:
+                description: |-
+                  Contains settings for vulnerability scans that Amazon Inspector runs against the test instance during image
+                  creation.
+                properties:
+                  ecrConfiguration:
+                    description: Contains ECR settings for vulnerability scans.
+                    properties:
+                      containerTags:
+                        description: |-
+                          Tags for Image Builder to apply the output container image that is scanned. Tags can help you identify and
+                          manage your scanned images.
+                        items:
+                          type: string
+                        type: array
+                      repositoryName:
+                        description: |-
+                          The name of the container repository that Amazon Inspector scans to identify findings for your container
+                          images. The name includes the path for the repository location. If you don't provide this information, Image
+                          Builder creates a repository in your account named image-builder-image-scanning-repository to use for
+                          vulnerability scans for your output container images.
+                        type: string
+                    type: object
+                  imageScanningEnabled:
+                    description: |-
+                      This sets whether Image Builder keeps a snapshot of the vulnerability scans that Amazon Inspector runs against
+                      the test instance when you create a new image.
+                    type: boolean
+                type: object
+              imageTags:
+                additionalProperties:
+                  type: string
+                description: The tags to be applied to images created by this pipeline.
+                type: object
+              imageTestsConfiguration:
+                description: The image tests configuration of the image pipeline.
+                properties:
+                  imageTestsEnabled:
+                    description: Defines if tests should be executed when building
+                      this image.
+                    type: boolean
+                  timeoutMinutes:
+                    description: The maximum time in minutes that tests are permitted
+                      to run.
+                    format: int64
+                    maximum: 1440
+                    minimum: 60
+                    type: integer
+                type: object
+              infrastructureConfigurationArn:
+                description: The Amazon Resource Name (ARN) of the infrastructure
+                  configuration associated with this image pipeline.
+                type: string
+              loggingConfiguration:
+                description: The logging configuration settings for the image pipeline.
+                properties:
+                  imageLogGroupName:
+                    description: The name of the log group for image build logs.
+                    type: string
+                  pipelineLogGroupName:
+                    description: The name of the log group for pipeline execution
+                      logs.
+                    type: string
+                type: object
+              name:
+                description: |-
+                  The name of the image pipeline.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              schedule:
+                description: The schedule of the image pipeline.
+                properties:
+                  autoDisablePolicy:
+                    description: The auto-disable policy for the image pipeline.
+                    properties:
+                      failureCount:
+                        description: The number of consecutive failures after which
+                          the pipeline should be automatically disabled.
+                        format: int64
+                        minimum: 1
+                        type: integer
+                    required:
+                    - failureCount
+                    type: object
+                  pipelineExecutionStartCondition:
+                    description: The condition configures when the pipeline should
+                      trigger a new image build.
+                    enum:
+                    - EXPRESSION_MATCH_ONLY
+                    - EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE
+                    type: string
+                  scheduleExpression:
+                    description: The expression determines how often EC2 Image Builder
+                      evaluates your pipelineExecutionStartCondition.
+                    type: string
+                  timezone:
+                    description: |-
+                      The timezone that applies to the scheduling expression, for example "Etc/UTC" or "America/Los_Angeles" in IANA
+                      timezone format. If not specified, this defaults to UTC.
+                    maxLength: 100
+                    type: string
+                type: object
+              status:
+                description: The status of the image pipeline.
+                enum:
+                - DISABLED
+                - ENABLED
+                type: string
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags of this image pipeline.
+                type: object
+              workflows:
+                description: Workflows to define the image build process
+                items:
+                  description: ImageBuilderImagePipelineWorkflowConfiguration is a
+                    nested property type of AWS::ImageBuilder::ImagePipeline.
+                  properties:
+                    onFailure:
+                      description: Define execution decision in case of workflow failure
+                      enum:
+                      - CONTINUE
+                      - ABORT
+                      type: string
+                    parallelGroup:
+                      description: The parallel group name
+                      type: string
+                    parameters:
+                      description: The parameters associated with the workflow
+                      items:
+                        description: ImageBuilderImagePipelineWorkflowParameter is
+                          a nested property type of AWS::ImageBuilder::ImagePipeline.
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      type: array
+                    workflowArn:
+                      description: The Amazon Resource Name (ARN) of the workflow
+                      type: string
+                  type: object
+                type: array
+            type: object
+          status:
+            description: ImageBuilderImagePipelineStatus is the observed state of
+              AWS::ImageBuilder::ImagePipeline.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the image pipeline.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              deploymentId:
+                description: |-
+                  The deployment ID of the pipeline, used for resource create/update triggers.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderimagerecipes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderImageRecipe
+    listKind: ImageBuilderImageRecipeList
+    plural: imagebuilderimagerecipes
+    singular: imagebuilderimagerecipe
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderImageRecipe manages AWS::ImageBuilder::ImageRecipe through the AWS Cloud Control API. Resource
+          Type definition for AWS::ImageBuilder::ImageRecipe
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderImageRecipeSpec is the desired state of AWS::ImageBuilder::ImageRecipe.
+            properties:
+              additionalInstanceConfiguration:
+                description: |-
+                  Specify additional settings and launch scripts for your build instances.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  systemsManagerAgent:
+                    description: Contains settings for the SSM agent on your build
+                      instance.
+                    properties:
+                      uninstallAfterBuild:
+                        description: |-
+                          Controls whether the SSM agent is removed from your final build image, prior to creating the new AMI. If this
+                          is set to true, then the agent is removed from the final image. If it's set to false, then the agent is left
+                          in, so that it is included in the new AMI. The default value is false.
+                        type: boolean
+                    type: object
+                  userDataOverride:
+                    description: Use this property to provide commands or a command
+                      script to run when you launch your build instance.
+                    type: string
+                type: object
+              amiTags:
+                additionalProperties:
+                  type: string
+                description: |-
+                  The tags to apply to the AMI created by this image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: object
+              amiWatermarks:
+                description: |-
+                  The AMI watermark names to attach to the output AMI from this recipe. AMI watermarks are lineage markers that
+                  automatically propagate to derivative AMIs when the source AMI is copied or distributed.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              blockDeviceMappings:
+                description: |-
+                  The block device mappings to apply when creating images from this recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ImageBuilderImageRecipeInstanceBlockDeviceMapping is
+                    a nested property type of AWS::ImageBuilder::ImageRecipe.
+                  properties:
+                    deviceName:
+                      description: The device to which these mappings apply.
+                      type: string
+                    ebs:
+                      description: Use to manage Amazon EBS-specific configuration
+                        for this mapping.
+                      properties:
+                        deleteOnTermination:
+                          description: Use to configure delete on termination of the
+                            associated device.
+                          type: boolean
+                        encrypted:
+                          description: Use to configure device encryption.
+                          type: boolean
+                        iops:
+                          description: Use to configure device IOPS.
+                          format: int64
+                          type: integer
+                        kmsKeyId:
+                          description: Use to configure the KMS key to use when encrypting
+                            the device.
+                          type: string
+                        snapshotId:
+                          description: The snapshot that defines the device contents.
+                          type: string
+                        throughput:
+                          description: For GP3 volumes only - The throughput in MiB/s
+                            that the volume supports.
+                          format: int64
+                          type: integer
+                        volumeSize:
+                          description: Use to override the device's volume size.
+                          format: int64
+                          type: integer
+                        volumeType:
+                          description: Use to override the device's volume type.
+                          enum:
+                          - standard
+                          - io1
+                          - io2
+                          - io2a
+                          - gp2
+                          - gp3
+                          - gp3a
+                          - sc1
+                          - st1
+                          type: string
+                      type: object
+                    noDevice:
+                      description: Use to remove a mapping from the parent image.
+                      type: string
+                    virtualName:
+                      description: Use to manage instance ephemeral devices.
+                      type: string
+                  type: object
+                type: array
+              components:
+                description: |-
+                  The components of the image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ImageBuilderImageRecipeComponentConfiguration is a
+                    nested property type of AWS::ImageBuilder::ImageRecipe.
+                  properties:
+                    componentArn:
+                      description: The Amazon Resource Name (ARN) of the component.
+                      type: string
+                    parameters:
+                      description: A group of parameter settings that are used to
+                        configure the component for a specific recipe.
+                      items:
+                        description: ImageBuilderImageRecipeComponentParameter is
+                          a nested property type of AWS::ImageBuilder::ImageRecipe.
+                        properties:
+                          name:
+                            description: The name of the component parameter to set.
+                            type: string
+                          value:
+                            description: Sets the value for the named component parameter.
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - name
+                        - value
+                        type: object
+                      type: array
+                  type: object
+                type: array
+              description:
+                description: |-
+                  The description of the image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              name:
+                description: |-
+                  The name of the image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              parentImage:
+                description: |-
+                  The parent image of the image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: parentImage is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags of the image recipe.
+                type: object
+              version:
+                description: |-
+                  The version of the image recipe.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: version is immutable
+                  rule: self == oldSelf
+              workingDirectory:
+                description: |-
+                  The working directory to be used during build and test workflows.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            required:
+            - name
+            - parentImage
+            - version
+            type: object
+          status:
+            description: ImageBuilderImageRecipeStatus is the observed state of AWS::ImageBuilder::ImageRecipe.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the image recipe.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              latestVersion:
+                description: |-
+                  The latest version references of the image recipe.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  arn:
+                    description: The latest version ARN of the created image recipe.
+                    type: string
+                  major:
+                    description: The latest version ARN of the created image recipe,
+                      with the same major version.
+                    type: string
+                  minor:
+                    description: The latest version ARN of the created image recipe,
+                      with the same minor version.
+                    type: string
+                  patch:
+                    description: The latest version ARN of the created image recipe,
+                      with the same patch version.
+                    type: string
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderinfrastructureconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderInfrastructureConfiguration
+    listKind: ImageBuilderInfrastructureConfigurationList
+    plural: imagebuilderinfrastructureconfigurations
+    singular: imagebuilderinfrastructureconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderInfrastructureConfiguration manages AWS::ImageBuilder::InfrastructureConfiguration through the AWS
+          Cloud Control API. Resource Type definition for AWS::ImageBuilder::InfrastructureConfiguration
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderInfrastructureConfigurationSpec is the desired
+              state of AWS::ImageBuilder::InfrastructureConfiguration.
+            properties:
+              description:
+                description: The description of the infrastructure configuration.
+                type: string
+              instanceMetadataOptions:
+                description: The instance metadata option settings for the infrastructure
+                  configuration.
+                properties:
+                  httpPutResponseHopLimit:
+                    description: Limit the number of hops that an instance metadata
+                      request can traverse to reach its destination.
+                    format: int64
+                    type: integer
+                  httpTokens:
+                    description: |-
+                      Indicates whether a signed token header is required for instance metadata retrieval requests. The values
+                      affect the response as follows:
+                    enum:
+                    - required
+                    - optional
+                    type: string
+                type: object
+              instanceProfileName:
+                description: The instance profile of the infrastructure configuration.
+                type: string
+              instanceTypes:
+                description: The instance types of the infrastructure configuration.
+                items:
+                  type: string
+                type: array
+              keyPair:
+                description: The EC2 key pair of the infrastructure configuration..
+                type: string
+              logging:
+                description: The logging configuration of the infrastructure configuration.
+                properties:
+                  s3Logs:
+                    description: ImageBuilderInfrastructureConfigurationS3Logs is
+                      a nested property type of AWS::ImageBuilder::InfrastructureConfiguration.
+                    properties:
+                      s3BucketName:
+                        description: S3BucketName
+                        type: string
+                      s3KeyPrefix:
+                        description: S3KeyPrefix
+                        type: string
+                    type: object
+                type: object
+              name:
+                description: |-
+                  The name of the infrastructure configuration.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              placement:
+                description: The placement option settings for the infrastructure
+                  configuration.
+                properties:
+                  availabilityZone:
+                    description: AvailabilityZone
+                    type: string
+                  hostId:
+                    description: HostId
+                    type: string
+                  hostResourceGroupArn:
+                    description: HostResourceGroupArn
+                    type: string
+                  tenancy:
+                    description: Tenancy
+                    enum:
+                    - default
+                    - dedicated
+                    - host
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceTags:
+                additionalProperties:
+                  type: string
+                description: The tags attached to the resource created by Image Builder.
+                type: object
+              securityGroupIds:
+                description: The security group IDs of the infrastructure configuration.
+                items:
+                  type: string
+                type: array
+              snsTopicArn:
+                description: The SNS Topic Amazon Resource Name (ARN) of the infrastructure
+                  configuration.
+                type: string
+              subnetId:
+                description: The subnet ID of the infrastructure configuration.
+                type: string
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags associated with the component.
+                type: object
+              terminateInstanceOnFailure:
+                description: The terminate instance on failure configuration of the
+                  infrastructure configuration.
+                type: boolean
+            required:
+            - instanceProfileName
+            - name
+            type: object
+          status:
+            description: ImageBuilderInfrastructureConfigurationStatus is the observed
+              state of AWS::ImageBuilder::InfrastructureConfiguration.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the infrastructure configuration.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderlifecyclepolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderLifecyclePolicy
+    listKind: ImageBuilderLifecyclePolicyList
+    plural: imagebuilderlifecyclepolicies
+    singular: imagebuilderlifecyclepolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderLifecyclePolicy manages AWS::ImageBuilder::LifecyclePolicy through the AWS Cloud Control API.
+          Resource Type definition for AWS::ImageBuilder::LifecyclePolicy
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderLifecyclePolicySpec is the desired state of AWS::ImageBuilder::LifecyclePolicy.
+            properties:
+              description:
+                description: The description of the lifecycle policy.
+                type: string
+              executionRole:
+                description: The execution role of the lifecycle policy.
+                type: string
+              name:
+                description: |-
+                  The name of the lifecycle policy.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              policyDetails:
+                description: The policy details of the lifecycle policy.
+                items:
+                  description: ImageBuilderLifecyclePolicyPolicyDetail is a nested
+                    property type of AWS::ImageBuilder::LifecyclePolicy.
+                  properties:
+                    action:
+                      description: ImageBuilderLifecyclePolicyAction is a nested property
+                        type of AWS::ImageBuilder::LifecyclePolicy.
+                      properties:
+                        includeResources:
+                          description: ImageBuilderLifecyclePolicyIncludeResources
+                            is a nested property type of AWS::ImageBuilder::LifecyclePolicy.
+                          properties:
+                            amis:
+                              description: Use to configure lifecycle actions on AMIs.
+                              type: boolean
+                            containers:
+                              description: Use to configure lifecycle actions on containers.
+                              type: boolean
+                            snapshots:
+                              description: Use to configure lifecycle actions on snapshots.
+                              type: boolean
+                          type: object
+                        type:
+                          description: The action type of the policy detail.
+                          enum:
+                          - DELETE
+                          - DEPRECATE
+                          - DISABLE
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    exclusionRules:
+                      description: ImageBuilderLifecyclePolicyExclusionRules is a
+                        nested property type of AWS::ImageBuilder::LifecyclePolicy.
+                      properties:
+                        amis:
+                          description: ImageBuilderLifecyclePolicyAmiExclusionRules
+                            is a nested property type of AWS::ImageBuilder::LifecyclePolicy.
+                          properties:
+                            isPublic:
+                              description: Use to apply lifecycle policy actions on
+                                whether the AMI is public.
+                              type: boolean
+                            lastLaunched:
+                              description: Use to apply lifecycle policy actions on
+                                AMIs launched before a certain time.
+                              properties:
+                                unit:
+                                  description: The value's time unit.
+                                  enum:
+                                  - DAYS
+                                  - WEEKS
+                                  - MONTHS
+                                  - YEARS
+                                  type: string
+                                value:
+                                  description: The last launched value.
+                                  format: int64
+                                  type: integer
+                              required:
+                              - unit
+                              - value
+                              type: object
+                            regions:
+                              description: Use to apply lifecycle policy actions on
+                                AMIs distributed to a set of regions.
+                              items:
+                                type: string
+                              type: array
+                            sharedAccounts:
+                              description: Use to apply lifecycle policy actions on
+                                AMIs shared with a set of regions.
+                              items:
+                                type: string
+                              type: array
+                            tagMap:
+                              additionalProperties:
+                                type: string
+                              description: The AMIs to select by tag.
+                              type: object
+                          type: object
+                        tagMap:
+                          additionalProperties:
+                            type: string
+                          description: The Image Builder tags to filter on.
+                          type: object
+                      type: object
+                    filter:
+                      description: ImageBuilderLifecyclePolicyFilter is a nested property
+                        type of AWS::ImageBuilder::LifecyclePolicy.
+                      properties:
+                        retainAtLeast:
+                          description: The minimum number of Image Builder resources
+                            to retain.
+                          format: int64
+                          type: integer
+                        type:
+                          description: The filter type.
+                          enum:
+                          - AGE
+                          - COUNT
+                          type: string
+                        unit:
+                          description: The value's time unit.
+                          enum:
+                          - DAYS
+                          - WEEKS
+                          - MONTHS
+                          - YEARS
+                          type: string
+                        value:
+                          description: The filter value.
+                          format: int64
+                          type: integer
+                      required:
+                      - type
+                      - value
+                      type: object
+                  required:
+                  - action
+                  - filter
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceSelection:
+                description: The resource selection of the lifecycle policy.
+                properties:
+                  recipes:
+                    description: The recipes to select.
+                    items:
+                      description: ImageBuilderLifecyclePolicyRecipeSelection is a
+                        nested property type of AWS::ImageBuilder::LifecyclePolicy.
+                      properties:
+                        name:
+                          description: The recipe name.
+                          type: string
+                        semanticVersion:
+                          description: The recipe version.
+                          type: string
+                      required:
+                      - name
+                      - semanticVersion
+                      type: object
+                    type: array
+                  tagMap:
+                    additionalProperties:
+                      type: string
+                    description: The Image Builder resources to select by tag.
+                    type: object
+                type: object
+              resourceType:
+                description: The resource type of the lifecycle policy.
+                enum:
+                - AMI_IMAGE
+                - CONTAINER_IMAGE
+                type: string
+              status:
+                description: The status of the lifecycle policy.
+                enum:
+                - DISABLED
+                - ENABLED
+                type: string
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags associated with the lifecycle policy.
+                type: object
+            required:
+            - executionRole
+            - name
+            - policyDetails
+            - resourceSelection
+            - resourceType
+            type: object
+          status:
+            description: ImageBuilderLifecyclePolicyStatus is the observed state of
+              AWS::ImageBuilder::LifecyclePolicy.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the lifecycle policy.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: imagebuilderworkflows.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ImageBuilderWorkflow
+    listKind: ImageBuilderWorkflowList
+    plural: imagebuilderworkflows
+    singular: imagebuilderworkflow
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ImageBuilderWorkflow manages AWS::ImageBuilder::Workflow through the AWS Cloud Control API. Resource schema
+          for AWS::ImageBuilder::Workflow
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageBuilderWorkflowSpec is the desired state of AWS::ImageBuilder::Workflow.
+            properties:
+              changeDescription:
+                description: |-
+                  The change description of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              data:
+                description: |-
+                  The data of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 16000
+                type: string
+              description:
+                description: |-
+                  The description of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              kmsKeyId:
+                description: |-
+                  The KMS key identifier used to encrypt the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              name:
+                description: |-
+                  The name of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                additionalProperties:
+                  type: string
+                description: The tags associated with the workflow.
+                type: object
+              type:
+                description: |-
+                  The type of the workflow denotes whether the workflow is used to build, test, or distribute.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - BUILD
+                - TEST
+                - DISTRIBUTION
+                type: string
+                x-kubernetes-validations:
+                - message: type is immutable
+                  rule: self == oldSelf
+              uri:
+                description: |-
+                  The uri of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              version:
+                description: |-
+                  The version of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: version is immutable
+                  rule: self == oldSelf
+            required:
+            - name
+            - type
+            - version
+            type: object
+          status:
+            description: ImageBuilderWorkflowStatus is the observed state of AWS::ImageBuilder::Workflow.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the workflow.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              latestVersion:
+                description: |-
+                  The latest version references of the workflow.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  arn:
+                    description: The latest version ARN of the created workflow.
+                    type: string
+                  major:
+                    description: The latest version ARN of the created workflow, with
+                      the same major version.
+                    type: string
+                  minor:
+                    description: The latest version ARN of the created workflow, with
+                      the same minor version.
+                    type: string
+                  patch:
+                    description: The latest version ARN of the created workflow, with
+                      the same patch version.
+                    type: string
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,1157 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fsxdatarepositoryassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FSxDataRepositoryAssociation
+    listKind: FSxDataRepositoryAssociationList
+    plural: fsxdatarepositoryassociations
+    singular: fsxdatarepositoryassociation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FSxDataRepositoryAssociation manages AWS::FSx::DataRepositoryAssociation through the AWS Cloud Control API.
+          Resource Type definition for AWS::FSx::DataRepositoryAssociation
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FSxDataRepositoryAssociationSpec is the desired state of
+              AWS::FSx::DataRepositoryAssociation.
+            properties:
+              batchImportMetaDataOnCreate:
+                description: |-
+                  A boolean flag indicating whether an import data repository task to import metadata should run after the data
+                  repository association is created. The task runs if this flag is set to true.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              dataRepositoryPath:
+                description: |-
+                  The path to the Amazon S3 data repository that will be linked to the file system. The path can be an S3 bucket
+                  or prefix in the format s3://myBucket/myPrefix/ . This path specifies where in the S3 data repository files
+                  will be imported from or exported to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: dataRepositoryPath is immutable
+                  rule: self == oldSelf
+              fileSystemId:
+                description: |-
+                  The globally unique ID of the file system, assigned by Amazon FSx.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: fileSystemId is immutable
+                  rule: self == oldSelf
+              fileSystemPath:
+                description: |-
+                  This path specifies where in your file system files will be exported from or imported to. This file system
+                  directory can be linked to only one Amazon S3 bucket, and no other S3 bucket can be linked to the directory.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: fileSystemPath is immutable
+                  rule: self == oldSelf
+              importedFileChunkSize:
+                description: |-
+                  For files imported from a data repository, this value determines the stripe count and maximum amount of data
+                  per file (in MiB) stored on a single physical disk. The maximum number of disks that a single file can be
+                  striped across is limited by the total number of disks that make up the file system.
+                format: int64
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3:
+                description: |-
+                  The configuration for an Amazon S3 data repository linked to an Amazon FSx Lustre file system with a data
+                  repository association. The configuration defines which file events (new, changed, or deleted files or
+                  directories) are automatically imported from the linked data repository to the file system or automatically
+                  exported from the file system to the data repository.
+                properties:
+                  autoExportPolicy:
+                    description: FSxDataRepositoryAssociationAutoExportPolicy is a
+                      nested property type of AWS::FSx::DataRepositoryAssociation.
+                    properties:
+                      events:
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - events
+                    type: object
+                  autoImportPolicy:
+                    description: FSxDataRepositoryAssociationAutoImportPolicy is a
+                      nested property type of AWS::FSx::DataRepositoryAssociation.
+                    properties:
+                      events:
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - events
+                    type: object
+                type: object
+              tags:
+                description: A list of Tag values, with a maximum of 50 elements.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - dataRepositoryPath
+            - fileSystemId
+            - fileSystemPath
+            type: object
+          status:
+            description: FSxDataRepositoryAssociationStatus is the observed state
+              of AWS::FSx::DataRepositoryAssociation.
+            properties:
+              associationId:
+                description: |-
+                  The system-generated, unique ID of the data repository association.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resourceARN:
+                description: |-
+                  The Amazon Resource Name (ARN) for a given resource. ARNs uniquely identify Amazon Web Services resources. We
+                  require an ARN when you need to specify a resource unambiguously across all of Amazon Web Services. For more
+                  information, see Amazon Resource Names (ARNs) in the Amazon Web Services General Reference.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fsxs3accesspointattachments.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FSxS3AccessPointAttachment
+    listKind: FSxS3AccessPointAttachmentList
+    plural: fsxs3accesspointattachments
+    singular: fsxs3accesspointattachment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FSxS3AccessPointAttachment manages AWS::FSx::S3AccessPointAttachment through the AWS Cloud Control API.
+          Resource type definition for AWS::FSx::S3AccessPointAttachment
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FSxS3AccessPointAttachmentSpec is the desired state of AWS::FSx::S3AccessPointAttachment.
+            properties:
+              name:
+                description: |-
+                  The name of the S3 access point attachment; also used for the name of the S3 access point.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 50
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              ontapConfiguration:
+                description: |-
+                  The OntapConfiguration of the S3 access point attachment.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  fileSystemIdentity:
+                    description: The file system identity used to authorize file access
+                      requests made using the S3 access point.
+                    properties:
+                      type:
+                        description: Specifies the FSx for ONTAP user identity type,
+                          accepts either UNIX or WINDOWS.
+                        enum:
+                        - UNIX
+                        - WINDOWS
+                        type: string
+                      unixUser:
+                        description: Specifies the properties of the file system UNIX
+                          user.
+                        properties:
+                          name:
+                            description: The name of the UNIX user.
+                            maxLength: 256
+                            minLength: 1
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      windowsUser:
+                        description: Specifies the properties of the file system Windows
+                          user.
+                        properties:
+                          name:
+                            description: The name of the Windows user.
+                            maxLength: 256
+                            minLength: 1
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    required:
+                    - type
+                    type: object
+                  volumeId:
+                    description: The ID of the FSx for ONTAP volume that the S3 access
+                      point is attached to.
+                    maxLength: 23
+                    minLength: 23
+                    type: string
+                required:
+                - fileSystemIdentity
+                - volumeId
+                type: object
+              openZFSConfiguration:
+                description: |-
+                  The OpenZFSConfiguration of the S3 access point attachment.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  fileSystemIdentity:
+                    description: The file system identity used to authorize file access
+                      requests made using the S3 access point.
+                    properties:
+                      posixUser:
+                        description: Specifies the UID and GIDs of the file system
+                          POSIX user.
+                        properties:
+                          gid:
+                            description: The GID of the file system user.
+                            type: number
+                          secondaryGids:
+                            description: The list of secondary GIDs for the file system
+                              user.
+                            items:
+                              description: FSxS3AccessPointAttachmentFileSystemGID
+                                is a nested property type of AWS::FSx::S3AccessPointAttachment.
+                              properties:
+                                gid:
+                                  description: The GID of the file system user.
+                                  type: number
+                              required:
+                              - gid
+                              type: object
+                            type: array
+                          uid:
+                            description: The UID of the file system user.
+                            type: number
+                        required:
+                        - gid
+                        - uid
+                        type: object
+                      type:
+                        description: Specifies the FSx for OpenZFS user identity type,
+                          accepts only POSIX.
+                        enum:
+                        - POSIX
+                        type: string
+                    required:
+                    - posixUser
+                    - type
+                    type: object
+                  volumeId:
+                    description: The ID of the FSx for OpenZFS volume that the S3
+                      access point is attached to.
+                    maxLength: 23
+                    minLength: 23
+                    type: string
+                required:
+                - fileSystemIdentity
+                - volumeId
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3AccessPoint:
+                description: |-
+                  The S3 access point configuration of the S3 access point attachment.
+                  Create-only in AWS: changing it requires replacing the resource.
+                properties:
+                  alias:
+                    description: The S3 access point's alias.
+                    maxLength: 63
+                    type: string
+                  policy:
+                    description: The S3 access point's policy.
+                    x-kubernetes-preserve-unknown-fields: true
+                  resourceARN:
+                    description: The S3 access point's ARN.
+                    maxLength: 1024
+                    type: string
+                  vpcConfiguration:
+                    description: The S3 access point's virtual private cloud (VPC)
+                      configuration.
+                    properties:
+                      vpcId:
+                        description: Specifies the virtual private cloud (VPC) for
+                          the S3 access point VPC configuration, if one exists.
+                        maxLength: 21
+                        minLength: 12
+                        type: string
+                    required:
+                    - vpcId
+                    type: object
+                type: object
+              type:
+                description: |-
+                  The type of Amazon FSx volume that the S3 access point is attached to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - OPENZFS
+                - ONTAP
+                type: string
+                x-kubernetes-validations:
+                - message: type is immutable
+                  rule: self == oldSelf
+            required:
+            - name
+            - type
+            type: object
+          status:
+            description: FSxS3AccessPointAttachmentStatus is the observed state of
+              AWS::FSx::S3AccessPointAttachment.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              lifecycle:
+                description: |-
+                  The lifecycle status of the S3 access point attachment.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - AVAILABLE
+                - CREATING
+                - DELETING
+                - FAILED
+                - MISCONFIGURED
+                - UPDATING
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: fsxvolumes.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: FSxVolume
+    listKind: FSxVolumeList
+    plural: fsxvolumes
+    singular: fsxvolume
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FSxVolume manages AWS::FSx::Volume through the AWS Cloud Control API. Resource Type definition for
+          AWS::FSx::Volume
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FSxVolumeSpec is the desired state of AWS::FSx::Volume.
+            properties:
+              backupId:
+                description: |-
+                  Specifies the ID of the volume backup to use to create a new volume.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              name:
+                description: The name of the volume.
+                type: string
+              ontapConfiguration:
+                description: The configuration of an Amazon FSx for NetApp ONTAP volume.
+                properties:
+                  aggregateConfiguration:
+                    description: Used to specify the configuration options for an
+                      FSx for ONTAP volume's storage aggregate or aggregates.
+                    properties:
+                      aggregates:
+                        description: |-
+                          The list of aggregates that this volume resides on. Aggregates are storage pools which make up your primary
+                          storage tier.
+                        items:
+                          type: string
+                        type: array
+                      constituentsPerAggregate:
+                        description: |-
+                          Used to explicitly set the number of constituents within the FlexGroup per storage aggregate. This field is
+                          optional when creating a FlexGroup volume. If unspecified, the default value will be 8. This field cannot be
+                          provided when creating a FlexVol volume.
+                        format: int64
+                        type: integer
+                    type: object
+                  copyTagsToBackups:
+                    description: A boolean flag indicating whether tags for the volume
+                      should be copied to backups.
+                    type: string
+                  junctionPath:
+                    description: |-
+                      Specifies the location in the SVM's namespace where the volume is mounted. This parameter is required. The
+                      JunctionPath must have a leading forward slash, such as /vol3.
+                    type: string
+                  ontapVolumeType:
+                    description: 'Specifies the type of volume you are creating. Valid
+                      values are the following: RW or DP'
+                    type: string
+                  securityStyle:
+                    description: |-
+                      Specifies the security style for the volume. If a volume's security style is not specified, it is
+                      automatically set to the root volume's security style.
+                    type: string
+                  sizeInBytes:
+                    description: Specifies the configured size of the volume, in bytes.
+                    type: string
+                  sizeInMegabytes:
+                    description: Use SizeInBytes instead. Specifies the size of the
+                      volume, in megabytes (MB), that you are creating
+                    type: string
+                  snaplockConfiguration:
+                    description: The SnapLock configuration object for an FSx for
+                      ONTAP SnapLock volume.
+                    properties:
+                      auditLogVolume:
+                        description: Enables or disables the audit log volume for
+                          an FSx for ONTAP SnapLock volume
+                        type: string
+                      autocommitPeriod:
+                        description: The configuration object for setting the autocommit
+                          period of files in an FSx for ONTAP SnapLock volume.
+                        properties:
+                          type:
+                            description: |-
+                              Defines the type of time for the autocommit period of a file in an FSx for ONTAP SnapLock volume. Setting this
+                              value to NONE disables autocommit. The default value is NONE.
+                            type: string
+                          value:
+                            description: Defines the amount of time for the autocommit
+                              period of a file in an FSx for ONTAP SnapLock volume.
+                            format: int64
+                            type: integer
+                        required:
+                        - type
+                        type: object
+                      privilegedDelete:
+                        description: Enables, disables, or permanently disables privileged
+                          delete on an FSx for ONTAP SnapLock Enterprise volume.
+                        type: string
+                      retentionPeriod:
+                        description: Specifies the retention period of an FSx for
+                          ONTAP SnapLock volume.
+                        properties:
+                          defaultRetention:
+                            description: |-
+                              The retention period assigned to a write once, read many (WORM) file by default if an explicit retention
+                              period is not set for an FSx for ONTAP SnapLock volume.
+                            properties:
+                              type:
+                                description: |-
+                                  Defines the type of time for the retention period of an FSx for ONTAP SnapLock volume. Set it to one of the
+                                  valid types. If you set it to INFINITE, the files are retained forever. If you set it to UNSPECIFIED, the
+                                  files are retained until you set an explicit retention period.
+                                type: string
+                              value:
+                                description: |-
+                                  Defines the amount of time for the retention period of an FSx for ONTAP SnapLock volume. You can't set a value
+                                  for INFINITE or UNSPECIFIED.
+                                format: int64
+                                type: integer
+                            required:
+                            - type
+                            type: object
+                          maximumRetention:
+                            description: The longest retention period that can be
+                              assigned to a WORM file on an FSx for ONTAP SnapLock
+                              volume.
+                            properties:
+                              type:
+                                description: |-
+                                  Defines the type of time for the retention period of an FSx for ONTAP SnapLock volume. Set it to one of the
+                                  valid types. If you set it to INFINITE, the files are retained forever. If you set it to UNSPECIFIED, the
+                                  files are retained until you set an explicit retention period.
+                                type: string
+                              value:
+                                description: |-
+                                  Defines the amount of time for the retention period of an FSx for ONTAP SnapLock volume. You can't set a value
+                                  for INFINITE or UNSPECIFIED.
+                                format: int64
+                                type: integer
+                            required:
+                            - type
+                            type: object
+                          minimumRetention:
+                            description: The shortest retention period that can be
+                              assigned to a WORM file on an FSx for ONTAP SnapLock
+                              volume.
+                            properties:
+                              type:
+                                description: |-
+                                  Defines the type of time for the retention period of an FSx for ONTAP SnapLock volume. Set it to one of the
+                                  valid types. If you set it to INFINITE, the files are retained forever. If you set it to UNSPECIFIED, the
+                                  files are retained until you set an explicit retention period.
+                                type: string
+                              value:
+                                description: |-
+                                  Defines the amount of time for the retention period of an FSx for ONTAP SnapLock volume. You can't set a value
+                                  for INFINITE or UNSPECIFIED.
+                                format: int64
+                                type: integer
+                            required:
+                            - type
+                            type: object
+                        required:
+                        - defaultRetention
+                        - maximumRetention
+                        - minimumRetention
+                        type: object
+                      snaplockType:
+                        description: Specifies the retention mode of an FSx for ONTAP
+                          SnapLock volume. After it is set, it can't be changed.
+                        type: string
+                      volumeAppendModeEnabled:
+                        description: Enables or disables volume-append mode on an
+                          FSx for ONTAP SnapLock volume.
+                        type: string
+                    required:
+                    - snaplockType
+                    type: object
+                  snapshotPolicy:
+                    description: |-
+                      Specifies the snapshot policy for the volume. There are three built-in snapshot policies: default,
+                      default-1weekly, none.
+                    type: string
+                  storageEfficiencyEnabled:
+                    description: |-
+                      Set to true to enable deduplication, compression, and compaction storage efficiency features on the volume, or
+                      set to false to disable them.
+                    type: string
+                  storageVirtualMachineId:
+                    description: Specifies the ONTAP SVM in which to create the volume.
+                    type: string
+                  tieringPolicy:
+                    description: Describes the data tiering policy for an ONTAP volume.
+                    properties:
+                      coolingPeriod:
+                        description: |-
+                          Specifies the number of days that user data in a volume must remain inactive before it is considered "cold"
+                          and moved to the capacity pool.
+                        format: int64
+                        type: integer
+                      name:
+                        description: Specifies the tiering policy used to transition
+                          data. Default value is SNAPSHOT_ONLY.
+                        type: string
+                    type: object
+                  volumeStyle:
+                    description: Use to specify the style of an ONTAP volume.
+                    type: string
+                required:
+                - storageVirtualMachineId
+                type: object
+              openZFSConfiguration:
+                description: The configuration of an Amazon FSx for OpenZFS volume.
+                properties:
+                  copyTagsToSnapshots:
+                    description: |-
+                      A Boolean value indicating whether tags for the volume should be copied to snapshots. This value defaults to
+                      false. If this value is set to true, and you do not specify any tags, all tags for the original volume are
+                      copied over to snapshots. If this value is set to true, and you do specify one or more tags, only the
+                      specified tags for the original volume are copied over to snapshots. If you spe...
+                    type: boolean
+                  dataCompressionType:
+                    description: Specifies the method used to compress the data on
+                      the volume
+                    type: string
+                  nfsExports:
+                    description: The configuration object for mounting a Network File
+                      System (NFS) file system.
+                    items:
+                      description: FSxVolumeNfsExports is a nested property type of
+                        AWS::FSx::Volume.
+                      properties:
+                        clientConfigurations:
+                          description: The configuration object for mounting a Network
+                            File System (NFS) file system.
+                          items:
+                            description: FSxVolumeClientConfigurations is a nested
+                              property type of AWS::FSx::Volume.
+                            properties:
+                              clients:
+                                description: |-
+                                  A value that specifies who can mount the file system. You can provide a wildcard character (*), an IP address
+                                  (0.0.0.0), or a CIDR address (192.0.2.0/24). By default, Amazon FSx uses the wildcard character when
+                                  specifying the client.
+                                type: string
+                              options:
+                                description: The configuration object for mounting
+                                  a Network File System (NFS) file system.
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - clients
+                            - options
+                            type: object
+                          type: array
+                      required:
+                      - clientConfigurations
+                      type: object
+                    type: array
+                  options:
+                    description: The configuration object for mounting a Network File
+                      System (NFS) file system.
+                    items:
+                      type: string
+                    type: array
+                  originSnapshot:
+                    description: The configuration of an Amazon FSx for OpenZFS volume.
+                    properties:
+                      copyStrategy:
+                        description: The configuration object for mounting a Network
+                          File System (NFS) file system.
+                        type: string
+                      snapshotARN:
+                        description: Specifies the snapshot to use when creating an
+                          OpenZFS volume from a snapshot.
+                        type: string
+                    required:
+                    - copyStrategy
+                    - snapshotARN
+                    type: object
+                  parentVolumeId:
+                    description: The ID of the volume to use as the parent volume
+                      of the volume that you are creating.
+                    type: string
+                  readOnly:
+                    description: A Boolean value indicating whether the volume is
+                      read-only.
+                    type: boolean
+                  recordSizeKiB:
+                    description: Specifies the suggested block size for a volume in
+                      a ZFS dataset, in kibibytes (KiB).
+                    format: int64
+                    type: integer
+                  storageCapacityQuotaGiB:
+                    description: |-
+                      Sets the maximum storage size in gibibytes (GiB) for the volume. You can specify a quota that is larger than
+                      the storage on the parent volume. A volume quota limits the amount of storage that the volume can consume to
+                      the configured amount, but does not guarantee the space will be available on the parent volume. To guarantee
+                      quota space, you must also set StorageCapacityReservationGiB. To not s...
+                    format: int64
+                    type: integer
+                  storageCapacityReservationGiB:
+                    description: |-
+                      Specifies the amount of storage in gibibytes (GiB) to reserve from the parent volume. Setting
+                      StorageCapacityReservationGiB guarantees that the specified amount of storage space on the parent volume will
+                      always be available for the volume. You can't reserve more storage than the parent volume has. To not specify
+                      a storage capacity reservation, set this to 0 or -1. For more information, see Volu...
+                    format: int64
+                    type: integer
+                  userAndGroupQuotas:
+                    description: Configures how much storage users and groups can
+                      use on the volume.
+                    items:
+                      description: FSxVolumeUserAndGroupQuotas is a nested property
+                        type of AWS::FSx::Volume.
+                      properties:
+                        id:
+                          description: The ID of the user or group that the quota
+                            applies to.
+                          format: int64
+                          type: integer
+                        storageCapacityQuotaGiB:
+                          description: The user or group's storage quota, in gibibytes
+                            (GiB).
+                          format: int64
+                          type: integer
+                        type:
+                          description: Specifies whether the quota applies to a user
+                            or group.
+                          type: string
+                      required:
+                      - id
+                      - storageCapacityQuotaGiB
+                      - type
+                      type: object
+                    type: array
+                required:
+                - parentVolumeId
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: One or more tags.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              volumeType:
+                description: |-
+                  The type of the volume.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+            required:
+            - name
+            type: object
+          status:
+            description: FSxVolumeStatus is the observed state of AWS::FSx::Volume.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resourceARN:
+                description: |-
+                  Returns the volume's Amazon Resource Name (ARN).
+                  Read-only: reported by AWS after creation.
+                type: string
+              uuid:
+                description: |-
+                  Returns the volume's ID.
+                  Read-only: reported by AWS after creation.
+                type: string
+              volumeId:
+                description: |-
+                  Returns the volume's universally unique identifier (UUID).
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -21,6 +21,16 @@ import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CRDS = os.path.join(ROOT, "helm/konfig-konector/crds")
+CC_CRDS = os.path.join(ROOT, "config/crd/cloudcontrol")
+CC_KINDS = os.path.join(ROOT, "hack/gen-cloudcontrol/kinds.json")
+# CloudFormation service (lowercase) -> reference service page it belongs on.
+CC_SERVICE_ALIAS = {
+    "logs": "cloudwatchlogs", "elasticloadbalancingv2": "elbv2", "elasticloadbalancing": "elbv2",
+    "certificatemanager": "acm", "kinesisfirehose": "firehose", "opensearchservice": "opensearch",
+    "stepfunctions": "sfn", "amazonmq": "mq", "events": "eventbridge", "sso": "ssoadmin", "aps": "amp",
+    "config": "configservice", "ce": "costexplorer", "msk": "kafka", "inspectorv2": "inspector2",
+    "cognito": "cognito", "servicediscovery": "servicediscovery",
+}
 CONTROLLERS = os.path.join(ROOT, "internal/controller")
 EXAMPLES = os.path.join(ROOT, "examples")
 DOCS = os.path.join(ROOT, "web/static/docs")
@@ -63,19 +73,34 @@ MAX_DEPTH = 5
 
 
 def load_crds():
+    """Native CRDs from the Helm chart plus generated Cloud Control kinds from
+    the per-service bundles (marked generated=True with their CFN service)."""
     crds = []
-    for f in sorted(glob.glob(os.path.join(CRDS, "*.yaml"))):
-        doc = yaml.safe_load(open(f))
-        if not doc or doc.get("kind") != "CustomResourceDefinition":
-            continue
-        version = doc["spec"]["versions"][0]
-        crds.append({
-            "kind": doc["spec"]["names"]["kind"],
-            "plural": doc["spec"]["names"]["plural"],
-            "group": doc["spec"]["group"],
-            "version": version["name"],
-            "schema": version["schema"]["openAPIV3Schema"],
-        })
+    cc_service = {}
+    if os.path.exists(CC_KINDS):
+        for m in json.load(open(CC_KINDS)):
+            cc_service[m["kind"]] = (m["service"], m["typeName"])
+    files = [(f, False) for f in sorted(glob.glob(os.path.join(CRDS, "*.yaml")))]
+    files += [(f, True) for f in sorted(glob.glob(os.path.join(CC_CRDS, "*.yaml")))]
+    for f, generated in files:
+        for doc in yaml.safe_load_all(open(f)):
+            if not doc or doc.get("kind") != "CustomResourceDefinition":
+                continue
+            version = doc["spec"]["versions"][0]
+            kind = doc["spec"]["names"]["kind"]
+            entry = {
+                "kind": kind,
+                "plural": doc["spec"]["names"]["plural"],
+                "group": doc["spec"]["group"],
+                "version": version["name"],
+                "schema": version["schema"]["openAPIV3Schema"],
+                "generated": generated,
+            }
+            if generated and kind in cc_service:
+                svc, tn = cc_service[kind]
+                entry["cc_service"] = CC_SERVICE_ALIAS.get(svc, svc)
+                entry["cfn_type"] = tn
+            crds.append(entry)
     return crds
 
 
@@ -399,9 +424,15 @@ def render_service_page(service, label, kinds_data):
         anchor = kind.lower()
         props = crd["schema"].get("properties", {})
         desc = first_sentence(crd["schema"].get("description")) or f"{kind} resource."
+        if crd.get("generated"):
+            badge = (f'<span class="resource-badge" style="background:rgba(56,189,248,.15);color:var(--cyan)" '
+                     f'title="Typed kind generated from the CloudFormation schema and reconciled through the AWS Cloud Control API">'
+                     f'CLOUD CONTROL · {html.escape(crd.get("cfn_type", ""))}</span>')
+        else:
+            badge = '<span class="resource-badge">GA</span>'
         parts.append(f"""
     <section id="{anchor}" class="resource-section">
-      <h2>{kind} <a href="#{anchor}" class="anchor">#</a> <span class="resource-badge">GA</span></h2>
+      <h2>{kind} <a href="#{anchor}" class="anchor">#</a> {badge}</h2>
       <p class="resource-desc">{html.escape(desc)}</p>
       <p class="resource-desc"><code>kubectl get {crd['plural']}</code> · <a href="https://github.com/konfig-io/konfig-konector/blob/main/examples/{service}/{anchor}.yaml">example on GitHub</a></p>
 
@@ -494,7 +525,7 @@ def main():
     services = {}
     unmapped = []
     for crd in crds:
-        svc = ctrl_service.get(crd["kind"].lower())
+        svc = crd.get("cc_service") or ctrl_service.get(crd["kind"].lower())
         if not svc:
             unmapped.append(crd["kind"])
             svc = "other"

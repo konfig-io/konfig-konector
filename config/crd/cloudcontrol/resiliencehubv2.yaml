@@ -1,0 +1,1436 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: resiliencehubv2policies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ResilienceHubV2Policy
+    listKind: ResilienceHubV2PolicyList
+    plural: resiliencehubv2policies
+    singular: resiliencehubv2policy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ResilienceHubV2Policy manages AWS::ResilienceHubV2::Policy through the AWS Cloud Control API. Creates a
+          resilience policy that defines availability and disaster recovery requirements.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResilienceHubV2PolicySpec is the desired state of AWS::ResilienceHubV2::Policy.
+            properties:
+              availabilitySlo:
+                description: ResilienceHubV2PolicyAvailabilitySlo is a nested property
+                  type of AWS::ResilienceHubV2::Policy.
+                properties:
+                  target:
+                    description: Availability target percentage.
+                    type: number
+                type: object
+              dataRecovery:
+                description: ResilienceHubV2PolicyDataRecoveryTargets is a nested
+                  property type of AWS::ResilienceHubV2::Policy.
+                properties:
+                  timeBetweenBackupsInMinutes:
+                    description: Time between backups in minutes.
+                    format: int64
+                    minimum: 0
+                    type: integer
+                type: object
+              description:
+                description: The description of the policy.
+                maxLength: 615
+                type: string
+              kmsKeyId:
+                description: |-
+                  The KMS key ID for encrypting policy data.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              multiAz:
+                description: ResilienceHubV2PolicyMultiAzTargets is a nested property
+                  type of AWS::ResilienceHubV2::Policy.
+                properties:
+                  disasterRecoveryApproach:
+                    description: Multi-AZ disaster recovery approach.
+                    enum:
+                    - ACTIVE_ACTIVE
+                    - HOT_STANDBY
+                    - WARM_STANDBY
+                    - PILOT_LIGHT
+                    - BACKUP_AND_RESTORE
+                    type: string
+                  rpoInMinutes:
+                    description: Recovery Point Objective in minutes.
+                    format: int64
+                    maximum: 2147483647
+                    minimum: 0
+                    type: integer
+                  rtoInMinutes:
+                    description: Recovery Time Objective in minutes.
+                    format: int64
+                    maximum: 2147483647
+                    minimum: 0
+                    type: integer
+                type: object
+              multiRegion:
+                description: ResilienceHubV2PolicyMultiRegionTargets is a nested property
+                  type of AWS::ResilienceHubV2::Policy.
+                properties:
+                  disasterRecoveryApproach:
+                    description: Multi-Region disaster recovery approach.
+                    enum:
+                    - ACTIVE_ACTIVE
+                    - HOT_STANDBY
+                    - WARM_STANDBY
+                    - PILOT_LIGHT
+                    - BACKUP_AND_RESTORE
+                    type: string
+                  rpoInMinutes:
+                    description: Recovery Point Objective in minutes.
+                    format: int64
+                    maximum: 2147483647
+                    minimum: 0
+                    type: integer
+                  rtoInMinutes:
+                    description: Recovery Time Objective in minutes.
+                    format: int64
+                    maximum: 2147483647
+                    minimum: 0
+                    type: integer
+                type: object
+              name:
+                description: |-
+                  The name of the policy.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: Tags assigned to the policy.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: ResilienceHubV2PolicyStatus is the observed state of AWS::ResilienceHubV2::Policy.
+            properties:
+              associatedServiceCount:
+                description: |-
+                  The number of services associated with this policy.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the policy was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              policyArn:
+                description: |-
+                  The ARN of the policy.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the policy was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: resiliencehubv2servicefunctions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ResilienceHubV2ServiceFunction
+    listKind: ResilienceHubV2ServiceFunctionList
+    plural: resiliencehubv2servicefunctions
+    singular: resiliencehubv2servicefunction
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ResilienceHubV2ServiceFunction manages AWS::ResilienceHubV2::ServiceFunction through the AWS Cloud Control
+          API. Creates a service function within a Resilience Hub service.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResilienceHubV2ServiceFunctionSpec is the desired state of
+              AWS::ResilienceHubV2::ServiceFunction.
+            properties:
+              criticality:
+                description: The criticality of the service function.
+                enum:
+                - PRIMARY
+                - SUPPLEMENTAL
+                type: string
+              description:
+                description: The description of the service function.
+                maxLength: 500
+                type: string
+              name:
+                description: The name of the service function.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serviceArn:
+                description: |-
+                  The ARN of the parent service.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: serviceArn is immutable
+                  rule: self == oldSelf
+            required:
+            - criticality
+            - name
+            - serviceArn
+            type: object
+          status:
+            description: ResilienceHubV2ServiceFunctionStatus is the observed state
+              of AWS::ResilienceHubV2::ServiceFunction.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the service function was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              resourceCount:
+                description: |-
+                  The number of resources associated with this function.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+              serviceFunctionId:
+                description: |-
+                  The server-generated service function ID.
+                  Read-only: reported by AWS after creation.
+                type: string
+              source:
+                description: |-
+                  The source of the service function.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - AI_GENERATED
+                - USER
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the service function was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: resiliencehubv2services.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ResilienceHubV2Service
+    listKind: ResilienceHubV2ServiceList
+    plural: resiliencehubv2services
+    singular: resiliencehubv2service
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ResilienceHubV2Service manages AWS::ResilienceHubV2::Service through the AWS Cloud Control API. Creates a
+          resilience-managed service with associated systems, input sources, assertions, and service functions.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResilienceHubV2ServiceSpec is the desired state of AWS::ResilienceHubV2::Service.
+            properties:
+              assertions:
+                description: Assertions associated with this service.
+                items:
+                  description: ResilienceHubV2ServiceAssertionDefinition is a nested
+                    property type of AWS::ResilienceHubV2::Service.
+                  properties:
+                    text:
+                      description: The text of the assertion.
+                      maxLength: 1000
+                      minLength: 1
+                      type: string
+                  required:
+                  - text
+                  type: object
+                type: array
+              associatedSystems:
+                description: Systems associated with this service.
+                items:
+                  description: ResilienceHubV2ServiceAssociatedSystem is a nested
+                    property type of AWS::ResilienceHubV2::Service.
+                  properties:
+                    systemArn:
+                      description: The system ARN.
+                      type: string
+                    userJourneyIds:
+                      description: User journey IDs associated with this system.
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - systemArn
+                  type: object
+                type: array
+              dependencyDiscovery:
+                description: Dependency discovery state.
+                enum:
+                - ENABLED
+                - DISABLED
+                - INITIALIZING
+                type: string
+              description:
+                description: The description of the service.
+                maxLength: 615
+                type: string
+              inputSources:
+                description: Input sources for this service.
+                items:
+                  description: ResilienceHubV2ServiceInputSourceDefinition is a nested
+                    property type of AWS::ResilienceHubV2::Service.
+                  properties:
+                    resourceConfiguration:
+                      description: ResilienceHubV2ServiceResourceConfiguration is
+                        a nested property type of AWS::ResilienceHubV2::Service.
+                      properties:
+                        cfnStackArn:
+                          description: ARN of a CloudFormation stack.
+                          type: string
+                        designFileS3Url:
+                          description: S3 URL of a design file.
+                          type: string
+                        eks:
+                          description: ResilienceHubV2ServiceEksSource is a nested
+                            property type of AWS::ResilienceHubV2::Service.
+                          properties:
+                            clusterArn:
+                              description: ARN of the EKS cluster.
+                              type: string
+                            namespaces:
+                              description: EKS namespaces.
+                              items:
+                                type: string
+                              type: array
+                          required:
+                          - clusterArn
+                          - namespaces
+                          type: object
+                        resourceTags:
+                          description: Resource tags to discover resources.
+                          items:
+                            description: ResilienceHubV2ServiceResourceTag is a nested
+                              property type of AWS::ResilienceHubV2::Service.
+                            properties:
+                              key:
+                                description: Tag key.
+                                maxLength: 128
+                                minLength: 1
+                                type: string
+                              values:
+                                description: Tag values.
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - key
+                            - values
+                            type: object
+                          type: array
+                        tfStateFileUrl:
+                          description: URL of a Terraform state file.
+                          type: string
+                      type: object
+                  required:
+                  - resourceConfiguration
+                  type: object
+                type: array
+              kmsKeyId:
+                description: |-
+                  The KMS key ID for encrypting service data.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              name:
+                description: |-
+                  The name of the service.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              permissionModel:
+                description: ResilienceHubV2ServicePermissionModel is a nested property
+                  type of AWS::ResilienceHubV2::Service.
+                properties:
+                  crossAccountRoleArns:
+                    description: Cross-account role ARNs.
+                    items:
+                      description: ResilienceHubV2ServiceCrossAccountRoleConfiguration
+                        is a nested property type of AWS::ResilienceHubV2::Service.
+                      properties:
+                        crossAccountRoleArn:
+                          description: ARN of the cross-account IAM role.
+                          maxLength: 2048
+                          minLength: 20
+                          type: string
+                        externalId:
+                          description: External ID for cross-account access.
+                          type: string
+                      required:
+                      - crossAccountRoleArn
+                      type: object
+                    type: array
+                  invokerRoleName:
+                    description: Name of the invoker IAM role.
+                    type: string
+                required:
+                - invokerRoleName
+                type: object
+              policyArn:
+                description: The ARN of the resilience policy to associate.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              regions:
+                description: |-
+                  AWS regions for the service.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              reportConfiguration:
+                description: ResilienceHubV2ServiceServiceReportConfiguration is a
+                  nested property type of AWS::ResilienceHubV2::Service.
+                properties:
+                  reportOutput:
+                    description: Output destinations for generated reports.
+                    items:
+                      description: ResilienceHubV2ServiceReportOutputConfiguration
+                        is a nested property type of AWS::ResilienceHubV2::Service.
+                      properties:
+                        s3:
+                          description: ResilienceHubV2ServiceS3ReportOutputConfiguration
+                            is a nested property type of AWS::ResilienceHubV2::Service.
+                          properties:
+                            bucketOwner:
+                              description: Account ID of the bucket owner.
+                              type: string
+                            bucketPath:
+                              description: S3 bucket path where reports will be written.
+                              maxLength: 512
+                              minLength: 3
+                              type: string
+                          required:
+                          - bucketOwner
+                          - bucketPath
+                          type: object
+                      type: object
+                    type: array
+                required:
+                - reportOutput
+                type: object
+              tags:
+                description: Tags assigned to the service.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            - regions
+            type: object
+          status:
+            description: ResilienceHubV2ServiceStatus is the observed state of AWS::ResilienceHubV2::Service.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the service was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              effectivePolicyValues:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  availabilitySlo:
+                    description: ResilienceHubV2ServiceSloSource is a nested property
+                      type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        type: number
+                    type: object
+                  multiAzDrApproach:
+                    description: ResilienceHubV2ServiceDisasterRecoverySource is a
+                      nested property type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        type: string
+                    type: object
+                  multiAzRpo:
+                    description: ResilienceHubV2ServiceTargetSource is a nested property
+                      type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        format: int64
+                        type: integer
+                    type: object
+                  multiAzRto:
+                    description: ResilienceHubV2ServiceTargetSource is a nested property
+                      type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        format: int64
+                        type: integer
+                    type: object
+                  multiRegionDrApproach:
+                    description: ResilienceHubV2ServiceDisasterRecoverySource is a
+                      nested property type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        type: string
+                    type: object
+                  multiRegionRpo:
+                    description: ResilienceHubV2ServiceTargetSource is a nested property
+                      type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        format: int64
+                        type: integer
+                    type: object
+                  multiRegionRto:
+                    description: ResilienceHubV2ServiceTargetSource is a nested property
+                      type of AWS::ResilienceHubV2::Service.
+                    properties:
+                      policyName:
+                        type: string
+                      value:
+                        format: int64
+                        type: integer
+                    type: object
+                type: object
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serviceArn:
+                description: |-
+                  The ARN of the service.
+                  Read-only: reported by AWS after creation.
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the service was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: resiliencehubv2systems.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ResilienceHubV2System
+    listKind: ResilienceHubV2SystemList
+    plural: resiliencehubv2systems
+    singular: resiliencehubv2system
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ResilienceHubV2System manages AWS::ResilienceHubV2::System through the AWS Cloud Control API. Creates a system
+          that represents a logical grouping of services.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResilienceHubV2SystemSpec is the desired state of AWS::ResilienceHubV2::System.
+            properties:
+              description:
+                description: The description of the system.
+                maxLength: 500
+                type: string
+              kmsKeyId:
+                description: |-
+                  The KMS key ID for encrypting system data.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              name:
+                description: |-
+                  The name of the system.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sharingEnabled:
+                description: |-
+                  Whether the system is enabled to be shared with other members of the Organization. Only applicable if the
+                  system owner is a management account or delegated admin.
+                type: boolean
+              tags:
+                description: Tags assigned to the system.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - name
+            type: object
+          status:
+            description: ResilienceHubV2SystemStatus is the observed state of AWS::ResilienceHubV2::System.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the system was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              systemArn:
+                description: |-
+                  The ARN of the system.
+                  Read-only: reported by AWS after creation.
+                type: string
+              systemId:
+                description: |-
+                  The system ID.
+                  Read-only: reported by AWS after creation.
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the system was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: resiliencehubv2userjourneys.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ResilienceHubV2UserJourney
+    listKind: ResilienceHubV2UserJourneyList
+    plural: resiliencehubv2userjourneys
+    singular: resiliencehubv2userjourney
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ResilienceHubV2UserJourney manages AWS::ResilienceHubV2::UserJourney through the AWS Cloud Control API.
+          Creates a user journey within a Resilience Hub system.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResilienceHubV2UserJourneySpec is the desired state of AWS::ResilienceHubV2::UserJourney.
+            properties:
+              description:
+                description: The description of the user journey.
+                maxLength: 500
+                type: string
+              name:
+                description: |-
+                  The name of the user journey.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              policyArn:
+                description: The ARN of the resilience policy to associate with this
+                  user journey.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              systemIdentifier:
+                description: |-
+                  The system ARN or system ID that owns this user journey.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: systemIdentifier is immutable
+                  rule: self == oldSelf
+            required:
+            - name
+            - systemIdentifier
+            type: object
+          status:
+            description: ResilienceHubV2UserJourneyStatus is the observed state of
+              AWS::ResilienceHubV2::UserJourney.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the user journey was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the user journey was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+              userJourneyId:
+                description: |-
+                  The server-generated user journey ID.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

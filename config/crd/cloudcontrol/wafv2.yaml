@@ -1,0 +1,503 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: wafv2loggingconfigurations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: WAFv2LoggingConfiguration
+    listKind: WAFv2LoggingConfigurationList
+    plural: wafv2loggingconfigurations
+    singular: wafv2loggingconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          WAFv2LoggingConfiguration manages AWS::WAFv2::LoggingConfiguration through the AWS Cloud Control API. A WAFv2
+          Logging Configuration Resource Provider
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WAFv2LoggingConfigurationSpec is the desired state of AWS::WAFv2::LoggingConfiguration.
+            properties:
+              logDestinationConfigs:
+                description: The Amazon Resource Names (ARNs) of the logging destinations
+                  that you want to associate with the web ACL.
+                items:
+                  type: string
+                type: array
+              loggingFilter:
+                description: |-
+                  Filtering that specifies which web requests are kept in the logs and which are dropped. You can filter on the
+                  rule action and on the web request labels that were applied by matching rules during web ACL evaluation.
+                properties:
+                  defaultBehavior:
+                    description: Default handling for logs that don't match any of
+                      the specified filtering conditions.
+                    enum:
+                    - KEEP
+                    - DROP
+                    type: string
+                  filters:
+                    description: The filters that you want to apply to the logs.
+                    items:
+                      description: WAFv2LoggingConfigurationFilter is a nested property
+                        type of AWS::WAFv2::LoggingConfiguration.
+                      properties:
+                        behavior:
+                          description: How to handle logs that satisfy the filter's
+                            conditions and requirement.
+                          enum:
+                          - KEEP
+                          - DROP
+                          type: string
+                        conditions:
+                          description: Match conditions for the filter.
+                          items:
+                            description: WAFv2LoggingConfigurationCondition is a nested
+                              property type of AWS::WAFv2::LoggingConfiguration.
+                            properties:
+                              actionCondition:
+                                description: A single action condition.
+                                properties:
+                                  action:
+                                    description: |-
+                                      Logic to apply to the filtering conditions. You can specify that, in order to satisfy the filter, a log must
+                                      match all conditions or must match at least one condition.
+                                    enum:
+                                    - ALLOW
+                                    - BLOCK
+                                    - COUNT
+                                    - CAPTCHA
+                                    - CHALLENGE
+                                    - MONETIZE
+                                    - EXCLUDED_AS_COUNT
+                                    type: string
+                                required:
+                                - action
+                                type: object
+                              labelNameCondition:
+                                description: A single label name condition.
+                                properties:
+                                  labelName:
+                                    description: |-
+                                      The label name that a log record must contain in order to meet the condition. This must be a fully qualified
+                                      label name. Fully qualified labels have a prefix, optional namespaces, and label name. The prefix identifies
+                                      the rule group or web ACL context of the rule that added the label.
+                                    type: string
+                                required:
+                                - labelName
+                                type: object
+                            type: object
+                          type: array
+                        requirement:
+                          description: |-
+                            Logic to apply to the filtering conditions. You can specify that, in order to satisfy the filter, a log must
+                            match all conditions or must match at least one condition.
+                          enum:
+                          - MEETS_ALL
+                          - MEETS_ANY
+                          type: string
+                      required:
+                      - behavior
+                      - conditions
+                      - requirement
+                      type: object
+                    type: array
+                required:
+                - defaultBehavior
+                - filters
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              redactedFields:
+                description: |-
+                  The parts of the request that you want to keep out of the logs. For example, if you redact the HEADER field,
+                  the HEADER field in the firehose will be xxx.
+                items:
+                  description: WAFv2LoggingConfigurationFieldToMatch is a nested property
+                    type of AWS::WAFv2::LoggingConfiguration.
+                  properties:
+                    method:
+                      description: |-
+                        Inspect the HTTP method. The method indicates the type of operation that the request is asking the origin to
+                        perform.
+                      x-kubernetes-preserve-unknown-fields: true
+                    queryString:
+                      description: Inspect the query string. This is the part of a
+                        URL that appears after a ? character, if any.
+                      x-kubernetes-preserve-unknown-fields: true
+                    singleHeader:
+                      description: |-
+                        Inspect a single header. Provide the name of the header to inspect, for example, User-Agent or Referer. This
+                        setting isn't case sensitive.
+                      properties:
+                        name:
+                          description: The name of the query header to inspect.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    uriPath:
+                      description: |-
+                        Inspect the request URI path. This is the part of a web request that identifies a resource, for example,
+                        /images/daily-ad.jpg.
+                      x-kubernetes-preserve-unknown-fields: true
+                  type: object
+                type: array
+              resourceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the web ACL that you want to associate with LogDestinationConfigs.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: resourceArn is immutable
+                  rule: self == oldSelf
+            required:
+            - logDestinationConfigs
+            - resourceArn
+            type: object
+          status:
+            description: WAFv2LoggingConfigurationStatus is the observed state of
+              AWS::WAFv2::LoggingConfiguration.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              managedByFirewallManager:
+                description: |-
+                  Indicates whether the logging configuration was created by AWS Firewall Manager, as part of an AWS WAF policy
+                  configuration. If true, only Firewall Manager can modify or delete the configuration.
+                  Read-only: reported by AWS after creation.
+                type: boolean
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: wafv2webaclassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: WAFv2WebACLAssociation
+    listKind: WAFv2WebACLAssociationList
+    plural: wafv2webaclassociations
+    singular: wafv2webaclassociation
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          WAFv2WebACLAssociation manages AWS::WAFv2::WebACLAssociation through the AWS Cloud Control API. Associates
+          WebACL to Application Load Balancer, CloudFront or API Gateway.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WAFv2WebACLAssociationSpec is the desired state of AWS::WAFv2::WebACLAssociation.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                minLength: 20
+                type: string
+                x-kubernetes-validations:
+                - message: resourceArn is immutable
+                  rule: self == oldSelf
+              webACLArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                minLength: 20
+                type: string
+                x-kubernetes-validations:
+                - message: webACLArn is immutable
+                  rule: self == oldSelf
+            required:
+            - resourceArn
+            - webACLArn
+            type: object
+          status:
+            description: WAFv2WebACLAssociationStatus is the observed state of AWS::WAFv2::WebACLAssociation.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

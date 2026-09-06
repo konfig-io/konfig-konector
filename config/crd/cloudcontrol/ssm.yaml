@@ -1,0 +1,1806 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmcloudconnectors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMCloudConnector
+    listKind: SSMCloudConnectorList
+    plural: ssmcloudconnectors
+    singular: ssmcloudconnector
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMCloudConnector manages AWS::SSM::CloudConnector through the AWS Cloud Control API. Resource Type definition
+          for AWS::SSM::CloudConnector. Enables AWS Systems Manager to manage resources in external cloud providers.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMCloudConnectorSpec is the desired state of AWS::SSM::CloudConnector.
+            properties:
+              configConnectorArn:
+                description: |-
+                  The ARN of the AWS Config connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 512
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: configConnectorArn is immutable
+                  rule: self == oldSelf
+              configuration:
+                description: The configuration for the cloud connector.
+                properties:
+                  azureConfiguration:
+                    description: SSMCloudConnectorAzureConfiguration is a nested property
+                      type of AWS::SSM::CloudConnector.
+                    properties:
+                      applicationDisplayName:
+                        description: The display name of the Azure AD application.
+                        maxLength: 256
+                        type: string
+                      applicationId:
+                        description: The Azure AD application ID.
+                        type: string
+                      targets:
+                        description: SSMCloudConnectorConfigurationTargets is a nested
+                          property type of AWS::SSM::CloudConnector.
+                        properties:
+                          subscriptions:
+                            description: List of Azure subscriptions.
+                            items:
+                              description: SSMCloudConnectorAzureSubscription is a
+                                nested property type of AWS::SSM::CloudConnector.
+                              properties:
+                                displayName:
+                                  description: The display name of the Azure subscription.
+                                  maxLength: 128
+                                  type: string
+                                id:
+                                  description: The Azure subscription ID.
+                                  maxLength: 256
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - id
+                              type: object
+                            type: array
+                        required:
+                        - subscriptions
+                        type: object
+                      tenantDisplayName:
+                        description: The display name of the Azure AD tenant.
+                        maxLength: 256
+                        type: string
+                      tenantId:
+                        description: The Azure AD tenant ID. Cannot be changed after
+                          creation.
+                        type: string
+                    required:
+                    - applicationId
+                    - tenantId
+                    type: object
+                required:
+                - azureConfiguration
+                type: object
+              description:
+                description: The description of the cloud connector.
+                maxLength: 1024
+                type: string
+              displayName:
+                description: The display name of the cloud connector.
+                maxLength: 256
+                minLength: 1
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              roleArn:
+                description: |-
+                  The IAM role ARN used by the cloud connector.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                minLength: 20
+                type: string
+                x-kubernetes-validations:
+                - message: roleArn is immutable
+                  rule: self == oldSelf
+              tags:
+                description: Tags to apply to the cloud connector.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - configConnectorArn
+            - configuration
+            - displayName
+            - roleArn
+            type: object
+          status:
+            description: SSMCloudConnectorStatus is the observed state of AWS::SSM::CloudConnector.
+            properties:
+              cloudConnectorArn:
+                description: |-
+                  The ARN of the cloud connector.
+                  Read-only: reported by AWS after creation.
+                type: string
+              cloudConnectorId:
+                description: |-
+                  The unique identifier of the cloud connector.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: |-
+                  The timestamp when the cloud connector was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              updatedAt:
+                description: |-
+                  The timestamp when the cloud connector was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmmaintenancewindowtargets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMMaintenanceWindowTarget
+    listKind: SSMMaintenanceWindowTargetList
+    plural: ssmmaintenancewindowtargets
+    singular: ssmmaintenancewindowtarget
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMMaintenanceWindowTarget manages AWS::SSM::MaintenanceWindowTarget through the AWS Cloud Control API.
+          Resource type definition for AWS::SSM::MaintenanceWindowTarget
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMMaintenanceWindowTargetSpec is the desired state of AWS::SSM::MaintenanceWindowTarget.
+            properties:
+              description:
+                description: A description for the target.
+                type: string
+              name:
+                description: The name for the maintenance window target.
+                type: string
+              ownerInformation:
+                description: |-
+                  A user-provided value that will be included in any Amazon CloudWatch Events events that are raised while
+                  running tasks for these targets in this maintenance window.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceType:
+                description: The type of target that is being registered with the
+                  maintenance window.
+                type: string
+              targets:
+                description: The targets to register with the maintenance window.
+                items:
+                  description: SSMMaintenanceWindowTargetTargets is a nested property
+                    type of AWS::SSM::MaintenanceWindowTarget.
+                  properties:
+                    key:
+                      description: User-defined criteria for sending commands that
+                        target managed nodes that meet the criteria.
+                      type: string
+                    values:
+                      description: User-defined criteria that maps to Key.
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - key
+                  - values
+                  type: object
+                type: array
+              windowId:
+                description: |-
+                  The ID of the maintenance window to register the target with.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: windowId is immutable
+                  rule: self == oldSelf
+            required:
+            - resourceType
+            - targets
+            - windowId
+            type: object
+          status:
+            description: SSMMaintenanceWindowTargetStatus is the observed state of
+              AWS::SSM::MaintenanceWindowTarget.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              windowTargetId:
+                description: |-
+                  The ID of the target.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmmaintenancewindowtasks.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMMaintenanceWindowTask
+    listKind: SSMMaintenanceWindowTaskList
+    plural: ssmmaintenancewindowtasks
+    singular: ssmmaintenancewindowtask
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMMaintenanceWindowTask manages AWS::SSM::MaintenanceWindowTask through the AWS Cloud Control API. Resource
+          Type definition for AWS::SSM::MaintenanceWindowTask
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMMaintenanceWindowTaskSpec is the desired state of AWS::SSM::MaintenanceWindowTask.
+            properties:
+              cutoffBehavior:
+                description: |-
+                  The specification for whether tasks should continue to run after the cutoff time specified in the maintenance
+                  windows is reached.
+                type: string
+              description:
+                description: A description of the task.
+                type: string
+              loggingInfo:
+                description: Information about an Amazon S3 bucket to write Run Command
+                  task-level logs to.
+                properties:
+                  region:
+                    type: string
+                  s3Bucket:
+                    type: string
+                  s3Prefix:
+                    type: string
+                required:
+                - region
+                - s3Bucket
+                type: object
+              maxConcurrency:
+                description: The maximum number of targets this task can be run for,
+                  in parallel.
+                type: string
+              maxErrors:
+                description: The maximum number of errors allowed before this task
+                  stops being scheduled.
+                type: string
+              name:
+                description: The task name.
+                type: string
+              priority:
+                description: |-
+                  The priority of the task in the maintenance window. The lower the number, the higher the priority. Tasks that
+                  have the same priority are scheduled in parallel.
+                format: int64
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serviceRoleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the IAM service role for AWS Systems Manager to assume when running a
+                  maintenance window task.
+                type: string
+              targets:
+                description: The targets (either instances or window target ids).
+                items:
+                  description: SSMMaintenanceWindowTaskTarget is a nested property
+                    type of AWS::SSM::MaintenanceWindowTask.
+                  properties:
+                    key:
+                      type: string
+                    values:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - key
+                  - values
+                  type: object
+                type: array
+              taskArn:
+                description: The resource that the task uses during execution.
+                type: string
+              taskInvocationParameters:
+                description: |-
+                  The parameters to pass to the task when it runs. Populate only the fields that match the task type. All other
+                  fields should be empty.
+                properties:
+                  maintenanceWindowAutomationParameters:
+                    description: SSMMaintenanceWindowTaskMaintenanceWindowAutomationParameters
+                      is a nested property type of AWS::SSM::MaintenanceWindowTask.
+                    properties:
+                      documentVersion:
+                        type: string
+                      parameters:
+                        x-kubernetes-preserve-unknown-fields: true
+                    type: object
+                  maintenanceWindowLambdaParameters:
+                    description: SSMMaintenanceWindowTaskMaintenanceWindowLambdaParameters
+                      is a nested property type of AWS::SSM::MaintenanceWindowTask.
+                    properties:
+                      clientContext:
+                        type: string
+                      payload:
+                        type: string
+                      qualifier:
+                        type: string
+                    type: object
+                  maintenanceWindowRunCommandParameters:
+                    description: SSMMaintenanceWindowTaskMaintenanceWindowRunCommandParameters
+                      is a nested property type of AWS::SSM::MaintenanceWindowTask.
+                    properties:
+                      cloudWatchOutputConfig:
+                        description: SSMMaintenanceWindowTaskCloudWatchOutputConfig
+                          is a nested property type of AWS::SSM::MaintenanceWindowTask.
+                        properties:
+                          cloudWatchLogGroupName:
+                            description: The name of the CloudWatch log group where
+                              you want to send command output.
+                            type: string
+                          cloudWatchOutputEnabled:
+                            description: Enables Systems Manager to send command output
+                              to CloudWatch Logs.
+                            type: boolean
+                        type: object
+                      comment:
+                        type: string
+                      documentHash:
+                        type: string
+                      documentHashType:
+                        type: string
+                      documentVersion:
+                        type: string
+                      notificationConfig:
+                        description: SSMMaintenanceWindowTaskNotificationConfig is
+                          a nested property type of AWS::SSM::MaintenanceWindowTask.
+                        properties:
+                          notificationArn:
+                            type: string
+                          notificationEvents:
+                            items:
+                              type: string
+                            type: array
+                          notificationType:
+                            type: string
+                        required:
+                        - notificationArn
+                        type: object
+                      outputS3BucketName:
+                        type: string
+                      outputS3KeyPrefix:
+                        type: string
+                      parameters:
+                        x-kubernetes-preserve-unknown-fields: true
+                      serviceRoleArn:
+                        type: string
+                      timeoutSeconds:
+                        format: int64
+                        type: integer
+                    type: object
+                  maintenanceWindowStepFunctionsParameters:
+                    description: SSMMaintenanceWindowTaskMaintenanceWindowStepFunctionsParameters
+                      is a nested property type of AWS::SSM::MaintenanceWindowTask.
+                    properties:
+                      input:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                type: object
+              taskParameters:
+                description: The parameters to pass to the task when it runs.
+                x-kubernetes-preserve-unknown-fields: true
+              taskType:
+                description: |-
+                  The type of task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: taskType is immutable
+                  rule: self == oldSelf
+              windowId:
+                description: |-
+                  The ID of the maintenance window where the task is registered.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: windowId is immutable
+                  rule: self == oldSelf
+            required:
+            - priority
+            - taskArn
+            - taskType
+            - windowId
+            type: object
+          status:
+            description: SSMMaintenanceWindowTaskStatus is the observed state of AWS::SSM::MaintenanceWindowTask.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              windowTaskId:
+                description: |-
+                  Unique identifier of the maintenance window task.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmopsitems.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMOpsItem
+    listKind: SSMOpsItemList
+    plural: ssmopsitems
+    singular: ssmopsitem
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SSMOpsItem manages AWS::SSM::OpsItem through the AWS Cloud Control
+          API. Resource schema for AWS::SSM::OpsItem.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMOpsItemSpec is the desired state of AWS::SSM::OpsItem.
+            properties:
+              category:
+                description: The category of the OpsItem.
+                type: string
+              description:
+                description: The description of the OpsItem.
+                type: string
+              priority:
+                description: The priority of the OpsItem.
+                format: int64
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              severity:
+                description: The severity of the OpsItem.
+                type: string
+              source:
+                description: |-
+                  The origin of the OpsItem.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: source is immutable
+                  rule: self == oldSelf
+              tags:
+                description: Tags for the OpsItem.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              title:
+                description: The title of the OpsItem.
+                type: string
+            required:
+            - description
+            - source
+            - title
+            type: object
+          status:
+            description: SSMOpsItemStatus is the observed state of AWS::SSM::OpsItem.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdBy:
+                description: |-
+                  The user who created the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              createdTime:
+                description: |-
+                  The time the OpsItem was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastModifiedBy:
+                description: |-
+                  The user who last modified the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastModifiedTime:
+                description: |-
+                  The time the OpsItem was last modified.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              opsItemArn:
+                description: |-
+                  The ARN of the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              opsItemId:
+                description: |-
+                  The ID of the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              opsItemType:
+                description: |-
+                  The type of OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The status of the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+              version:
+                description: |-
+                  The version of the OpsItem.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmresourcedatasyncs.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMResourceDataSync
+    listKind: SSMResourceDataSyncList
+    plural: ssmresourcedatasyncs
+    singular: ssmresourcedatasync
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMResourceDataSync manages AWS::SSM::ResourceDataSync through the AWS Cloud Control API. Resource Type
+          definition for AWS::SSM::ResourceDataSync
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMResourceDataSyncSpec is the desired state of AWS::SSM::ResourceDataSync.
+            properties:
+              bucketName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                type: string
+              bucketPrefix:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                type: string
+              bucketRegion:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                type: string
+              kmsKeyArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 512
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3Destination:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  bucketName:
+                    maxLength: 2048
+                    minLength: 1
+                    type: string
+                  bucketPrefix:
+                    maxLength: 256
+                    type: string
+                  bucketRegion:
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                  kmsKeyArn:
+                    maxLength: 512
+                    type: string
+                  syncFormat:
+                    maxLength: 1024
+                    minLength: 1
+                    type: string
+                required:
+                - bucketName
+                - bucketRegion
+                - syncFormat
+                type: object
+              syncFormat:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 1024
+                type: string
+              syncName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: syncName is immutable
+                  rule: self == oldSelf
+              syncSource:
+                description: SSMResourceDataSyncSyncSource is a nested property type
+                  of AWS::SSM::ResourceDataSync.
+                properties:
+                  awsOrganizationsSource:
+                    description: SSMResourceDataSyncAwsOrganizationsSource is a nested
+                      property type of AWS::SSM::ResourceDataSync.
+                    properties:
+                      organizationSourceType:
+                        maxLength: 64
+                        minLength: 1
+                        type: string
+                      organizationalUnits:
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - organizationSourceType
+                    type: object
+                  includeFutureRegions:
+                    type: boolean
+                  sourceRegions:
+                    items:
+                      type: string
+                    type: array
+                  sourceType:
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                required:
+                - sourceRegions
+                - sourceType
+                type: object
+              syncType:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                type: string
+            required:
+            - syncName
+            type: object
+          status:
+            description: SSMResourceDataSyncStatus is the observed state of AWS::SSM::ResourceDataSync.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmresourcepolicies.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMResourcePolicy
+    listKind: SSMResourcePolicyList
+    plural: ssmresourcepolicies
+    singular: ssmresourcepolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMResourcePolicy manages AWS::SSM::ResourcePolicy through the AWS Cloud Control API. Resource Type definition
+          for AWS::SSM::ResourcePolicy
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMResourcePolicySpec is the desired state of AWS::SSM::ResourcePolicy.
+            properties:
+              policy:
+                description: Actual policy statement.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceArn:
+                description: |-
+                  Arn of OpsItemGroup etc.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: resourceArn is immutable
+                  rule: self == oldSelf
+            required:
+            - policy
+            - resourceArn
+            type: object
+          status:
+            description: SSMResourcePolicyStatus is the observed state of AWS::SSM::ResourcePolicy.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              policyHash:
+                description: |-
+                  A snapshot identifier for the policy over time.
+                  Read-only: reported by AWS after creation.
+                type: string
+              policyId:
+                description: |-
+                  An unique identifier within the policies of a resource.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ssmservicesettings.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: SSMServiceSetting
+    listKind: SSMServiceSettingList
+    plural: ssmservicesettings
+    singular: ssmservicesetting
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          SSMServiceSetting manages AWS::SSM::ServiceSetting through the AWS Cloud Control API. Resource Type definition
+          for AWS::SSM::ServiceSetting. ServiceSetting is an account-level setting for an AWS service that defines how a
+          user interacts with or uses a service or feature.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SSMServiceSettingSpec is the desired state of AWS::SSM::ServiceSetting.
+            properties:
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              settingId:
+                description: |-
+                  The ID of the service setting, such as /ssm/parameter-store/high-throughput-enabled.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1000
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: settingId is immutable
+                  rule: self == oldSelf
+              settingValue:
+                description: The value of the service setting.
+                maxLength: 4096
+                minLength: 1
+                type: string
+            required:
+            - settingId
+            - settingValue
+            type: object
+          status:
+            description: SSMServiceSettingStatus is the observed state of AWS::SSM::ServiceSetting.
+            properties:
+              arn:
+                description: |-
+                  The ARN of the service setting.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastModifiedDate:
+                description: |-
+                  The last time the service setting was modified.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastModifiedUser:
+                description: |-
+                  The ARN of the last modified user.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  The status of the service setting. The value can be Default, Customized or PendingUpdate.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

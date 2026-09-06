@@ -1,0 +1,673 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: invoicinginvoiceunits.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: InvoicingInvoiceUnit
+    listKind: InvoicingInvoiceUnitList
+    plural: invoicinginvoiceunits
+    singular: invoicinginvoiceunit
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          InvoicingInvoiceUnit manages AWS::Invoicing::InvoiceUnit through the AWS Cloud Control API. An invoice unit is
+          a set of mutually exclusive accounts that correspond to your business entity. Invoice units allow you to
+          separate AWS account costs and configures your invoice for each business entity.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: InvoicingInvoiceUnitSpec is the desired state of AWS::Invoicing::InvoiceUnit.
+            properties:
+              description:
+                maxLength: 500
+                type: string
+              invoiceReceiver:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 12
+                minLength: 12
+                type: string
+                x-kubernetes-validations:
+                - message: invoiceReceiver is immutable
+                  rule: self == oldSelf
+              name:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 50
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: name is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              resourceTags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              rule:
+                description: InvoicingInvoiceUnitRule is a nested property type of
+                  AWS::Invoicing::InvoiceUnit.
+                properties:
+                  linkedAccounts:
+                    items:
+                      type: string
+                    type: array
+                required:
+                - linkedAccounts
+                type: object
+              taxInheritanceDisabled:
+                type: boolean
+            required:
+            - invoiceReceiver
+            - name
+            - rule
+            type: object
+          status:
+            description: InvoicingInvoiceUnitStatus is the observed state of AWS::Invoicing::InvoiceUnit.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              invoiceUnitArn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 256
+                type: string
+              lastModified:
+                description: 'Read-only: reported by AWS after creation.'
+                type: number
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: invoicingprocurementportalpreferences.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: InvoicingProcurementPortalPreference
+    listKind: InvoicingProcurementPortalPreferenceList
+    plural: invoicingprocurementportalpreferences
+    singular: invoicingprocurementportalpreference
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          InvoicingProcurementPortalPreference manages AWS::Invoicing::ProcurementPortalPreference through the AWS Cloud
+          Control API. Creates and manages a procurement portal preference configuration for e-invoice delivery and
+          purchase order retrieval.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: InvoicingProcurementPortalPreferenceSpec is the desired state
+              of AWS::Invoicing::ProcurementPortalPreference.
+            properties:
+              buyerDomain:
+                description: |-
+                  The domain identifier for the buyer in the procurement portal.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - NetworkID
+                type: string
+                x-kubernetes-validations:
+                - message: buyerDomain is immutable
+                  rule: self == oldSelf
+              buyerIdentifier:
+                description: |-
+                  The unique identifier for the buyer in the procurement portal.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+                x-kubernetes-validations:
+                - message: buyerIdentifier is immutable
+                  rule: self == oldSelf
+              contacts:
+                description: List of contact information for portal administrators
+                  and technical contacts.
+                items:
+                  description: InvoicingProcurementPortalPreferenceContact is a nested
+                    property type of AWS::Invoicing::ProcurementPortalPreference.
+                  properties:
+                    email:
+                      description: The email address of the contact person or role.
+                      maxLength: 1024
+                      type: string
+                    name:
+                      description: The name of the contact person or role.
+                      maxLength: 1024
+                      type: string
+                  type: object
+                type: array
+              einvoiceDeliveryEnabled:
+                description: Indicates whether e-invoice delivery is enabled for this
+                  procurement portal preference.
+                type: boolean
+              einvoiceDeliveryPreference:
+                description: InvoicingProcurementPortalPreferenceEinvoiceDeliveryPreference
+                  is a nested property type of AWS::Invoicing::ProcurementPortalPreference.
+                properties:
+                  connectionTestingMethod:
+                    description: The method to use for testing the connection to the
+                      procurement portal.
+                    enum:
+                    - PROD_ENV_DOLLAR_TEST
+                    - TEST_ENV_REPLAY_TEST
+                    type: string
+                  einvoiceDeliveryActivationDate:
+                    description: The ISO 8601 date-time when e-invoice delivery should
+                      be activated.
+                    type: string
+                  einvoiceDeliveryAttachmentTypes:
+                    description: The types of attachments to include with the e-invoice
+                      delivery.
+                    items:
+                      type: string
+                    type: array
+                  einvoiceDeliveryDocumentTypes:
+                    description: The types of e-invoice documents to be delivered.
+                    items:
+                      type: string
+                    type: array
+                  protocol:
+                    description: The communication protocol to use for e-invoice delivery.
+                    enum:
+                    - CXML
+                    type: string
+                  purchaseOrderDataSources:
+                    description: The sources of purchase order data.
+                    items:
+                      description: InvoicingProcurementPortalPreferencePurchaseOrderDataSource
+                        is a nested property type of AWS::Invoicing::ProcurementPortalPreference.
+                      properties:
+                        einvoiceDeliveryDocumentType:
+                          description: The type of e-invoice document that requires
+                            purchase order data.
+                          enum:
+                          - AWS_CLOUD_INVOICE
+                          - AWS_CLOUD_CREDIT_MEMO
+                          - AWS_MARKETPLACE_INVOICE
+                          - AWS_MARKETPLACE_CREDIT_MEMO
+                          - AWS_REQUEST_FOR_PAYMENT
+                          type: string
+                        purchaseOrderDataSourceType:
+                          description: The type of source for purchase order data.
+                          enum:
+                          - ASSOCIATED_PURCHASE_ORDER_REQUIRED
+                          - PURCHASE_ORDER_NOT_REQUIRED
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              procurementPortalInstanceEndpoint:
+                description: The endpoint URL where e-invoices are delivered to the
+                  procurement portal.
+                maxLength: 1024
+                type: string
+              procurementPortalName:
+                description: |-
+                  The name of the procurement portal.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - SAP_BUSINESS_NETWORK
+                - COUPA
+                type: string
+                x-kubernetes-validations:
+                - message: procurementPortalName is immutable
+                  rule: self == oldSelf
+              procurementPortalSharedSecret:
+                description: The shared secret or authentication credential used for
+                  secure communication with the procurement portal.
+                maxLength: 1024
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              purchaseOrderRetrievalEnabled:
+                description: Indicates whether purchase order retrieval is enabled
+                  for this procurement portal preference.
+                type: boolean
+              selector:
+                description: InvoicingProcurementPortalPreferenceProcurementPortalPreferenceSelector
+                  is a nested property type of AWS::Invoicing::ProcurementPortalPreference.
+                properties:
+                  invoiceUnitArns:
+                    description: The Amazon Resource Name (ARN) of invoice unit identifiers
+                      to which this preference applies.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              supplierDomain:
+                description: |-
+                  The domain identifier for the supplier in the procurement portal.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - NetworkID
+                type: string
+                x-kubernetes-validations:
+                - message: supplierDomain is immutable
+                  rule: self == oldSelf
+              supplierIdentifier:
+                description: |-
+                  The unique identifier for the supplier in the procurement portal.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 1024
+                type: string
+                x-kubernetes-validations:
+                - message: supplierIdentifier is immutable
+                  rule: self == oldSelf
+              tags:
+                description: The tags associated with this procurement portal preference.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              testEnvPreference:
+                description: InvoicingProcurementPortalPreferenceTestEnvPreference
+                  is a nested property type of AWS::Invoicing::ProcurementPortalPreference.
+                properties:
+                  buyerDomain:
+                    description: The domain identifier for the buyer in the test environment.
+                    enum:
+                    - NetworkID
+                    type: string
+                  buyerIdentifier:
+                    description: The unique identifier for the buyer in the test environment.
+                    maxLength: 1024
+                    type: string
+                  procurementPortalInstanceEndpoint:
+                    description: The endpoint URL for e-invoice delivery in the test
+                      environment.
+                    maxLength: 1024
+                    type: string
+                  procurementPortalSharedSecret:
+                    description: The shared secret for secure communication in the
+                      test environment.
+                    maxLength: 1024
+                    type: string
+                  supplierDomain:
+                    description: The domain identifier for the supplier in the test
+                      environment.
+                    enum:
+                    - NetworkID
+                    type: string
+                  supplierIdentifier:
+                    description: The unique identifier for the supplier in the test
+                      environment.
+                    maxLength: 1024
+                    type: string
+                type: object
+            required:
+            - buyerDomain
+            - buyerIdentifier
+            - contacts
+            - einvoiceDeliveryEnabled
+            - procurementPortalName
+            - purchaseOrderRetrievalEnabled
+            - supplierDomain
+            - supplierIdentifier
+            type: object
+          status:
+            description: InvoicingProcurementPortalPreferenceStatus is the observed
+              state of AWS::Invoicing::ProcurementPortalPreference.
+            properties:
+              awsAccountId:
+                description: |-
+                  The AWS account ID associated with this procurement portal preference.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createDate:
+                description: |-
+                  The date and time when the procurement portal preference was created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              einvoiceDeliveryPreferenceStatus:
+                description: |-
+                  The current status of the e-invoice delivery preference.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - PENDING_VERIFICATION
+                - TEST_INITIALIZED
+                - TEST_INITIALIZATION_FAILED
+                - TEST_FAILED
+                - ACTIVE
+                - SUSPENDED
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              lastUpdateDate:
+                description: |-
+                  The date and time when the procurement portal preference was last updated.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              procurementPortalPreferenceArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the procurement portal preference.
+                  Read-only: reported by AWS after creation.
+                maxLength: 256
+                type: string
+              purchaseOrderRetrievalEndpoint:
+                description: |-
+                  The endpoint URL used for retrieving purchase orders from the procurement portal.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1024
+                type: string
+              purchaseOrderRetrievalPreferenceStatus:
+                description: |-
+                  The current status of the purchase order retrieval preference.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - PENDING_VERIFICATION
+                - TEST_INITIALIZED
+                - TEST_INITIALIZATION_FAILED
+                - TEST_FAILED
+                - ACTIVE
+                - SUSPENDED
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              version:
+                description: |-
+                  The version number of the procurement portal preference configuration.
+                  Read-only: reported by AWS after creation.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

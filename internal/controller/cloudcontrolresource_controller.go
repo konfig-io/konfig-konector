@@ -133,6 +133,11 @@ func (r *CloudControlResourceReconciler) pollRequest(ctx context.Context, obj *a
 		obj.Status.RequestToken, obj.Status.Operation = "", ""
 		return true, persistStatus(ctx, r.Client, obj)
 	case cctypes.OperationStatusFailed, cctypes.OperationStatusCancelComplete:
+		if obj.Status.Operation == "DELETE" && ev.ErrorCode == cctypes.HandlerErrorCodeNotFound {
+			// The resource (or its parent) is already gone: deletion is complete.
+			obj.Status.RequestToken, obj.Status.Operation = "", ""
+			return true, persistStatus(ctx, r.Client, obj)
+		}
 		msg := fmt.Sprintf("%s %s: %s (%s)", obj.Status.Operation, ev.OperationStatus, aws.ToString(ev.StatusMessage), ev.ErrorCode)
 		obj.Status.RequestToken, obj.Status.Operation = "", ""
 		if err := persistStatus(ctx, r.Client, obj); err != nil {
@@ -274,6 +279,9 @@ func (r *CloudControlResourceReconciler) deleteResource(ctx context.Context, obj
 	obj.Status.OperationStatus = string(out.ProgressEvent.OperationStatus)
 	if err := persistStatus(ctx, r.Client, obj); err != nil {
 		return false, err
+	}
+	if out.ProgressEvent.OperationStatus == cctypes.OperationStatusFailed && out.ProgressEvent.ErrorCode == cctypes.HandlerErrorCodeNotFound {
+		return true, nil
 	}
 	return out.ProgressEvent.OperationStatus == cctypes.OperationStatusSuccess, nil
 }

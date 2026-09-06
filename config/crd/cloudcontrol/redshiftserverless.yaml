@@ -1,0 +1,997 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: redshiftserverlessnamespaces.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RedshiftServerlessNamespace
+    listKind: RedshiftServerlessNamespaceList
+    plural: redshiftserverlessnamespaces
+    singular: redshiftserverlessnamespace
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RedshiftServerlessNamespace manages AWS::RedshiftServerless::Namespace through the AWS Cloud Control API.
+          Definition of AWS::RedshiftServerless::Namespace Resource Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RedshiftServerlessNamespaceSpec is the desired state of AWS::RedshiftServerless::Namespace.
+            properties:
+              adminPasswordSecretKmsKeyId:
+                description: |-
+                  The ID of the AWS Key Management Service (KMS) key used to encrypt and store the namespace's admin credentials
+                  secret. You can only use this parameter if manageAdminPassword is true.
+                type: string
+              adminUserPassword:
+                description: |-
+                  The password associated with the admin user for the namespace that is being created. Password must be at least
+                  8 characters in length, should be any printable ASCII character. Must contain at least one lowercase letter,
+                  one uppercase letter and one decimal digit. You can't use adminUserPassword if manageAdminPassword is true.
+                maxLength: 64
+                type: string
+              adminUsername:
+                description: |-
+                  The user name associated with the admin user for the namespace that is being created. Only alphanumeric
+                  characters and underscores are allowed. It should start with an alphabet.
+                type: string
+              dbName:
+                description: |-
+                  The database name associated for the namespace that is being created. Only alphanumeric characters and
+                  underscores are allowed. It should start with an alphabet.
+                maxLength: 127
+                type: string
+              defaultIamRoleArn:
+                description: The default IAM role ARN for the namespace that is being
+                  created.
+                type: string
+              finalSnapshotName:
+                description: |-
+                  The name of the namespace the source snapshot was created from. Please specify the name if needed before
+                  deleting namespace
+                maxLength: 255
+                type: string
+              finalSnapshotRetentionPeriod:
+                description: |-
+                  The number of days to retain automated snapshot in the destination region after they are copied from the
+                  source region. If the value is -1, the manual snapshot is retained indefinitely. The value must be either -1
+                  or an integer between 1 and 3,653.
+                format: int64
+                type: integer
+              iamRoles:
+                description: |-
+                  A list of AWS Identity and Access Management (IAM) roles that can be used by the namespace to access other AWS
+                  services. You must supply the IAM roles in their Amazon Resource Name (ARN) format. The Default role limit for
+                  each request is 10.
+                items:
+                  type: string
+                type: array
+              kmsKeyId:
+                description: |-
+                  The AWS Key Management Service (KMS) key ID of the encryption key that you want to use to encrypt data in the
+                  namespace.
+                type: string
+              logExports:
+                description: |-
+                  The collection of log types to be exported provided by the customer. Should only be one of the three supported
+                  log types: userlog, useractivitylog and connectionlog
+                items:
+                  type: string
+                type: array
+              manageAdminPassword:
+                description: |-
+                  If true, Amazon Redshift uses AWS Secrets Manager to manage the namespace's admin credentials. You can't use
+                  adminUserPassword if manageAdminPassword is true. If manageAdminPassword is false or not set, Amazon Redshift
+                  uses adminUserPassword for the admin user account's password.
+                type: boolean
+              namespaceName:
+                description: |-
+                  A unique identifier for the namespace. You use this identifier to refer to the namespace for any subsequent
+                  namespace operations such as deleting or modifying. All alphabetical characters must be lower case. Namespace
+                  name should be unique for all namespaces within an AWS account.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: namespaceName is immutable
+                  rule: self == oldSelf
+              namespaceResourcePolicy:
+                description: The resource policy document that will be attached to
+                  the namespace.
+                x-kubernetes-preserve-unknown-fields: true
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              redshiftIdcApplicationArn:
+                description: The ARN for the Redshift application that integrates
+                  with IAM Identity Center.
+                type: string
+              snapshotCopyConfigurations:
+                description: The snapshot copy configurations for the namespace.
+                items:
+                  description: RedshiftServerlessNamespaceSnapshotCopyConfiguration
+                    is a nested property type of AWS::RedshiftServerless::Namespace.
+                  properties:
+                    destinationKmsKeyId:
+                      type: string
+                    destinationRegion:
+                      type: string
+                    snapshotRetentionPeriod:
+                      format: int64
+                      type: integer
+                  required:
+                  - destinationRegion
+                  type: object
+                type: array
+              tags:
+                description: The list of tags for the namespace.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - namespaceName
+            type: object
+          status:
+            description: RedshiftServerlessNamespaceStatus is the observed state of
+              AWS::RedshiftServerless::Namespace.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              namespace:
+                description: |-
+                  Definition of Namespace resource.
+                  Read-only: reported by AWS after creation.
+                properties:
+                  adminPasswordSecretArn:
+                    type: string
+                  adminPasswordSecretKmsKeyId:
+                    type: string
+                  adminUsername:
+                    type: string
+                  creationDate:
+                    type: string
+                  dbName:
+                    type: string
+                  defaultIamRoleArn:
+                    type: string
+                  iamRoles:
+                    items:
+                      type: string
+                    type: array
+                  kmsKeyId:
+                    type: string
+                  logExports:
+                    items:
+                      type: string
+                    type: array
+                  namespaceArn:
+                    type: string
+                  namespaceId:
+                    type: string
+                  namespaceName:
+                    maxLength: 64
+                    type: string
+                  status:
+                    enum:
+                    - AVAILABLE
+                    - MODIFYING
+                    - DELETING
+                    type: string
+                type: object
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: redshiftserverlesssnapshots.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RedshiftServerlessSnapshot
+    listKind: RedshiftServerlessSnapshotList
+    plural: redshiftserverlesssnapshots
+    singular: redshiftserverlesssnapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RedshiftServerlessSnapshot manages AWS::RedshiftServerless::Snapshot through the AWS Cloud Control API.
+          Resource Type definition for AWS::RedshiftServerless::Snapshot Resource Type.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RedshiftServerlessSnapshotSpec is the desired state of AWS::RedshiftServerless::Snapshot.
+            properties:
+              namespaceName:
+                description: |-
+                  The namespace the snapshot is associated with.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              retentionPeriod:
+                description: The retention period of the snapshot.
+                format: int64
+                type: integer
+              snapshotName:
+                description: |-
+                  The name of the snapshot.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: snapshotName is immutable
+                  rule: self == oldSelf
+              tags:
+                description: |-
+                  An array of key-value pairs to apply to this resource.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - snapshotName
+            type: object
+          status:
+            description: RedshiftServerlessSnapshotStatus is the observed state of
+              AWS::RedshiftServerless::Snapshot.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              ownerAccount:
+                description: |-
+                  The owner account of the snapshot.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              snapshot:
+                description: |-
+                  Definition for snapshot resource
+                  Read-only: reported by AWS after creation.
+                properties:
+                  adminUsername:
+                    type: string
+                  kmsKeyId:
+                    type: string
+                  namespaceArn:
+                    type: string
+                  namespaceName:
+                    maxLength: 64
+                    type: string
+                  ownerAccount:
+                    type: string
+                  retentionPeriod:
+                    format: int64
+                    type: integer
+                  snapshotArn:
+                    type: string
+                  snapshotCreateTime:
+                    type: string
+                  snapshotName:
+                    maxLength: 64
+                    type: string
+                  status:
+                    enum:
+                    - AVAILABLE
+                    - CREATING
+                    - DELETED
+                    - CANCELLED
+                    - FAILED
+                    - COPYING
+                    type: string
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: redshiftserverlessworkgroups.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: RedshiftServerlessWorkgroup
+    listKind: RedshiftServerlessWorkgroupList
+    plural: redshiftserverlessworkgroups
+    singular: redshiftserverlessworkgroup
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          RedshiftServerlessWorkgroup manages AWS::RedshiftServerless::Workgroup through the AWS Cloud Control API.
+          Definition of AWS::RedshiftServerless::Workgroup Resource Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RedshiftServerlessWorkgroupSpec is the desired state of AWS::RedshiftServerless::Workgroup.
+            properties:
+              baseCapacity:
+                description: The base compute capacity of the workgroup in Redshift
+                  Processing Units (RPUs).
+                format: int64
+                type: integer
+              configParameters:
+                description: |-
+                  A list of parameters to set for finer control over a database. Available options are datestyle,
+                  enable_user_activity_logging, query_group, search_path, max_query_execution_time, and require_ssl.
+                items:
+                  description: RedshiftServerlessWorkgroupConfigParameter is a nested
+                    property type of AWS::RedshiftServerless::Workgroup.
+                  properties:
+                    parameterKey:
+                      maxLength: 255
+                      type: string
+                    parameterValue:
+                      maxLength: 15000
+                      type: string
+                  type: object
+                type: array
+              enhancedVpcRouting:
+                description: |-
+                  The value that specifies whether to enable enhanced virtual private cloud (VPC) routing, which forces Amazon
+                  Redshift Serverless to route traffic through your VPC.
+                type: boolean
+              maxCapacity:
+                description: The max compute capacity of the workgroup in Redshift
+                  Processing Units (RPUs).
+                format: int64
+                type: integer
+              namespaceName:
+                description: |-
+                  The namespace the workgroup is associated with.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              port:
+                description: |-
+                  The custom port to use when connecting to a workgroup. Valid port ranges are 5431-5455 and 8191-8215. The
+                  default is 5439.
+                format: int64
+                type: integer
+              pricePerformanceTarget:
+                description: A property that represents the price performance target
+                  settings for the workgroup.
+                properties:
+                  level:
+                    format: int64
+                    maximum: 100
+                    minimum: 1
+                    type: integer
+                  status:
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publiclyAccessible:
+                description: A value that specifies whether the workgroup can be accessible
+                  from a public network.
+                type: boolean
+              recoveryPointId:
+                description: |-
+                  The identifier of the recovery point to restore the namespace from. When this resource is first created, the
+                  namespace is restored from this recovery point. On subsequent updates, a restore occurs only when
+                  RecoveryPointId changes from its previous value. If the value is unchanged or removed, no restore takes place
+                  and existing data is preserved.
+                type: string
+              securityGroupIds:
+                description: A list of security group IDs to associate with the workgroup.
+                items:
+                  type: string
+                type: array
+              snapshotArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the snapshot to restore the namespace from. Specify either SnapshotArn or
+                  SnapshotName, but not both. When this resource is first created, the namespace is restored from this snapshot.
+                  On subsequent updates, a restore occurs only when SnapshotArn changes from its previous value. If the value is
+                  unchanged or removed, no restore takes place and existing data is p...
+                type: string
+              snapshotName:
+                description: |-
+                  The name of the snapshot to restore the namespace from. Because snapshot names are unique only within an
+                  account, also specify SnapshotOwnerAccount when restoring from a snapshot owned by a different account.
+                  Specify either SnapshotName or SnapshotArn, but not both. When this resource is first created, the namespace
+                  is restored from this snapshot. On subsequent updates, a restore occurs only wh...
+                type: string
+              snapshotOwnerAccount:
+                description: |-
+                  The AWS account ID that owns the snapshot. Required when restoring from a snapshot shared by another account.
+                  Used in combination with SnapshotName. On updates, changing this value while SnapshotName is set triggers a
+                  restore from the newly referenced snapshot. If the value is unchanged, no restore takes place and existing
+                  data is preserved.
+                type: string
+              subnetIds:
+                description: A list of subnet IDs the workgroup is associated with.
+                items:
+                  type: string
+                type: array
+              tags:
+                description: The map of the key-value pairs used to tag the workgroup.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              trackName:
+                maxLength: 256
+                type: string
+              workgroup:
+                description: Definition for workgroup resource
+                properties:
+                  baseCapacity:
+                    format: int64
+                    type: integer
+                  configParameters:
+                    items:
+                      description: RedshiftServerlessWorkgroupConfigParameter is a
+                        nested property type of AWS::RedshiftServerless::Workgroup.
+                      properties:
+                        parameterKey:
+                          maxLength: 255
+                          type: string
+                        parameterValue:
+                          maxLength: 15000
+                          type: string
+                      type: object
+                    type: array
+                  creationDate:
+                    type: string
+                  endpoint:
+                    description: RedshiftServerlessWorkgroupEndpoint is a nested property
+                      type of AWS::RedshiftServerless::Workgroup.
+                    properties:
+                      address:
+                        type: string
+                      port:
+                        format: int64
+                        type: integer
+                      vpcEndpoints:
+                        items:
+                          description: RedshiftServerlessWorkgroupVpcEndpoint is a
+                            nested property type of AWS::RedshiftServerless::Workgroup.
+                          properties:
+                            networkInterfaces:
+                              items:
+                                description: RedshiftServerlessWorkgroupNetworkInterface
+                                  is a nested property type of AWS::RedshiftServerless::Workgroup.
+                                properties:
+                                  availabilityZone:
+                                    type: string
+                                  networkInterfaceId:
+                                    type: string
+                                  privateIpAddress:
+                                    type: string
+                                  subnetId:
+                                    type: string
+                                type: object
+                              type: array
+                            vpcEndpointId:
+                              type: string
+                            vpcId:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  enhancedVpcRouting:
+                    type: boolean
+                  maxCapacity:
+                    format: int64
+                    type: integer
+                  namespaceName:
+                    maxLength: 64
+                    type: string
+                  pricePerformanceTarget:
+                    description: RedshiftServerlessWorkgroupPerformanceTarget is a
+                      nested property type of AWS::RedshiftServerless::Workgroup.
+                    properties:
+                      level:
+                        format: int64
+                        maximum: 100
+                        minimum: 1
+                        type: integer
+                      status:
+                        enum:
+                        - ENABLED
+                        - DISABLED
+                        type: string
+                    type: object
+                  publiclyAccessible:
+                    type: boolean
+                  securityGroupIds:
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    enum:
+                    - CREATING
+                    - AVAILABLE
+                    - MODIFYING
+                    - DELETING
+                    type: string
+                  subnetIds:
+                    items:
+                      type: string
+                    type: array
+                  trackName:
+                    maxLength: 256
+                    type: string
+                  workgroupArn:
+                    type: string
+                  workgroupId:
+                    type: string
+                  workgroupName:
+                    maxLength: 64
+                    type: string
+                type: object
+              workgroupName:
+                description: |-
+                  The name of the workgroup.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: workgroupName is immutable
+                  rule: self == oldSelf
+            required:
+            - workgroupName
+            type: object
+          status:
+            description: RedshiftServerlessWorkgroupStatus is the observed state of
+              AWS::RedshiftServerless::Workgroup.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,2300 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecsclustercapacityproviderassociations.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSClusterCapacityProviderAssociations
+    listKind: ECSClusterCapacityProviderAssociationsList
+    plural: ecsclustercapacityproviderassociations
+    singular: ecsclustercapacityproviderassociations
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ECSClusterCapacityProviderAssociations manages AWS::ECS::ClusterCapacityProviderAssociations through the AWS
+          Cloud Control API. Associate a set of ECS Capacity Providers with a specified ECS Cluster
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSClusterCapacityProviderAssociationsSpec is the desired
+              state of AWS::ECS::ClusterCapacityProviderAssociations.
+            properties:
+              capacityProviders:
+                items:
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+              cluster:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: cluster is immutable
+                  rule: self == oldSelf
+              defaultCapacityProviderStrategy:
+                items:
+                  description: ECSClusterCapacityProviderAssociationsCapacityProviderStrategy
+                    is a nested property type of AWS::ECS::ClusterCapacityProviderAssociations.
+                  properties:
+                    base:
+                      format: int64
+                      maximum: 100000
+                      minimum: 0
+                      type: integer
+                    capacityProvider:
+                      x-kubernetes-preserve-unknown-fields: true
+                    weight:
+                      format: int64
+                      maximum: 1000
+                      minimum: 0
+                      type: integer
+                  required:
+                  - capacityProvider
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - cluster
+            - defaultCapacityProviderStrategy
+            type: object
+          status:
+            description: ECSClusterCapacityProviderAssociationsStatus is the observed
+              state of AWS::ECS::ClusterCapacityProviderAssociations.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecsdaemons.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSDaemon
+    listKind: ECSDaemonList
+    plural: ecsdaemons
+    singular: ecsdaemon
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ECSDaemon manages AWS::ECS::Daemon through the AWS Cloud Control
+          API. Information about a daemon resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSDaemonSpec is the desired state of AWS::ECS::Daemon.
+            properties:
+              capacityProviderArns:
+                description: The Amazon Resource Names (ARNs) of the capacity providers
+                  associated with the daemon.
+                items:
+                  type: string
+                type: array
+              clusterArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the cluster that the daemon is running in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              daemonName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              daemonTaskDefinitionArn:
+                description: The Amazon Resource Name (ARN) of the daemon task definition
+                  used by this revision.
+                type: string
+              deploymentConfiguration:
+                description: The deployment configuration used for this daemon deployment.
+                properties:
+                  alarms:
+                    description: |-
+                      The CloudWatch alarm configuration for the daemon deployment. When alarms are triggered during a deployment,
+                      the deployment can be automatically rolled back.
+                    properties:
+                      alarmNames:
+                        description: The CloudWatch alarm names to monitor during
+                          a daemon deployment.
+                        items:
+                          type: string
+                        type: array
+                      enable:
+                        description: |-
+                          Determines whether to use the CloudWatch alarm option in the daemon deployment process. The default value is
+                          ``false``.
+                        type: boolean
+                    type: object
+                  bakeTimeInMinutes:
+                    description: |-
+                      The amount of time (in minutes) to wait after a successful deployment step before proceeding. This allows time
+                      to monitor for issues before continuing. The default value is 0.
+                    format: int64
+                    maximum: 1440
+                    minimum: 0
+                    type: integer
+                  drainPercent:
+                    description: |-
+                      The percentage of container instances to drain simultaneously during a daemon deployment. Valid values are
+                      between 0.0 and 100.0.
+                    type: number
+                type: object
+              enableECSManagedTags:
+                description: Specifies whether Amazon ECS managed tags are turned
+                  on for the daemon tasks.
+                type: boolean
+              enableExecuteCommand:
+                description: Specifies whether the execute command functionality is
+                  turned on for the daemon tasks.
+                type: boolean
+              propagateTags:
+                description: Specifies whether tags are propagated from the daemon
+                  to the daemon tasks.
+                enum:
+                - DAEMON
+                - NONE
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: ECSDaemonStatus is the observed state of AWS::ECS::Daemon.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              daemonArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              daemonStatus:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - ACTIVE
+                - DELETE_IN_PROGRESS
+                type: string
+              deploymentArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              updatedAt:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecsdaemontaskdefinitions.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSDaemonTaskDefinition
+    listKind: ECSDaemonTaskDefinitionList
+    plural: ecsdaemontaskdefinitions
+    singular: ecsdaemontaskdefinition
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ECSDaemonTaskDefinition manages AWS::ECS::DaemonTaskDefinition through the AWS Cloud Control API. The details
+          of a daemon task definition. A daemon task definition is a template that describes the containers that form a
+          daemon. Daemons deploy cross-cutting software agents independently across your Amazon ECS infrastructure.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSDaemonTaskDefinitionSpec is the desired state of AWS::ECS::DaemonTaskDefinition.
+            properties:
+              containerDefinitions:
+                description: |-
+                  A list of container definitions in JSON format that describe the containers that make up the daemon task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ECSDaemonTaskDefinitionDaemonContainerDefinition is
+                    a nested property type of AWS::ECS::DaemonTaskDefinition.
+                  properties:
+                    command:
+                      description: The command that's passed to the container.
+                      items:
+                        type: string
+                      type: array
+                    cpu:
+                      description: The number of ``cpu`` units reserved for the container.
+                      format: int64
+                      type: integer
+                    dependsOn:
+                      description: |-
+                        The dependencies defined for container startup and shutdown. A container can contain multiple dependencies on
+                        other containers in a task definition.
+                      items:
+                        description: ECSDaemonTaskDefinitionContainerDependency is
+                          a nested property type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          condition:
+                            description: |-
+                              The dependency condition of the container. The following are the available conditions and their behavior: +
+                              ``START`` - This condition emulates the behavior of links and volumes today. It validates that a dependent
+                              container is started before permitting other containers to start. + ``COMPLETE`` - This condition validates
+                              that a dependent container runs to completion (exits) before permitting ot...
+                            type: string
+                          containerName:
+                            description: The name of a container.
+                            type: string
+                        type: object
+                      type: array
+                    entryPoint:
+                      description: The entry point that's passed to the container.
+                      items:
+                        type: string
+                      type: array
+                    environment:
+                      description: The environment variables to pass to a container.
+                      items:
+                        description: ECSDaemonTaskDefinitionKeyValuePair is a nested
+                          property type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          name:
+                            description: The name of the key-value pair. For environment
+                              variables, this is the name of the environment variable.
+                            type: string
+                          value:
+                            description: The value of the key-value pair. For environment
+                              variables, this is the value of the environment variable.
+                            type: string
+                        type: object
+                      type: array
+                    environmentFiles:
+                      description: A list of files containing the environment variables
+                        to pass to a container.
+                      items:
+                        description: ECSDaemonTaskDefinitionEnvironmentFile is a nested
+                          property type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          type:
+                            description: The file type to use. Environment files are
+                              objects in Amazon S3. The only supported value is ``s3``.
+                            type: string
+                          value:
+                            description: The Amazon Resource Name (ARN) of the Amazon
+                              S3 object containing the environment variable file.
+                            type: string
+                        type: object
+                      type: array
+                    essential:
+                      description: |-
+                        If the ``essential`` parameter of a container is marked as ``true``, and that container fails or stops for any
+                        reason, all other containers that are part of the task are stopped.
+                      type: boolean
+                    firelensConfiguration:
+                      description: |-
+                        The FireLens configuration for the container. This is used to specify and configure a log router for container
+                        logs.
+                      properties:
+                        options:
+                          additionalProperties:
+                            type: string
+                          description: |-
+                            The options to use when configuring the log router. This field is optional and can be used to specify a custom
+                            configuration file or to add additional metadata, such as the task, task definition, cluster, and container
+                            instance details to the log event. If specified, the syntax to use is
+                            ``"options":{"enable-ecs-log-metadata":"true|false","config-file-type:"s3|file","config-file-value":"arn:aws...
+                          type: object
+                        type:
+                          description: The log router to use. The valid values are
+                            ``fluentd`` or ``fluentbit``.
+                          type: string
+                      type: object
+                    healthCheck:
+                      description: The container health check command and associated
+                        configuration parameters for the container.
+                      properties:
+                        command:
+                          description: |-
+                            A string array representing the command that the container runs to determine if it is healthy. The string
+                            array must start with ``CMD`` to run the command arguments directly, or ``CMD-SHELL`` to run the command with
+                            the container's default shell. When you use the AWS Management Console JSON panel, the CLIlong, or the APIs,
+                            enclose the list of commands in double quotes and brackets. ``[ "CMD-SHE...
+                          items:
+                            type: string
+                          type: array
+                        interval:
+                          description: |-
+                            The time period in seconds between each health check execution. You may specify between 5 and 300 seconds. The
+                            default value is 30 seconds. This value applies only when you specify a ``command``.
+                          format: int64
+                          type: integer
+                        retries:
+                          description: |-
+                            The number of times to retry a failed health check before the container is considered unhealthy. You may
+                            specify between 1 and 10 retries. The default value is 3. This value applies only when you specify a
+                            ``command``.
+                          format: int64
+                          type: integer
+                        startPeriod:
+                          description: |-
+                            The optional grace period to provide containers time to bootstrap before failed health checks count towards
+                            the maximum number of retries. You can specify between 0 and 300 seconds. By default, the ``startPeriod`` is
+                            off. This value applies only when you specify a ``command``. If a health check succeeds within the
+                            ``startPeriod``, then the container is considered healthy and any subsequent fail...
+                          format: int64
+                          type: integer
+                        timeout:
+                          description: |-
+                            The time period in seconds to wait for a health check to succeed before it is considered a failure. You may
+                            specify between 2 and 60 seconds. The default value is 5. This value applies only when you specify a
+                            ``command``.
+                          format: int64
+                          type: integer
+                      type: object
+                    image:
+                      description: |-
+                        The image used to start the container. This string is passed directly to the Docker daemon. Images in the
+                        Docker Hub registry are available by default. Other repositories are specified with either
+                        ``repository-url/image:tag`` or ``repository-url/image@digest``.
+                      type: string
+                    interactive:
+                      description: |-
+                        When this parameter is ``true``, you can deploy containerized applications that require ``stdin`` or a ``tty``
+                        to be allocated.
+                      type: boolean
+                    linuxParameters:
+                      description: |-
+                        Linux-specific modifications that are applied to the container configuration, such as Linux kernel
+                        capabilities.
+                      properties:
+                        capabilities:
+                          description: |-
+                            The Linux capabilities for the container that are added to or dropped from the default configuration provided
+                            by Docker. For tasks that use the Fargate launch type, ``capabilities`` is supported for all platform versions
+                            but the ``add`` parameter is only supported if using platform version 1.4.0 or later.
+                          properties:
+                            add:
+                              description: |-
+                                The Linux capabilities for the container that have been added to the default configuration provided by Docker.
+                                This parameter maps to ``CapAdd`` in the docker container create command and the ``--cap-add`` option to
+                                docker run. Tasks launched on FARGATElong only support adding the ``SYS_PTRACE`` kernel capability. Valid
+                                values: ``"ALL" | "AUDIT_CONTROL" | "AUDIT_WRITE" | "BLOCK_SUSPEND" | "CHOW...
+                              items:
+                                type: string
+                              type: array
+                            drop:
+                              description: |-
+                                The Linux capabilities for the container that have been removed from the default configuration provided by
+                                Docker. This parameter maps to ``CapDrop`` in the docker container create command and the ``--cap-drop``
+                                option to docker run. Valid values: ``"ALL" | "AUDIT_CONTROL" | "AUDIT_WRITE" | "BLOCK_SUSPEND" | "CHOWN" |
+                                "DAC_OVERRIDE" | "DAC_READ_SEARCH" | "FOWNER" | "FSETID" | "IPC_LOCK" | "IPC_...
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        devices:
+                          description: |-
+                            Any host devices to expose to the container. This parameter maps to ``Devices`` in the docker container create
+                            command and the ``--device`` option to docker run. If you're using tasks that use the Fargate launch type, the
+                            ``devices`` parameter isn't supported.
+                          items:
+                            description: ECSDaemonTaskDefinitionDevice is a nested
+                              property type of AWS::ECS::DaemonTaskDefinition.
+                            properties:
+                              containerPath:
+                                description: The path inside the container at which
+                                  to expose the host device.
+                                type: string
+                              hostPath:
+                                description: The path for the device on the host container
+                                  instance.
+                                type: string
+                              permissions:
+                                description: |-
+                                  The explicit permissions to provide to the container for the device. By default, the container has permissions
+                                  for ``read``, ``write``, and ``mknod`` for the device.
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                          type: array
+                        initProcessEnabled:
+                          description: |-
+                            Run an ``init`` process inside the container that forwards signals and reaps processes. This parameter maps to
+                            the ``--init`` option to docker run. This parameter requires version 1.25 of the Docker Remote API or greater
+                            on your container instance. To check the Docker Remote API version on your container instance, log in to your
+                            container instance and run the following command: ``sudo docker ve...
+                          type: boolean
+                        tmpfs:
+                          description: |-
+                            The container path, mount options, and size (in MiB) of the tmpfs mount. This parameter maps to the
+                            ``--tmpfs`` option to docker run.
+                          items:
+                            description: ECSDaemonTaskDefinitionTmpfs is a nested
+                              property type of AWS::ECS::DaemonTaskDefinition.
+                            properties:
+                              containerPath:
+                                description: The absolute file path where the tmpfs
+                                  volume is to be mounted.
+                                type: string
+                              mountOptions:
+                                description: |-
+                                  The list of tmpfs volume mount options. Valid values: ``"defaults" | "ro" | "rw" | "suid" | "nosuid" | "dev" |
+                                  "nodev" | "exec" | "noexec" | "sync" | "async" | "dirsync" | "remount" | "mand" | "nomand" | "atime" |
+                                  "noatime" | "diratime" | "nodiratime" | "bind" | "rbind" | "unbindable" | "runbindable" | "private" |
+                                  "rprivate" | "shared" | "rshared" | "slave" | "rslave" | "relatime" | "norelatime...
+                                items:
+                                  type: string
+                                type: array
+                              size:
+                                description: The maximum size (in MiB) of the tmpfs
+                                  volume.
+                                format: int64
+                                type: integer
+                            required:
+                            - size
+                            type: object
+                          type: array
+                      type: object
+                    logConfiguration:
+                      description: The log configuration specification for the container.
+                      properties:
+                        logDriver:
+                          description: |-
+                            The log driver to use for the container. For tasks on FARGATElong, the supported log drivers are ``awslogs``,
+                            ``splunk``, and ``awsfirelens``. For tasks hosted on Amazon EC2 instances, the supported log drivers are
+                            ``awslogs``, ``fluentd``, ``gelf``, ``json-file``, ``journald``, ``syslog``, ``splunk``, and ``awsfirelens``.
+                            For more information about using the ``awslogs`` log driver, see [Send A...
+                          type: string
+                        options:
+                          additionalProperties:
+                            type: string
+                          description: |-
+                            The configuration options to send to the log driver. The options you can specify depend on the log driver.
+                            Some of the options you can specify when you use the ``awslogs`` log driver to route logs to Amazon CloudWatch
+                            include the following: + awslogs-create-group Required: No Specify whether you want the log group to be
+                            created automatically. If this option isn't specified, it defaults to false...
+                          type: object
+                        secretOptions:
+                          description: |-
+                            The secrets to pass to the log configuration. For more information, see [Specifying sensitive
+                            data](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html) in the
+                            *Amazon Elastic Container Service Developer Guide*.
+                          items:
+                            description: ECSDaemonTaskDefinitionSecret is a nested
+                              property type of AWS::ECS::DaemonTaskDefinition.
+                            properties:
+                              name:
+                                description: The name of the secret.
+                                type: string
+                              valueFrom:
+                                description: |-
+                                  The secret to expose to the container. The supported values are either the full ARN of the ASMlong secret or
+                                  the full ARN of the parameter in the SSM Parameter Store. For information about the require IAMlong
+                                  permissions, see [Required IAM permissions for Amazon ECS
+                                  secrets](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data-secrets.html#secrets-iam)
+                                  (for Secr...
+                                type: string
+                            required:
+                            - name
+                            - valueFrom
+                            type: object
+                          type: array
+                      required:
+                      - logDriver
+                      type: object
+                    memory:
+                      description: |-
+                        The amount (in MiB) of memory to present to the container. If the container attempts to exceed the memory
+                        specified here, the container is killed.
+                      format: int64
+                      type: integer
+                    memoryReservation:
+                      description: The soft limit (in MiB) of memory to reserve for
+                        the container.
+                      format: int64
+                      type: integer
+                    mountPoints:
+                      description: The mount points for data volumes in your container.
+                      items:
+                        description: ECSDaemonTaskDefinitionMountPoint is a nested
+                          property type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          containerPath:
+                            description: The path on the container to mount the host
+                              volume at.
+                            type: string
+                          readOnly:
+                            description: |-
+                              If this value is ``true``, the container has read-only access to the volume. If this value is ``false``, then
+                              the container can write to the volume. The default value is ``false``.
+                            type: boolean
+                          sourceVolume:
+                            description: |-
+                              The name of the volume to mount. Must be a volume name referenced in the ``name`` parameter of task definition
+                              ``volume``.
+                            type: string
+                        type: object
+                      type: array
+                    name:
+                      description: |-
+                        The name of the container. Up to 255 letters (uppercase and lowercase), numbers, underscores, and hyphens are
+                        allowed.
+                      type: string
+                    privileged:
+                      description: |-
+                        When this parameter is true, the container is given elevated privileges on the host container instance
+                        (similar to the ``root`` user).
+                      type: boolean
+                    pseudoTerminal:
+                      description: When this parameter is ``true``, a TTY is allocated.
+                      type: boolean
+                    readonlyRootFilesystem:
+                      description: When this parameter is true, the container is given
+                        read-only access to its root file system.
+                      type: boolean
+                    repositoryCredentials:
+                      description: The private repository authentication credentials
+                        to use.
+                      properties:
+                        credentialsParameter:
+                          description: |-
+                            The Amazon Resource Name (ARN) of the secret containing the private repository credentials. When you use the
+                            Amazon ECS API, CLI, or AWS SDK, if the secret exists in the same Region as the task that you're launching
+                            then you can use either the full ARN or the name of the secret. When you use the AWS Management Console, you
+                            must specify the full ARN of the secret.
+                          type: string
+                      type: object
+                    restartPolicy:
+                      description: |-
+                        The restart policy for the container. When you set up a restart policy, Amazon ECS can restart the container
+                        without needing to replace the task.
+                      properties:
+                        enabled:
+                          type: boolean
+                        ignoredExitCodes:
+                          items:
+                            format: int64
+                            type: integer
+                          type: array
+                        restartAttemptPeriod:
+                          format: int64
+                          type: integer
+                      type: object
+                    secrets:
+                      description: The secrets to pass to the container.
+                      items:
+                        description: ECSDaemonTaskDefinitionSecret is a nested property
+                          type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          name:
+                            description: The name of the secret.
+                            type: string
+                          valueFrom:
+                            description: |-
+                              The secret to expose to the container. The supported values are either the full ARN of the ASMlong secret or
+                              the full ARN of the parameter in the SSM Parameter Store. For information about the require IAMlong
+                              permissions, see [Required IAM permissions for Amazon ECS
+                              secrets](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data-secrets.html#secrets-iam)
+                              (for Secr...
+                            type: string
+                        required:
+                        - name
+                        - valueFrom
+                        type: object
+                      type: array
+                    startTimeout:
+                      description: Time duration (in seconds) to wait before giving
+                        up on resolving dependencies for a container.
+                      format: int64
+                      type: integer
+                    stopTimeout:
+                      description: |-
+                        Time duration (in seconds) to wait before the container is forcefully killed if it doesn't exit normally on
+                        its own.
+                      format: int64
+                      type: integer
+                    systemControls:
+                      description: A list of namespaced kernel parameters to set in
+                        the container.
+                      items:
+                        description: ECSDaemonTaskDefinitionSystemControl is a nested
+                          property type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          namespace:
+                            description: The namespaced kernel parameter to set a
+                              ``value`` for.
+                            type: string
+                          value:
+                            description: |-
+                              The namespaced kernel parameter to set a ``value`` for. Valid IPC namespace values: ``"kernel.msgmax" |
+                              "kernel.msgmnb" | "kernel.msgmni" | "kernel.sem" | "kernel.shmall" | "kernel.shmmax" | "kernel.shmmni" |
+                              "kernel.shm_rmid_forced"``, and ``Sysctls`` that start with ``"fs.mqueue.*"`` Valid network namespace values:
+                              ``Sysctls`` that start with ``"net.*"``. Only namespaced ``Sysctls`` that exis...
+                            type: string
+                        type: object
+                      type: array
+                    ulimits:
+                      description: A list of ``ulimits`` to set in the container.
+                      items:
+                        description: ECSDaemonTaskDefinitionUlimit is a nested property
+                          type of AWS::ECS::DaemonTaskDefinition.
+                        properties:
+                          hardLimit:
+                            description: |-
+                              The hard limit for the ``ulimit`` type. The value can be specified in bytes, seconds, or as a count, depending
+                              on the ``type`` of the ``ulimit``.
+                            format: int64
+                            type: integer
+                          name:
+                            description: The ``type`` of the ``ulimit``.
+                            type: string
+                          softLimit:
+                            description: |-
+                              The soft limit for the ``ulimit`` type. The value can be specified in bytes, seconds, or as a count, depending
+                              on the ``type`` of the ``ulimit``.
+                            format: int64
+                            type: integer
+                        required:
+                        - hardLimit
+                        - name
+                        - softLimit
+                        type: object
+                      type: array
+                    user:
+                      description: The user to use inside the container.
+                      type: string
+                    workingDirectory:
+                      description: The working directory to run commands inside the
+                        container in.
+                      type: string
+                  required:
+                  - image
+                  - name
+                  type: object
+                type: array
+              cpu:
+                description: |-
+                  The number of CPU units used by the daemon task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              executionRoleArn:
+                description: |-
+                  The Amazon Resource Name (ARN) of the task execution role that grants the Amazon ECS container agent
+                  permission to make Amazon Web Services API calls on your behalf.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              family:
+                description: |-
+                  The name of a family that this daemon task definition is registered to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              ipcMode:
+                description: |-
+                  The IPC namespace mode for the daemon. The valid values are ``none`` and ``shared``. The default is ``none``.
+                  If ``none`` is specified or no value is provided, the daemon runs with its own IPC namespace, isolated from
+                  other tasks. If ``shared`` is specified, the daemon joins the host IPC namespace, making it accessible to
+                  non-daemon tasks that use ``ipcMode: "host"`` or other daemons that use `...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              memory:
+                description: |-
+                  The amount of memory (in MiB) used by the daemon task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              pidMode:
+                description: |-
+                  The PID namespace mode for the daemon. The valid values are ``none`` and ``shared``. The default is ``none``.
+                  If ``none`` is specified or no value is provided, the daemon runs with its own PID namespace, isolated from
+                  other tasks. If ``shared`` is specified, the daemon joins the host PID namespace, making it accessible to
+                  non-daemon tasks that use ``pidMode: "host"`` or other daemons that use `...
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              taskRoleArn:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the IAM role that grants containers in the daemon task
+                  permission to call Amazon Web Services APIs on your behalf.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              volumes:
+                description: |-
+                  The list of data volume definitions for the daemon task.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ECSDaemonTaskDefinitionVolume is a nested property
+                    type of AWS::ECS::DaemonTaskDefinition.
+                  properties:
+                    host:
+                      description: |-
+                        This parameter is specified when you use bind mount host volumes. The contents of the ``host`` parameter
+                        determine whether your bind mount host volume persists on the host container instance and where it's stored.
+                        If the ``host`` parameter is empty, then the Docker daemon assigns a host path for your data volume. However,
+                        the data isn't guaranteed to persist after the containers that are associ...
+                      properties:
+                        sourcePath:
+                          description: |-
+                            When the ``host`` parameter is used, specify a ``sourcePath`` to declare the path on the host container
+                            instance that's presented to the container. If this parameter is empty, then the Docker daemon has assigned a
+                            host path for you. If the ``host`` parameter contains a ``sourcePath`` file location, then the data volume
+                            persists at the specified location on the host container instance until you ...
+                          type: string
+                      type: object
+                    name:
+                      description: |-
+                        The name of the volume. Up to 255 letters (uppercase and lowercase), numbers, underscores, and hyphens are
+                        allowed. When using a volume configured at launch, the ``name`` is required and must also be specified as the
+                        volume name in the ``ServiceVolumeConfiguration`` or ``TaskVolumeConfiguration`` parameter when creating your
+                        service or standalone task. For all other types of volumes, this name ...
+                      type: string
+                  type: object
+                type: array
+            type: object
+          status:
+            description: ECSDaemonTaskDefinitionStatus is the observed state of AWS::ECS::DaemonTaskDefinition.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              daemonTaskDefinitionArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecsexpressgatewayservices.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSExpressGatewayService
+    listKind: ECSExpressGatewayServiceList
+    plural: ecsexpressgatewayservices
+    singular: ecsexpressgatewayservice
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ECSExpressGatewayService manages AWS::ECS::ExpressGatewayService through the AWS Cloud Control API. Resource
+          Type definition for AWS::ECS::ExpressGatewayService
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSExpressGatewayServiceSpec is the desired state of AWS::ECS::ExpressGatewayService.
+            properties:
+              cluster:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              cpu:
+                type: string
+              executionRoleArn:
+                type: string
+              healthCheckPath:
+                type: string
+              infrastructureRoleArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+                x-kubernetes-validations:
+                - message: infrastructureRoleArn is immutable
+                  rule: self == oldSelf
+              memory:
+                type: string
+              networkConfiguration:
+                description: ECSExpressGatewayServiceExpressGatewayServiceNetworkConfiguration
+                  is a nested property type of AWS::ECS::ExpressGatewayService.
+                properties:
+                  securityGroups:
+                    items:
+                      type: string
+                    type: array
+                  subnets:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              primaryContainer:
+                description: ECSExpressGatewayServiceExpressGatewayContainer is a
+                  nested property type of AWS::ECS::ExpressGatewayService.
+                properties:
+                  awsLogsConfiguration:
+                    description: ECSExpressGatewayServiceExpressGatewayServiceAwsLogsConfiguration
+                      is a nested property type of AWS::ECS::ExpressGatewayService.
+                    properties:
+                      logGroup:
+                        type: string
+                      logStreamPrefix:
+                        type: string
+                    required:
+                    - logGroup
+                    - logStreamPrefix
+                    type: object
+                  command:
+                    items:
+                      type: string
+                    type: array
+                  containerPort:
+                    format: int64
+                    type: integer
+                  environment:
+                    items:
+                      description: ECSExpressGatewayServiceKeyValuePair is a nested
+                        property type of AWS::ECS::ExpressGatewayService.
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                      - name
+                      - value
+                      type: object
+                    type: array
+                  image:
+                    type: string
+                  repositoryCredentials:
+                    description: ECSExpressGatewayServiceExpressGatewayRepositoryCredentials
+                      is a nested property type of AWS::ECS::ExpressGatewayService.
+                    properties:
+                      credentialsParameter:
+                        type: string
+                    required:
+                    - credentialsParameter
+                    type: object
+                  secrets:
+                    items:
+                      description: ECSExpressGatewayServiceSecret is a nested property
+                        type of AWS::ECS::ExpressGatewayService.
+                      properties:
+                        name:
+                          type: string
+                        valueFrom:
+                          type: string
+                      required:
+                      - name
+                      - valueFrom
+                      type: object
+                    type: array
+                required:
+                - image
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              scalingTarget:
+                description: ECSExpressGatewayServiceExpressGatewayScalingTarget is
+                  a nested property type of AWS::ECS::ExpressGatewayService.
+                properties:
+                  autoScalingMetric:
+                    enum:
+                    - AVERAGE_CPU
+                    - AVERAGE_MEMORY
+                    - REQUEST_COUNT_PER_TARGET
+                    type: string
+                  autoScalingTargetValue:
+                    format: int64
+                    type: integer
+                  maxTaskCount:
+                    format: int64
+                    type: integer
+                  minTaskCount:
+                    format: int64
+                    type: integer
+                type: object
+              serviceName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                type: string
+              tags:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              taskDefinitionArn:
+                type: string
+              taskRoleArn:
+                type: string
+            required:
+            - infrastructureRoleArn
+            type: object
+          status:
+            description: ECSExpressGatewayServiceStatus is the observed state of AWS::ECS::ExpressGatewayService.
+            properties:
+              activeConfigurations:
+                description: 'Read-only: reported by AWS after creation.'
+                items:
+                  description: ECSExpressGatewayServiceExpressGatewayServiceConfiguration
+                    is a nested property type of AWS::ECS::ExpressGatewayService.
+                  properties:
+                    cpu:
+                      type: string
+                    createdAt:
+                      type: string
+                    executionRoleArn:
+                      type: string
+                    healthCheckPath:
+                      type: string
+                    ingressPaths:
+                      items:
+                        description: ECSExpressGatewayServiceIngressPathSummary is
+                          a nested property type of AWS::ECS::ExpressGatewayService.
+                        properties:
+                          accessType:
+                            enum:
+                            - PUBLIC
+                            - PRIVATE
+                            type: string
+                          endpoint:
+                            type: string
+                        type: object
+                      type: array
+                    memory:
+                      type: string
+                    networkConfiguration:
+                      description: ECSExpressGatewayServiceExpressGatewayServiceNetworkConfiguration
+                        is a nested property type of AWS::ECS::ExpressGatewayService.
+                      properties:
+                        securityGroups:
+                          items:
+                            type: string
+                          type: array
+                        subnets:
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    primaryContainer:
+                      description: ECSExpressGatewayServiceExpressGatewayContainer
+                        is a nested property type of AWS::ECS::ExpressGatewayService.
+                      properties:
+                        awsLogsConfiguration:
+                          description: ECSExpressGatewayServiceExpressGatewayServiceAwsLogsConfiguration
+                            is a nested property type of AWS::ECS::ExpressGatewayService.
+                          properties:
+                            logGroup:
+                              type: string
+                            logStreamPrefix:
+                              type: string
+                          required:
+                          - logGroup
+                          - logStreamPrefix
+                          type: object
+                        command:
+                          items:
+                            type: string
+                          type: array
+                        containerPort:
+                          format: int64
+                          type: integer
+                        environment:
+                          items:
+                            description: ECSExpressGatewayServiceKeyValuePair is a
+                              nested property type of AWS::ECS::ExpressGatewayService.
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
+                        image:
+                          type: string
+                        repositoryCredentials:
+                          description: ECSExpressGatewayServiceExpressGatewayRepositoryCredentials
+                            is a nested property type of AWS::ECS::ExpressGatewayService.
+                          properties:
+                            credentialsParameter:
+                              type: string
+                          required:
+                          - credentialsParameter
+                          type: object
+                        secrets:
+                          items:
+                            description: ECSExpressGatewayServiceSecret is a nested
+                              property type of AWS::ECS::ExpressGatewayService.
+                            properties:
+                              name:
+                                type: string
+                              valueFrom:
+                                type: string
+                            required:
+                            - name
+                            - valueFrom
+                            type: object
+                          type: array
+                      required:
+                      - image
+                      type: object
+                    scalingTarget:
+                      description: ECSExpressGatewayServiceExpressGatewayScalingTarget
+                        is a nested property type of AWS::ECS::ExpressGatewayService.
+                      properties:
+                        autoScalingMetric:
+                          enum:
+                          - AVERAGE_CPU
+                          - AVERAGE_MEMORY
+                          - REQUEST_COUNT_PER_TARGET
+                          type: string
+                        autoScalingTargetValue:
+                          format: int64
+                          type: integer
+                        maxTaskCount:
+                          format: int64
+                          type: integer
+                        minTaskCount:
+                          format: int64
+                          type: integer
+                      type: object
+                    serviceRevisionArn:
+                      type: string
+                    taskDefinitionArn:
+                      type: string
+                    taskRoleArn:
+                      type: string
+                  type: object
+                type: array
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              createdAt:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              ecsManagedResourceArns:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  autoScaling:
+                    description: ECSExpressGatewayServiceAutoScalingArns is a nested
+                      property type of AWS::ECS::ExpressGatewayService.
+                    properties:
+                      applicationAutoScalingPolicies:
+                        items:
+                          type: string
+                        type: array
+                      scalableTarget:
+                        type: string
+                    type: object
+                  ingressPath:
+                    description: ECSExpressGatewayServiceIngressPathArns is a nested
+                      property type of AWS::ECS::ExpressGatewayService.
+                    properties:
+                      certificateArn:
+                        type: string
+                      listenerArn:
+                        type: string
+                      listenerRuleArn:
+                        type: string
+                      loadBalancerArn:
+                        type: string
+                      loadBalancerSecurityGroups:
+                        items:
+                          type: string
+                        type: array
+                      targetGroupArns:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  logGroups:
+                    items:
+                      type: string
+                    type: array
+                  metricAlarms:
+                    items:
+                      type: string
+                    type: array
+                  serviceSecurityGroups:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              endpoint:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serviceArn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              status:
+                description: 'Read-only: reported by AWS after creation.'
+                properties:
+                  statusCode:
+                    enum:
+                    - ACTIVE
+                    - DRAINING
+                    - INACTIVE
+                    type: string
+                type: object
+              updatedAt:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecsprimarytasksets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSPrimaryTaskSet
+    listKind: ECSPrimaryTaskSetList
+    plural: ecsprimarytasksets
+    singular: ecsprimarytaskset
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ECSPrimaryTaskSet manages AWS::ECS::PrimaryTaskSet through the AWS Cloud Control API. A pseudo-resource that
+          manages which of your ECS task sets is primary.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSPrimaryTaskSetSpec is the desired state of AWS::ECS::PrimaryTaskSet.
+            properties:
+              cluster:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the cluster that hosts the service to create the task set
+                  in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: cluster is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              service:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the service to create the task set in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: service is immutable
+                  rule: self == oldSelf
+              taskSetId:
+                description: The ID or full Amazon Resource Name (ARN) of the task
+                  set.
+                type: string
+            required:
+            - cluster
+            - service
+            - taskSetId
+            type: object
+          status:
+            description: ECSPrimaryTaskSetStatus is the observed state of AWS::ECS::PrimaryTaskSet.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: ecstasksets.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: ECSTaskSet
+    listKind: ECSTaskSetList
+    plural: ecstasksets
+    singular: ecstaskset
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ECSTaskSet manages AWS::ECS::TaskSet through the AWS Cloud Control API. Create a task set in the specified
+          cluster and service. This is used when a service uses the EXTERNAL deployment controller type. For more
+          information, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-types.htmlin the
+          Amazon Elastic Container Service Developer Guide.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ECSTaskSetSpec is the desired state of AWS::ECS::TaskSet.
+            properties:
+              capacityProviderStrategy:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: ECSTaskSetCapacityProviderStrategyItem is a nested
+                    property type of AWS::ECS::TaskSet.
+                  properties:
+                    base:
+                      format: int64
+                      type: integer
+                    capacityProvider:
+                      type: string
+                    weight:
+                      format: int64
+                      type: integer
+                  type: object
+                type: array
+              cluster:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the cluster that hosts the service to create the task set
+                  in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: cluster is immutable
+                  rule: self == oldSelf
+              externalId:
+                description: |-
+                  An optional non-unique tag that identifies this task set in external systems. If the task set is associated
+                  with a service discovery registry, the tasks in this task set will have the ECS_TASK_SET_EXTERNAL_ID AWS Cloud
+                  Map attribute set to the provided value.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              launchType:
+                description: |-
+                  The launch type that new tasks in the task set will use. For more information, see
+                  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html in the Amazon Elastic Container
+                  Service Developer Guide.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - EC2
+                - FARGATE
+                type: string
+              loadBalancers:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                items:
+                  description: ECSTaskSetLoadBalancer is a nested property type of
+                    AWS::ECS::TaskSet.
+                  properties:
+                    containerName:
+                      description: The name of the container (as it appears in a container
+                        definition) to associate with the load balancer.
+                      type: string
+                    containerPort:
+                      description: |-
+                        The port on the container to associate with the load balancer. This port must correspond to a containerPort in
+                        the task definition the tasks in the service are using. For tasks that use the EC2 launch type, the container
+                        instance they are launched on must allow ingress traffic on the hostPort of the port mapping.
+                      format: int64
+                      type: integer
+                    targetGroupArn:
+                      description: |-
+                        The full Amazon Resource Name (ARN) of the Elastic Load Balancing target group or groups associated with a
+                        service or task set. A target group ARN is only specified when using an Application Load Balancer or Network
+                        Load Balancer. If you are using a Classic Load Balancer this should be omitted. For services using the ECS
+                        deployment controller, you can specify one or multiple target groups. For ...
+                      type: string
+                  type: object
+                type: array
+              networkConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  awsVpcConfiguration:
+                    description: ECSTaskSetAwsVpcConfiguration is a nested property
+                      type of AWS::ECS::TaskSet.
+                    properties:
+                      assignPublicIp:
+                        description: Whether the task's elastic network interface
+                          receives a public IP address. The default value is DISABLED.
+                        enum:
+                        - DISABLED
+                        - ENABLED
+                        type: string
+                      securityGroups:
+                        description: |-
+                          The security groups associated with the task or service. If you do not specify a security group, the default
+                          security group for the VPC is used. There is a limit of 5 security groups that can be specified per
+                          AwsVpcConfiguration.
+                        items:
+                          type: string
+                        type: array
+                      subnets:
+                        description: |-
+                          The subnets associated with the task or service. There is a limit of 16 subnets that can be specified per
+                          AwsVpcConfiguration.
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - subnets
+                    type: object
+                type: object
+              platformVersion:
+                description: |-
+                  The platform version that the tasks in the task set should use. A platform version is specified only for tasks
+                  using the Fargate launch type. If one isn't specified, the LATEST platform version is used by default.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              scale:
+                description: A floating-point percentage of the desired number of
+                  tasks to place and keep running in the task set.
+                properties:
+                  unit:
+                    description: The unit of measure for the scale value.
+                    enum:
+                    - PERCENT
+                    type: string
+                  value:
+                    description: |-
+                      The value, specified as a percent total of a service's desiredCount, to scale the task set. Accepted values
+                      are numbers between 0 and 100.
+                    type: number
+                type: object
+              service:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the service to create the task set in.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: service is immutable
+                  rule: self == oldSelf
+              serviceRegistries:
+                description: |-
+                  The details of the service discovery registries to assign to this task set. For more information, see
+                  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: ECSTaskSetServiceRegistry is a nested property type
+                    of AWS::ECS::TaskSet.
+                  properties:
+                    containerName:
+                      description: |-
+                        The container name value, already specified in the task definition, to be used for your service discovery
+                        service. If the task definition that your service task specifies uses the bridge or host network mode, you
+                        must specify a containerName and containerPort combination from the task definition. If the task definition
+                        that your service task specifies uses the awsvpc network mode and a type SRV...
+                      type: string
+                    containerPort:
+                      description: |-
+                        The port value, already specified in the task definition, to be used for your service discovery service. If
+                        the task definition your service task specifies uses the bridge or host network mode, you must specify a
+                        containerName and containerPort combination from the task definition. If the task definition your service task
+                        specifies uses the awsvpc network mode and a type SRV DNS record is used,...
+                      format: int64
+                      type: integer
+                    port:
+                      description: |-
+                        The port value used if your service discovery service specified an SRV record. This field may be used if both
+                        the awsvpc network mode and SRV records are used.
+                      format: int64
+                      type: integer
+                    registryArn:
+                      description: |-
+                        The Amazon Resource Name (ARN) of the service registry. The currently supported service registry is AWS Cloud
+                        Map. For more information, see https://docs.aws.amazon.com/cloud-map/latest/api/API_CreateService.html
+                      type: string
+                  type: object
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              taskDefinition:
+                description: |-
+                  The short name or full Amazon Resource Name (ARN) of the task definition for the tasks in the task set to use.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: taskDefinition is immutable
+                  rule: self == oldSelf
+            required:
+            - cluster
+            - service
+            - taskDefinition
+            type: object
+          status:
+            description: ECSTaskSetStatus is the observed state of AWS::ECS::TaskSet.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: |-
+                  The ID of the task set.
+                  Read-only: reported by AWS after creation.
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

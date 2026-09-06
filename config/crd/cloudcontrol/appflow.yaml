@@ -1,0 +1,2754 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appflowconnectorprofiles.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppFlowConnectorProfile
+    listKind: AppFlowConnectorProfileList
+    plural: appflowconnectorprofiles
+    singular: appflowconnectorprofile
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppFlowConnectorProfile manages AWS::AppFlow::ConnectorProfile through the AWS Cloud Control API. Resource
+          Type definition for AWS::AppFlow::ConnectorProfile
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppFlowConnectorProfileSpec is the desired state of AWS::AppFlow::ConnectorProfile.
+            properties:
+              connectionMode:
+                description: |-
+                  Mode in which data transfer should be enabled. Private connection mode is currently enabled for Salesforce,
+                  Snowflake, Trendmicro and Singular
+                enum:
+                - Public
+                - Private
+                type: string
+              connectorLabel:
+                description: |-
+                  The label of the connector. The label is unique for each ConnectorRegistration in your AWS account. Only
+                  needed if calling for CUSTOMCONNECTOR connector type/.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 256
+                type: string
+              connectorProfileConfig:
+                description: Connector specific configurations needed to create connector
+                  profile
+                properties:
+                  connectorProfileCredentials:
+                    description: AppFlowConnectorProfileConnectorProfileCredentials
+                      is a nested property type of AWS::AppFlow::ConnectorProfile.
+                    properties:
+                      amplitude:
+                        description: AppFlowConnectorProfileAmplitudeConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiKey:
+                            description: A unique alphanumeric identiﬁer used to authenticate
+                              a user, developer, or calling program to your API.
+                            maxLength: 256
+                            type: string
+                          secretKey:
+                            maxLength: 256
+                            type: string
+                        required:
+                        - apiKey
+                        - secretKey
+                        type: object
+                      customConnector:
+                        description: AppFlowConnectorProfileCustomConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiKey:
+                            description: AppFlowConnectorProfileApiKeyCredentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              apiKey:
+                                maxLength: 256
+                                type: string
+                              apiSecretKey:
+                                maxLength: 256
+                                type: string
+                            required:
+                            - apiKey
+                            type: object
+                          authenticationType:
+                            enum:
+                            - OAUTH2
+                            - APIKEY
+                            - BASIC
+                            - CUSTOM
+                            type: string
+                          basic:
+                            description: AppFlowConnectorProfileBasicAuthCredentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              password:
+                                maxLength: 512
+                                type: string
+                              username:
+                                maxLength: 512
+                                type: string
+                            required:
+                            - password
+                            - username
+                            type: object
+                          custom:
+                            description: AppFlowConnectorProfileCustomAuthCredentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              credentialsMap:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              customAuthenticationType:
+                                maxLength: 256
+                                type: string
+                            required:
+                            - customAuthenticationType
+                            type: object
+                          oauth2:
+                            description: AppFlowConnectorProfileOAuth2Credentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              accessToken:
+                                maxLength: 4096
+                                type: string
+                              clientId:
+                                maxLength: 512
+                                type: string
+                              clientSecret:
+                                maxLength: 512
+                                type: string
+                              oAuthRequest:
+                                description: AppFlowConnectorProfileConnectorOAuthRequest
+                                  is a nested property type of AWS::AppFlow::ConnectorProfile.
+                                properties:
+                                  authCode:
+                                    description: The code provided by the connector
+                                      when it has been authenticated via the connected
+                                      app.
+                                    type: string
+                                  redirectUri:
+                                    description: The URL to which the authentication
+                                      server redirects the browser after authorization
+                                      has been granted.
+                                    type: string
+                                type: object
+                              refreshToken:
+                                maxLength: 4096
+                                type: string
+                            type: object
+                        required:
+                        - authenticationType
+                        type: object
+                      datadog:
+                        description: AppFlowConnectorProfileDatadogConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiKey:
+                            description: A unique alphanumeric identiﬁer used to authenticate
+                              a user, developer, or calling program to your API.
+                            maxLength: 256
+                            type: string
+                          applicationKey:
+                            description: |-
+                              Application keys, in conjunction with your API key, give you full access to Datadog’s programmatic API.
+                              Application keys are associated with the user account that created them. The application key is used to log
+                              all requests made to the API.
+                            maxLength: 512
+                            type: string
+                        required:
+                        - apiKey
+                        - applicationKey
+                        type: object
+                      dynatrace:
+                        description: AppFlowConnectorProfileDynatraceConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiToken:
+                            description: The API tokens used by Dynatrace API to authenticate
+                              various API calls.
+                            maxLength: 256
+                            type: string
+                        required:
+                        - apiToken
+                        type: object
+                      googleAnalytics:
+                        description: AppFlowConnectorProfileGoogleAnalyticsConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientId:
+                            description: The identiﬁer for the desired client.
+                            maxLength: 512
+                            type: string
+                          clientSecret:
+                            description: The client secret used by the oauth client
+                              to authenticate to the authorization server.
+                            maxLength: 512
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                          refreshToken:
+                            description: The credentials used to acquire new access
+                              tokens.
+                            maxLength: 4096
+                            type: string
+                        required:
+                        - clientId
+                        - clientSecret
+                        type: object
+                      inforNexus:
+                        description: AppFlowConnectorProfileInforNexusConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessKeyId:
+                            description: The Access Key portion of the credentials.
+                            maxLength: 256
+                            type: string
+                          datakey:
+                            description: The encryption keys used to encrypt data.
+                            maxLength: 512
+                            type: string
+                          secretAccessKey:
+                            description: The secret key used to sign requests.
+                            maxLength: 512
+                            type: string
+                          userId:
+                            description: The identiﬁer for the user.
+                            maxLength: 512
+                            type: string
+                        required:
+                        - accessKeyId
+                        - datakey
+                        - secretAccessKey
+                        - userId
+                        type: object
+                      marketo:
+                        description: AppFlowConnectorProfileMarketoConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientId:
+                            description: The identiﬁer for the desired client.
+                            maxLength: 512
+                            type: string
+                          clientSecret:
+                            description: The client secret used by the oauth client
+                              to authenticate to the authorization server.
+                            maxLength: 512
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                        required:
+                        - clientId
+                        - clientSecret
+                        type: object
+                      pardot:
+                        description: AppFlowConnectorProfilePardotConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientCredentialsArn:
+                            description: The client credentials to fetch access token
+                              and refresh token.
+                            maxLength: 2048
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                          refreshToken:
+                            description: The credentials used to acquire new access
+                              tokens.
+                            maxLength: 4096
+                            type: string
+                        type: object
+                      redshift:
+                        description: AppFlowConnectorProfileRedshiftConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          password:
+                            description: The password that corresponds to the username.
+                            maxLength: 512
+                            type: string
+                          username:
+                            description: The name of the user.
+                            maxLength: 512
+                            type: string
+                        type: object
+                      salesforce:
+                        description: AppFlowConnectorProfileSalesforceConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientCredentialsArn:
+                            description: The client credentials to fetch access token
+                              and refresh token.
+                            maxLength: 2048
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                          jwtToken:
+                            description: The credentials used to access your Salesforce
+                              records
+                            maxLength: 8000
+                            type: string
+                          oAuth2GrantType:
+                            description: The grant types to fetch an access token
+                            enum:
+                            - CLIENT_CREDENTIALS
+                            - AUTHORIZATION_CODE
+                            - JWT_BEARER
+                            type: string
+                          refreshToken:
+                            description: The credentials used to acquire new access
+                              tokens.
+                            maxLength: 4096
+                            type: string
+                        type: object
+                      sapoData:
+                        description: AppFlowConnectorProfileSAPODataConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          basicAuthCredentials:
+                            description: AppFlowConnectorProfileBasicAuthCredentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              password:
+                                maxLength: 512
+                                type: string
+                              username:
+                                maxLength: 512
+                                type: string
+                            required:
+                            - password
+                            - username
+                            type: object
+                          oAuthCredentials:
+                            description: AppFlowConnectorProfileSAPODataConnectorProfileCredentialsOAuthCredentials
+                              is a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              accessToken:
+                                maxLength: 4096
+                                type: string
+                              clientId:
+                                maxLength: 512
+                                type: string
+                              clientSecret:
+                                maxLength: 512
+                                type: string
+                              connectorOAuthRequest:
+                                description: AppFlowConnectorProfileConnectorOAuthRequest
+                                  is a nested property type of AWS::AppFlow::ConnectorProfile.
+                                properties:
+                                  authCode:
+                                    description: The code provided by the connector
+                                      when it has been authenticated via the connected
+                                      app.
+                                    type: string
+                                  redirectUri:
+                                    description: The URL to which the authentication
+                                      server redirects the browser after authorization
+                                      has been granted.
+                                    type: string
+                                type: object
+                              refreshToken:
+                                maxLength: 4096
+                                type: string
+                            type: object
+                        type: object
+                      serviceNow:
+                        description: AppFlowConnectorProfileServiceNowConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          oAuth2Credentials:
+                            description: The OAuth 2.0 credentials required to authenticate
+                              the user.
+                            properties:
+                              accessToken:
+                                maxLength: 4096
+                                type: string
+                              clientId:
+                                maxLength: 512
+                                type: string
+                              clientSecret:
+                                maxLength: 512
+                                type: string
+                              oAuthRequest:
+                                description: AppFlowConnectorProfileConnectorOAuthRequest
+                                  is a nested property type of AWS::AppFlow::ConnectorProfile.
+                                properties:
+                                  authCode:
+                                    description: The code provided by the connector
+                                      when it has been authenticated via the connected
+                                      app.
+                                    type: string
+                                  redirectUri:
+                                    description: The URL to which the authentication
+                                      server redirects the browser after authorization
+                                      has been granted.
+                                    type: string
+                                type: object
+                              refreshToken:
+                                maxLength: 4096
+                                type: string
+                            type: object
+                          password:
+                            description: The password that corresponds to the username.
+                            maxLength: 512
+                            type: string
+                          username:
+                            description: The name of the user.
+                            maxLength: 512
+                            type: string
+                        type: object
+                      singular:
+                        description: AppFlowConnectorProfileSingularConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiKey:
+                            description: A unique alphanumeric identiﬁer used to authenticate
+                              a user, developer, or calling program to your API.
+                            maxLength: 256
+                            type: string
+                        required:
+                        - apiKey
+                        type: object
+                      slack:
+                        description: AppFlowConnectorProfileSlackConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientId:
+                            description: The identiﬁer for the desired client.
+                            maxLength: 512
+                            type: string
+                          clientSecret:
+                            description: The client secret used by the oauth client
+                              to authenticate to the authorization server.
+                            maxLength: 512
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                        required:
+                        - clientId
+                        - clientSecret
+                        type: object
+                      snowflake:
+                        description: AppFlowConnectorProfileSnowflakeConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          password:
+                            description: The password that corresponds to the username.
+                            maxLength: 512
+                            type: string
+                          username:
+                            description: The name of the user.
+                            maxLength: 512
+                            type: string
+                        required:
+                        - password
+                        - username
+                        type: object
+                      trendmicro:
+                        description: AppFlowConnectorProfileTrendmicroConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          apiSecretKey:
+                            description: The Secret Access Key portion of the credentials.
+                            maxLength: 256
+                            type: string
+                        required:
+                        - apiSecretKey
+                        type: object
+                      veeva:
+                        description: AppFlowConnectorProfileVeevaConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          password:
+                            description: The password that corresponds to the username.
+                            maxLength: 512
+                            type: string
+                          username:
+                            description: The name of the user.
+                            maxLength: 512
+                            type: string
+                        required:
+                        - password
+                        - username
+                        type: object
+                      zendesk:
+                        description: AppFlowConnectorProfileZendeskConnectorProfileCredentials
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accessToken:
+                            description: The credentials used to access protected
+                              resources.
+                            maxLength: 4096
+                            type: string
+                          clientId:
+                            description: The identiﬁer for the desired client.
+                            maxLength: 512
+                            type: string
+                          clientSecret:
+                            description: The client secret used by the oauth client
+                              to authenticate to the authorization server.
+                            maxLength: 512
+                            type: string
+                          connectorOAuthRequest:
+                            description: The oauth needed to request security tokens
+                              from the connector endpoint.
+                            properties:
+                              authCode:
+                                description: The code provided by the connector when
+                                  it has been authenticated via the connected app.
+                                type: string
+                              redirectUri:
+                                description: The URL to which the authentication server
+                                  redirects the browser after authorization has been
+                                  granted.
+                                type: string
+                            type: object
+                        required:
+                        - clientId
+                        - clientSecret
+                        type: object
+                    type: object
+                  connectorProfileProperties:
+                    description: AppFlowConnectorProfileConnectorProfileProperties
+                      is a nested property type of AWS::AppFlow::ConnectorProfile.
+                    properties:
+                      customConnector:
+                        description: AppFlowConnectorProfileCustomConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          oAuth2Properties:
+                            description: AppFlowConnectorProfileOAuth2Properties is
+                              a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              oAuth2GrantType:
+                                enum:
+                                - CLIENT_CREDENTIALS
+                                - AUTHORIZATION_CODE
+                                - JWT_BEARER
+                                type: string
+                              tokenUrl:
+                                maxLength: 256
+                                type: string
+                              tokenUrlCustomProperties:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                            type: object
+                          profileProperties:
+                            additionalProperties:
+                              type: string
+                            type: object
+                        type: object
+                      datadog:
+                        description: AppFlowConnectorProfileDatadogConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Datadog resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      dynatrace:
+                        description: AppFlowConnectorProfileDynatraceConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Dynatrace resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      inforNexus:
+                        description: AppFlowConnectorProfileInforNexusConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the InforNexus resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      marketo:
+                        description: AppFlowConnectorProfileMarketoConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Marketo resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      pardot:
+                        description: AppFlowConnectorProfilePardotConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          businessUnitId:
+                            description: The Business unit id of Salesforce Pardot
+                              instance to be connected
+                            maxLength: 18
+                            type: string
+                          instanceUrl:
+                            description: The location of the Salesforce Pardot resource
+                            maxLength: 256
+                            type: string
+                          isSandboxEnvironment:
+                            description: Indicates whether the connector profile applies
+                              to a demo or production environment
+                            type: boolean
+                        required:
+                        - businessUnitId
+                        type: object
+                      redshift:
+                        description: AppFlowConnectorProfileRedshiftConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          bucketName:
+                            description: The name of the Amazon S3 bucket associated
+                              with Redshift.
+                            maxLength: 63
+                            minLength: 3
+                            type: string
+                          bucketPrefix:
+                            description: The object key for the destination bucket
+                              in which Amazon AppFlow will place the ﬁles.
+                            maxLength: 128
+                            type: string
+                          clusterIdentifier:
+                            description: The unique identifier of the Amazon Redshift
+                              cluster.
+                            maxLength: 512
+                            type: string
+                          dataApiRoleArn:
+                            description: |-
+                              The Amazon Resource Name (ARN) of the IAM role that grants Amazon AppFlow access to the data through the
+                              Amazon Redshift Data API.
+                            maxLength: 512
+                            type: string
+                          databaseName:
+                            description: The name of the Amazon Redshift database
+                              that will store the transferred data.
+                            maxLength: 512
+                            type: string
+                          databaseUrl:
+                            description: The JDBC URL of the Amazon Redshift cluster.
+                            maxLength: 512
+                            type: string
+                          isRedshiftServerless:
+                            description: If Amazon AppFlow will connect to Amazon
+                              Redshift Serverless or Amazon Redshift cluster.
+                            type: boolean
+                          roleArn:
+                            description: The Amazon Resource Name (ARN) of the IAM
+                              role.
+                            maxLength: 512
+                            type: string
+                          workgroupName:
+                            description: The name of the Amazon Redshift serverless
+                              workgroup
+                            maxLength: 512
+                            type: string
+                        required:
+                        - bucketName
+                        - roleArn
+                        type: object
+                      salesforce:
+                        description: AppFlowConnectorProfileSalesforceConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Salesforce resource
+                            maxLength: 256
+                            type: string
+                          isSandboxEnvironment:
+                            description: Indicates whether the connector profile applies
+                              to a sandbox or production environment
+                            type: boolean
+                          usePrivateLinkForMetadataAndAuthorization:
+                            description: Indicates whether to make Metadata And Authorization
+                              calls over Pivate Network
+                            type: boolean
+                        type: object
+                      sapoData:
+                        description: AppFlowConnectorProfileSAPODataConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          applicationHostUrl:
+                            maxLength: 256
+                            type: string
+                          applicationServicePath:
+                            maxLength: 512
+                            type: string
+                          clientNumber:
+                            maxLength: 3
+                            type: string
+                          disableSSO:
+                            description: |-
+                              If you set this parameter to true, Amazon AppFlow bypasses the single sign-on (SSO) settings in your SAP
+                              account when it accesses your SAP OData instance.
+                            type: boolean
+                          logonLanguage:
+                            maxLength: 2
+                            type: string
+                          oAuthProperties:
+                            description: AppFlowConnectorProfileOAuthProperties is
+                              a nested property type of AWS::AppFlow::ConnectorProfile.
+                            properties:
+                              authCodeUrl:
+                                maxLength: 256
+                                type: string
+                              oAuthScopes:
+                                items:
+                                  type: string
+                                type: array
+                              tokenUrl:
+                                maxLength: 256
+                                type: string
+                            type: object
+                          portNumber:
+                            format: int64
+                            maximum: 65535
+                            minimum: 1
+                            type: integer
+                          privateLinkServiceName:
+                            maxLength: 512
+                            type: string
+                        type: object
+                      serviceNow:
+                        description: AppFlowConnectorProfileServiceNowConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the ServiceNow resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      slack:
+                        description: AppFlowConnectorProfileSlackConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Slack resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      snowflake:
+                        description: AppFlowConnectorProfileSnowflakeConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          accountName:
+                            description: The name of the account.
+                            maxLength: 512
+                            type: string
+                          bucketName:
+                            description: The name of the Amazon S3 bucket associated
+                              with Snowﬂake.
+                            maxLength: 63
+                            minLength: 3
+                            type: string
+                          bucketPrefix:
+                            description: The bucket prefix that refers to the Amazon
+                              S3 bucket associated with Snowﬂake.
+                            maxLength: 128
+                            type: string
+                          privateLinkServiceName:
+                            description: The Snowﬂake Private Link service name to
+                              be used for private data transfers.
+                            maxLength: 512
+                            type: string
+                          region:
+                            description: The region of the Snowﬂake account.
+                            maxLength: 64
+                            type: string
+                          stage:
+                            description: |-
+                              The name of the Amazon S3 stage that was created while setting up an Amazon S3 stage in the Snowﬂake account.
+                              This is written in the following format: < Database>< Schema><Stage Name>.
+                            maxLength: 512
+                            type: string
+                          warehouse:
+                            description: The name of the Snowﬂake warehouse.
+                            maxLength: 512
+                            type: string
+                        required:
+                        - bucketName
+                        - stage
+                        - warehouse
+                        type: object
+                      veeva:
+                        description: AppFlowConnectorProfileVeevaConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Veeva resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                      zendesk:
+                        description: AppFlowConnectorProfileZendeskConnectorProfileProperties
+                          is a nested property type of AWS::AppFlow::ConnectorProfile.
+                        properties:
+                          instanceUrl:
+                            description: The location of the Zendesk resource
+                            maxLength: 256
+                            type: string
+                        required:
+                        - instanceUrl
+                        type: object
+                    type: object
+                type: object
+              connectorProfileName:
+                description: |-
+                  The maximum number of items to retrieve in a single batch.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 256
+                type: string
+                x-kubernetes-validations:
+                - message: connectorProfileName is immutable
+                  rule: self == oldSelf
+              connectorType:
+                description: |-
+                  List of Saas providers that need connector profile to be created
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - Salesforce
+                - Pardot
+                - Singular
+                - Slack
+                - Redshift
+                - Marketo
+                - Googleanalytics
+                - Zendesk
+                - Servicenow
+                - SAPOData
+                - Datadog
+                - Trendmicro
+                - Snowflake
+                - Dynatrace
+                - Infornexus
+                - Amplitude
+                - Veeva
+                - CustomConnector
+                type: string
+                x-kubernetes-validations:
+                - message: connectorType is immutable
+                  rule: self == oldSelf
+              kmsArn:
+                description: |-
+                  The ARN of the AWS Key Management Service (AWS KMS) key that's used to encrypt your function's environment
+                  variables. If it's not provided, AWS Lambda uses a default service key.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - connectionMode
+            - connectorProfileName
+            - connectorType
+            type: object
+          status:
+            description: AppFlowConnectorProfileStatus is the observed state of AWS::AppFlow::ConnectorProfile.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              connectorProfileArn:
+                description: |-
+                  Unique identifier for connector profile resources
+                  Read-only: reported by AWS after creation.
+                maxLength: 512
+                type: string
+              credentialsArn:
+                description: |-
+                  A unique Arn for Connector-Profile resource
+                  Read-only: reported by AWS after creation.
+                maxLength: 512
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appflowconnectors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppFlowConnector
+    listKind: AppFlowConnectorList
+    plural: appflowconnectors
+    singular: appflowconnector
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppFlowConnector manages AWS::AppFlow::Connector through the AWS Cloud Control API. Resource schema for
+          AWS::AppFlow::Connector
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppFlowConnectorSpec is the desired state of AWS::AppFlow::Connector.
+            properties:
+              connectorLabel:
+                description: |-
+                  The name of the connector. The name is unique for each ConnectorRegistration in your AWS account.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 512
+                type: string
+              connectorProvisioningConfig:
+                description: Contains information about the configuration of the connector
+                  being registered.
+                properties:
+                  lambda:
+                    description: Contains information about the configuration of the
+                      lambda which is being registered as the connector.
+                    properties:
+                      lambdaArn:
+                        description: Lambda ARN of the connector being registered.
+                        maxLength: 512
+                        type: string
+                    required:
+                    - lambdaArn
+                    type: object
+                type: object
+              connectorProvisioningType:
+                description: The provisioning type of the connector. Currently the
+                  only supported value is LAMBDA.
+                maxLength: 256
+                minLength: 1
+                type: string
+              description:
+                description: A description about the connector that's being registered.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - connectorProvisioningConfig
+            - connectorProvisioningType
+            type: object
+          status:
+            description: AppFlowConnectorStatus is the observed state of AWS::AppFlow::Connector.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              connectorArn:
+                description: |-
+                  The arn of the connector. The arn is unique for each ConnectorRegistration in your AWS account.
+                  Read-only: reported by AWS after creation.
+                maxLength: 512
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: appflowflows.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: AppFlowFlow
+    listKind: AppFlowFlowList
+    plural: appflowflows
+    singular: appflowflow
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AppFlowFlow manages AWS::AppFlow::Flow through the AWS Cloud Control API. Resource schema for
+          AWS::AppFlow::Flow.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AppFlowFlowSpec is the desired state of AWS::AppFlow::Flow.
+            properties:
+              description:
+                description: Description of the flow.
+                maxLength: 2048
+                type: string
+              destinationFlowConfigList:
+                description: List of Destination connectors of the flow.
+                items:
+                  description: AppFlowFlowDestinationFlowConfig is a nested property
+                    type of AWS::AppFlow::Flow.
+                  properties:
+                    apiVersion:
+                      description: The API version that the destination connector
+                        uses.
+                      maxLength: 256
+                      type: string
+                    connectorProfileName:
+                      description: Name of destination connector profile
+                      maxLength: 256
+                      type: string
+                    connectorType:
+                      description: Destination connector type
+                      enum:
+                      - SAPOData
+                      - Salesforce
+                      - Pardot
+                      - Singular
+                      - Slack
+                      - Redshift
+                      - S3
+                      - Marketo
+                      - Googleanalytics
+                      - Zendesk
+                      - Servicenow
+                      - Datadog
+                      - Trendmicro
+                      - Snowflake
+                      - Dynatrace
+                      - Infornexus
+                      - Amplitude
+                      - Veeva
+                      - CustomConnector
+                      - EventBridge
+                      - Upsolver
+                      - LookoutMetrics
+                      type: string
+                    destinationConnectorProperties:
+                      description: Destination connector details
+                      properties:
+                        customConnector:
+                          description: AppFlowFlowCustomConnectorDestinationProperties
+                            is a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            customProperties:
+                              additionalProperties:
+                                type: string
+                              type: object
+                            entityName:
+                              maxLength: 1024
+                              type: string
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            idFieldNames:
+                              description: List of fields used as ID when performing
+                                a write operation.
+                              items:
+                                type: string
+                              type: array
+                            writeOperationType:
+                              enum:
+                              - INSERT
+                              - UPSERT
+                              - UPDATE
+                              - DELETE
+                              type: string
+                          required:
+                          - entityName
+                          type: object
+                        eventBridge:
+                          description: AppFlowFlowEventBridgeDestinationProperties
+                            is a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            object:
+                              maxLength: 512
+                              type: string
+                          required:
+                          - object
+                          type: object
+                        lookoutMetrics:
+                          description: AppFlowFlowLookoutMetricsDestinationProperties
+                            is a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            object:
+                              maxLength: 512
+                              type: string
+                          type: object
+                        marketo:
+                          description: AppFlowFlowMarketoDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            object:
+                              maxLength: 512
+                              type: string
+                          required:
+                          - object
+                          type: object
+                        redshift:
+                          description: AppFlowFlowRedshiftDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            bucketPrefix:
+                              maxLength: 512
+                              type: string
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            intermediateBucketName:
+                              maxLength: 63
+                              minLength: 3
+                              type: string
+                            object:
+                              maxLength: 512
+                              type: string
+                          required:
+                          - intermediateBucketName
+                          - object
+                          type: object
+                        s3:
+                          description: AppFlowFlowS3DestinationProperties is a nested
+                            property type of AWS::AppFlow::Flow.
+                          properties:
+                            bucketName:
+                              maxLength: 63
+                              minLength: 3
+                              type: string
+                            bucketPrefix:
+                              maxLength: 512
+                              type: string
+                            s3OutputFormatConfig:
+                              description: AppFlowFlowS3OutputFormatConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                aggregationConfig:
+                                  description: AppFlowFlowAggregationConfig is a nested
+                                    property type of AWS::AppFlow::Flow.
+                                  properties:
+                                    aggregationType:
+                                      enum:
+                                      - None
+                                      - SingleFile
+                                      type: string
+                                    targetFileSize:
+                                      format: int64
+                                      type: integer
+                                  type: object
+                                fileType:
+                                  enum:
+                                  - CSV
+                                  - JSON
+                                  - PARQUET
+                                  type: string
+                                prefixConfig:
+                                  description: AppFlowFlowPrefixConfig is a nested
+                                    property type of AWS::AppFlow::Flow.
+                                  properties:
+                                    pathPrefixHierarchy:
+                                      items:
+                                        type: string
+                                      type: array
+                                    prefixFormat:
+                                      enum:
+                                      - YEAR
+                                      - MONTH
+                                      - DAY
+                                      - HOUR
+                                      - MINUTE
+                                      type: string
+                                    prefixType:
+                                      enum:
+                                      - FILENAME
+                                      - PATH
+                                      - PATH_AND_FILENAME
+                                      type: string
+                                  type: object
+                                preserveSourceDataTyping:
+                                  type: boolean
+                              type: object
+                          required:
+                          - bucketName
+                          type: object
+                        salesforce:
+                          description: AppFlowFlowSalesforceDestinationProperties
+                            is a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            dataTransferApi:
+                              enum:
+                              - AUTOMATIC
+                              - BULKV2
+                              - REST_SYNC
+                              type: string
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            idFieldNames:
+                              description: List of fields used as ID when performing
+                                a write operation.
+                              items:
+                                type: string
+                              type: array
+                            object:
+                              maxLength: 512
+                              type: string
+                            writeOperationType:
+                              enum:
+                              - INSERT
+                              - UPSERT
+                              - UPDATE
+                              - DELETE
+                              type: string
+                          required:
+                          - object
+                          type: object
+                        sapoData:
+                          description: AppFlowFlowSAPODataDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            idFieldNames:
+                              description: List of fields used as ID when performing
+                                a write operation.
+                              items:
+                                type: string
+                              type: array
+                            objectPath:
+                              maxLength: 512
+                              type: string
+                            successResponseHandlingConfig:
+                              description: AppFlowFlowSuccessResponseHandlingConfig
+                                is a nested property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                              type: object
+                            writeOperationType:
+                              enum:
+                              - INSERT
+                              - UPSERT
+                              - UPDATE
+                              - DELETE
+                              type: string
+                          required:
+                          - objectPath
+                          type: object
+                        snowflake:
+                          description: AppFlowFlowSnowflakeDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            bucketPrefix:
+                              maxLength: 512
+                              type: string
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            intermediateBucketName:
+                              maxLength: 63
+                              minLength: 3
+                              type: string
+                            object:
+                              maxLength: 512
+                              type: string
+                          required:
+                          - intermediateBucketName
+                          - object
+                          type: object
+                        upsolver:
+                          description: AppFlowFlowUpsolverDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            bucketName:
+                              maxLength: 63
+                              minLength: 16
+                              type: string
+                            bucketPrefix:
+                              maxLength: 512
+                              type: string
+                            s3OutputFormatConfig:
+                              description: AppFlowFlowUpsolverS3OutputFormatConfig
+                                is a nested property type of AWS::AppFlow::Flow.
+                              properties:
+                                aggregationConfig:
+                                  description: AppFlowFlowAggregationConfig is a nested
+                                    property type of AWS::AppFlow::Flow.
+                                  properties:
+                                    aggregationType:
+                                      enum:
+                                      - None
+                                      - SingleFile
+                                      type: string
+                                    targetFileSize:
+                                      format: int64
+                                      type: integer
+                                  type: object
+                                fileType:
+                                  enum:
+                                  - CSV
+                                  - JSON
+                                  - PARQUET
+                                  type: string
+                                prefixConfig:
+                                  description: AppFlowFlowPrefixConfig is a nested
+                                    property type of AWS::AppFlow::Flow.
+                                  properties:
+                                    pathPrefixHierarchy:
+                                      items:
+                                        type: string
+                                      type: array
+                                    prefixFormat:
+                                      enum:
+                                      - YEAR
+                                      - MONTH
+                                      - DAY
+                                      - HOUR
+                                      - MINUTE
+                                      type: string
+                                    prefixType:
+                                      enum:
+                                      - FILENAME
+                                      - PATH
+                                      - PATH_AND_FILENAME
+                                      type: string
+                                  type: object
+                              required:
+                              - prefixConfig
+                              type: object
+                          required:
+                          - bucketName
+                          - s3OutputFormatConfig
+                          type: object
+                        zendesk:
+                          description: AppFlowFlowZendeskDestinationProperties is
+                            a nested property type of AWS::AppFlow::Flow.
+                          properties:
+                            errorHandlingConfig:
+                              description: AppFlowFlowErrorHandlingConfig is a nested
+                                property type of AWS::AppFlow::Flow.
+                              properties:
+                                bucketName:
+                                  maxLength: 63
+                                  type: string
+                                bucketPrefix:
+                                  maxLength: 512
+                                  type: string
+                                failOnFirstError:
+                                  type: boolean
+                              type: object
+                            idFieldNames:
+                              description: List of fields used as ID when performing
+                                a write operation.
+                              items:
+                                type: string
+                              type: array
+                            object:
+                              maxLength: 512
+                              type: string
+                            writeOperationType:
+                              enum:
+                              - INSERT
+                              - UPSERT
+                              - UPDATE
+                              - DELETE
+                              type: string
+                          required:
+                          - object
+                          type: object
+                      type: object
+                  required:
+                  - connectorType
+                  - destinationConnectorProperties
+                  type: object
+                type: array
+              flowName:
+                description: |-
+                  Name of the flow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 256
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: flowName is immutable
+                  rule: self == oldSelf
+              flowStatus:
+                description: Flow activation status for Scheduled- and Event-triggered
+                  flows
+                enum:
+                - Active
+                - Suspended
+                - Draft
+                type: string
+              kmsArn:
+                description: |-
+                  The ARN of the AWS Key Management Service (AWS KMS) key that's used to encrypt your function's environment
+                  variables. If it's not provided, AWS Lambda uses a default service key.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 2048
+                type: string
+              metadataCatalogConfig:
+                description: Configurations of metadata catalog of the flow.
+                properties:
+                  glueDataCatalog:
+                    description: Configurations of glue data catalog of the flow.
+                    properties:
+                      databaseName:
+                        description: A string containing the value for the tag
+                        maxLength: 255
+                        type: string
+                      roleArn:
+                        description: A string containing the value for the tag
+                        maxLength: 512
+                        type: string
+                      tablePrefix:
+                        description: A string containing the value for the tag
+                        maxLength: 128
+                        type: string
+                    required:
+                    - databaseName
+                    - roleArn
+                    - tablePrefix
+                    type: object
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              sourceFlowConfig:
+                description: Configurations of Source connector of the flow.
+                properties:
+                  apiVersion:
+                    description: The API version that the destination connector uses.
+                    maxLength: 256
+                    type: string
+                  connectorProfileName:
+                    description: Name of source connector profile
+                    maxLength: 256
+                    type: string
+                  connectorType:
+                    description: Type of source connector
+                    enum:
+                    - SAPOData
+                    - Salesforce
+                    - Pardot
+                    - Singular
+                    - Slack
+                    - Redshift
+                    - S3
+                    - Marketo
+                    - Googleanalytics
+                    - Zendesk
+                    - Servicenow
+                    - Datadog
+                    - Trendmicro
+                    - Snowflake
+                    - Dynatrace
+                    - Infornexus
+                    - Amplitude
+                    - Veeva
+                    - CustomConnector
+                    - EventBridge
+                    - Upsolver
+                    - LookoutMetrics
+                    type: string
+                  incrementalPullConfig:
+                    description: Configuration for scheduled incremental data pull
+                    properties:
+                      datetimeTypeFieldName:
+                        maxLength: 256
+                        type: string
+                    type: object
+                  sourceConnectorProperties:
+                    description: Source connector details required to query a connector
+                    properties:
+                      amplitude:
+                        description: AppFlowFlowAmplitudeSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      customConnector:
+                        description: AppFlowFlowCustomConnectorSourceProperties is
+                          a nested property type of AWS::AppFlow::Flow.
+                        properties:
+                          customProperties:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          dataTransferApi:
+                            description: AppFlowFlowCustomConnectorSourcePropertiesDataTransferApi
+                              is a nested property type of AWS::AppFlow::Flow.
+                            properties:
+                              name:
+                                maxLength: 64
+                                type: string
+                              type:
+                                enum:
+                                - SYNC
+                                - ASYNC
+                                - AUTOMATIC
+                                type: string
+                            required:
+                            - name
+                            - type
+                            type: object
+                          entityName:
+                            maxLength: 1024
+                            type: string
+                        required:
+                        - entityName
+                        type: object
+                      datadog:
+                        description: AppFlowFlowDatadogSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      dynatrace:
+                        description: AppFlowFlowDynatraceSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      googleAnalytics:
+                        description: AppFlowFlowGoogleAnalyticsSourceProperties is
+                          a nested property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      inforNexus:
+                        description: AppFlowFlowInforNexusSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      marketo:
+                        description: AppFlowFlowMarketoSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      pardot:
+                        description: AppFlowFlowPardotSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      s3:
+                        description: AppFlowFlowS3SourceProperties is a nested property
+                          type of AWS::AppFlow::Flow.
+                        properties:
+                          bucketName:
+                            maxLength: 63
+                            minLength: 3
+                            type: string
+                          bucketPrefix:
+                            maxLength: 512
+                            type: string
+                          s3InputFormatConfig:
+                            description: AppFlowFlowS3InputFormatConfig is a nested
+                              property type of AWS::AppFlow::Flow.
+                            properties:
+                              s3InputFileType:
+                                enum:
+                                - CSV
+                                - JSON
+                                type: string
+                            type: object
+                        required:
+                        - bucketName
+                        - bucketPrefix
+                        type: object
+                      salesforce:
+                        description: AppFlowFlowSalesforceSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          dataTransferApi:
+                            enum:
+                            - AUTOMATIC
+                            - BULKV2
+                            - REST_SYNC
+                            type: string
+                          enableDynamicFieldUpdate:
+                            type: boolean
+                          includeDeletedRecords:
+                            type: boolean
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      sapoData:
+                        description: AppFlowFlowSAPODataSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          objectPath:
+                            maxLength: 512
+                            type: string
+                          paginationConfig:
+                            description: AppFlowFlowSAPODataPaginationConfig is a
+                              nested property type of AWS::AppFlow::Flow.
+                            properties:
+                              maxPageSize:
+                                format: int64
+                                maximum: 10000
+                                minimum: 1
+                                type: integer
+                            required:
+                            - maxPageSize
+                            type: object
+                          parallelismConfig:
+                            description: AppFlowFlowSAPODataParallelismConfig is a
+                              nested property type of AWS::AppFlow::Flow.
+                            properties:
+                              maxParallelism:
+                                format: int64
+                                maximum: 10
+                                minimum: 1
+                                type: integer
+                            required:
+                            - maxParallelism
+                            type: object
+                        required:
+                        - objectPath
+                        type: object
+                      serviceNow:
+                        description: AppFlowFlowServiceNowSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      singular:
+                        description: AppFlowFlowSingularSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      slack:
+                        description: AppFlowFlowSlackSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      trendmicro:
+                        description: AppFlowFlowTrendmicroSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      veeva:
+                        description: AppFlowFlowVeevaSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          documentType:
+                            maxLength: 512
+                            type: string
+                          includeAllVersions:
+                            type: boolean
+                          includeRenditions:
+                            type: boolean
+                          includeSourceFiles:
+                            type: boolean
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                      zendesk:
+                        description: AppFlowFlowZendeskSourceProperties is a nested
+                          property type of AWS::AppFlow::Flow.
+                        properties:
+                          object:
+                            maxLength: 512
+                            type: string
+                        required:
+                        - object
+                        type: object
+                    type: object
+                required:
+                - connectorType
+                - sourceConnectorProperties
+                type: object
+              tags:
+                description: List of Tags.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              tasks:
+                description: List of tasks for the flow.
+                items:
+                  description: AppFlowFlowTask is a nested property type of AWS::AppFlow::Flow.
+                  properties:
+                    connectorOperator:
+                      description: Operation to be performed on provided source fields
+                      properties:
+                        amplitude:
+                          enum:
+                          - BETWEEN
+                          type: string
+                        customConnector:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - GREATER_THAN
+                          - CONTAINS
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        datadog:
+                          enum:
+                          - PROJECTION
+                          - BETWEEN
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        dynatrace:
+                          enum:
+                          - PROJECTION
+                          - BETWEEN
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        googleAnalytics:
+                          enum:
+                          - PROJECTION
+                          - BETWEEN
+                          type: string
+                        inforNexus:
+                          enum:
+                          - PROJECTION
+                          - BETWEEN
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        marketo:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - GREATER_THAN
+                          - BETWEEN
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        pardot:
+                          enum:
+                          - PROJECTION
+                          - EQUAL_TO
+                          - NO_OP
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          type: string
+                        s3:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - GREATER_THAN
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        salesforce:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - CONTAINS
+                          - GREATER_THAN
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        sapoData:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - CONTAINS
+                          - GREATER_THAN
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        serviceNow:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - CONTAINS
+                          - GREATER_THAN
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        singular:
+                          enum:
+                          - PROJECTION
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        slack:
+                          enum:
+                          - PROJECTION
+                          - BETWEEN
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        trendmicro:
+                          enum:
+                          - PROJECTION
+                          - EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        veeva:
+                          enum:
+                          - PROJECTION
+                          - LESS_THAN
+                          - GREATER_THAN
+                          - BETWEEN
+                          - LESS_THAN_OR_EQUAL_TO
+                          - GREATER_THAN_OR_EQUAL_TO
+                          - EQUAL_TO
+                          - NOT_EQUAL_TO
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                        zendesk:
+                          enum:
+                          - PROJECTION
+                          - GREATER_THAN
+                          - ADDITION
+                          - MULTIPLICATION
+                          - DIVISION
+                          - SUBTRACTION
+                          - MASK_ALL
+                          - MASK_FIRST_N
+                          - MASK_LAST_N
+                          - VALIDATE_NON_NULL
+                          - VALIDATE_NON_ZERO
+                          - VALIDATE_NON_NEGATIVE
+                          - VALIDATE_NUMERIC
+                          - NO_OP
+                          type: string
+                      type: object
+                    destinationField:
+                      description: A field value on which source field should be validated
+                      maxLength: 256
+                      type: string
+                    sourceFields:
+                      description: Source fields on which particular task will be
+                        applied
+                      items:
+                        type: string
+                      type: array
+                    taskProperties:
+                      description: A Map used to store task related info
+                      items:
+                        description: AppFlowFlowTaskPropertiesObject is a nested property
+                          type of AWS::AppFlow::Flow.
+                        properties:
+                          key:
+                            enum:
+                            - VALUE
+                            - VALUES
+                            - DATA_TYPE
+                            - UPPER_BOUND
+                            - LOWER_BOUND
+                            - SOURCE_DATA_TYPE
+                            - DESTINATION_DATA_TYPE
+                            - VALIDATION_ACTION
+                            - MASK_VALUE
+                            - MASK_LENGTH
+                            - TRUNCATE_LENGTH
+                            - MATH_OPERATION_FIELDS_ORDER
+                            - CONCAT_FORMAT
+                            - SUBFIELD_CATEGORY_MAP
+                            - EXCLUDE_SOURCE_FIELDS_LIST
+                            - INCLUDE_NEW_FIELDS
+                            - ORDERED_PARTITION_KEYS_LIST
+                            type: string
+                          value:
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - key
+                        - value
+                        type: object
+                      type: array
+                    taskType:
+                      description: Type of task
+                      enum:
+                      - Arithmetic
+                      - Filter
+                      - Map
+                      - Map_all
+                      - Mask
+                      - Merge
+                      - Passthrough
+                      - Truncate
+                      - Validate
+                      - Partition
+                      type: string
+                  required:
+                  - sourceFields
+                  - taskType
+                  type: object
+                type: array
+              triggerConfig:
+                description: Trigger settings of the flow.
+                properties:
+                  triggerProperties:
+                    description: Details required based on the type of trigger
+                    properties:
+                      dataPullMode:
+                        enum:
+                        - Incremental
+                        - Complete
+                        type: string
+                      firstExecutionFrom:
+                        type: number
+                      flowErrorDeactivationThreshold:
+                        format: int64
+                        maximum: 100
+                        minimum: 1
+                        type: integer
+                      scheduleEndTime:
+                        type: number
+                      scheduleExpression:
+                        maxLength: 256
+                        minLength: 1
+                        type: string
+                      scheduleOffset:
+                        type: number
+                      scheduleStartTime:
+                        type: number
+                      timeZone:
+                        maxLength: 256
+                        type: string
+                    required:
+                    - scheduleExpression
+                    type: object
+                  triggerType:
+                    description: Trigger type of the flow
+                    enum:
+                    - Scheduled
+                    - Event
+                    - OnDemand
+                    type: string
+                required:
+                - triggerType
+                type: object
+            required:
+            - destinationFlowConfigList
+            - flowName
+            - sourceFlowConfig
+            - tasks
+            - triggerConfig
+            type: object
+          status:
+            description: AppFlowFlowStatus is the observed state of AWS::AppFlow::Flow.
+            properties:
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              flowArn:
+                description: |-
+                  ARN identifier of the flow.
+                  Read-only: reported by AWS after creation.
+                maxLength: 512
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

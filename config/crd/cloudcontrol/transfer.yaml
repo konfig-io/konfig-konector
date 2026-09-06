@@ -1,0 +1,2938 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferagreements.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferAgreement
+    listKind: TransferAgreementList
+    plural: transferagreements
+    singular: transferagreement
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferAgreement manages AWS::Transfer::Agreement through the AWS Cloud Control API. Resource Type definition
+          for AWS::Transfer::Agreement
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferAgreementSpec is the desired state of AWS::Transfer::Agreement.
+            properties:
+              accessRole:
+                description: Specifies the access role for the agreement.
+                maxLength: 2048
+                minLength: 20
+                type: string
+              baseDirectory:
+                description: Specifies the base directory for the agreement.
+                maxLength: 1024
+                type: string
+              customDirectories:
+                description: Specifies a separate directory for each type of file
+                  to store for an AS2 message.
+                properties:
+                  failedFilesDirectory:
+                    description: Specifies a location to store the failed files for
+                      an AS2 message.
+                    type: string
+                  mdnFilesDirectory:
+                    description: Specifies a location to store the MDN file for an
+                      AS2 message.
+                    type: string
+                  payloadFilesDirectory:
+                    description: Specifies a location to store the payload file for
+                      an AS2 message.
+                    type: string
+                  statusFilesDirectory:
+                    description: Specifies a location to store the status file for
+                      an AS2 message.
+                    type: string
+                  temporaryFilesDirectory:
+                    description: Specifies a location to store the temporary processing
+                      file for an AS2 message.
+                    type: string
+                required:
+                - failedFilesDirectory
+                - mdnFilesDirectory
+                - payloadFilesDirectory
+                - statusFilesDirectory
+                - temporaryFilesDirectory
+                type: object
+              description:
+                description: A textual description for the agreement.
+                maxLength: 200
+                type: string
+              enforceMessageSigning:
+                description: Specifies whether to enforce an AS2 message is signed
+                  for this agreement.
+                enum:
+                - ENABLED
+                - DISABLED
+                type: string
+              localProfileId:
+                description: A unique identifier for the local profile.
+                maxLength: 19
+                minLength: 19
+                type: string
+              partnerProfileId:
+                description: A unique identifier for the partner profile.
+                maxLength: 19
+                minLength: 19
+                type: string
+              preserveFilename:
+                description: Specifies whether to preserve the filename received for
+                  this agreement.
+                enum:
+                - ENABLED
+                - DISABLED
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serverId:
+                description: |-
+                  A unique identifier for the server.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 19
+                minLength: 19
+                type: string
+                x-kubernetes-validations:
+                - message: serverId is immutable
+                  rule: self == oldSelf
+              status:
+                description: Specifies the status of the agreement.
+                enum:
+                - ACTIVE
+                - INACTIVE
+                type: string
+              tags:
+                description: |-
+                  Key-value pairs that can be used to group and search for agreements. Tags are metadata attached to agreements
+                  for any purpose.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - accessRole
+            - localProfileId
+            - partnerProfileId
+            - serverId
+            type: object
+          status:
+            description: TransferAgreementStatus is the observed state of AWS::Transfer::Agreement.
+            properties:
+              agreementId:
+                description: |-
+                  A unique identifier for the agreement.
+                  Read-only: reported by AWS after creation.
+                maxLength: 19
+                type: string
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the agreement.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transfercertificates.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferCertificate
+    listKind: TransferCertificateList
+    plural: transfercertificates
+    singular: transfercertificate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferCertificate manages AWS::Transfer::Certificate through the AWS Cloud Control API. Resource Type
+          definition for AWS::Transfer::Certificate
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferCertificateSpec is the desired state of AWS::Transfer::Certificate.
+            properties:
+              activeDate:
+                description: Specifies the active date for the certificate.
+                type: string
+              certificate:
+                description: |-
+                  Specifies the certificate body to be imported.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 16384
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: certificate is immutable
+                  rule: self == oldSelf
+              certificateChain:
+                description: |-
+                  Specifies the certificate chain to be imported.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              description:
+                description: A textual description for the certificate.
+                maxLength: 200
+                type: string
+              inactiveDate:
+                description: Specifies the inactive date for the certificate.
+                type: string
+              privateKey:
+                description: |-
+                  Specifies the private key for the certificate.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 16384
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: |-
+                  Key-value pairs that can be used to group and search for certificates. Tags are metadata attached to
+                  certificates for any purpose.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              usage:
+                description: Specifies the usage type for the certificate.
+                enum:
+                - SIGNING
+                - ENCRYPTION
+                - TLS
+                type: string
+            required:
+            - certificate
+            - usage
+            type: object
+          status:
+            description: TransferCertificateStatus is the observed state of AWS::Transfer::Certificate.
+            properties:
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the agreement.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              certificateId:
+                description: |-
+                  A unique identifier for the certificate.
+                  Read-only: reported by AWS after creation.
+                maxLength: 22
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              notAfterDate:
+                description: |-
+                  Specifies the not after date for the certificate.
+                  Read-only: reported by AWS after creation.
+                type: string
+              notBeforeDate:
+                description: |-
+                  Specifies the not before date for the certificate.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serial:
+                description: |-
+                  Specifies Certificate's serial.
+                  Read-only: reported by AWS after creation.
+                maxLength: 48
+                type: string
+              status:
+                description: |-
+                  A status description for the certificate.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - ACTIVE
+                - PENDING
+                - INACTIVE
+                type: string
+              type:
+                description: |-
+                  Describing the type of certificate. With or without a private key.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - CERTIFICATE
+                - CERTIFICATE_WITH_PRIVATE_KEY
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferconnectors.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferConnector
+    listKind: TransferConnectorList
+    plural: transferconnectors
+    singular: transferconnector
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferConnector manages AWS::Transfer::Connector through the AWS Cloud Control API. Resource Type definition
+          for AWS::Transfer::Connector
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferConnectorSpec is the desired state of AWS::Transfer::Connector.
+            properties:
+              accessRole:
+                description: Specifies the access role for the connector.
+                maxLength: 2048
+                minLength: 20
+                type: string
+              as2Config:
+                description: Configuration for an AS2 connector.
+                properties:
+                  asyncMdnConfig:
+                    description: Configuration for an AS2 connector with ASYNC MDN
+                      Response
+                    properties:
+                      serverIds:
+                        items:
+                          type: string
+                        type: array
+                      url:
+                        description: URL of the server to receive the MDN response
+                          on
+                        type: string
+                    required:
+                    - serverIds
+                    - url
+                    type: object
+                  basicAuthSecretId:
+                    description: |-
+                      ARN or name of the secret in AWS Secrets Manager which contains the credentials for Basic authentication. If
+                      empty, Basic authentication is disabled for the AS2 connector
+                    maxLength: 2048
+                    type: string
+                  compression:
+                    description: Compression setting for this AS2 connector configuration.
+                    enum:
+                    - ZLIB
+                    - DISABLED
+                    type: string
+                  encryptionAlgorithm:
+                    description: Encryption algorithm for this AS2 connector configuration.
+                    enum:
+                    - AES128_CBC
+                    - AES192_CBC
+                    - AES256_CBC
+                    - NONE
+                    - DES_EDE3_CBC
+                    type: string
+                  localProfileId:
+                    description: A unique identifier for the local profile.
+                    maxLength: 19
+                    type: string
+                  mdnResponse:
+                    description: MDN Response setting for this AS2 connector configuration.
+                    enum:
+                    - SYNC
+                    - ASYNC
+                    - NONE
+                    type: string
+                  mdnSigningAlgorithm:
+                    description: MDN Signing algorithm for this AS2 connector configuration.
+                    enum:
+                    - SHA256
+                    - SHA384
+                    - SHA512
+                    - SHA1
+                    - NONE
+                    - DEFAULT
+                    type: string
+                  messageSubject:
+                    description: The message subject for this AS2 connector configuration.
+                    maxLength: 1024
+                    type: string
+                  partnerProfileId:
+                    description: A unique identifier for the partner profile.
+                    maxLength: 19
+                    type: string
+                  preserveContentType:
+                    description: Specifies whether to use the AWS S3 object content-type
+                      as the content-type for the AS2 message.
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                  signingAlgorithm:
+                    description: Signing algorithm for this AS2 connector configuration.
+                    enum:
+                    - SHA256
+                    - SHA384
+                    - SHA512
+                    - SHA1
+                    - NONE
+                    type: string
+                type: object
+              egressConfig:
+                description: Egress configuration for the connector.
+                properties:
+                  vpcLattice:
+                    description: TransferConnectorConnectorVpcLatticeEgressConfig
+                      is a nested property type of AWS::Transfer::Connector.
+                    properties:
+                      portNumber:
+                        description: Port to connect to on the target VPC Lattice
+                          resource
+                        format: int64
+                        maximum: 65535
+                        minimum: 1
+                        type: integer
+                      resourceConfigurationArn:
+                        description: ARN of the VPC Lattice resource configuration
+                        maxLength: 2048
+                        minLength: 1
+                        type: string
+                    required:
+                    - resourceConfigurationArn
+                    type: object
+                required:
+                - vpcLattice
+                type: object
+              egressType:
+                description: Specifies the egress type for the connector.
+                enum:
+                - SERVICE_MANAGED
+                - VPC_LATTICE
+                type: string
+              ipAddressType:
+                enum:
+                - IPV4
+                - DUALSTACK
+                type: string
+              loggingRole:
+                description: Specifies the logging role for the connector.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              securityPolicyName:
+                description: Security policy for SFTP Connector
+                maxLength: 50
+                type: string
+              sftpConfig:
+                description: Configuration for an SFTP connector.
+                properties:
+                  maxConcurrentConnections:
+                    description: |-
+                      Specifies the number of active connections that your connector can establish with the remote server at the
+                      same time.
+                    format: int64
+                    maximum: 5
+                    minimum: 1
+                    type: integer
+                  trustedHostKeys:
+                    description: List of public host keys, for the external server
+                      to which you are connecting.
+                    items:
+                      type: string
+                    type: array
+                  userSecretId:
+                    description: ARN or name of the secret in AWS Secrets Manager
+                      which contains the SFTP user's private keys or passwords.
+                    maxLength: 2048
+                    type: string
+                type: object
+              tags:
+                description: |-
+                  Key-value pairs that can be used to group and search for connectors. Tags are metadata attached to connectors
+                  for any purpose.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              url:
+                description: URL for Connector
+                maxLength: 255
+                type: string
+            required:
+            - accessRole
+            type: object
+          status:
+            description: TransferConnectorStatus is the observed state of AWS::Transfer::Connector.
+            properties:
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the connector.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              connectorId:
+                description: |-
+                  A unique identifier for the connector.
+                  Read-only: reported by AWS after creation.
+                maxLength: 19
+                type: string
+              errorMessage:
+                description: |-
+                  Detailed error message when Connector in ERRORED status
+                  Read-only: reported by AWS after creation.
+                maxLength: 2048
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serviceManagedEgressIpAddresses:
+                description: |-
+                  The list of egress IP addresses of this connector. These IP addresses are assigned automatically when you
+                  create the connector.
+                  Read-only: reported by AWS after creation.
+                items:
+                  type: string
+                type: array
+              status:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - ACTIVE
+                - PENDING
+                - ERRORED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferhostkeys.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferHostKey
+    listKind: TransferHostKeyList
+    plural: transferhostkeys
+    singular: transferhostkey
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferHostKey manages AWS::Transfer::HostKey through the AWS Cloud Control API. Resource type definition for
+          AWS::Transfer::HostKey
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferHostKeySpec is the desired state of AWS::Transfer::HostKey.
+            properties:
+              description:
+                description: The text description for this host key.
+                maxLength: 200
+                type: string
+              hostKeyBody:
+                description: |-
+                  The private key portion of an SSH key pair. Transfer Family accepts RSA, ECDSA, and ED25519 keys.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 4096
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              serverId:
+                description: |-
+                  The identifier of the server that contains the host key.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 19
+                minLength: 19
+                type: string
+                x-kubernetes-validations:
+                - message: serverId is immutable
+                  rule: self == oldSelf
+              tags:
+                description: Key-value pairs that can be used to group and search
+                  for host keys.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - serverId
+            type: object
+          status:
+            description: TransferHostKeyStatus is the observed state of AWS::Transfer::HostKey.
+            properties:
+              arn:
+                description: |-
+                  The unique Amazon Resource Name (ARN) for the host key.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              dateImported:
+                description: |-
+                  The date on which the host key was added to the server.
+                  Read-only: reported by AWS after creation.
+                type: string
+              hostKeyFingerprint:
+                description: |-
+                  The public key fingerprint, which is a short sequence of bytes used to identify the longer public key.
+                  Read-only: reported by AWS after creation.
+                type: string
+              hostKeyId:
+                description: |-
+                  A unique identifier for the host key.
+                  Read-only: reported by AWS after creation.
+                maxLength: 25
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              type:
+                description: |-
+                  The encryption algorithm that is used for the host key.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferprofiles.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferProfile
+    listKind: TransferProfileList
+    plural: transferprofiles
+    singular: transferprofile
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferProfile manages AWS::Transfer::Profile through the AWS Cloud Control API. Resource Type definition for
+          AWS::Transfer::Profile
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferProfileSpec is the desired state of AWS::Transfer::Profile.
+            properties:
+              as2Id:
+                description: AS2 identifier agreed with a trading partner.
+                maxLength: 128
+                minLength: 1
+                type: string
+              certificateIds:
+                description: |-
+                  List of the certificate IDs associated with this profile to be used for encryption and signing of AS2
+                  messages.
+                items:
+                  type: string
+                type: array
+              profileType:
+                description: |-
+                  Enum specifying whether the profile is local or associated with a trading partner.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - LOCAL
+                - PARTNER
+                type: string
+                x-kubernetes-validations:
+                - message: profileType is immutable
+                  rule: self == oldSelf
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - as2Id
+            - profileType
+            type: object
+          status:
+            description: TransferProfileStatus is the observed state of AWS::Transfer::Profile.
+            properties:
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the profile.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              profileId:
+                description: |-
+                  A unique identifier for the profile
+                  Read-only: reported by AWS after creation.
+                maxLength: 19
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferservers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferServer
+    listKind: TransferServerList
+    plural: transferservers
+    singular: transferserver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferServer manages AWS::Transfer::Server through the AWS Cloud Control API. Definition of
+          AWS::Transfer::Server Resource Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferServerSpec is the desired state of AWS::Transfer::Server.
+            properties:
+              certificate:
+                maxLength: 1600
+                type: string
+              domain:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                enum:
+                - S3
+                - EFS
+                type: string
+              endpointDetails:
+                description: TransferServerEndpointDetails is a nested property type
+                  of AWS::Transfer::Server.
+                properties:
+                  addressAllocationIds:
+                    items:
+                      type: string
+                    type: array
+                  securityGroupIds:
+                    items:
+                      type: string
+                    type: array
+                  subnetIds:
+                    items:
+                      type: string
+                    type: array
+                  vpcEndpointId:
+                    maxLength: 22
+                    type: string
+                  vpcId:
+                    type: string
+                type: object
+              endpointType:
+                enum:
+                - PUBLIC
+                - VPC
+                - VPC_ENDPOINT
+                type: string
+              identityProviderDetails:
+                description: TransferServerIdentityProviderDetails is a nested property
+                  type of AWS::Transfer::Server.
+                properties:
+                  directoryId:
+                    maxLength: 12
+                    type: string
+                  function:
+                    maxLength: 170
+                    type: string
+                  invocationRole:
+                    maxLength: 2048
+                    type: string
+                  sftpAuthenticationMethods:
+                    enum:
+                    - PASSWORD
+                    - PUBLIC_KEY
+                    - PUBLIC_KEY_OR_PASSWORD
+                    - PUBLIC_KEY_AND_PASSWORD
+                    type: string
+                  url:
+                    maxLength: 255
+                    type: string
+                type: object
+              identityProviderType:
+                enum:
+                - SERVICE_MANAGED
+                - API_GATEWAY
+                - AWS_DIRECTORY_SERVICE
+                - AWS_LAMBDA
+                type: string
+              ipAddressType:
+                enum:
+                - IPV4
+                - DUALSTACK
+                type: string
+              loggingRole:
+                maxLength: 2048
+                type: string
+              postAuthenticationLoginBanner:
+                maxLength: 4096
+                type: string
+              preAuthenticationLoginBanner:
+                maxLength: 4096
+                type: string
+              protocolDetails:
+                description: TransferServerProtocolDetails is a nested property type
+                  of AWS::Transfer::Server.
+                properties:
+                  as2Transports:
+                    items:
+                      type: string
+                    type: array
+                  passiveIp:
+                    maxLength: 15
+                    type: string
+                  setStatOption:
+                    enum:
+                    - DEFAULT
+                    - ENABLE_NO_OP
+                    type: string
+                  tlsSessionResumptionMode:
+                    enum:
+                    - DISABLED
+                    - ENABLED
+                    - ENFORCED
+                    type: string
+                type: object
+              protocols:
+                items:
+                  type: string
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              s3StorageOptions:
+                description: TransferServerS3StorageOptions is a nested property type
+                  of AWS::Transfer::Server.
+                properties:
+                  directoryListingOptimization:
+                    enum:
+                    - ENABLED
+                    - DISABLED
+                    type: string
+                type: object
+              securityPolicyName:
+                maxLength: 100
+                type: string
+              structuredLogDestinations:
+                items:
+                  type: string
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              workflowDetails:
+                description: TransferServerWorkflowDetails is a nested property type
+                  of AWS::Transfer::Server.
+                properties:
+                  onPartialUpload:
+                    items:
+                      description: TransferServerWorkflowDetail is a nested property
+                        type of AWS::Transfer::Server.
+                      properties:
+                        executionRole:
+                          maxLength: 2048
+                          minLength: 20
+                          type: string
+                        workflowId:
+                          maxLength: 19
+                          minLength: 19
+                          type: string
+                      required:
+                      - executionRole
+                      - workflowId
+                      type: object
+                    type: array
+                  onUpload:
+                    items:
+                      description: TransferServerWorkflowDetail is a nested property
+                        type of AWS::Transfer::Server.
+                      properties:
+                        executionRole:
+                          maxLength: 2048
+                          minLength: 20
+                          type: string
+                        workflowId:
+                          maxLength: 19
+                          minLength: 19
+                          type: string
+                      required:
+                      - executionRole
+                      - workflowId
+                      type: object
+                    type: array
+                type: object
+            type: object
+          status:
+            description: TransferServerStatus is the observed state of AWS::Transfer::Server.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1600
+                type: string
+              as2ServiceManagedEgressIpAddresses:
+                description: |-
+                  The list of egress IP addresses of this server. These IP addresses are only relevant for servers that use the
+                  AS2 protocol. They are used for sending asynchronous MDNs. These IP addresses are assigned automatically when
+                  you create an AS2 server. Additionally, if you update an existing server and add the AS2 protocol, static IP
+                  addresses are assigned as well.
+                  Read-only: reported by AWS after creation.
+                items:
+                  type: string
+                type: array
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              serverId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 19
+                type: string
+              state:
+                description: 'Read-only: reported by AWS after creation.'
+                enum:
+                - OFFLINE
+                - ONLINE
+                - STARTING
+                - STOPPING
+                - START_FAILED
+                - STOP_FAILED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferusers.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferUser
+    listKind: TransferUserList
+    plural: transferusers
+    singular: transferuser
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferUser manages AWS::Transfer::User through the AWS Cloud Control API. Definition of AWS::Transfer::User
+          Resource Type
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferUserSpec is the desired state of AWS::Transfer::User.
+            properties:
+              homeDirectory:
+                maxLength: 1024
+                type: string
+              homeDirectoryMappings:
+                items:
+                  description: TransferUserHomeDirectoryMapEntry is a nested property
+                    type of AWS::Transfer::User.
+                  properties:
+                    entry:
+                      maxLength: 1024
+                      type: string
+                    target:
+                      maxLength: 1024
+                      type: string
+                    type:
+                      enum:
+                      - FILE
+                      - DIRECTORY
+                      type: string
+                  required:
+                  - entry
+                  - target
+                  type: object
+                type: array
+              homeDirectoryType:
+                enum:
+                - PATH
+                - LOGICAL
+                type: string
+              policy:
+                maxLength: 2048
+                type: string
+              posixProfile:
+                description: TransferUserPosixProfile is a nested property type of
+                  AWS::Transfer::User.
+                properties:
+                  gid:
+                    type: number
+                  secondaryGids:
+                    items:
+                      type: number
+                    type: array
+                  uid:
+                    type: number
+                required:
+                - gid
+                - uid
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              role:
+                maxLength: 2048
+                minLength: 20
+                type: string
+              serverId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 19
+                minLength: 19
+                type: string
+                x-kubernetes-validations:
+                - message: serverId is immutable
+                  rule: self == oldSelf
+              sshPublicKeys:
+                description: This represents the SSH User Public Keys for CloudFormation
+                  resource
+                items:
+                  type: string
+                type: array
+              tags:
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              userName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 100
+                minLength: 3
+                type: string
+                x-kubernetes-validations:
+                - message: userName is immutable
+                  rule: self == oldSelf
+            required:
+            - role
+            - serverId
+            - userName
+            type: object
+          status:
+            description: TransferUserStatus is the observed state of AWS::Transfer::User.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferwebapps.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferWebApp
+    listKind: TransferWebAppList
+    plural: transferwebapps
+    singular: transferwebapp
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferWebApp manages AWS::Transfer::WebApp through the AWS Cloud Control API. Resource Type definition for
+          AWS::Transfer::WebApp
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferWebAppSpec is the desired state of AWS::Transfer::WebApp.
+            properties:
+              accessEndpoint:
+                description: |-
+                  The AccessEndpoint is the URL that you provide to your users for them to interact with the Transfer Family web
+                  app. You can specify a custom URL or use the default value.
+                maxLength: 1024
+                type: string
+              endpointDetails:
+                description: TransferWebAppEndpointDetails is a nested property type
+                  of AWS::Transfer::WebApp.
+                properties:
+                  vpc:
+                    description: TransferWebAppVpc is a nested property type of AWS::Transfer::WebApp.
+                    properties:
+                      ipAddressType:
+                        description: The IP address type for the VPC endpoint used
+                          by the web app.
+                        enum:
+                        - IPV4
+                        - DUALSTACK
+                        type: string
+                      securityGroupIds:
+                        items:
+                          type: string
+                        type: array
+                      subnetIds:
+                        items:
+                          type: string
+                        type: array
+                      vpcId:
+                        maxLength: 21
+                        type: string
+                    type: object
+                type: object
+              identityProviderDetails:
+                description: TransferWebAppIdentityProviderDetails is a nested property
+                  type of AWS::Transfer::WebApp.
+                properties:
+                  applicationArn:
+                    maxLength: 1224
+                    type: string
+                  instanceArn:
+                    description: The Amazon Resource Name (ARN) for the IAM Identity
+                      Center used for the web app.
+                    maxLength: 1224
+                    type: string
+                  role:
+                    description: The IAM role in IAM Identity Center used for the
+                      web app.
+                    maxLength: 2048
+                    type: string
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: Key-value pairs that can be used to group and search
+                  for web apps.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              webAppCustomization:
+                description: TransferWebAppWebAppCustomization is a nested property
+                  type of AWS::Transfer::WebApp.
+                properties:
+                  faviconFile:
+                    description: Specifies a favicon to display in the browser tab.
+                    maxLength: 20960
+                    type: string
+                  logoFile:
+                    description: Specifies a logo to display on the web app.
+                    maxLength: 51200
+                    type: string
+                  title:
+                    description: Specifies a title to display on the web app.
+                    maxLength: 100
+                    type: string
+                type: object
+              webAppEndpointPolicy:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                enum:
+                - STANDARD
+                - FIPS
+                type: string
+              webAppUnits:
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - identityProviderDetails
+            type: object
+          status:
+            description: TransferWebAppStatus is the observed state of AWS::Transfer::WebApp.
+            properties:
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the web app.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              vpcEndpointId:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 22
+                type: string
+              webAppId:
+                description: |-
+                  A unique identifier for the web app.
+                  Read-only: reported by AWS after creation.
+                maxLength: 24
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: transferworkflows.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TransferWorkflow
+    listKind: TransferWorkflowList
+    plural: transferworkflows
+    singular: transferworkflow
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TransferWorkflow manages AWS::Transfer::Workflow through the AWS Cloud Control API. Resource Type definition
+          for AWS::Transfer::Workflow
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransferWorkflowSpec is the desired state of AWS::Transfer::Workflow.
+            properties:
+              description:
+                description: |-
+                  A textual description for the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 256
+                type: string
+              onExceptionSteps:
+                description: |-
+                  Specifies the steps (actions) to take if any errors are encountered during execution of the workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: TransferWorkflowWorkflowStep is a nested property type
+                    of AWS::Transfer::Workflow.
+                  properties:
+                    copyStepDetails:
+                      description: Details for a step that performs a file copy.
+                      properties:
+                        destinationFileLocation:
+                          description: TransferWorkflowS3FileLocation is a nested
+                            property type of AWS::Transfer::Workflow.
+                          properties:
+                            s3FileLocation:
+                              description: TransferWorkflowS3InputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                bucket:
+                                  description: Specifies the S3 bucket that contains
+                                    the file.
+                                  maxLength: 63
+                                  type: string
+                                key:
+                                  description: The name assigned to the file when
+                                    it was created in S3. You use the object key to
+                                    retrieve the object.
+                                  maxLength: 1024
+                                  type: string
+                              type: object
+                          type: object
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        overwriteExisting:
+                          description: A flag that indicates whether or not to overwrite
+                            an existing file of the same name. The default is FALSE.
+                          enum:
+                          - "TRUE"
+                          - "FALSE"
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                      type: object
+                    customStepDetails:
+                      description: Details for a step that invokes a lambda function.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        target:
+                          description: The ARN for the lambda function that is being
+                            called.
+                          maxLength: 170
+                          type: string
+                        timeoutSeconds:
+                          description: Timeout, in seconds, for the step.
+                          format: int64
+                          maximum: 1800
+                          minimum: 1
+                          type: integer
+                      type: object
+                    decryptStepDetails:
+                      description: Details for a step that performs a file decryption.
+                      properties:
+                        destinationFileLocation:
+                          description: TransferWorkflowInputFileLocation is a nested
+                            property type of AWS::Transfer::Workflow.
+                          properties:
+                            efsFileLocation:
+                              description: TransferWorkflowEfsInputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                fileSystemId:
+                                  description: Specifies the EFS filesystem that contains
+                                    the file.
+                                  maxLength: 128
+                                  type: string
+                                path:
+                                  description: The name assigned to the file when
+                                    it was created in EFS. You use the object path
+                                    to retrieve the object.
+                                  maxLength: 65536
+                                  type: string
+                              type: object
+                            s3FileLocation:
+                              description: TransferWorkflowS3InputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                bucket:
+                                  description: Specifies the S3 bucket that contains
+                                    the file.
+                                  maxLength: 63
+                                  type: string
+                                key:
+                                  description: The name assigned to the file when
+                                    it was created in S3. You use the object key to
+                                    retrieve the object.
+                                  maxLength: 1024
+                                  type: string
+                              type: object
+                          type: object
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        overwriteExisting:
+                          description: A flag that indicates whether or not to overwrite
+                            an existing file of the same name. The default is FALSE.
+                          enum:
+                          - "TRUE"
+                          - "FALSE"
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        type:
+                          description: Specifies which encryption method to use.
+                          enum:
+                          - PGP
+                          type: string
+                      required:
+                      - destinationFileLocation
+                      - type
+                      type: object
+                    deleteStepDetails:
+                      description: Details for a step that deletes the file.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                      type: object
+                    tagStepDetails:
+                      description: Details for a step that creates one or more tags.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        tags:
+                          description: Array that contains from 1 to 10 key/value
+                            pairs.
+                          items:
+                            description: CFNTag is the CloudFormation Tag shape shared
+                              by generated kinds.
+                            properties:
+                              key:
+                                minLength: 1
+                                type: string
+                              value:
+                                type: string
+                            required:
+                            - key
+                            - value
+                            type: object
+                          type: array
+                      type: object
+                    type:
+                      enum:
+                      - COPY
+                      - CUSTOM
+                      - DECRYPT
+                      - DELETE
+                      - TAG
+                      type: string
+                  type: object
+                type: array
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              steps:
+                description: |-
+                  Specifies the details for the steps that are in the specified workflow.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  description: TransferWorkflowWorkflowStep is a nested property type
+                    of AWS::Transfer::Workflow.
+                  properties:
+                    copyStepDetails:
+                      description: Details for a step that performs a file copy.
+                      properties:
+                        destinationFileLocation:
+                          description: TransferWorkflowS3FileLocation is a nested
+                            property type of AWS::Transfer::Workflow.
+                          properties:
+                            s3FileLocation:
+                              description: TransferWorkflowS3InputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                bucket:
+                                  description: Specifies the S3 bucket that contains
+                                    the file.
+                                  maxLength: 63
+                                  type: string
+                                key:
+                                  description: The name assigned to the file when
+                                    it was created in S3. You use the object key to
+                                    retrieve the object.
+                                  maxLength: 1024
+                                  type: string
+                              type: object
+                          type: object
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        overwriteExisting:
+                          description: A flag that indicates whether or not to overwrite
+                            an existing file of the same name. The default is FALSE.
+                          enum:
+                          - "TRUE"
+                          - "FALSE"
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                      type: object
+                    customStepDetails:
+                      description: Details for a step that invokes a lambda function.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        target:
+                          description: The ARN for the lambda function that is being
+                            called.
+                          maxLength: 170
+                          type: string
+                        timeoutSeconds:
+                          description: Timeout, in seconds, for the step.
+                          format: int64
+                          maximum: 1800
+                          minimum: 1
+                          type: integer
+                      type: object
+                    decryptStepDetails:
+                      description: Details for a step that performs a file decryption.
+                      properties:
+                        destinationFileLocation:
+                          description: TransferWorkflowInputFileLocation is a nested
+                            property type of AWS::Transfer::Workflow.
+                          properties:
+                            efsFileLocation:
+                              description: TransferWorkflowEfsInputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                fileSystemId:
+                                  description: Specifies the EFS filesystem that contains
+                                    the file.
+                                  maxLength: 128
+                                  type: string
+                                path:
+                                  description: The name assigned to the file when
+                                    it was created in EFS. You use the object path
+                                    to retrieve the object.
+                                  maxLength: 65536
+                                  type: string
+                              type: object
+                            s3FileLocation:
+                              description: TransferWorkflowS3InputFileLocation is
+                                a nested property type of AWS::Transfer::Workflow.
+                              properties:
+                                bucket:
+                                  description: Specifies the S3 bucket that contains
+                                    the file.
+                                  maxLength: 63
+                                  type: string
+                                key:
+                                  description: The name assigned to the file when
+                                    it was created in S3. You use the object key to
+                                    retrieve the object.
+                                  maxLength: 1024
+                                  type: string
+                              type: object
+                          type: object
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        overwriteExisting:
+                          description: A flag that indicates whether or not to overwrite
+                            an existing file of the same name. The default is FALSE.
+                          enum:
+                          - "TRUE"
+                          - "FALSE"
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        type:
+                          description: Specifies which encryption method to use.
+                          enum:
+                          - PGP
+                          type: string
+                      required:
+                      - destinationFileLocation
+                      - type
+                      type: object
+                    deleteStepDetails:
+                      description: Details for a step that deletes the file.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                      type: object
+                    tagStepDetails:
+                      description: Details for a step that creates one or more tags.
+                      properties:
+                        name:
+                          description: The name of the step, used as an identifier.
+                          maxLength: 30
+                          type: string
+                        sourceFileLocation:
+                          description: Specifies which file to use as input to the
+                            workflow step.
+                          maxLength: 256
+                          type: string
+                        tags:
+                          description: Array that contains from 1 to 10 key/value
+                            pairs.
+                          items:
+                            description: CFNTag is the CloudFormation Tag shape shared
+                              by generated kinds.
+                            properties:
+                              key:
+                                minLength: 1
+                                type: string
+                              value:
+                                type: string
+                            required:
+                            - key
+                            - value
+                            type: object
+                          type: array
+                      type: object
+                    type:
+                      enum:
+                      - COPY
+                      - CUSTOM
+                      - DECRYPT
+                      - DELETE
+                      - TAG
+                      type: string
+                  type: object
+                type: array
+              tags:
+                description: |-
+                  Key-value pairs that can be used to group and search for workflows. Tags are metadata attached to workflows
+                  for any purpose.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - steps
+            type: object
+          status:
+            description: TransferWorkflowStatus is the observed state of AWS::Transfer::Workflow.
+            properties:
+              arn:
+                description: |-
+                  Specifies the unique Amazon Resource Name (ARN) for the workflow.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1600
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              workflowId:
+                description: |-
+                  A unique identifier for the workflow.
+                  Read-only: reported by AWS after creation.
+                maxLength: 19
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

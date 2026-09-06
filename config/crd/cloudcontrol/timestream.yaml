@@ -1,0 +1,1722 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: timestreamdatabases.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TimestreamDatabase
+    listKind: TimestreamDatabaseList
+    plural: timestreamdatabases
+    singular: timestreamdatabase
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TimestreamDatabase manages AWS::Timestream::Database through the AWS Cloud Control API. The
+          AWS::Timestream::Database resource creates a Timestream database.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TimestreamDatabaseSpec is the desired state of AWS::Timestream::Database.
+            properties:
+              databaseName:
+                description: |-
+                  The name for the database. If you don't specify a name, AWS CloudFormation generates a unique physical ID and
+                  uses that ID for the database name.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              kmsKeyId:
+                description: |-
+                  The KMS key for the database. If the KMS key is not specified, the database will be encrypted with a
+                  Timestream managed KMS key located in your account.
+                maxLength: 2048
+                type: string
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            type: object
+          status:
+            description: TimestreamDatabaseStatus is the observed state of AWS::Timestream::Database.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: timestreaminfluxdbclusters.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TimestreamInfluxDBCluster
+    listKind: TimestreamInfluxDBClusterList
+    plural: timestreaminfluxdbclusters
+    singular: timestreaminfluxdbcluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TimestreamInfluxDBCluster manages AWS::Timestream::InfluxDBCluster through the AWS Cloud Control API. The
+          AWS::Timestream::InfluxDBCluster resource creates an InfluxDB cluster.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TimestreamInfluxDBClusterSpec is the desired state of AWS::Timestream::InfluxDBCluster.
+            properties:
+              allocatedStorage:
+                description: |-
+                  The allocated storage for the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                format: int64
+                maximum: 15360
+                minimum: 20
+                type: integer
+              bucket:
+                description: |-
+                  The bucket for the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              dbInstanceType:
+                description: The compute instance of the InfluxDB cluster.
+                enum:
+                - db.influx.medium
+                - db.influx.large
+                - db.influx.xlarge
+                - db.influx.2xlarge
+                - db.influx.4xlarge
+                - db.influx.8xlarge
+                - db.influx.12xlarge
+                - db.influx.16xlarge
+                - db.influx.24xlarge
+                type: string
+              dbParameterGroupIdentifier:
+                description: The name of an existing InfluxDB parameter group.
+                maxLength: 64
+                type: string
+              dbStorageType:
+                description: |-
+                  The storage type of the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - InfluxIOIncludedT1
+                - InfluxIOIncludedT2
+                - InfluxIOIncludedT3
+                type: string
+              deploymentType:
+                description: |-
+                  Deployment type of the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - MULTI_NODE_READ_REPLICAS
+                type: string
+              failoverMode:
+                description: Failover mode of the InfluxDB cluster.
+                enum:
+                - AUTOMATIC
+                - NO_FAILOVER
+                type: string
+              logDeliveryConfiguration:
+                description: Configuration for sending logs to customer account from
+                  the InfluxDB cluster.
+                properties:
+                  s3Configuration:
+                    description: S3 configuration for sending logs to customer account
+                      from the InfluxDB cluster.
+                    properties:
+                      bucketName:
+                        description: The bucket name for logs to be sent from the
+                          InfluxDB cluster
+                        maxLength: 63
+                        minLength: 3
+                        type: string
+                      enabled:
+                        description: Specifies whether logging to customer specified
+                          bucket is enabled.
+                        type: boolean
+                    required:
+                    - bucketName
+                    - enabled
+                    type: object
+                required:
+                - s3Configuration
+                type: object
+              maintenanceSchedule:
+                description: The maintenance schedule for the InfluxDB cluster.
+                properties:
+                  preferredMaintenanceWindow:
+                    description: The preferred maintenance window in format ddd:HH:MM-ddd:HH:MM.
+                    maxLength: 19
+                    type: string
+                  timezone:
+                    description: The IANA timezone identifier for the maintenance
+                      schedule.
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                required:
+                - preferredMaintenanceWindow
+                - timezone
+                type: object
+              name:
+                description: |-
+                  The unique name that is associated with the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 40
+                type: string
+              networkType:
+                description: |-
+                  Network type of the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - IPV4
+                - DUAL
+                type: string
+              organization:
+                description: |-
+                  The organization for the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              password:
+                description: |-
+                  The password for the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              port:
+                description: The port number on which InfluxDB accepts connections.
+                format: int64
+                maximum: 65535
+                minimum: 1024
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publiclyAccessible:
+                description: |-
+                  Attach a public IP to the customer ENI.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: An arbitrary set of tags (key-value pairs) for this DB
+                  cluster.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              username:
+                description: |-
+                  The username for the InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              vpcSecurityGroupIds:
+                description: |-
+                  A list of Amazon EC2 VPC security groups to associate with this InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              vpcSubnetIds:
+                description: |-
+                  A list of EC2 subnet IDs for this InfluxDB cluster.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: TimestreamInfluxDBClusterStatus is the observed state of
+              AWS::Timestream::InfluxDBCluster.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) that is associated with the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1011
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpoint:
+                description: |-
+                  The connection endpoint for the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                type: string
+              engineType:
+                description: |-
+                  The engine type for the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - INFLUXDB_V2
+                - INFLUXDB_V3_CORE
+                - INFLUXDB_V3_ENTERPRISE
+                type: string
+              id:
+                description: |-
+                  The service generated unique identifier for InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                maxLength: 64
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              influxAuthParametersSecretArn:
+                description: |-
+                  The Auth parameters secret Amazon Resource name (ARN) that is associated with the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              nextMaintenanceTime:
+                description: |-
+                  The timestamp of the next scheduled maintenance event.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              readerEndpoint:
+                description: |-
+                  The reader endpoint for the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              status:
+                description: |-
+                  Status of the InfluxDB cluster.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - CREATING
+                - UPDATING
+                - UPDATING_INSTANCE_TYPE
+                - MAINTENANCE
+                - DELETING
+                - AVAILABLE
+                - REBOOTING
+                - REBOOT_FAILED
+                - PARTIALLY_AVAILABLE
+                - FAILED
+                - DELETED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: timestreaminfluxdbinstances.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TimestreamInfluxDBInstance
+    listKind: TimestreamInfluxDBInstanceList
+    plural: timestreaminfluxdbinstances
+    singular: timestreaminfluxdbinstance
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TimestreamInfluxDBInstance manages AWS::Timestream::InfluxDBInstance through the AWS Cloud Control API. The
+          AWS::Timestream::InfluxDBInstance resource creates an InfluxDB instance.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TimestreamInfluxDBInstanceSpec is the desired state of AWS::Timestream::InfluxDBInstance.
+            properties:
+              allocatedStorage:
+                description: The allocated storage for the InfluxDB instance.
+                format: int64
+                maximum: 16384
+                minimum: 20
+                type: integer
+              bucket:
+                description: |-
+                  The bucket for the InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              dbInstanceType:
+                description: The compute instance of the InfluxDB instance.
+                enum:
+                - db.influx.medium
+                - db.influx.large
+                - db.influx.xlarge
+                - db.influx.2xlarge
+                - db.influx.4xlarge
+                - db.influx.8xlarge
+                - db.influx.12xlarge
+                - db.influx.16xlarge
+                - db.influx.24xlarge
+                type: string
+              dbParameterGroupIdentifier:
+                description: The name of an existing InfluxDB parameter group.
+                maxLength: 64
+                type: string
+              dbStorageType:
+                description: The storage type of the InfluxDB instance.
+                enum:
+                - InfluxIOIncludedT1
+                - InfluxIOIncludedT2
+                - InfluxIOIncludedT3
+                type: string
+              deploymentType:
+                description: Deployment type of the InfluxDB Instance.
+                enum:
+                - SINGLE_AZ
+                - WITH_MULTIAZ_STANDBY
+                type: string
+              logDeliveryConfiguration:
+                description: Configuration for sending logs to customer account from
+                  the InfluxDB instance.
+                properties:
+                  s3Configuration:
+                    description: S3 configuration for sending logs to customer account
+                      from the InfluxDB instance.
+                    properties:
+                      bucketName:
+                        description: The bucket name for logs to be sent from the
+                          InfluxDB instance
+                        maxLength: 63
+                        minLength: 3
+                        type: string
+                      enabled:
+                        description: Specifies whether logging to customer specified
+                          bucket is enabled.
+                        type: boolean
+                    required:
+                    - bucketName
+                    - enabled
+                    type: object
+                required:
+                - s3Configuration
+                type: object
+              maintenanceSchedule:
+                description: The maintenance schedule for the InfluxDB instance.
+                properties:
+                  preferredMaintenanceWindow:
+                    description: The preferred maintenance window in format ddd:HH:MM-ddd:HH:MM.
+                    maxLength: 19
+                    type: string
+                  timezone:
+                    description: The IANA timezone identifier for the maintenance
+                      schedule.
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                required:
+                - preferredMaintenanceWindow
+                - timezone
+                type: object
+              name:
+                description: |-
+                  The unique name that is associated with the InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 40
+                type: string
+              networkType:
+                description: |-
+                  Network type of the InfluxDB Instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                enum:
+                - IPV4
+                - DUAL
+                type: string
+              organization:
+                description: |-
+                  The organization for the InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              password:
+                description: |-
+                  The password for the InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              port:
+                description: The port number on which InfluxDB accepts connections.
+                format: int64
+                maximum: 65535
+                minimum: 1024
+                type: integer
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              publiclyAccessible:
+                description: |-
+                  Attach a public IP to the customer ENI.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: boolean
+              tags:
+                description: An arbitrary set of tags (key-value pairs) for this DB
+                  instance.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              username:
+                description: |-
+                  The username for the InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                maxLength: 64
+                type: string
+              vpcSecurityGroupIds:
+                description: |-
+                  A list of Amazon EC2 VPC security groups to associate with this InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+              vpcSubnetIds:
+                description: |-
+                  A list of EC2 subnet IDs for this InfluxDB instance.
+                  Create-only in AWS: changing it requires replacing the resource.
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: TimestreamInfluxDBInstanceStatus is the observed state of
+              AWS::Timestream::InfluxDBInstance.
+            properties:
+              arn:
+                description: |-
+                  The Amazon Resource Name (ARN) that is associated with the InfluxDB instance.
+                  Read-only: reported by AWS after creation.
+                maxLength: 1011
+                type: string
+              availabilityZone:
+                description: |-
+                  The Availability Zone (AZ) where the InfluxDB instance is created.
+                  Read-only: reported by AWS after creation.
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              endpoint:
+                description: |-
+                  The connection endpoint for the InfluxDB instance.
+                  Read-only: reported by AWS after creation.
+                type: string
+              id:
+                description: |-
+                  The service generated unique identifier for InfluxDB instance.
+                  Read-only: reported by AWS after creation.
+                maxLength: 64
+                type: string
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              influxAuthParametersSecretArn:
+                description: |-
+                  The Auth parameters secret Amazon Resource name (ARN) that is associated with the InfluxDB instance.
+                  Read-only: reported by AWS after creation.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              nextMaintenanceTime:
+                description: |-
+                  The timestamp of the next scheduled maintenance event.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              secondaryAvailabilityZone:
+                description: |-
+                  The Secondary Availability Zone (AZ) where the InfluxDB instance is created, if DeploymentType is set as
+                  WITH_MULTIAZ_STANDBY.
+                  Read-only: reported by AWS after creation.
+                type: string
+              status:
+                description: |-
+                  Status of the InfluxDB Instance.
+                  Read-only: reported by AWS after creation.
+                enum:
+                - CREATING
+                - AVAILABLE
+                - DELETING
+                - MODIFYING
+                - MAINTENANCE
+                - UPDATING
+                - UPDATING_DEPLOYMENT_TYPE
+                - UPDATING_INSTANCE_TYPE
+                - REBOOTING
+                - REBOOT_FAILED
+                - DELETED
+                - FAILED
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: timestreamscheduledqueries.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TimestreamScheduledQuery
+    listKind: TimestreamScheduledQueryList
+    plural: timestreamscheduledqueries
+    singular: timestreamscheduledquery
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TimestreamScheduledQuery manages AWS::Timestream::ScheduledQuery through the AWS Cloud Control API. The
+          AWS::Timestream::ScheduledQuery resource creates a Timestream Scheduled Query.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TimestreamScheduledQuerySpec is the desired state of AWS::Timestream::ScheduledQuery.
+            properties:
+              clientToken:
+                maxLength: 128
+                type: string
+              errorReportConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  s3Configuration:
+                    description: TimestreamScheduledQueryS3Configuration is a nested
+                      property type of AWS::Timestream::ScheduledQuery.
+                    properties:
+                      bucketName:
+                        maxLength: 63
+                        minLength: 3
+                        type: string
+                      encryptionOption:
+                        enum:
+                        - SSE_S3
+                        - SSE_KMS
+                        type: string
+                      objectKeyPrefix:
+                        maxLength: 896
+                        type: string
+                    required:
+                    - bucketName
+                    type: object
+                required:
+                - s3Configuration
+                type: object
+              kmsKeyId:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                type: string
+              notificationConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  snsConfiguration:
+                    description: TimestreamScheduledQuerySnsConfiguration is a nested
+                      property type of AWS::Timestream::ScheduledQuery.
+                    properties:
+                      topicArn:
+                        maxLength: 2048
+                        minLength: 1
+                        type: string
+                    required:
+                    - topicArn
+                    type: object
+                required:
+                - snsConfiguration
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              queryString:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 262144
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: queryString is immutable
+                  rule: self == oldSelf
+              scheduleConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  scheduleExpression:
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                required:
+                - scheduleExpression
+                type: object
+              scheduledQueryExecutionRoleArn:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 2048
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: scheduledQueryExecutionRoleArn is immutable
+                  rule: self == oldSelf
+              scheduledQueryName:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                maxLength: 64
+                type: string
+              tags:
+                items:
+                  description: TimestreamScheduledQueryTag is a nested property type
+                    of AWS::Timestream::ScheduledQuery.
+                  properties:
+                    key:
+                      maxLength: 128
+                      minLength: 1
+                      type: string
+                    value:
+                      maxLength: 256
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+              targetConfiguration:
+                description: 'Create-only in AWS: changing it requires replacing the
+                  resource.'
+                properties:
+                  timestreamConfiguration:
+                    description: TimestreamScheduledQueryTimestreamConfiguration is
+                      a nested property type of AWS::Timestream::ScheduledQuery.
+                    properties:
+                      databaseName:
+                        type: string
+                      dimensionMappings:
+                        items:
+                          description: TimestreamScheduledQueryDimensionMapping is
+                            a nested property type of AWS::Timestream::ScheduledQuery.
+                          properties:
+                            dimensionValueType:
+                              enum:
+                              - VARCHAR
+                              type: string
+                            name:
+                              type: string
+                          required:
+                          - dimensionValueType
+                          - name
+                          type: object
+                        type: array
+                      measureNameColumn:
+                        type: string
+                      mixedMeasureMappings:
+                        items:
+                          description: TimestreamScheduledQueryMixedMeasureMapping
+                            is a nested property type of AWS::Timestream::ScheduledQuery.
+                          properties:
+                            measureName:
+                              type: string
+                            measureValueType:
+                              enum:
+                              - BIGINT
+                              - BOOLEAN
+                              - DOUBLE
+                              - VARCHAR
+                              - MULTI
+                              type: string
+                            multiMeasureAttributeMappings:
+                              items:
+                                description: TimestreamScheduledQueryMultiMeasureAttributeMapping
+                                  is a nested property type of AWS::Timestream::ScheduledQuery.
+                                properties:
+                                  measureValueType:
+                                    enum:
+                                    - BIGINT
+                                    - BOOLEAN
+                                    - DOUBLE
+                                    - VARCHAR
+                                    - TIMESTAMP
+                                    type: string
+                                  sourceColumn:
+                                    type: string
+                                  targetMultiMeasureAttributeName:
+                                    type: string
+                                required:
+                                - measureValueType
+                                - sourceColumn
+                                type: object
+                              type: array
+                            sourceColumn:
+                              type: string
+                            targetMeasureName:
+                              type: string
+                          required:
+                          - measureValueType
+                          type: object
+                        type: array
+                      multiMeasureMappings:
+                        description: TimestreamScheduledQueryMultiMeasureMappings
+                          is a nested property type of AWS::Timestream::ScheduledQuery.
+                        properties:
+                          multiMeasureAttributeMappings:
+                            items:
+                              description: TimestreamScheduledQueryMultiMeasureAttributeMapping
+                                is a nested property type of AWS::Timestream::ScheduledQuery.
+                              properties:
+                                measureValueType:
+                                  enum:
+                                  - BIGINT
+                                  - BOOLEAN
+                                  - DOUBLE
+                                  - VARCHAR
+                                  - TIMESTAMP
+                                  type: string
+                                sourceColumn:
+                                  type: string
+                                targetMultiMeasureAttributeName:
+                                  type: string
+                              required:
+                              - measureValueType
+                              - sourceColumn
+                              type: object
+                            type: array
+                          targetMultiMeasureName:
+                            type: string
+                        required:
+                        - multiMeasureAttributeMappings
+                        type: object
+                      tableName:
+                        type: string
+                      timeColumn:
+                        type: string
+                    required:
+                    - databaseName
+                    - dimensionMappings
+                    - tableName
+                    - timeColumn
+                    type: object
+                required:
+                - timestreamConfiguration
+                type: object
+            required:
+            - errorReportConfiguration
+            - notificationConfiguration
+            - queryString
+            - scheduleConfiguration
+            - scheduledQueryExecutionRoleArn
+            type: object
+          status:
+            description: TimestreamScheduledQueryStatus is the observed state of AWS::Timestream::ScheduledQuery.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                maxLength: 2048
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+              sqErrorReportConfiguration:
+                description: |-
+                  Configuration for error reporting. Error reports will be generated when a problem is encountered when writing
+                  the query results.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqKmsKeyId:
+                description: |-
+                  The Amazon KMS key used to encrypt the scheduled query resource, at-rest. If the Amazon KMS key is not
+                  specified, the scheduled query resource will be encrypted with a Timestream owned Amazon KMS key. To specify a
+                  KMS key, use the key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix the name with
+                  alias/. If ErrorReportConfiguration uses SSE_KMS as encryption type, the sam...
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqName:
+                description: |-
+                  The name of the scheduled query. Scheduled query names must be unique within each Region.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqNotificationConfiguration:
+                description: |-
+                  Notification configuration for the scheduled query. A notification is sent by Timestream when a query run
+                  finishes, when the state is updated or when you delete it.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqQueryString:
+                description: |-
+                  The query string to run. Parameter names can be specified in the query string @ character followed by an
+                  identifier. The named Parameter @scheduled_runtime is reserved and can be used in the query to get the time at
+                  which the query is scheduled to run. The timestamp calculated according to the ScheduleConfiguration
+                  parameter, will be the value of @scheduled_runtime paramater for each query run....
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqScheduleConfiguration:
+                description: |-
+                  Configuration for when the scheduled query is executed.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqScheduledQueryExecutionRoleArn:
+                description: |-
+                  The ARN for the IAM role that Timestream will assume when running the scheduled query.
+                  Read-only: reported by AWS after creation.
+                type: string
+              sqTargetConfiguration:
+                description: |-
+                  Configuration of target store where scheduled query results are written to.
+                  Read-only: reported by AWS after creation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: timestreamtables.aws.konfig.io
+spec:
+  group: aws.konfig.io
+  names:
+    kind: TimestreamTable
+    listKind: TimestreamTableList
+    plural: timestreamtables
+    singular: timestreamtable
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.identifier
+      name: Identifier
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          TimestreamTable manages AWS::Timestream::Table through the AWS Cloud Control API. The AWS::Timestream::Table
+          resource creates a Timestream Table.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TimestreamTableSpec is the desired state of AWS::Timestream::Table.
+            properties:
+              databaseName:
+                description: |-
+                  The name for the database which the table to be created belongs to.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+                x-kubernetes-validations:
+                - message: databaseName is immutable
+                  rule: self == oldSelf
+              magneticStoreWriteProperties:
+                description: The properties that determine whether magnetic store
+                  writes are enabled.
+                properties:
+                  enableMagneticStoreWrites:
+                    description: Boolean flag indicating whether magnetic store writes
+                      are enabled.
+                    type: boolean
+                  magneticStoreRejectedDataLocation:
+                    description: Location to store information about records that
+                      were asynchronously rejected during magnetic store writes.
+                    properties:
+                      s3Configuration:
+                        description: S3 configuration for location to store rejections
+                          from magnetic store writes
+                        properties:
+                          bucketName:
+                            description: The bucket name used to store the data.
+                            type: string
+                          encryptionOption:
+                            description: Either SSE_KMS or SSE_S3.
+                            type: string
+                          kmsKeyId:
+                            description: Must be provided if SSE_KMS is specified
+                              as the encryption option
+                            type: string
+                          objectKeyPrefix:
+                            description: String used to prefix all data in the bucket.
+                            type: string
+                        required:
+                        - bucketName
+                        - encryptionOption
+                        type: object
+                    type: object
+                required:
+                - enableMagneticStoreWrites
+                type: object
+              providerRef:
+                description: |-
+                  ProviderRef selects the AWSProvider (account/region) this resource is
+                  reconciled against. Defaults to the namespace annotation, then the
+                  default provider, then the operator's own credentials.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
+                type: object
+              retentionProperties:
+                description: The retention duration of the memory store and the magnetic
+                  store.
+                properties:
+                  magneticStoreRetentionPeriodInDays:
+                    description: The duration for which data must be stored in the
+                      magnetic store.
+                    type: string
+                  memoryStoreRetentionPeriodInHours:
+                    description: The duration for which data must be stored in the
+                      memory store.
+                    type: string
+                type: object
+              schema:
+                description: A Schema specifies the expected data model of the table.
+                properties:
+                  compositePartitionKey:
+                    items:
+                      description: TimestreamTablePartitionKey is a nested property
+                        type of AWS::Timestream::Table.
+                      properties:
+                        enforcementInRecord:
+                          enum:
+                          - REQUIRED
+                          - OPTIONAL
+                          type: string
+                        name:
+                          maxLength: 2048
+                          type: string
+                        type:
+                          enum:
+                          - DIMENSION
+                          - MEASURE
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    type: array
+                type: object
+              tableName:
+                description: |-
+                  The name for the table. If you don't specify a name, AWS CloudFormation generates a unique physical ID and
+                  uses that ID for the table name.
+                  Create-only in AWS: changing it requires replacing the resource.
+                type: string
+              tags:
+                description: An array of key-value pairs to apply to this resource.
+                items:
+                  description: CFNTag is the CloudFormation Tag shape shared by generated
+                    kinds.
+                  properties:
+                    key:
+                      minLength: 1
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - value
+                  type: object
+                type: array
+            required:
+            - databaseName
+            type: object
+          status:
+            description: TimestreamTableStatus is the observed state of AWS::Timestream::Table.
+            properties:
+              arn:
+                description: 'Read-only: reported by AWS after creation.'
+                type: string
+              conditions:
+                description: Conditions describe the current state of the resource.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              identifier:
+                description: Identifier is the Cloud Control primary identifier of
+                  the resource.
+                type: string
+              lastSyncTime:
+                format: date-time
+                type: string
+              name:
+                description: |-
+                  The table name exposed as a read-only attribute.
+                  Read-only: reported by AWS after creation.
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              operation:
+                description: Operation is the in-flight operation (CREATE, UPDATE,
+                  DELETE).
+                type: string
+              operationStatus:
+                description: OperationStatus is the last reported operation status.
+                type: string
+              requestToken:
+                description: RequestToken tracks an in-flight asynchronous operation.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

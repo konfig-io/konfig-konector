@@ -23,16 +23,21 @@ Think of it as [Google Config Connector](https://cloud.google.com/config-connect
 
 ## Supported Resources
 
-The operator ships **246 resource kinds across ~75 AWS services** — IAM, EC2/VPC,
+The operator ships **246 hand-written resource kinds across ~75 AWS services** — IAM, EC2/VPC,
 RDS/Aurora, S3, DynamoDB, Lambda, ECS, EKS, ElastiCache, SQS/SNS/EventBridge,
 Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
 List every kind with `konfig-export --list`, browse the generated API reference
 at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
 full-options examples in [`examples/`](examples/) — one per kind, generated from
-the CRD schemas (`make gen-reference`). Anything without a native kind yet can be
-managed through `CloudControlResource`, which drives any AWS Cloud Control API
-type; see [`docs/terraform-parity.md`](docs/terraform-parity.md) for the measured
-gap against the Terraform AWS provider (`make parity`). A few highlights:
+the CRD schemas (`make gen-reference`). On top of those, **828 typed kinds are
+generated from the CloudFormation schema registry** and reconciled through the
+AWS Cloud Control API, installed per service bundle from
+[`config/crd/cloudcontrol/`](config/crd/cloudcontrol/) (see
+[docs/cloudcontrol-kinds.md](docs/cloudcontrol-kinds.md)). Anything else can be
+managed through the generic `CloudControlResource`. Coverage is measured
+against the Terraform AWS provider in
+[`docs/terraform-parity.md`](docs/terraform-parity.md) (`make parity`). A few
+highlights:
 
 | Kind | AWS Service | Notes |
 |---|---|---|
@@ -166,7 +171,7 @@ kubectl get pods -n konfig-system
 kubectl get crds | grep konfig.io | head
 # autoscalinggroups.aws.konfig.io
 # dbinstances.aws.konfig.io
-# ... (246 CRDs total)
+# ... (246 native CRDs; generated bundles under config/crd/cloudcontrol/)
 ```
 
 ## Usage
