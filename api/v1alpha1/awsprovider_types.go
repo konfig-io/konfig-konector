@@ -29,7 +29,8 @@ const (
 // ProviderRef selects the AWSProvider (account + region) a resource is
 // reconciled against. Resolution order: spec.providerRef, then the
 // aws.konfig.io/provider annotation on the resource's Namespace, then the
-// operator's own credentials and region.
+// AWSProvider marked spec.default, then the operator's own credentials and
+// region.
 type ProviderRef struct {
 	// Name of a cluster-scoped AWSProvider.
 	// +kubebuilder:validation:MinLength=1
@@ -42,6 +43,13 @@ type ProviderRef struct {
 // AWSProviderSpec defines how the operator obtains credentials for one AWS
 // account (and optionally one region).
 type AWSProviderSpec struct {
+	// Default marks this provider as the primary account: every resource that
+	// sets no providerRef and whose namespace carries no provider annotation
+	// is reconciled here. At most one AWSProvider should be default; when
+	// several are, the alphabetically first name wins.
+	// +optional
+	Default bool `json:"default,omitempty"`
+
 	// RoleARN is the IAM role to assume in the target account. When empty the
 	// operator's own credentials (EKS Pod Identity) are used, which makes the
 	// provider a pure region override.
@@ -101,6 +109,7 @@ type AWSProviderStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,shortName=awsprov
+// +kubebuilder:printcolumn:name="Default",type="boolean",JSONPath=".spec.default"
 // +kubebuilder:printcolumn:name="Account",type="string",JSONPath=".status.accountId"
 // +kubebuilder:printcolumn:name="Region",type="string",JSONPath=".spec.region"
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"

@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -315,3 +316,49 @@ func withProviderScope(ctx context.Context, obj provider.ProviderScoped) (contex
 	}
 	return provider.WithScope(ctx, s), nil
 }
+
+// crossAccountContext returns a context scoped to the *other* side of a
+// two-sided resource (the accepter of a peering, the owner of a shared TGW,
+// the VPC account of a private hosted zone...). ref names the AWSProvider for
+// that side; region, when non-empty, overrides the region. With a nil ref the
+// current scope is reused with only the region override applied, which covers
+// same-account cross-region cases.
+func crossAccountContext(ctx context.Context, namespace string, ref *awsv1alpha1.ProviderRef, region string) (context.Context, error) {
+	var s *provider.Scope
+	if ref != nil && ref.Name != "" {
+		if providerResolver == nil {
+			return ctx, nil
+		}
+		var err error
+		s, err = providerResolver.ForName(ctx, ref.Name, namespace)
+		if err != nil {
+			return ctx, fmt.Errorf("resolve accepter AWS provider: %w", err)
+		}
+		if ref.Region != "" {
+			s.Region = ref.Region
+		}
+	} else {
+		cur := provider.ScopeFrom(ctx)
+		if cur != nil {
+			c := *cur
+			s = &c
+		} else {
+			s = &provider.Scope{}
+		}
+	}
+	if region != "" {
+		s.Region = region
+	}
+	if s.Region == "" && s.Credentials == nil {
+		return ctx, nil
+	}
+	return provider.WithScope(ctx, s), nil
+}
+
+// requeuePending is the poll interval for two-sided resources awaiting the
+// other party's acceptance or an async state transition.
+var requeuePending = ctrl.Result{RequeueAfter: 30 * time.Second}
+
+// errPendingAcceptance signals a two-sided resource is waiting on the other
+// party; reconcilers translate it into requeuePending without logging an error.
+var errPendingAcceptance = errors.New("pending acceptance")

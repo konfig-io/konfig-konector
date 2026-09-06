@@ -30,6 +30,18 @@ func init() {
 			STSClient: clients.STS, Resolver: providerResolver}).SetupWithManager(mgr); err != nil {
 			return fmt.Errorf("AWSProvider: %w", err)
 		}
+		if err := (&ResourceShareInvitationReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),
+			RAMClient: clients.RAM}).SetupWithManager(mgr); err != nil {
+			return fmt.Errorf("ResourceShareInvitation: %w", err)
+		}
+		if err := (&HostedZoneVPCAssociationReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),
+			Route53Client: clients.Route53}).SetupWithManager(mgr); err != nil {
+			return fmt.Errorf("HostedZoneVPCAssociation: %w", err)
+		}
+		if err := (&VPCEndpointServiceReconciler{Client: mgr.GetClient(), Scheme: mgr.GetScheme(),
+			EC2Client: clients.EC2}).SetupWithManager(mgr); err != nil {
+			return fmt.Errorf("VPCEndpointService: %w", err)
+		}
 		return nil
 	})
 }

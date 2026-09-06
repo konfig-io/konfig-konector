@@ -48,41 +48,49 @@ func IsNotFound(err error) bool {
 	}
 	var apiErr smithy.APIError
 	if errors.As(err, &apiErr) {
-		code := apiErr.ErrorCode()
-		switch code {
-		case "InvalidVpcID.NotFound",
-			"InvalidSubnetID.NotFound",
-			"InvalidInternetGatewayID.NotFound",
-			"InvalidRouteTableID.NotFound",
-			"InvalidNatGatewayID.NotFound",
-			"InvalidGroup.NotFound",
-			"InvalidGroupId.NotFound",
-			"InvalidVpcEndpointId.NotFound",
-			"InvalidKeyPair.NotFound",
-			"InvalidLaunchTemplateId.NotFound",
-			"InvalidLaunchTemplateName.NotFoundException",
-			"InvalidAllocationID.NotFound",
-			"InvalidAssociationID.NotFound",
-			"InvalidNetworkAclID.NotFound",
-			"InvalidPlacementGroup.Unknown",
-			"InvalidTransitGatewayID.NotFound",
-			"InvalidTransitGatewayAttachmentID.NotFound",
-			"InvalidVpcPeeringConnectionID.NotFound",
-			"InvalidEgressOnlyInternetGatewayId.NotFound",
-			"InvalidFlowLogId.NotFound",
-			"InvalidVolumeID.NotFound",
-			"InvalidAMIID.NotFound",
-			"InvalidSpotFleetRequestId.NotFound",
-			"InvalidCustomerGatewayID.NotFound",
-			"InvalidVpnGatewayID.NotFound",
-			"InvalidVpnConnectionID.NotFound",
-			"InvalidRoute.NotFound",
-			"InvalidPrefixListID.NotFound",
-			"InvalidPrefixListId.NotFound",
-			"InvalidCapacityReservationId.NotFound",
-			"InvalidCapacityReservationId.NotFoundException":
-			return true
-		}
+		return IsNotFoundCode(apiErr.ErrorCode())
+	}
+	return false
+}
+
+// IsNotFoundCode reports whether an EC2 error code denotes a missing resource.
+// Used for batch APIs that return per-item error codes (Unsuccessful items).
+func IsNotFoundCode(code string) bool {
+	switch code {
+	case "InvalidVpcID.NotFound",
+		"InvalidSubnetID.NotFound",
+		"InvalidInternetGatewayID.NotFound",
+		"InvalidRouteTableID.NotFound",
+		"InvalidNatGatewayID.NotFound",
+		"InvalidGroup.NotFound",
+		"InvalidGroupId.NotFound",
+		"InvalidVpcEndpointId.NotFound",
+		"InvalidVpcEndpointServiceId.NotFound",
+		"InvalidVpcEndpointService.NotFound",
+		"InvalidKeyPair.NotFound",
+		"InvalidLaunchTemplateId.NotFound",
+		"InvalidLaunchTemplateName.NotFoundException",
+		"InvalidAllocationID.NotFound",
+		"InvalidAssociationID.NotFound",
+		"InvalidNetworkAclID.NotFound",
+		"InvalidPlacementGroup.Unknown",
+		"InvalidTransitGatewayID.NotFound",
+		"InvalidTransitGatewayAttachmentID.NotFound",
+		"InvalidVpcPeeringConnectionID.NotFound",
+		"InvalidEgressOnlyInternetGatewayId.NotFound",
+		"InvalidFlowLogId.NotFound",
+		"InvalidVolumeID.NotFound",
+		"InvalidAMIID.NotFound",
+		"InvalidSpotFleetRequestId.NotFound",
+		"InvalidCustomerGatewayID.NotFound",
+		"InvalidVpnGatewayID.NotFound",
+		"InvalidVpnConnectionID.NotFound",
+		"InvalidRoute.NotFound",
+		"InvalidPrefixListID.NotFound",
+		"InvalidPrefixListId.NotFound",
+		"InvalidCapacityReservationId.NotFound",
+		"InvalidCapacityReservationId.NotFoundException":
+		return true
 	}
 	return false
 }

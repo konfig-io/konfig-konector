@@ -4,19 +4,19 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: vpcpeeringconnections.aws.konfig.io
+  name: resourceshareinvitations.aws.konfig.io
 spec:
   group: aws.konfig.io
   names:
-    kind: VPCPeeringConnection
-    listKind: VPCPeeringConnectionList
-    plural: vpcpeeringconnections
-    singular: vpcpeeringconnection
+    kind: ResourceShareInvitation
+    listKind: ResourceShareInvitationList
+    plural: resourceshareinvitations
+    singular: resourceshareinvitation
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.peeringId
-      name: PeeringID
+    - jsonPath: .status.status
+      name: Status
       type: string
     - jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
@@ -27,7 +27,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: VPCPeeringConnection is the Schema for managing VPC Peering Connections.
+        description: |-
+          ResourceShareInvitation accepts an AWS RAM resource share invitation in the
+          receiving account.
         properties:
           apiVersion:
             description: |-
@@ -47,50 +49,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: VPCPeeringConnectionSpec defines the desired state of a VPC
-              Peering Connection.
+            description: |-
+              ResourceShareInvitationSpec accepts a RAM resource share in the receiving
+              account. Pair it with a ResourceShare in the owning account (under another
+              AWSProvider) to complete cross-account sharing from a single cluster.
             properties:
-              accepterProviderRef:
-                description: |-
-                  AccepterProviderRef names the AWSProvider for the accepter VPC's account.
-                  When set the controller accepts the request on the peer's behalf and
-                  Ready only becomes True once the connection is active on both sides.
-                properties:
-                  name:
-                    description: Name of a cluster-scoped AWSProvider.
-                    minLength: 1
-                    type: string
-                  region:
-                    description: Region overrides the provider's region for this resource
-                      only.
-                    type: string
-                required:
-                - name
-                type: object
-              autoAccept:
-                description: |-
-                  AutoAccept makes the controller accept the peering request itself. For
-                  same-account peers this uses the resource's own provider (in PeerRegion
-                  when set). For cross-account peers set AccepterProviderRef as well so the
-                  acceptance runs with the accepter account's credentials.
-                type: boolean
-              peerOwnerId:
-                description: |-
-                  PeerOwnerID is the AWS account ID of the accepter VPC owner.
-                  Leave empty for same-account peering.
-                type: string
-              peerRegion:
-                description: |-
-                  PeerRegion is the region of the accepter VPC.
-                  Leave empty for same-region peering.
-                type: string
-              peerVpcId:
-                description: PeerVPCID is the accepter VPC ID.
-                minLength: 1
-                type: string
-                x-kubernetes-validations:
-                - message: peerVpcId is immutable
-                  rule: self == oldSelf
               providerRef:
                 description: |-
                   ProviderRef selects the AWSProvider (account/region) this resource is
@@ -108,35 +71,27 @@ spec:
                 required:
                 - name
                 type: object
-              tags:
-                additionalProperties:
-                  type: string
-                description: Tags are AWS resource tags to apply.
-                type: object
-              vpcRef:
-                description: VPCRef is the requester VPC (local).
+              resourceShareRef:
+                description: ResourceShareRef identifies the share to accept.
                 properties:
-                  id:
-                    description: ID is a direct AWS VPC ID (e.g. vpc-0abc1234).
+                  arn:
+                    description: ARN is a direct resource share ARN.
                     type: string
                   name:
-                    description: Name of a VPC CR in the same namespace.
+                    description: Name of a ResourceShare CR.
+                    type: string
+                  namespace:
+                    description: Namespace of the ResourceShare CR. Defaults to the
+                      referring object's namespace.
                     type: string
                 type: object
             required:
-            - peerVpcId
-            - vpcRef
+            - resourceShareRef
             type: object
           status:
-            description: VPCPeeringConnectionStatus defines the observed state of
-              VPCPeeringConnection.
+            description: ResourceShareInvitationStatus defines the observed state
+              of ResourceShareInvitation.
             properties:
-              accepterAccountId:
-                description: AccepterAccountID is the account that owns the accepter
-                  VPC.
-                type: string
-              accepterVpcId:
-                type: string
               conditions:
                 description: Conditions describe the current state of the resource.
                 items:
@@ -207,25 +162,31 @@ spec:
                   - type
                   type: object
                 type: array
+              invitationArn:
+                description: InvitationARN is the accepted invitation, when one existed.
+                type: string
               lastSyncTime:
-                description: LastSyncTime is when the resource was last successfully
-                  reconciled.
+                description: LastSyncTime is the last successful sync.
                 format: date-time
                 type: string
               observedGeneration:
-                description: ObservedGeneration is the most recent .metadata.generation
-                  reconciled.
+                description: ObservedGeneration is the generation last reconciled.
                 format: int64
                 type: integer
-              peeringId:
-                description: PeeringID is the VPC peering connection ID.
+              resourceArns:
+                description: ResourceARNs shared with this account through the share.
+                items:
+                  type: string
+                type: array
+              resourceShareArn:
+                description: ResourceShareARN is the share that was accepted.
                 type: string
-              requesterVpcId:
-                description: RequesterVPCID and AccepterVPCID are the two VPCs as
-                  reported by AWS.
+              senderAccountId:
+                description: SenderAccountID owns the share.
                 type: string
               status:
-                description: Status is the current state of the peering connection.
+                description: Status is the RAM invitation status (PENDING, ACCEPTED,
+                  ...).
                 type: string
             type: object
         type: object

@@ -744,3 +744,12 @@ func (o *XRaySamplingRule) GetProviderRef() *ProviderRef { return o.Spec.Provide
 
 // GetProviderRef implements ProviderScoped.
 func (o *ManagedPrefixList) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+
+// GetProviderRef implements ProviderScoped.
+func (o *ResourceShareInvitation) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+
+// GetProviderRef implements ProviderScoped.
+func (o *HostedZoneVPCAssociation) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }
+
+// GetProviderRef implements ProviderScoped.
+func (o *VPCEndpointService) GetProviderRef() *ProviderRef { return o.Spec.ProviderRef }

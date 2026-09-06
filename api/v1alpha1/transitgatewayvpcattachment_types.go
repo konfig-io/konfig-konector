@@ -60,6 +60,13 @@ type TransitGatewayVpcAttachmentSpec struct {
 	// +optional
 	ApplianceModeSupport bool `json:"applianceModeSupport,omitempty"`
 
+	// AccepterProviderRef names the AWSProvider of the account that owns the
+	// Transit Gateway when it is shared into this account via RAM. When set
+	// the controller accepts the attachment on the owner's behalf and Ready
+	// only becomes True once the attachment is available.
+	// +optional
+	AccepterProviderRef *ProviderRef `json:"accepterProviderRef,omitempty"`
+
 	// Tags are AWS resource tags to apply.
 	// +optional
 	Tags map[string]string `json:"tags,omitempty"`

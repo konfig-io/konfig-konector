@@ -185,6 +185,9 @@ const (
 	DeletionPolicyAbandon    = "abandon"
 
 	ReasonUpdateNotSupported = "UpdateNotSupported"
+	// ReasonPendingAcceptance marks a two-sided resource (peering, attachment,
+	// share invitation) that the other side has not accepted yet.
+	ReasonPendingAcceptance = "PendingAcceptance"
 	ReasonAbandoned          = "Abandoned"
 )
 

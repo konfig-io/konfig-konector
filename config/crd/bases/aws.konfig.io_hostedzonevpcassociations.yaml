@@ -4,19 +4,22 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: vpcpeeringconnections.aws.konfig.io
+  name: hostedzonevpcassociations.aws.konfig.io
 spec:
   group: aws.konfig.io
   names:
-    kind: VPCPeeringConnection
-    listKind: VPCPeeringConnectionList
-    plural: vpcpeeringconnections
-    singular: vpcpeeringconnection
+    kind: HostedZoneVPCAssociation
+    listKind: HostedZoneVPCAssociationList
+    plural: hostedzonevpcassociations
+    singular: hostedzonevpcassociation
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.peeringId
-      name: PeeringID
+    - jsonPath: .status.hostedZoneId
+      name: Zone
+      type: string
+    - jsonPath: .status.vpcId
+      name: VPC
       type: string
     - jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
@@ -27,7 +30,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: VPCPeeringConnection is the Schema for managing VPC Peering Connections.
+        description: |-
+          HostedZoneVPCAssociation associates a VPC (optionally in another account)
+          with a Route53 private hosted zone.
         properties:
           apiVersion:
             description: |-
@@ -47,50 +52,27 @@ spec:
           metadata:
             type: object
           spec:
-            description: VPCPeeringConnectionSpec defines the desired state of a VPC
-              Peering Connection.
+            description: |-
+              HostedZoneVPCAssociationSpec associates a VPC with a private hosted zone.
+              The zone is owned by this resource's provider; the VPC may live in another
+              account (vpcProviderRef), in which case the controller performs the full
+              authorization handshake (CreateVPCAssociationAuthorization in the zone
+              account, AssociateVPCWithHostedZone in the VPC account, then cleanup).
             properties:
-              accepterProviderRef:
-                description: |-
-                  AccepterProviderRef names the AWSProvider for the accepter VPC's account.
-                  When set the controller accepts the request on the peer's behalf and
-                  Ready only becomes True once the connection is active on both sides.
+              hostedZoneRef:
+                description: HostedZoneRef is the private hosted zone.
                 properties:
+                  id:
+                    description: ID is a direct hosted zone ID (e.g. Z0123456789).
+                    type: string
                   name:
-                    description: Name of a cluster-scoped AWSProvider.
-                    minLength: 1
+                    description: Name of a HostedZone CR.
                     type: string
-                  region:
-                    description: Region overrides the provider's region for this resource
-                      only.
+                  namespace:
+                    description: Namespace of the HostedZone CR. Defaults to the referring
+                      object's namespace.
                     type: string
-                required:
-                - name
                 type: object
-              autoAccept:
-                description: |-
-                  AutoAccept makes the controller accept the peering request itself. For
-                  same-account peers this uses the resource's own provider (in PeerRegion
-                  when set). For cross-account peers set AccepterProviderRef as well so the
-                  acceptance runs with the accepter account's credentials.
-                type: boolean
-              peerOwnerId:
-                description: |-
-                  PeerOwnerID is the AWS account ID of the accepter VPC owner.
-                  Leave empty for same-account peering.
-                type: string
-              peerRegion:
-                description: |-
-                  PeerRegion is the region of the accepter VPC.
-                  Leave empty for same-region peering.
-                type: string
-              peerVpcId:
-                description: PeerVPCID is the accepter VPC ID.
-                minLength: 1
-                type: string
-                x-kubernetes-validations:
-                - message: peerVpcId is immutable
-                  rule: self == oldSelf
               providerRef:
                 description: |-
                   ProviderRef selects the AWSProvider (account/region) this resource is
@@ -108,13 +90,24 @@ spec:
                 required:
                 - name
                 type: object
-              tags:
-                additionalProperties:
-                  type: string
-                description: Tags are AWS resource tags to apply.
+              vpcProviderRef:
+                description: |-
+                  VPCProviderRef names the AWSProvider of the account owning the VPC when
+                  it differs from the zone's account.
+                properties:
+                  name:
+                    description: Name of a cluster-scoped AWSProvider.
+                    minLength: 1
+                    type: string
+                  region:
+                    description: Region overrides the provider's region for this resource
+                      only.
+                    type: string
+                required:
+                - name
                 type: object
               vpcRef:
-                description: VPCRef is the requester VPC (local).
+                description: VPCRef is the VPC to associate (CR name or direct ID).
                 properties:
                   id:
                     description: ID is a direct AWS VPC ID (e.g. vpc-0abc1234).
@@ -123,20 +116,21 @@ spec:
                     description: Name of a VPC CR in the same namespace.
                     type: string
                 type: object
+              vpcRegion:
+                description: VPCRegion is the region of the VPC.
+                minLength: 1
+                type: string
             required:
-            - peerVpcId
+            - hostedZoneRef
             - vpcRef
+            - vpcRegion
             type: object
           status:
-            description: VPCPeeringConnectionStatus defines the observed state of
-              VPCPeeringConnection.
+            description: HostedZoneVPCAssociationStatus defines the observed state.
             properties:
-              accepterAccountId:
-                description: AccepterAccountID is the account that owns the accepter
-                  VPC.
-                type: string
-              accepterVpcId:
-                type: string
+              associated:
+                description: Associated is true once AWS reports the VPC on the zone.
+                type: boolean
               conditions:
                 description: Conditions describe the current state of the resource.
                 items:
@@ -207,25 +201,16 @@ spec:
                   - type
                   type: object
                 type: array
+              hostedZoneId:
+                description: HostedZoneID and VPCID are the resolved identifiers.
+                type: string
               lastSyncTime:
-                description: LastSyncTime is when the resource was last successfully
-                  reconciled.
                 format: date-time
                 type: string
               observedGeneration:
-                description: ObservedGeneration is the most recent .metadata.generation
-                  reconciled.
                 format: int64
                 type: integer
-              peeringId:
-                description: PeeringID is the VPC peering connection ID.
-                type: string
-              requesterVpcId:
-                description: RequesterVPCID and AccepterVPCID are the two VPCs as
-                  reported by AWS.
-                type: string
-              status:
-                description: Status is the current state of the peering connection.
+              vpcId:
                 type: string
             type: object
         type: object

@@ -113,3 +113,19 @@ func TestMissingProvider(t *testing.T) {
 		t.Fatal("expected error")
 	}
 }
+
+func TestDefaultProvider(t *testing.T) {
+	primary := &awsv1alpha1.AWSProvider{ObjectMeta: metav1.ObjectMeta{Name: "primary", Generation: 1},
+		Spec: awsv1alpha1.AWSProviderSpec{Default: true, RoleARN: "arn:aws:iam::999988887777:role/spoke", Region: "us-west-2"}}
+	other := &awsv1alpha1.AWSProvider{ObjectMeta: metav1.ObjectMeta{Name: "other"}, Spec: awsv1alpha1.AWSProviderSpec{Region: "eu-central-1"}}
+	r, _ := newResolver(t, primary, other)
+	s, err := r.ForObject(context.Background(), obj{ns: "anything"})
+	if err != nil || s == nil || s.Name != "primary" || s.AccountID != "999988887777" || s.Region != "us-west-2" {
+		t.Fatalf("expected default provider scope, got %+v %v", s, err)
+	}
+	// explicit ref still wins over the default
+	s, err = r.ForObject(context.Background(), obj{ns: "anything", ref: &awsv1alpha1.ProviderRef{Name: "other"}})
+	if err != nil || s.Name != "other" {
+		t.Fatalf("explicit ref should win: %+v %v", s, err)
+	}
+}

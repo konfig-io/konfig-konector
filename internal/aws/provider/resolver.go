@@ -90,6 +90,18 @@ func (r *Resolver) ForObject(ctx context.Context, obj ProviderScoped) (*Scope, e
 		}
 	}
 	if name == "" {
+		if def, err := r.defaultProvider(ctx); err != nil {
+			return nil, err
+		} else if def != nil {
+			s, err := r.ForProvider(ctx, def, 0)
+			if err != nil {
+				return nil, err
+			}
+			if regionOverride != "" {
+				s.Region = regionOverride
+			}
+			return s, nil
+		}
 		if regionOverride == "" {
 			return nil, nil
 		}
@@ -103,6 +115,26 @@ func (r *Resolver) ForObject(ctx context.Context, obj ProviderScoped) (*Scope, e
 		s.Region = regionOverride
 	}
 	return s, nil
+}
+
+// defaultProvider returns the AWSProvider with spec.default set (lowest name
+// wins when several are marked), or nil when none is.
+func (r *Resolver) defaultProvider(ctx context.Context) (*awsv1alpha1.AWSProvider, error) {
+	if r.Client == nil {
+		return nil, nil
+	}
+	list := &awsv1alpha1.AWSProviderList{}
+	if err := r.Client.List(ctx, list); err != nil {
+		return nil, fmt.Errorf("list AWSProviders: %w", err)
+	}
+	var def *awsv1alpha1.AWSProvider
+	for i := range list.Items {
+		p := &list.Items[i]
+		if p.Spec.Default && (def == nil || p.Name < def.Name) {
+			def = p
+		}
+	}
+	return def, nil
 }
 
 // ForName resolves the named AWSProvider. namespace is checked against
