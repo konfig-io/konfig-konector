@@ -154,7 +154,8 @@ func main() {
 	// namespace annotation, or operator default) and the SDK wrappers apply
 	// the resulting credentials/region per call.
 	controller.SetProviderResolver(&provider.Resolver{
-		Client: mgr.GetClient(),
+		BaseAccountID: baseAccountID,
+		Client:        mgr.GetClient(),
 		// Role assumption must use the unscoped base STS client: the scoped
 		// wrapper would try to sign AssumeRole with the credentials it is
 		// producing and deadlock inside the credentials cache.
