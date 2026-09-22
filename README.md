@@ -2,7 +2,7 @@
 
 **Manage AWS infrastructure as Kubernetes custom resources.**
 
-konfig-konector is a Kubernetes operator that lets you declare AWS resources — IAM roles, VPCs, RDS instances, S3 buckets, and more — as native Kubernetes objects. The controller continuously reconciles your cluster's desired state against AWS, detecting and correcting configuration drift automatically.
+konfig-konector is a Kubernetes operator that lets you declare AWS resources — IAM roles, VPCs, RDS instances, S3 buckets, and more — as native Kubernetes objects. **1,061 resource kinds across 150+ AWS services**, one operator binary, any number of AWS accounts. The controller continuously reconciles your cluster's desired state against AWS, detecting and correcting configuration drift automatically.
 
 Think of it as [Google Config Connector](https://cloud.google.com/config-connector/docs/overview), but for AWS and purpose-built for EKS teams who want to manage cloud infrastructure the same way they manage applications.
 
@@ -23,17 +23,22 @@ Think of it as [Google Config Connector](https://cloud.google.com/config-connect
 
 ## Supported Resources
 
-The operator ships **246 hand-written resource kinds across ~75 AWS services** — IAM, EC2/VPC,
-RDS/Aurora, S3, DynamoDB, Lambda, ECS, EKS, ElastiCache, SQS/SNS/EventBridge,
-Route53, CloudFront, API Gateway, KMS, Secrets Manager, CloudWatch, and more.
-List every kind with `konfig-export --list`, browse the generated API reference
-at [konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
+The operator ships **1,061 resource kinds across 150+ AWS services**:
+
+| | Kinds | How | Installed |
+|---|---|---|---|
+| Native | 246 | hand-written controllers with cross-resource refs, Secret refs, async polling and two-sided handshakes | always (Helm chart CRDs) |
+| Generated | 815 | typed kinds generated from the CloudFormation schema registry, reconciled through the AWS Cloud Control API | opt-in per service bundle (`config/crd/cloudcontrol/<service>.yaml`, 146 services) |
+| Generic | 1 | `CloudControlResource` drives any Cloud Control type by name | always |
+
+Native kinds cover IAM, EC2/VPC, RDS/Aurora, S3, DynamoDB, Lambda, ECS, EKS,
+ElastiCache, SQS/SNS/EventBridge, Route53, CloudFront, API Gateway, KMS,
+Secrets Manager, CloudWatch and more; the generated bundles add the long tail
+(see [docs/cloudcontrol-kinds.md](docs/cloudcontrol-kinds.md)). List every
+kind with `konfig-export --list`, browse the generated API reference at
+[konfig-konector.io/docs](https://konfig-konector.io/docs/), or start from the
 full-options examples in [`examples/`](examples/) — one per kind, generated from
-the CRD schemas (`make gen-reference`). On top of those, **815 typed kinds are
-generated from the CloudFormation schema registry** and reconciled through the
-AWS Cloud Control API, installed per service bundle from
-[`config/crd/cloudcontrol/`](config/crd/cloudcontrol/) (see
-[docs/cloudcontrol-kinds.md](docs/cloudcontrol-kinds.md)). Billing, invoicing and
+the CRD schemas (`make gen-reference`). Billing, invoicing and
 cost-report kinds are deliberately excluded, and account- or organization-wide
 settings are generated but flagged as destructive scope. Anything else can be
 managed through the generic `CloudControlResource`. Coverage is measured
@@ -173,7 +178,8 @@ kubectl get pods -n konfig-system
 kubectl get crds | grep konfig.io | head
 # autoscalinggroups.aws.konfig.io
 # dbinstances.aws.konfig.io
-# ... (246 native CRDs; generated bundles under config/crd/cloudcontrol/)
+# ... (246 native CRDs installed by the chart; add generated bundles with
+#      kubectl apply -f config/crd/cloudcontrol/<service>.yaml — 1,061 kinds in total)
 ```
 
 ## Usage
