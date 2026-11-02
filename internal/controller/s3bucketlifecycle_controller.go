@@ -96,49 +96,13 @@ func (r *S3BucketLifecycleReconciler) Reconcile(ctx context.Context, req ctrl.Re
 }
 
 func (r *S3BucketLifecycleReconciler) reconcileLifecycle(ctx context.Context, obj *awsv1alpha1.S3BucketLifecycle) error {
-	rules := make([]s3types.LifecycleRule, 0, len(obj.Spec.Rules))
-	for _, rule := range obj.Spec.Rules {
-		rule := rule
-		lr := s3types.LifecycleRule{
-			Status: s3types.ExpirationStatus(rule.Status),
-		}
-		if rule.ID != "" {
-			lr.ID = aws.String(rule.ID)
-		}
-		if rule.Prefix != "" {
-			lr.Filter = &s3types.LifecycleRuleFilter{Prefix: aws.String(rule.Prefix)}
-		}
-		if rule.ExpirationDays != nil || rule.ExpirationDate != "" {
-			exp := &s3types.LifecycleExpiration{}
-			if rule.ExpirationDays != nil {
-				exp.Days = rule.ExpirationDays
-			}
-			lr.Expiration = exp
-		}
-		if rule.NoncurrentVersionExpirationDays != nil {
-			lr.NoncurrentVersionExpiration = &s3types.NoncurrentVersionExpiration{
-				NoncurrentDays: rule.NoncurrentVersionExpirationDays,
-			}
-		}
-		if rule.AbortIncompleteMultipartUploadDays != nil {
-			lr.AbortIncompleteMultipartUpload = &s3types.AbortIncompleteMultipartUpload{
-				DaysAfterInitiation: rule.AbortIncompleteMultipartUploadDays,
-			}
-		}
-		for _, t := range rule.Transitions {
-			t := t
-			tr := s3types.Transition{
-				StorageClass: s3types.TransitionStorageClass(t.StorageClass),
-			}
-			if t.Days != nil {
-				tr.Days = t.Days
-			}
-			lr.Transitions = append(lr.Transitions, tr)
-		}
-		rules = append(rules, lr)
+	rules, err := buildLifecycleRules(obj.Spec.Rules)
+	if err != nil {
+		_ = r.setConditionSBL(ctx, obj, awsv1alpha1.ConditionReady, metav1.ConditionFalse, awsv1alpha1.ReasonError, err.Error())
+		return fmt.Errorf("invalid lifecycle rule: %w", err)
 	}
 
-	_, err := r.S3Client.PutBucketLifecycleConfiguration(ctx, &awss3.PutBucketLifecycleConfigurationInput{
+	_, err = r.S3Client.PutBucketLifecycleConfiguration(ctx, &awss3.PutBucketLifecycleConfigurationInput{
 		Bucket: aws.String(obj.Spec.BucketName),
 		LifecycleConfiguration: &s3types.BucketLifecycleConfiguration{
 			Rules: rules,

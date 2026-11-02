@@ -225,41 +225,9 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 
 	// Sync lifecycle rules.
 	if len(b.Spec.LifecycleRules) > 0 {
-		rules := make([]s3types.LifecycleRule, 0, len(b.Spec.LifecycleRules))
-		for _, lr := range b.Spec.LifecycleRules {
-			rule := s3types.LifecycleRule{
-				Status: s3types.ExpirationStatus(lr.Status),
-				Filter: &s3types.LifecycleRuleFilter{Prefix: aws.String(lr.Prefix)},
-			}
-			if lr.ID != "" {
-				rule.ID = aws.String(lr.ID)
-			}
-			if lr.ExpirationDays != nil {
-				rule.Expiration = &s3types.LifecycleExpiration{Days: lr.ExpirationDays}
-			} else if lr.ExpirationDate != "" {
-				rule.Expiration = &s3types.LifecycleExpiration{ExpiredObjectDeleteMarker: aws.Bool(false)}
-			}
-			if lr.NoncurrentVersionExpirationDays != nil {
-				rule.NoncurrentVersionExpiration = &s3types.NoncurrentVersionExpiration{NoncurrentDays: lr.NoncurrentVersionExpirationDays}
-			}
-			if lr.AbortIncompleteMultipartUploadDays != nil {
-				rule.AbortIncompleteMultipartUpload = &s3types.AbortIncompleteMultipartUpload{DaysAfterInitiation: lr.AbortIncompleteMultipartUploadDays}
-			}
-			for _, t := range lr.Transitions {
-				st := s3types.Transition{StorageClass: s3types.TransitionStorageClass(t.StorageClass)}
-				if t.Days != nil {
-					st.Days = t.Days
-				}
-				rule.Transitions = append(rule.Transitions, st)
-			}
-			for _, nvt := range lr.NoncurrentVersionTransitions {
-				st := s3types.NoncurrentVersionTransition{StorageClass: s3types.TransitionStorageClass(nvt.StorageClass)}
-				if nvt.NoncurrentDays != nil {
-					st.NoncurrentDays = nvt.NoncurrentDays
-				}
-				rule.NoncurrentVersionTransitions = append(rule.NoncurrentVersionTransitions, st)
-			}
-			rules = append(rules, rule)
+		rules, err := buildLifecycleRules(b.Spec.LifecycleRules)
+		if err != nil {
+			return fmt.Errorf("invalid lifecycle rule: %w", err)
 		}
 		if _, err := r.S3Client.PutBucketLifecycleConfiguration(ctx, &awss3.PutBucketLifecycleConfigurationInput{
 			Bucket:                 aws.String(b.Spec.BucketName),
