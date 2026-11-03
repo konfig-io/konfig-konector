@@ -413,6 +413,14 @@ spec:
     }
 ```
 
+Lifecycle rules, CORS, notifications and website hosting can be set inline on
+the `S3Bucket` or managed by the dedicated `S3BucketLifecycle`, `S3BucketCORS`
+and `S3BucketNotification` kinds. The `S3Bucket` only writes a setting when its
+spec contains it, records that in `status.managedSettings`, and only removes
+the setting from AWS when a previously set field is deleted from its spec. A
+bucket spec that never set a lifecycle therefore never deletes one owned by an
+`S3BucketLifecycle`.
+
 ### Route53 DNS record
 
 ```yaml
