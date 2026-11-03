@@ -138,10 +138,12 @@ allowed_iam_resource_paths = "/"
 allowed_iam_resource_paths = "/platform/"
 ```
 
-### Step 2 — Build and push the operator image
+### Step 2 — Pick an image
 
-No public image is published yet, so build one into a registry your cluster
-can pull from (ECR, GHCR, …):
+A public multi-arch image is published to GitHub Container Registry on every
+release: `ghcr.io/konfig-io/konfig-konector:<version>` (also `latest` and the
+git sha). The Helm chart defaults to it, pinned to the chart's `appVersion`.
+To build your own instead:
 
 ```bash
 make docker-build docker-push IMG=<your-registry>/konfig-konector:v0.1.0
@@ -153,8 +155,6 @@ make docker-build docker-push IMG=<your-registry>/konfig-konector:v0.1.0
 helm install konfig-konector ./helm/konfig-konector \
   --namespace konfig-system \
   --create-namespace \
-  --set image.repository=<your-registry>/konfig-konector \
-  --set image.tag=v0.1.0 \
   --set aws.region=us-east-1 \
   --set operatorRoleArn=arn:aws:iam::123456789012:role/dev-konfig-konector-operator
 ```
@@ -676,8 +676,8 @@ by `sts:AssumeRole` into spoke roles declared as `AWSProvider` objects; the
 
 | Value | Default | Description |
 |---|---|---|
-| `image.repository` | — | Container image repository |
-| `image.tag` | `latest` | Image tag |
+| `image.repository` | `ghcr.io/konfig-io/konfig-konector` | Container image repository (public, published by CI) |
+| `image.tag` | chart `appVersion` | Image tag |
 | `image.pullPolicy` | `Always` | Image pull policy |
 | `aws.region` | `us-east-1` | AWS region for the operator |
 | `aws.credentialsSecret` | `""` | Secret with `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` for clusters without Pod Identity |
