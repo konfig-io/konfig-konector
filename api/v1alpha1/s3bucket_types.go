@@ -379,6 +379,14 @@ type S3BucketStatus struct {
 	// WebsiteEndpoint is the website endpoint URL when website hosting is enabled.
 	// +optional
 	WebsiteEndpoint string `json:"websiteEndpoint,omitempty"`
+
+	// ManagedSettings lists the bucket sub-configurations this S3Bucket has
+	// written (lifecycle, cors, notifications, website). A setting absent from
+	// the spec is only removed from AWS if it is listed here, so configurations
+	// owned by a separate S3BucketLifecycle / S3BucketCORS / S3BucketNotification
+	// object are left alone.
+	// +optional
+	ManagedSettings []string `json:"managedSettings,omitempty"`
 }
 
 // +kubebuilder:object:root=true

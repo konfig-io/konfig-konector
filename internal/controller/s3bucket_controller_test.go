@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	awss3 "github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -270,6 +271,89 @@ func TestS3BucketReconcile(t *testing.T) {
 				cond := apimeta.FindStatusCondition(got.Status.Conditions, awsv1alpha1.ConditionReady)
 				if cond == nil || cond.Status != metav1.ConditionTrue {
 					t.Errorf("Ready condition = %+v, want True", cond)
+				}
+			},
+		},
+		{
+			name: "existing bucket without lifecycle/CORS/notifications/website leaves them alone",
+			obj:  s3BucketCR(),
+			fake: &fakeS3BucketAPI{
+				headBucket: func(_ context.Context, _ *awss3.HeadBucketInput) (*awss3.HeadBucketOutput, error) {
+					return &awss3.HeadBucketOutput{}, nil
+				},
+			},
+			reconciles: 2,
+			assert: func(t *testing.T, ctx context.Context, c client.Client, f *fakeS3BucketAPI) {
+				for _, call := range []string{"DeleteBucketLifecycle", "DeleteBucketCors", "PutBucketNotificationConfiguration", "DeleteBucketWebsite"} {
+					if n := f.putCalls[call]; n != 0 {
+						t.Errorf("%s called %d times; must not touch settings this object never set", call, n)
+					}
+				}
+				got := &awsv1alpha1.S3Bucket{}
+				if err := c.Get(ctx, req.NamespacedName, got); err != nil {
+					t.Fatalf("get: %v", err)
+				}
+				if len(got.Status.ManagedSettings) != 0 {
+					t.Errorf("managedSettings = %v, want empty", got.Status.ManagedSettings)
+				}
+			},
+		},
+		{
+			name: "settings set in spec are written and recorded as managed",
+			obj: s3BucketCR(func(b *awsv1alpha1.S3Bucket) {
+				b.Spec.LifecycleRules = []awsv1alpha1.S3LifecycleRule{{ID: "x", Status: "Enabled", ExpirationDays: aws.Int32(1)}}
+				b.Spec.CORSRules = []awsv1alpha1.S3CORSRule{{AllowedMethods: []string{"GET"}, AllowedOrigins: []string{"*"}}}
+				b.Spec.NotificationConfig = &awsv1alpha1.S3NotificationConfig{EventBridgeEnabled: true}
+				b.Spec.WebsiteConfig = &awsv1alpha1.S3WebsiteConfig{IndexDocument: "index.html"}
+			}),
+			fake: &fakeS3BucketAPI{
+				headBucket: func(_ context.Context, _ *awss3.HeadBucketInput) (*awss3.HeadBucketOutput, error) {
+					return &awss3.HeadBucketOutput{}, nil
+				},
+			},
+			reconciles: 2,
+			assert: func(t *testing.T, ctx context.Context, c client.Client, f *fakeS3BucketAPI) {
+				for _, call := range []string{"PutBucketLifecycleConfiguration", "PutBucketCors", "PutBucketNotificationConfiguration", "PutBucketWebsite"} {
+					if f.putCalls[call] == 0 {
+						t.Errorf("%s not called", call)
+					}
+				}
+				got := &awsv1alpha1.S3Bucket{}
+				if err := c.Get(ctx, req.NamespacedName, got); err != nil {
+					t.Fatalf("get: %v", err)
+				}
+				want := map[string]bool{"lifecycle": true, "cors": true, "notifications": true, "website": true}
+				for _, m := range got.Status.ManagedSettings {
+					delete(want, m)
+				}
+				if len(want) != 0 {
+					t.Errorf("managedSettings %v missing %v", got.Status.ManagedSettings, want)
+				}
+			},
+		},
+		{
+			name: "removing previously managed settings from the spec deletes them once and clears the record",
+			obj: s3BucketCR(func(b *awsv1alpha1.S3Bucket) {
+				b.Status.ManagedSettings = []string{"lifecycle", "cors", "notifications", "website"}
+			}),
+			fake: &fakeS3BucketAPI{
+				headBucket: func(_ context.Context, _ *awss3.HeadBucketInput) (*awss3.HeadBucketOutput, error) {
+					return &awss3.HeadBucketOutput{}, nil
+				},
+			},
+			reconciles: 3,
+			assert: func(t *testing.T, ctx context.Context, c client.Client, f *fakeS3BucketAPI) {
+				for _, call := range []string{"DeleteBucketLifecycle", "DeleteBucketCors", "PutBucketNotificationConfiguration", "DeleteBucketWebsite"} {
+					if n := f.putCalls[call]; n != 1 {
+						t.Errorf("%s called %d times, want exactly 1 (then ownership released)", call, n)
+					}
+				}
+				got := &awsv1alpha1.S3Bucket{}
+				if err := c.Get(ctx, req.NamespacedName, got); err != nil {
+					t.Fatalf("get: %v", err)
+				}
+				if len(got.Status.ManagedSettings) != 0 {
+					t.Errorf("managedSettings = %v, want empty", got.Status.ManagedSettings)
 				}
 			},
 		},

@@ -223,6 +223,12 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		}
 	}
 
+	// Lifecycle, CORS, notifications and website are only touched when the
+	// spec sets them, or when this object set them earlier and the field was
+	// removed (tracked in status.managedSettings). Buckets configured through
+	// S3BucketLifecycle / S3BucketCORS / S3BucketNotification are otherwise
+	// left alone.
+
 	// Sync lifecycle rules.
 	if len(b.Spec.LifecycleRules) > 0 {
 		rules, err := buildLifecycleRules(b.Spec.LifecycleRules)
@@ -235,12 +241,14 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		}); err != nil {
 			return fmt.Errorf("put bucket lifecycle: %w", err)
 		}
-	} else {
+		s3MarkManaged(b, s3SettingLifecycle)
+	} else if s3IsManaged(b, s3SettingLifecycle) {
 		if _, err := r.S3Client.DeleteBucketLifecycle(ctx, &awss3.DeleteBucketLifecycleInput{
 			Bucket: aws.String(b.Spec.BucketName),
 		}); err != nil && !s3helper.IsNotFound(err) {
 			return fmt.Errorf("delete bucket lifecycle: %w", err)
 		}
+		s3UnmarkManaged(b, s3SettingLifecycle)
 	}
 
 	// Sync CORS rules.
@@ -267,16 +275,19 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		}); err != nil {
 			return fmt.Errorf("put bucket CORS: %w", err)
 		}
-	} else {
+		s3MarkManaged(b, s3SettingCORS)
+	} else if s3IsManaged(b, s3SettingCORS) {
 		if _, err := r.S3Client.DeleteBucketCors(ctx, &awss3.DeleteBucketCorsInput{
 			Bucket: aws.String(b.Spec.BucketName),
 		}); err != nil && !s3helper.IsNotFound(err) {
 			return fmt.Errorf("delete bucket CORS: %w", err)
 		}
+		s3UnmarkManaged(b, s3SettingCORS)
 	}
 
-	// Sync notifications (always put, empty config clears).
-	if b.Spec.NotificationConfig != nil || true {
+	// Sync notifications. An empty configuration clears them, so only send one
+	// when this object previously set notifications.
+	if b.Spec.NotificationConfig != nil || s3IsManaged(b, s3SettingNotifications) {
 		nc := &s3types.NotificationConfiguration{}
 		if b.Spec.NotificationConfig != nil {
 			cfg := b.Spec.NotificationConfig
@@ -323,6 +334,11 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 		}); err != nil {
 			return fmt.Errorf("put bucket notifications: %w", err)
 		}
+		if b.Spec.NotificationConfig != nil {
+			s3MarkManaged(b, s3SettingNotifications)
+		} else {
+			s3UnmarkManaged(b, s3SettingNotifications)
+		}
 	}
 
 	// Sync website config.
@@ -348,13 +364,15 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 			return fmt.Errorf("put bucket website: %w", err)
 		}
 		b.Status.WebsiteEndpoint = fmt.Sprintf("%s.s3-website.%s.amazonaws.com", b.Spec.BucketName, region)
-	} else {
+		s3MarkManaged(b, s3SettingWebsite)
+	} else if s3IsManaged(b, s3SettingWebsite) {
 		if _, err := r.S3Client.DeleteBucketWebsite(ctx, &awss3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(b.Spec.BucketName),
 		}); err != nil && !s3helper.IsNotFound(err) {
 			return fmt.Errorf("delete bucket website: %w", err)
 		}
 		b.Status.WebsiteEndpoint = ""
+		s3UnmarkManaged(b, s3SettingWebsite)
 	}
 
 	// Sync accelerate status.
@@ -426,6 +444,39 @@ func (r *S3BucketReconciler) reconcileBucket(ctx context.Context, b *awsv1alpha1
 	now := metav1.Now()
 	b.Status.LastSyncTime = &now
 	return r.setCondition(ctx, b, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "S3 bucket reconciled")
+}
+
+// Bucket sub-configurations whose ownership is tracked in status.managedSettings.
+const (
+	s3SettingLifecycle     = "lifecycle"
+	s3SettingCORS          = "cors"
+	s3SettingNotifications = "notifications"
+	s3SettingWebsite       = "website"
+)
+
+func s3IsManaged(b *awsv1alpha1.S3Bucket, setting string) bool {
+	for _, m := range b.Status.ManagedSettings {
+		if m == setting {
+			return true
+		}
+	}
+	return false
+}
+
+func s3MarkManaged(b *awsv1alpha1.S3Bucket, setting string) {
+	if !s3IsManaged(b, setting) {
+		b.Status.ManagedSettings = append(b.Status.ManagedSettings, setting)
+	}
+}
+
+func s3UnmarkManaged(b *awsv1alpha1.S3Bucket, setting string) {
+	out := b.Status.ManagedSettings[:0]
+	for _, m := range b.Status.ManagedSettings {
+		if m != setting {
+			out = append(out, m)
+		}
+	}
+	b.Status.ManagedSettings = out
 }
 
 func s3eventsFromStrings(events []string) []s3types.Event {
