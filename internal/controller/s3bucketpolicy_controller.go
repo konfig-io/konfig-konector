@@ -168,7 +168,6 @@ func (r *S3BucketPolicyReconciler) setCondition(ctx context.Context, bp *awsv1al
 }
 
 func (r *S3BucketPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3BucketPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.S3BucketPolicy{}).
 		Complete(r)
 }

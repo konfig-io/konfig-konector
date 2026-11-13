@@ -268,7 +268,6 @@ func (r *VPCPeeringConnectionReconciler) setConditionVPC(ctx context.Context, ob
 }
 
 func (r *VPCPeeringConnectionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.VPCPeeringConnection{}).
+	return newKindController(mgr, &awsv1alpha1.VPCPeeringConnection{}).
 		Complete(r)
 }

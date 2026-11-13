@@ -179,7 +179,6 @@ func (r *LambdaAliasReconciler) setConditionLA(ctx context.Context, obj *awsv1al
 }
 
 func (r *LambdaAliasReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaAlias{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaAlias{}).
 		Complete(r)
 }

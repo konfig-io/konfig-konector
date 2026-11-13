@@ -194,7 +194,6 @@ func (r *ShieldProtectionReconciler) setConditionSP(ctx context.Context, obj *aw
 }
 
 func (r *ShieldProtectionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ShieldProtection{}).
+	return newKindController(mgr, &awsv1alpha1.ShieldProtection{}).
 		Complete(r)
 }

@@ -182,7 +182,6 @@ func (r *CodeDeployDeploymentGroupReconciler) setConditionCDDG(ctx context.Conte
 }
 
 func (r *CodeDeployDeploymentGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeDeployDeploymentGroup{}).
+	return newKindController(mgr, &awsv1alpha1.CodeDeployDeploymentGroup{}).
 		Complete(r)
 }

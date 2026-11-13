@@ -235,7 +235,6 @@ func (r *ResolverRuleReconciler) setConditionRR(ctx context.Context, obj *awsv1a
 }
 
 func (r *ResolverRuleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ResolverRule{}).
+	return newKindController(mgr, &awsv1alpha1.ResolverRule{}).
 		Complete(r)
 }

@@ -304,7 +304,6 @@ func (r *DynamoDBTableReconciler) setConditionDDB(ctx context.Context, t *awsv1a
 }
 
 func (r *DynamoDBTableReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DynamoDBTable{}).
+	return newKindController(mgr, &awsv1alpha1.DynamoDBTable{}).
 		Complete(r)
 }

@@ -276,7 +276,6 @@ func (r *OrganizationsAccountReconciler) setCondition(ctx context.Context, acct 
 }
 
 func (r *OrganizationsAccountReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OrganizationsAccount{}).
+	return newKindController(mgr, &awsv1alpha1.OrganizationsAccount{}).
 		Complete(r)
 }

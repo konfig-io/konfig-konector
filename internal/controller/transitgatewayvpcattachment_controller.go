@@ -310,7 +310,6 @@ func (r *TransitGatewayVpcAttachmentReconciler) setConditionTGWAtt(ctx context.C
 }
 
 func (r *TransitGatewayVpcAttachmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.TransitGatewayVpcAttachment{}).
+	return newKindController(mgr, &awsv1alpha1.TransitGatewayVpcAttachment{}).
 		Complete(r)
 }

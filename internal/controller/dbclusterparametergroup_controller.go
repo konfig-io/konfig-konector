@@ -165,7 +165,6 @@ func (r *DBClusterParameterGroupReconciler) setCondition(ctx context.Context, pg
 }
 
 func (r *DBClusterParameterGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBClusterParameterGroup{}).
+	return newKindController(mgr, &awsv1alpha1.DBClusterParameterGroup{}).
 		Complete(r)
 }

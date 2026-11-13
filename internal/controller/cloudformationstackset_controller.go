@@ -186,7 +186,6 @@ func (r *CloudFormationStackSetReconciler) setConditionCFNSS(ctx context.Context
 }
 
 func (r *CloudFormationStackSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFormationStackSet{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFormationStackSet{}).
 		Complete(r)
 }

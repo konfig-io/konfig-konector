@@ -171,7 +171,6 @@ func (r *SecurityHubAccountReconciler) setCondition(ctx context.Context, hub *aw
 }
 
 func (r *SecurityHubAccountReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SecurityHubAccount{}).
+	return newKindController(mgr, &awsv1alpha1.SecurityHubAccount{}).
 		Complete(r)
 }

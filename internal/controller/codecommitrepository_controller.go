@@ -178,7 +178,6 @@ func (r *CodeCommitRepositoryReconciler) setConditionCCR(ctx context.Context, ob
 }
 
 func (r *CodeCommitRepositoryReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeCommitRepository{}).
+	return newKindController(mgr, &awsv1alpha1.CodeCommitRepository{}).
 		Complete(r)
 }

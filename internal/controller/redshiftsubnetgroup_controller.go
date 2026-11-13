@@ -185,7 +185,6 @@ func (r *RedshiftSubnetGroupReconciler) setCondition(ctx context.Context, sg *aw
 }
 
 func (r *RedshiftSubnetGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RedshiftSubnetGroup{}).
+	return newKindController(mgr, &awsv1alpha1.RedshiftSubnetGroup{}).
 		Complete(r)
 }

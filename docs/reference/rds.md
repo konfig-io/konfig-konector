@@ -192,6 +192,8 @@ Creates and manages an RDS database instance.
 **Status: ✅ Working — async provisioning**
 
 > RDS instances take several minutes to provision. The controller polls every 30 seconds until the status reaches `available`.
+>
+> If an instance with the same `dbInstanceIdentifier` already exists in the account and region (for example after re-applying a CR that was deleted with `deletion-policy: abandon`), the controller adopts it instead of creating a second one, then applies the CR's spec with `ModifyDBInstance` once the instance is `available`. An instance in any other state (`stopped`, `failed`, ...) is reported as `Ready: False` with reason `NotAvailable` and polled; it is never re-created.
 
 ### Spec Fields
 

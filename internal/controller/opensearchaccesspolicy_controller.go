@@ -178,7 +178,6 @@ func (r *OpenSearchAccessPolicyReconciler) setConditionOSAP(ctx context.Context,
 }
 
 func (r *OpenSearchAccessPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OpenSearchAccessPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.OpenSearchAccessPolicy{}).
 		Complete(r)
 }

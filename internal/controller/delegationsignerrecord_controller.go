@@ -187,7 +187,6 @@ func (r *DelegationSignerRecordReconciler) setConditionDSR(ctx context.Context, 
 }
 
 func (r *DelegationSignerRecordReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DelegationSignerRecord{}).
+	return newKindController(mgr, &awsv1alpha1.DelegationSignerRecord{}).
 		Complete(r)
 }

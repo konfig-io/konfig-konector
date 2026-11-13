@@ -169,7 +169,6 @@ func (r *ScalableTargetReconciler) setCondition(ctx context.Context, st *awsv1al
 }
 
 func (r *ScalableTargetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ScalableTarget{}).
+	return newKindController(mgr, &awsv1alpha1.ScalableTarget{}).
 		Complete(r)
 }

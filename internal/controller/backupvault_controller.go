@@ -176,7 +176,6 @@ func (r *BackupVaultReconciler) setCondition(ctx context.Context, vault *awsv1al
 }
 
 func (r *BackupVaultReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.BackupVault{}).
+	return newKindController(mgr, &awsv1alpha1.BackupVault{}).
 		Complete(r)
 }

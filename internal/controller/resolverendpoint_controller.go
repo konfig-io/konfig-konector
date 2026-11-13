@@ -218,7 +218,6 @@ func (r *ResolverEndpointReconciler) setConditionRE(ctx context.Context, obj *aw
 }
 
 func (r *ResolverEndpointReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ResolverEndpoint{}).
+	return newKindController(mgr, &awsv1alpha1.ResolverEndpoint{}).
 		Complete(r)
 }

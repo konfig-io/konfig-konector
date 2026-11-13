@@ -196,7 +196,6 @@ func (r *OrganizationsPolicyReconciler) setCondition(ctx context.Context, pol *a
 }
 
 func (r *OrganizationsPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OrganizationsPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.OrganizationsPolicy{}).
 		Complete(r)
 }

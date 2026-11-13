@@ -228,7 +228,6 @@ func (r *S3AccessPointReconciler) setCondition(ctx context.Context, ap *awsv1alp
 }
 
 func (r *S3AccessPointReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3AccessPoint{}).
+	return newKindController(mgr, &awsv1alpha1.S3AccessPoint{}).
 		Complete(r)
 }

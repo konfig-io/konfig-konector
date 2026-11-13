@@ -373,7 +373,6 @@ func (r *DBClusterReconciler) setCondition(ctx context.Context, dbc *awsv1alpha1
 }
 
 func (r *DBClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBCluster{}).
+	return newKindController(mgr, &awsv1alpha1.DBCluster{}).
 		Complete(r)
 }

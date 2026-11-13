@@ -177,7 +177,6 @@ func (r *EFSMountTargetReconciler) setConditionEMT(ctx context.Context, obj *aws
 }
 
 func (r *EFSMountTargetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EFSMountTarget{}).
+	return newKindController(mgr, &awsv1alpha1.EFSMountTarget{}).
 		Complete(r)
 }

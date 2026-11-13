@@ -188,7 +188,6 @@ func (r *AthenaDataCatalogReconciler) setCondition(ctx context.Context, dc *awsv
 }
 
 func (r *AthenaDataCatalogReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AthenaDataCatalog{}).
+	return newKindController(mgr, &awsv1alpha1.AthenaDataCatalog{}).
 		Complete(r)
 }

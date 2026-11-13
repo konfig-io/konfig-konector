@@ -162,7 +162,6 @@ func (r *SESEmailIdentityReconciler) setConditionSEI(ctx context.Context, obj *a
 }
 
 func (r *SESEmailIdentityReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SESEmailIdentity{}).
+	return newKindController(mgr, &awsv1alpha1.SESEmailIdentity{}).
 		Complete(r)
 }

@@ -289,7 +289,6 @@ func (r *AutoScalingGroupReconciler) setCondition(ctx context.Context, asg *awsv
 }
 
 func (r *AutoScalingGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AutoScalingGroup{}).
+	return newKindController(mgr, &awsv1alpha1.AutoScalingGroup{}).
 		Complete(r)
 }

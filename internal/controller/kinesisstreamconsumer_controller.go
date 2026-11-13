@@ -159,7 +159,6 @@ func (r *KinesisStreamConsumerReconciler) setConditionKSC(ctx context.Context, o
 }
 
 func (r *KinesisStreamConsumerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KinesisStreamConsumer{}).
+	return newKindController(mgr, &awsv1alpha1.KinesisStreamConsumer{}).
 		Complete(r)
 }

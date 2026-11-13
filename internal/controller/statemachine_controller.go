@@ -222,7 +222,6 @@ func (r *StateMachineReconciler) setConditionSM(ctx context.Context, obj *awsv1a
 }
 
 func (r *StateMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.StateMachine{}).
+	return newKindController(mgr, &awsv1alpha1.StateMachine{}).
 		Complete(r)
 }

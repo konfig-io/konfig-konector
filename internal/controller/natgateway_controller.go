@@ -297,7 +297,6 @@ func (r *NatGatewayReconciler) setCondition(ctx context.Context, ng *awsv1alpha1
 }
 
 func (r *NatGatewayReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.NatGateway{}).
+	return newKindController(mgr, &awsv1alpha1.NatGateway{}).
 		Complete(r)
 }

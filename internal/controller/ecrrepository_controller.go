@@ -199,7 +199,6 @@ func (r *ECRRepositoryReconciler) setConditionRepo(ctx context.Context, repo *aw
 }
 
 func (r *ECRRepositoryReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECRRepository{}).
+	return newKindController(mgr, &awsv1alpha1.ECRRepository{}).
 		Complete(r)
 }

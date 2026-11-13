@@ -316,7 +316,6 @@ func (r *CloudFrontDistributionReconciler) setConditionCFD(ctx context.Context, 
 }
 
 func (r *CloudFrontDistributionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFrontDistribution{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFrontDistribution{}).
 		Complete(r)
 }

@@ -250,7 +250,6 @@ func (r *AthenaWorkGroupReconciler) setCondition(ctx context.Context, wg *awsv1a
 }
 
 func (r *AthenaWorkGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AthenaWorkGroup{}).
+	return newKindController(mgr, &awsv1alpha1.AthenaWorkGroup{}).
 		Complete(r)
 }

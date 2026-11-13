@@ -217,7 +217,6 @@ func (r *CapacityReservationReconciler) setCondition(ctx context.Context, obj *a
 }
 
 func (r *CapacityReservationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CapacityReservation{}).
+	return newKindController(mgr, &awsv1alpha1.CapacityReservation{}).
 		Complete(r)
 }

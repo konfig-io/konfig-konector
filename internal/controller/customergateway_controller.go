@@ -199,7 +199,6 @@ func (r *CustomerGatewayReconciler) setCondition(ctx context.Context, obj *awsv1
 }
 
 func (r *CustomerGatewayReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CustomerGateway{}).
+	return newKindController(mgr, &awsv1alpha1.CustomerGateway{}).
 		Complete(r)
 }

@@ -196,7 +196,6 @@ func (r *LatticeServiceNetworkServiceAssociationReconciler) setCondition(ctx con
 }
 
 func (r *LatticeServiceNetworkServiceAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LatticeServiceNetworkServiceAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.LatticeServiceNetworkServiceAssociation{}).
 		Complete(r)
 }

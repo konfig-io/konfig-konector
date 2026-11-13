@@ -217,7 +217,6 @@ func (r *DBOptionGroupReconciler) setConditionOG(ctx context.Context, og *awsv1a
 }
 
 func (r *DBOptionGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBOptionGroup{}).
+	return newKindController(mgr, &awsv1alpha1.DBOptionGroup{}).
 		Complete(r)
 }

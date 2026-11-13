@@ -272,7 +272,6 @@ func (r *GlueCrawlerReconciler) setCondition(ctx context.Context, cr *awsv1alpha
 }
 
 func (r *GlueCrawlerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GlueCrawler{}).
+	return newKindController(mgr, &awsv1alpha1.GlueCrawler{}).
 		Complete(r)
 }

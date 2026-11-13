@@ -205,7 +205,6 @@ func (r *ActivityReconciler) setConditionAct(ctx context.Context, obj *awsv1alph
 }
 
 func (r *ActivityReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Activity{}).
+	return newKindController(mgr, &awsv1alpha1.Activity{}).
 		Complete(r)
 }

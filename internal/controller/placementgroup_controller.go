@@ -186,7 +186,6 @@ func (r *PlacementGroupReconciler) setConditionPG(ctx context.Context, pg *awsv1
 }
 
 func (r *PlacementGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PlacementGroup{}).
+	return newKindController(mgr, &awsv1alpha1.PlacementGroup{}).
 		Complete(r)
 }

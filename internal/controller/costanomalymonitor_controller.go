@@ -225,7 +225,6 @@ func (r *CostAnomalyMonitorReconciler) setCondition(ctx context.Context, m *awsv
 }
 
 func (r *CostAnomalyMonitorReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CostAnomalyMonitor{}).
+	return newKindController(mgr, &awsv1alpha1.CostAnomalyMonitor{}).
 		Complete(r)
 }

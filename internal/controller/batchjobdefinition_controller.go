@@ -236,7 +236,6 @@ func (r *BatchJobDefinitionReconciler) setCondition(ctx context.Context, obj *aw
 }
 
 func (r *BatchJobDefinitionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.BatchJobDefinition{}).
+	return newKindController(mgr, &awsv1alpha1.BatchJobDefinition{}).
 		Complete(r)
 }

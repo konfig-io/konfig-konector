@@ -221,7 +221,6 @@ func (r *EventTargetReconciler) setConditionET(ctx context.Context, et *awsv1alp
 }
 
 func (r *EventTargetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EventTarget{}).
+	return newKindController(mgr, &awsv1alpha1.EventTarget{}).
 		Complete(r)
 }

@@ -236,7 +236,6 @@ func (r *GlueTriggerReconciler) setCondition(ctx context.Context, tr *awsv1alpha
 }
 
 func (r *GlueTriggerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GlueTrigger{}).
+	return newKindController(mgr, &awsv1alpha1.GlueTrigger{}).
 		Complete(r)
 }

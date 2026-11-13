@@ -338,9 +338,8 @@ func (r *CloudControlKindReconciler) setCondition(ctx context.Context, obj cfn.C
 
 // SetupWithManager registers the controller for this kind under a unique name.
 func (r *CloudControlKindReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+	return newKindController(mgr, r.Kind.New()).
 		Named("cc-" + strings.ToLower(r.Kind.Kind)).
-		For(r.Kind.New()).
 		WithOptions(controller.Options{MaxConcurrentReconciles: 1}).
 		Complete(r)
 }

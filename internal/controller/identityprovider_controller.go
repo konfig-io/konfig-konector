@@ -195,7 +195,6 @@ func (r *IdentityProviderReconciler) setConditionIDP(ctx context.Context, idp *a
 }
 
 func (r *IdentityProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IdentityProvider{}).
+	return newKindController(mgr, &awsv1alpha1.IdentityProvider{}).
 		Complete(r)
 }

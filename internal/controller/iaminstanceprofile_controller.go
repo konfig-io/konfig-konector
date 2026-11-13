@@ -239,7 +239,6 @@ func (r *IAMInstanceProfileReconciler) setCondition(ctx context.Context, ip *aws
 }
 
 func (r *IAMInstanceProfileReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMInstanceProfile{}).
+	return newKindController(mgr, &awsv1alpha1.IAMInstanceProfile{}).
 		Complete(r)
 }

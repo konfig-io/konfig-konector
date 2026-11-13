@@ -225,7 +225,6 @@ func (r *SCProductReconciler) setCondition(ctx context.Context, prod *awsv1alpha
 }
 
 func (r *SCProductReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SCProduct{}).
+	return newKindController(mgr, &awsv1alpha1.SCProduct{}).
 		Complete(r)
 }

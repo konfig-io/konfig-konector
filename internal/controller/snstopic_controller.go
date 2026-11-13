@@ -236,7 +236,6 @@ func (r *SNSTopicReconciler) setCondition(ctx context.Context, t *awsv1alpha1.SN
 }
 
 func (r *SNSTopicReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SNSTopic{}).
+	return newKindController(mgr, &awsv1alpha1.SNSTopic{}).
 		Complete(r)
 }

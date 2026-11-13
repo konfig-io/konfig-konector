@@ -213,7 +213,6 @@ func (r *APIGatewayV2VpcLinkReconciler) setConditionVpcLink(ctx context.Context,
 }
 
 func (r *APIGatewayV2VpcLinkReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2VpcLink{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2VpcLink{}).
 		Complete(r)
 }

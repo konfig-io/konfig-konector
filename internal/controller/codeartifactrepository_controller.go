@@ -290,7 +290,6 @@ func (r *CodeArtifactRepositoryReconciler) setCondition(ctx context.Context, rep
 }
 
 func (r *CodeArtifactRepositoryReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeArtifactRepository{}).
+	return newKindController(mgr, &awsv1alpha1.CodeArtifactRepository{}).
 		Complete(r)
 }

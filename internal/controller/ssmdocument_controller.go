@@ -191,7 +191,6 @@ func (r *SSMDocumentReconciler) setConditionSD(ctx context.Context, obj *awsv1al
 }
 
 func (r *SSMDocumentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSMDocument{}).
+	return newKindController(mgr, &awsv1alpha1.SSMDocument{}).
 		Complete(r)
 }

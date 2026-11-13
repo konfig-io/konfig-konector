@@ -182,7 +182,6 @@ func (r *IAMRolePolicyReconciler) setRPCondition(ctx context.Context, rp *awsv1a
 }
 
 func (r *IAMRolePolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMRolePolicy{}).
+	return newKindController(mgr, &awsv1alpha1.IAMRolePolicy{}).
 		Complete(r)
 }

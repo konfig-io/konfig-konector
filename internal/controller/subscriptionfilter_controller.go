@@ -175,7 +175,6 @@ func (r *SubscriptionFilterReconciler) setConditionSF(ctx context.Context, sf *a
 }
 
 func (r *SubscriptionFilterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SubscriptionFilter{}).
+	return newKindController(mgr, &awsv1alpha1.SubscriptionFilter{}).
 		Complete(r)
 }

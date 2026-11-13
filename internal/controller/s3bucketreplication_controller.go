@@ -165,7 +165,6 @@ func (r *S3BucketReplicationReconciler) setConditionSBR(ctx context.Context, obj
 }
 
 func (r *S3BucketReplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3BucketReplication{}).
+	return newKindController(mgr, &awsv1alpha1.S3BucketReplication{}).
 		Complete(r)
 }

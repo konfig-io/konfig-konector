@@ -319,7 +319,6 @@ func (r *PermissionSetReconciler) setCondition(ctx context.Context, ps *awsv1alp
 }
 
 func (r *PermissionSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PermissionSet{}).
+	return newKindController(mgr, &awsv1alpha1.PermissionSet{}).
 		Complete(r)
 }

@@ -186,7 +186,6 @@ func (r *MetricFilterReconciler) setConditionMF(ctx context.Context, mf *awsv1al
 }
 
 func (r *MetricFilterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MetricFilter{}).
+	return newKindController(mgr, &awsv1alpha1.MetricFilter{}).
 		Complete(r)
 }

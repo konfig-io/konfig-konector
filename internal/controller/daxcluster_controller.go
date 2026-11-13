@@ -189,7 +189,6 @@ func (r *DAXClusterReconciler) setConditionDAX(ctx context.Context, obj *awsv1al
 }
 
 func (r *DAXClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DAXCluster{}).
+	return newKindController(mgr, &awsv1alpha1.DAXCluster{}).
 		Complete(r)
 }

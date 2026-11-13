@@ -212,7 +212,6 @@ func ecTagsFromMap(m map[string]string) []ectypes.Tag {
 }
 
 func (r *ElastiCacheSubnetGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ElastiCacheSubnetGroup{}).
+	return newKindController(mgr, &awsv1alpha1.ElastiCacheSubnetGroup{}).
 		Complete(r)
 }

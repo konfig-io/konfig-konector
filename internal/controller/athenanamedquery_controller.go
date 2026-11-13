@@ -198,7 +198,6 @@ func (r *AthenaNamedQueryReconciler) setCondition(ctx context.Context, nq *awsv1
 }
 
 func (r *AthenaNamedQueryReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AthenaNamedQuery{}).
+	return newKindController(mgr, &awsv1alpha1.AthenaNamedQuery{}).
 		Complete(r)
 }

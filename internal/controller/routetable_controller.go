@@ -380,7 +380,6 @@ func (r *RouteTableReconciler) setCondition(ctx context.Context, rt *awsv1alpha1
 }
 
 func (r *RouteTableReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RouteTable{}).
+	return newKindController(mgr, &awsv1alpha1.RouteTable{}).
 		Complete(r)
 }

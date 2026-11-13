@@ -220,7 +220,6 @@ func (r *CloudFormationStackReconciler) setConditionCFN(ctx context.Context, obj
 }
 
 func (r *CloudFormationStackReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFormationStack{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFormationStack{}).
 		Complete(r)
 }

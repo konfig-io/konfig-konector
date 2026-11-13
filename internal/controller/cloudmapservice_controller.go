@@ -257,7 +257,6 @@ func (r *CloudMapServiceReconciler) setCondition(ctx context.Context, obj *awsv1
 }
 
 func (r *CloudMapServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudMapService{}).
+	return newKindController(mgr, &awsv1alpha1.CloudMapService{}).
 		Complete(r)
 }

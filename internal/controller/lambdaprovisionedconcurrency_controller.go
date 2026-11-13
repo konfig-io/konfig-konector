@@ -173,7 +173,6 @@ func (r *LambdaProvisionedConcurrencyReconciler) setCondition(ctx context.Contex
 }
 
 func (r *LambdaProvisionedConcurrencyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaProvisionedConcurrency{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaProvisionedConcurrency{}).
 		Complete(r)
 }

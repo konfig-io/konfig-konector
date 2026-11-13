@@ -240,7 +240,6 @@ func (r *LatticeTargetGroupReconciler) setCondition(ctx context.Context, obj *aw
 }
 
 func (r *LatticeTargetGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LatticeTargetGroup{}).
+	return newKindController(mgr, &awsv1alpha1.LatticeTargetGroup{}).
 		Complete(r)
 }

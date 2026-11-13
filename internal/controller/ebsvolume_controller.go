@@ -251,7 +251,6 @@ func (r *EBSVolumeReconciler) setConditionEBS(ctx context.Context, vol *awsv1alp
 }
 
 func (r *EBSVolumeReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EBSVolume{}).
+	return newKindController(mgr, &awsv1alpha1.EBSVolume{}).
 		Complete(r)
 }

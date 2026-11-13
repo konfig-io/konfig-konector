@@ -230,7 +230,6 @@ func (r *BudgetReconciler) setCondition(ctx context.Context, b *awsv1alpha1.Budg
 }
 
 func (r *BudgetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Budget{}).
+	return newKindController(mgr, &awsv1alpha1.Budget{}).
 		Complete(r)
 }

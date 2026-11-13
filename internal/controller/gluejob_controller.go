@@ -234,7 +234,6 @@ func (r *GlueJobReconciler) setCondition(ctx context.Context, job *awsv1alpha1.G
 }
 
 func (r *GlueJobReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GlueJob{}).
+	return newKindController(mgr, &awsv1alpha1.GlueJob{}).
 		Complete(r)
 }

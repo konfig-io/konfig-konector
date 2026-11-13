@@ -241,7 +241,6 @@ func (r *BackupPlanReconciler) setCondition(ctx context.Context, plan *awsv1alph
 }
 
 func (r *BackupPlanReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.BackupPlan{}).
+	return newKindController(mgr, &awsv1alpha1.BackupPlan{}).
 		Complete(r)
 }

@@ -195,7 +195,6 @@ func (r *LambdaEventInvokeConfigReconciler) setCondition(ctx context.Context, ei
 }
 
 func (r *LambdaEventInvokeConfigReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaEventInvokeConfig{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaEventInvokeConfig{}).
 		Complete(r)
 }

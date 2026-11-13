@@ -216,7 +216,6 @@ func (r *WAFRuleGroupReconciler) setConditionRG(ctx context.Context, obj *awsv1a
 }
 
 func (r *WAFRuleGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.WAFRuleGroup{}).
+	return newKindController(mgr, &awsv1alpha1.WAFRuleGroup{}).
 		Complete(r)
 }

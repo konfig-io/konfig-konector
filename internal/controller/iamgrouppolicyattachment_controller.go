@@ -169,7 +169,6 @@ func (r *IAMGroupPolicyAttachmentReconciler) setCondition(ctx context.Context, a
 }
 
 func (r *IAMGroupPolicyAttachmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMGroupPolicyAttachment{}).
+	return newKindController(mgr, &awsv1alpha1.IAMGroupPolicyAttachment{}).
 		Complete(r)
 }

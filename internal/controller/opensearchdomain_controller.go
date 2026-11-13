@@ -192,7 +192,6 @@ func (r *OpenSearchDomainReconciler) setConditionOSD(ctx context.Context, obj *a
 }
 
 func (r *OpenSearchDomainReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OpenSearchDomain{}).
+	return newKindController(mgr, &awsv1alpha1.OpenSearchDomain{}).
 		Complete(r)
 }

@@ -144,7 +144,6 @@ func (r *CloudWatchDashboardReconciler) setConditionCWD(ctx context.Context, obj
 }
 
 func (r *CloudWatchDashboardReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudWatchDashboard{}).
+	return newKindController(mgr, &awsv1alpha1.CloudWatchDashboard{}).
 		Complete(r)
 }

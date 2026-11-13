@@ -235,7 +235,6 @@ func (r *APIGatewayV2APIReconciler) setConditionAPI(ctx context.Context, obj *aw
 }
 
 func (r *APIGatewayV2APIReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2API{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2API{}).
 		Complete(r)
 }

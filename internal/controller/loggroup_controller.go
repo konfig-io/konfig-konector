@@ -208,7 +208,6 @@ func (r *LogGroupReconciler) setConditionLG(ctx context.Context, lg *awsv1alpha1
 }
 
 func (r *LogGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LogGroup{}).
+	return newKindController(mgr, &awsv1alpha1.LogGroup{}).
 		Complete(r)
 }

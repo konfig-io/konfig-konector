@@ -191,7 +191,6 @@ func (r *LambdaCodeSigningConfigReconciler) setConditionLCSC(ctx context.Context
 }
 
 func (r *LambdaCodeSigningConfigReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaCodeSigningConfig{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaCodeSigningConfig{}).
 		Complete(r)
 }

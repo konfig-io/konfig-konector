@@ -205,7 +205,6 @@ func (r *IAMPolicyAttachmentReconciler) setAttCondition(ctx context.Context, att
 }
 
 func (r *IAMPolicyAttachmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMPolicyAttachment{}).
+	return newKindController(mgr, &awsv1alpha1.IAMPolicyAttachment{}).
 		Complete(r)
 }

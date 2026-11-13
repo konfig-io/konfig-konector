@@ -274,7 +274,6 @@ func (r *MQBrokerReconciler) setCondition(ctx context.Context, obj *awsv1alpha1.
 }
 
 func (r *MQBrokerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MQBroker{}).
+	return newKindController(mgr, &awsv1alpha1.MQBroker{}).
 		Complete(r)
 }

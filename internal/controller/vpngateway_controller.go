@@ -276,7 +276,6 @@ func (r *VPNGatewayReconciler) setCondition(ctx context.Context, obj *awsv1alpha
 }
 
 func (r *VPNGatewayReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.VPNGateway{}).
+	return newKindController(mgr, &awsv1alpha1.VPNGateway{}).
 		Complete(r)
 }

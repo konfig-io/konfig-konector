@@ -189,7 +189,6 @@ func (r *AppRunnerAutoScalingReconciler) setCondition(ctx context.Context, obj *
 }
 
 func (r *AppRunnerAutoScalingReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AppRunnerAutoScaling{}).
+	return newKindController(mgr, &awsv1alpha1.AppRunnerAutoScaling{}).
 		Complete(r)
 }

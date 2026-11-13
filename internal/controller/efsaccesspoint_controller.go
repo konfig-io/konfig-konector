@@ -200,7 +200,6 @@ func (r *EFSAccessPointReconciler) setConditionEAP(ctx context.Context, obj *aws
 }
 
 func (r *EFSAccessPointReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EFSAccessPoint{}).
+	return newKindController(mgr, &awsv1alpha1.EFSAccessPoint{}).
 		Complete(r)
 }

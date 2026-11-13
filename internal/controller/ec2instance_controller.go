@@ -289,7 +289,6 @@ func (r *EC2InstanceReconciler) setCondition(ctx context.Context, inst *awsv1alp
 }
 
 func (r *EC2InstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EC2Instance{}).
+	return newKindController(mgr, &awsv1alpha1.EC2Instance{}).
 		Complete(r)
 }

@@ -196,7 +196,6 @@ func (r *KMSAliasReconciler) setConditionAlias(ctx context.Context, a *awsv1alph
 }
 
 func (r *KMSAliasReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KMSAlias{}).
+	return newKindController(mgr, &awsv1alpha1.KMSAlias{}).
 		Complete(r)
 }

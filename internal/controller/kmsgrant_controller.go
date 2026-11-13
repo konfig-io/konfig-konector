@@ -164,7 +164,6 @@ func (r *KMSGrantReconciler) setConditionKG(ctx context.Context, obj *awsv1alpha
 }
 
 func (r *KMSGrantReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KMSGrant{}).
+	return newKindController(mgr, &awsv1alpha1.KMSGrant{}).
 		Complete(r)
 }

@@ -152,7 +152,6 @@ func (r *IAMGroupMembershipReconciler) setCondition(ctx context.Context, mem *aw
 }
 
 func (r *IAMGroupMembershipReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMGroupMembership{}).
+	return newKindController(mgr, &awsv1alpha1.IAMGroupMembership{}).
 		Complete(r)
 }

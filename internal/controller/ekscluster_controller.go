@@ -285,7 +285,6 @@ func (r *EKSClusterReconciler) setCondition(ctx context.Context, obj *awsv1alpha
 }
 
 func (r *EKSClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EKSCluster{}).
+	return newKindController(mgr, &awsv1alpha1.EKSCluster{}).
 		Complete(r)
 }

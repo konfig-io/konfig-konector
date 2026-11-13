@@ -266,7 +266,6 @@ func (r *APIGatewayV2AuthorizerReconciler) setConditionAuthorizer(ctx context.Co
 }
 
 func (r *APIGatewayV2AuthorizerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2Authorizer{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2Authorizer{}).
 		Complete(r)
 }

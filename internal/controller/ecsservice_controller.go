@@ -242,7 +242,6 @@ func (r *ECSServiceReconciler) setCondition(ctx context.Context, obj *awsv1alpha
 }
 
 func (r *ECSServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECSService{}).
+	return newKindController(mgr, &awsv1alpha1.ECSService{}).
 		Complete(r)
 }

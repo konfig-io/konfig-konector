@@ -260,7 +260,6 @@ func (r *LambdaFunctionReconciler) setCondition(ctx context.Context, obj *awsv1a
 }
 
 func (r *LambdaFunctionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaFunction{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaFunction{}).
 		Complete(r)
 }

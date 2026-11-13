@@ -236,7 +236,6 @@ func (r *BackupSelectionReconciler) setCondition(ctx context.Context, sel *awsv1
 }
 
 func (r *BackupSelectionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.BackupSelection{}).
+	return newKindController(mgr, &awsv1alpha1.BackupSelection{}).
 		Complete(r)
 }

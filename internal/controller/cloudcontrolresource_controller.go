@@ -329,7 +329,6 @@ func (r *CloudControlResourceReconciler) setCondition(ctx context.Context, obj *
 }
 
 func (r *CloudControlResourceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudControlResource{}).
+	return newKindController(mgr, &awsv1alpha1.CloudControlResource{}).
 		Complete(r)
 }

@@ -188,7 +188,6 @@ func (r *FirehoseDeliveryStreamReconciler) setConditionFDS(ctx context.Context, 
 }
 
 func (r *FirehoseDeliveryStreamReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.FirehoseDeliveryStream{}).
+	return newKindController(mgr, &awsv1alpha1.FirehoseDeliveryStream{}).
 		Complete(r)
 }

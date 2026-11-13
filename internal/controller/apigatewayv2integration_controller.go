@@ -285,7 +285,6 @@ func (r *APIGatewayV2IntegrationReconciler) setConditionIntegration(ctx context.
 }
 
 func (r *APIGatewayV2IntegrationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2Integration{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2Integration{}).
 		Complete(r)
 }

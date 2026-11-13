@@ -289,7 +289,6 @@ func (r *BatchComputeEnvironmentReconciler) setCondition(ctx context.Context, ob
 }
 
 func (r *BatchComputeEnvironmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.BatchComputeEnvironment{}).
+	return newKindController(mgr, &awsv1alpha1.BatchComputeEnvironment{}).
 		Complete(r)
 }

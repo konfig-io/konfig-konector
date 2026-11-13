@@ -227,7 +227,6 @@ func (r *ECSScheduledTaskReconciler) setConditionEST(ctx context.Context, obj *a
 }
 
 func (r *ECSScheduledTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECSScheduledTask{}).
+	return newKindController(mgr, &awsv1alpha1.ECSScheduledTask{}).
 		Complete(r)
 }

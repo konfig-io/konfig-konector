@@ -241,7 +241,6 @@ func (r *GlueConnectionReconciler) setCondition(ctx context.Context, conn *awsv1
 }
 
 func (r *GlueConnectionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GlueConnection{}).
+	return newKindController(mgr, &awsv1alpha1.GlueConnection{}).
 		Complete(r)
 }

@@ -212,7 +212,6 @@ func (r *ElasticIPReconciler) setConditionEIP(ctx context.Context, eip *awsv1alp
 }
 
 func (r *ElasticIPReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ElasticIP{}).
+	return newKindController(mgr, &awsv1alpha1.ElasticIP{}).
 		Complete(r)
 }

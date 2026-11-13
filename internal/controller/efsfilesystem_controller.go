@@ -197,7 +197,6 @@ func (r *EFSFileSystemReconciler) setConditionEFS(ctx context.Context, obj *awsv
 }
 
 func (r *EFSFileSystemReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EFSFileSystem{}).
+	return newKindController(mgr, &awsv1alpha1.EFSFileSystem{}).
 		Complete(r)
 }

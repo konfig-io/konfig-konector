@@ -224,7 +224,6 @@ func (r *ResourceShareInvitationReconciler) setCondition(ctx context.Context, ob
 }
 
 func (r *ResourceShareInvitationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ResourceShareInvitation{}).
+	return newKindController(mgr, &awsv1alpha1.ResourceShareInvitation{}).
 		Complete(r)
 }

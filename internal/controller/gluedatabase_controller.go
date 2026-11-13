@@ -190,7 +190,6 @@ func (r *GlueDatabaseReconciler) setCondition(ctx context.Context, db *awsv1alph
 }
 
 func (r *GlueDatabaseReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GlueDatabase{}).
+	return newKindController(mgr, &awsv1alpha1.GlueDatabase{}).
 		Complete(r)
 }

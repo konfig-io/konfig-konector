@@ -249,7 +249,6 @@ func (r *EKSNodeGroupReconciler) setCondition(ctx context.Context, obj *awsv1alp
 }
 
 func (r *EKSNodeGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EKSNodeGroup{}).
+	return newKindController(mgr, &awsv1alpha1.EKSNodeGroup{}).
 		Complete(r)
 }

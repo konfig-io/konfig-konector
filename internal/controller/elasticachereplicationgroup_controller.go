@@ -299,7 +299,6 @@ func (r *ElastiCacheReplicationGroupReconciler) setCondition(ctx context.Context
 }
 
 func (r *ElastiCacheReplicationGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ElastiCacheReplicationGroup{}).
+	return newKindController(mgr, &awsv1alpha1.ElastiCacheReplicationGroup{}).
 		Complete(r)
 }

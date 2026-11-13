@@ -282,7 +282,6 @@ func (r *APIGatewayV2RouteReconciler) setConditionRoute(ctx context.Context, obj
 }
 
 func (r *APIGatewayV2RouteReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2Route{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2Route{}).
 		Complete(r)
 }

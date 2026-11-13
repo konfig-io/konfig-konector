@@ -276,7 +276,6 @@ func (r *SSOAssignmentReconciler) setCondition(ctx context.Context, sa *awsv1alp
 }
 
 func (r *SSOAssignmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSOAssignment{}).
+	return newKindController(mgr, &awsv1alpha1.SSOAssignment{}).
 		Complete(r)
 }

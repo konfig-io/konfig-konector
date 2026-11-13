@@ -201,7 +201,6 @@ func (r *ScalingPolicyReconciler) setConditionSP(ctx context.Context, sp *awsv1a
 }
 
 func (r *ScalingPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ScalingPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.ScalingPolicy{}).
 		Complete(r)
 }

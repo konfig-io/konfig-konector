@@ -259,7 +259,6 @@ func (r *RestAPIStageReconciler) setConditionRestStage(ctx context.Context, obj 
 }
 
 func (r *RestAPIStageReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RestAPIStage{}).
+	return newKindController(mgr, &awsv1alpha1.RestAPIStage{}).
 		Complete(r)
 }

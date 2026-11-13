@@ -293,7 +293,6 @@ func (r *ManagedPrefixListReconciler) setCondition(ctx context.Context, obj *aws
 }
 
 func (r *ManagedPrefixListReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ManagedPrefixList{}).
+	return newKindController(mgr, &awsv1alpha1.ManagedPrefixList{}).
 		Complete(r)
 }

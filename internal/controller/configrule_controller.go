@@ -180,7 +180,6 @@ func (r *ConfigRuleReconciler) setCondition(ctx context.Context, rule *awsv1alph
 }
 
 func (r *ConfigRuleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ConfigRule{}).
+	return newKindController(mgr, &awsv1alpha1.ConfigRule{}).
 		Complete(r)
 }

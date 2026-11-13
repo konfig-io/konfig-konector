@@ -222,7 +222,6 @@ func (r *PrometheusRuleGroupsNamespaceReconciler) setCondition(ctx context.Conte
 }
 
 func (r *PrometheusRuleGroupsNamespaceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PrometheusRuleGroupsNamespace{}).
+	return newKindController(mgr, &awsv1alpha1.PrometheusRuleGroupsNamespace{}).
 		Complete(r)
 }

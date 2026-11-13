@@ -179,7 +179,6 @@ func (r *KeyPairReconciler) setCondition(ctx context.Context, kp *awsv1alpha1.Ke
 }
 
 func (r *KeyPairReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KeyPair{}).
+	return newKindController(mgr, &awsv1alpha1.KeyPair{}).
 		Complete(r)
 }

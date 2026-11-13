@@ -387,7 +387,6 @@ func (r *SecurityGroupReconciler) setCondition(ctx context.Context, sg *awsv1alp
 }
 
 func (r *SecurityGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SecurityGroup{}).
+	return newKindController(mgr, &awsv1alpha1.SecurityGroup{}).
 		Complete(r)
 }

@@ -185,7 +185,6 @@ func (r *EventBridgePipeReconciler) setConditionEBP(ctx context.Context, obj *aw
 }
 
 func (r *EventBridgePipeReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EventBridgePipe{}).
+	return newKindController(mgr, &awsv1alpha1.EventBridgePipe{}).
 		Complete(r)
 }

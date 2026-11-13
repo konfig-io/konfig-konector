@@ -165,7 +165,6 @@ func (r *DynamoDBBackupReconciler) setConditionDB(ctx context.Context, obj *awsv
 }
 
 func (r *DynamoDBBackupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DynamoDBBackup{}).
+	return newKindController(mgr, &awsv1alpha1.DynamoDBBackup{}).
 		Complete(r)
 }

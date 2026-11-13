@@ -344,7 +344,6 @@ func (r *AppRunnerServiceReconciler) setCondition(ctx context.Context, obj *awsv
 }
 
 func (r *AppRunnerServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AppRunnerService{}).
+	return newKindController(mgr, &awsv1alpha1.AppRunnerService{}).
 		Complete(r)
 }

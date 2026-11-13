@@ -203,7 +203,6 @@ func (r *APIGatewayV2DomainNameReconciler) setConditionDomain(ctx context.Contex
 }
 
 func (r *APIGatewayV2DomainNameReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2DomainName{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2DomainName{}).
 		Complete(r)
 }

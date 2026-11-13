@@ -169,7 +169,6 @@ func (r *ECRRepositoryPolicyReconciler) setConditionRP(ctx context.Context, rp *
 }
 
 func (r *ECRRepositoryPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECRRepositoryPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.ECRRepositoryPolicy{}).
 		Complete(r)
 }

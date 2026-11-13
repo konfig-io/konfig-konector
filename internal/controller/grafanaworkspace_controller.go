@@ -260,7 +260,6 @@ func (r *GrafanaWorkspaceReconciler) setCondition(ctx context.Context, ws *awsv1
 }
 
 func (r *GrafanaWorkspaceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GrafanaWorkspace{}).
+	return newKindController(mgr, &awsv1alpha1.GrafanaWorkspace{}).
 		Complete(r)
 }

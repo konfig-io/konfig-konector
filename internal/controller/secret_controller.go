@@ -233,7 +233,6 @@ func (r *SecretReconciler) setConditionSecret(ctx context.Context, s *awsv1alpha
 }
 
 func (r *SecretReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Secret{}).
+	return newKindController(mgr, &awsv1alpha1.Secret{}).
 		Complete(r)
 }

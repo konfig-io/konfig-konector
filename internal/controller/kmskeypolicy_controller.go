@@ -156,7 +156,6 @@ func (r *KMSKeyPolicyReconciler) setConditionKP(ctx context.Context, kp *awsv1al
 }
 
 func (r *KMSKeyPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KMSKeyPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.KMSKeyPolicy{}).
 		Complete(r)
 }

@@ -213,7 +213,6 @@ func (r *SSMParameterReconciler) setConditionSSM(ctx context.Context, p *awsv1al
 }
 
 func (r *SSMParameterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSMParameter{}).
+	return newKindController(mgr, &awsv1alpha1.SSMParameter{}).
 		Complete(r)
 }

@@ -196,7 +196,6 @@ func (r *IAMRoleReconciler) setCondition(ctx context.Context, role *awsv1alpha1.
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *IAMRoleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMRole{}).
+	return newKindController(mgr, &awsv1alpha1.IAMRole{}).
 		Complete(r)
 }

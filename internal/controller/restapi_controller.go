@@ -268,7 +268,6 @@ func (r *RestAPIReconciler) setConditionRestAPI(ctx context.Context, obj *awsv1a
 }
 
 func (r *RestAPIReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RestAPI{}).
+	return newKindController(mgr, &awsv1alpha1.RestAPI{}).
 		Complete(r)
 }

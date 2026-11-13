@@ -48,7 +48,10 @@ Every hand-written kind ships ALL of the following. Reference implementations:
      finalizer, no AWS call) → delete<Kind>() → RemoveFinalizer → Update.
   4. AddFinalizer if missing, Update, then **return `ctrl.Result{Requeue: true}`**.
      Creating in the same pass races the stale-cache reconcile queued by the
-     finalizer update and produces duplicate AWS resources.
+     finalizer update and produces duplicate AWS resources. The requeue is
+     what drives the next pass: the finalizer update itself is not a user
+     change and only enqueues through the rate limiter (see SetupWithManager
+     below).
   5. reconcile<Kind>(): on `*dependencyNotReady` → `requeueDependency, nil`;
      on `errPendingAcceptance` (two-sided kinds) → `requeuePending, nil`;
      on error → setCondition(Error) + return err; success → `requeueResult(), nil`.
@@ -56,6 +59,10 @@ Every hand-written kind ships ALL of the following. Reference implementations:
   attributes (name, VPC + CIDR, attachment) before calling Create, and adopt
   what you find. Treat `AlreadyExists` on Create as adopt-by-lookup. A
   resource that exists in AWS but not in status must never be created twice.
+  Never gate the lookup on a status identifier when the resource can be found
+  from spec: status can be lost, and "identifier empty → Create" then loops
+  on `AlreadyExists` (this is what DBInstance did through v0.11.6). An existing
+  resource in an unexpected state is reported and polled, not re-created.
 - **persistStatus(ctx, r.Client, obj) IMMEDIATELY after any AWS create call
   stores the identifier** — before any follow-up step. Non-negotiable.
 - Delete helper: if the status identifier is empty, fall back to a
@@ -76,7 +83,20 @@ Every hand-written kind ships ALL of the following. Reference implementations:
   of a two-sided resource (accepter, VPC owner). Ready only when AWS confirms
   both sides; report `ReasonPendingAcceptance` meanwhile.
 - setCondition helper uses `persistStatus` (copy from sqsqueue) — never a
-  bare `r.Status().Update` with conflict-swallowing.
+  bare `r.Status().Update` with conflict-swallowing. On a resourceVersion
+  conflict `persistStatus` retries against the latest object and keeps any
+  string status field that is set there but empty in yours, so a reconcile
+  that started from a stale read cannot blank a stored identifier. To clear
+  a string field on purpose, expect it to take effect on a conflict-free pass.
+- **SetupWithManager is `newKindController(mgr, &awsv1alpha1.Foo{}).Complete(r)`**
+  — never `ctrl.NewControllerManagedBy(mgr).For(...)` directly. The helper
+  enqueues user changes (spec, labels, annotations, deletion) immediately and
+  the operator's own status/finalizer writes through the rate limiter, so a
+  failing reconcile that rewrites its error condition backs off instead of
+  hot-looping against AWS. Consequences: return an explicit requeue whenever
+  more work is pending (do not rely on your own status write to wake you up),
+  and keep mutating AWS calls off the steady-state path (read, compare, then
+  write — see ecrlifecyclepolicy).
 - Async resources: poll with a family-level `requeue<X>Polling` result.
 - EC2 tag specifications with no tags are stripped by client middleware; do
   not special-case empty `spec.tags`.

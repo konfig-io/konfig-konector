@@ -195,7 +195,6 @@ func (r *RestAPIDeploymentReconciler) setConditionDeployment(ctx context.Context
 }
 
 func (r *RestAPIDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RestAPIDeployment{}).
+	return newKindController(mgr, &awsv1alpha1.RestAPIDeployment{}).
 		Complete(r)
 }

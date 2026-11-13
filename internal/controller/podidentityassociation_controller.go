@@ -226,7 +226,6 @@ func (r *PodIdentityAssociationReconciler) setPIACondition(ctx context.Context, 
 }
 
 func (r *PodIdentityAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PodIdentityAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.PodIdentityAssociation{}).
 		Complete(r)
 }

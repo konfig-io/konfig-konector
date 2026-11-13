@@ -305,7 +305,6 @@ func (r *ResourceShareReconciler) setCondition(ctx context.Context, rs *awsv1alp
 }
 
 func (r *ResourceShareReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ResourceShare{}).
+	return newKindController(mgr, &awsv1alpha1.ResourceShare{}).
 		Complete(r)
 }

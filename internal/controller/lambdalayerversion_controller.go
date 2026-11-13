@@ -185,7 +185,6 @@ func (r *LambdaLayerVersionReconciler) setConditionLLV(ctx context.Context, obj 
 }
 
 func (r *LambdaLayerVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaLayerVersion{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaLayerVersion{}).
 		Complete(r)
 }

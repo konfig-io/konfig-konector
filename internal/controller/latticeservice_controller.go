@@ -227,7 +227,6 @@ func (r *LatticeServiceReconciler) setCondition(ctx context.Context, obj *awsv1a
 }
 
 func (r *LatticeServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LatticeService{}).
+	return newKindController(mgr, &awsv1alpha1.LatticeService{}).
 		Complete(r)
 }

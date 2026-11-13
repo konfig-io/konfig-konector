@@ -188,7 +188,6 @@ func (r *IPSetReconciler) setConditionIPSet(ctx context.Context, ip *awsv1alpha1
 }
 
 func (r *IPSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IPSet{}).
+	return newKindController(mgr, &awsv1alpha1.IPSet{}).
 		Complete(r)
 }

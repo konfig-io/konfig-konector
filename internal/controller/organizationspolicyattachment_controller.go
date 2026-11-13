@@ -171,7 +171,6 @@ func (r *OrganizationsPolicyAttachmentReconciler) setCondition(ctx context.Conte
 }
 
 func (r *OrganizationsPolicyAttachmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OrganizationsPolicyAttachment{}).
+	return newKindController(mgr, &awsv1alpha1.OrganizationsPolicyAttachment{}).
 		Complete(r)
 }
