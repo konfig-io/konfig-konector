@@ -370,6 +370,8 @@ spec:
 
 RDS instances take several minutes to provision. The controller polls every 30 seconds and sets `Ready: True` once the instance status reaches `available`.
 
+If an instance with the same `dbInstanceIdentifier` already exists in the account and region (for example after re-applying a CR that was deleted with `deletion-policy: abandon`), the controller adopts it instead of creating a second one, then applies the CR's spec with `ModifyDBInstance` once the instance is `available`. An instance in any other state (`stopped`, `failed`, ...) is reported as `Ready: False` with reason `NotAvailable` and polled; it is never re-created.
+
 ### S3 Bucket with encryption and policy
 
 ```yaml
@@ -651,14 +653,19 @@ Every controller follows the same pattern:
 2. Resolve the `AWSProvider` for the CR and attach its account/region scope to the
    context; every SDK call in this reconcile runs under that scope
 3. If `DeletionTimestamp` is set → delete the AWS resource, remove finalizer, return
-4. Add finalizer if not present and return; the resulting update event drives the
-   next reconcile (creating in the same pass races the stale cache and duplicates
+4. Add finalizer if not present and requeue; the AWS resource is created on the
+   next pass (creating in the same pass races the stale cache and duplicates
    resources)
 5. Look the resource up by its deterministic name or attributes and adopt it if it
    already exists; otherwise create it and persist the identifier immediately
 6. Update the AWS resource to match spec
 7. Write observed state (IDs, ARNs, endpoints, `awsProvider`) back to `status`
 8. Requeue after 5 minutes for drift detection
+
+Changes you make to a CR (spec, labels, annotations, deletion) are reconciled
+immediately. A reconcile that fails is retried with exponential backoff (5 ms
+doubling up to about 16 minutes) and the error is recorded in the `Ready`
+condition; the operator's own status writes never trigger an immediate retry.
 
 Generated Cloud Control kinds share one engine (`internal/controller/cc_engine.go`)
 that renders the typed spec into a CloudFormation property document, creates or
