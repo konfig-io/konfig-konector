@@ -254,7 +254,6 @@ func (r *CloudFrontCachePolicyReconciler) setConditionCFCP(ctx context.Context, 
 }
 
 func (r *CloudFrontCachePolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFrontCachePolicy{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFrontCachePolicy{}).
 		Complete(r)
 }

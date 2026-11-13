@@ -226,7 +226,6 @@ func configResourceTypes(in []string) []configtypes.ResourceType {
 }
 
 func (r *ConfigRecorderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ConfigRecorder{}).
+	return newKindController(mgr, &awsv1alpha1.ConfigRecorder{}).
 		Complete(r)
 }

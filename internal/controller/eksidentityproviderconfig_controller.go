@@ -195,7 +195,6 @@ func (r *EKSIdentityProviderConfigReconciler) setConditionEIPC(ctx context.Conte
 }
 
 func (r *EKSIdentityProviderConfigReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EKSIdentityProviderConfig{}).
+	return newKindController(mgr, &awsv1alpha1.EKSIdentityProviderConfig{}).
 		Complete(r)
 }

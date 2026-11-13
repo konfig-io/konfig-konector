@@ -226,7 +226,6 @@ func (r *TransitGatewayReconciler) setConditionTGW(ctx context.Context, tgw *aws
 }
 
 func (r *TransitGatewayReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.TransitGateway{}).
+	return newKindController(mgr, &awsv1alpha1.TransitGateway{}).
 		Complete(r)
 }

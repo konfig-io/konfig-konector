@@ -193,7 +193,6 @@ func (r *SCPortfolioProductAssociationReconciler) setCondition(ctx context.Conte
 }
 
 func (r *SCPortfolioProductAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SCPortfolioProductAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.SCPortfolioProductAssociation{}).
 		Complete(r)
 }

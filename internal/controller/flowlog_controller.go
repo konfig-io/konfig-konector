@@ -219,7 +219,6 @@ func (r *FlowLogReconciler) setConditionFL(ctx context.Context, fl *awsv1alpha1.
 }
 
 func (r *FlowLogReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.FlowLog{}).
+	return newKindController(mgr, &awsv1alpha1.FlowLog{}).
 		Complete(r)
 }

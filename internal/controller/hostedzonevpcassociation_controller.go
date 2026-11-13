@@ -259,7 +259,6 @@ func (r *HostedZoneVPCAssociationReconciler) setCondition(ctx context.Context, o
 }
 
 func (r *HostedZoneVPCAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.HostedZoneVPCAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.HostedZoneVPCAssociation{}).
 		Complete(r)
 }

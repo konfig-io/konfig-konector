@@ -527,7 +527,6 @@ func (r *S3BucketReconciler) setCondition(ctx context.Context, b *awsv1alpha1.S3
 }
 
 func (r *S3BucketReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3Bucket{}).
+	return newKindController(mgr, &awsv1alpha1.S3Bucket{}).
 		Complete(r)
 }

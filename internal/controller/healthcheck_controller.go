@@ -258,7 +258,6 @@ func (r *HealthCheckReconciler) setHCCondition(ctx context.Context, hc *awsv1alp
 }
 
 func (r *HealthCheckReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.HealthCheck{}).
+	return newKindController(mgr, &awsv1alpha1.HealthCheck{}).
 		Complete(r)
 }

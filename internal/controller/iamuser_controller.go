@@ -158,7 +158,6 @@ func (r *IAMUserReconciler) setCondition(ctx context.Context, user *awsv1alpha1.
 }
 
 func (r *IAMUserReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMUser{}).
+	return newKindController(mgr, &awsv1alpha1.IAMUser{}).
 		Complete(r)
 }

@@ -18,9 +18,11 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
+	"reflect"
 	"strings"
 	"time"
 
@@ -28,10 +30,17 @@ import (
 	"github.com/konfig-io/konfig-konector/internal/aws/provider"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 	k8stypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/util/retry"
+	"k8s.io/client-go/util/workqueue"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // roleNameFromARN extracts the role name from a full IAM role ARN.
@@ -75,23 +84,138 @@ func shouldAbandon(obj client.Object) bool {
 }
 
 // persistStatus writes obj's status subresource, retrying resourceVersion
-// conflicts by refreshing the resourceVersion and re-writing obj's status
-// wholesale (the operator owns status, so last-write-wins is correct here).
-// Unlike the old setCondition pattern, conflicts are never silently dropped —
-// AWS identifiers stored in status always reach etcd or an error is returned.
+// conflicts against the latest copy of the object.
+//
+// A conflict means obj was read before some other write landed. Usually that
+// write only touched metadata or spec and obj's status is still the freshest
+// view, so it is written as-is. But the reconcile may also have started from a
+// stale cache read that predates the operator's own previous status write; a
+// wholesale overwrite would then erase AWS identifiers recorded by that write
+// (and the next reconcile would try to create the AWS resource again). So on
+// conflict, string fields that are empty in obj but set in the latest status
+// are carried over before retrying. Identifiers are never blanked by a
+// conflicting write; a reconcile that really means to clear one will do so
+// again on its next, conflict-free pass.
 func persistStatus(ctx context.Context, c client.Client, obj client.Object) error {
 	return retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		err := c.Status().Update(ctx, obj)
 		if err == nil || !apierrors.IsConflict(err) {
 			return err
 		}
-		latest := obj.DeepCopyObject().(client.Object)
+		latest := reflect.New(reflect.TypeOf(obj).Elem()).Interface().(client.Object)
 		if getErr := c.Get(ctx, client.ObjectKeyFromObject(obj), latest); getErr != nil {
 			return getErr
+		}
+		if mergeErr := keepRecordedStatusStrings(obj, latest); mergeErr != nil {
+			return mergeErr
 		}
 		obj.SetResourceVersion(latest.GetResourceVersion())
 		return err
 	})
+}
+
+// keepRecordedStatusStrings copies into obj.status every non-empty string that
+// latest.status holds where obj.status has none, recursing through nested
+// objects. Lists (conditions) and non-string scalars are left as obj has them.
+func keepRecordedStatusStrings(obj, latest client.Object) error {
+	ours, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
+	if err != nil {
+		return err
+	}
+	theirs, err := runtime.DefaultUnstructuredConverter.ToUnstructured(latest)
+	if err != nil {
+		return err
+	}
+	theirStatus, _ := theirs["status"].(map[string]interface{})
+	if len(theirStatus) == 0 {
+		return nil
+	}
+	ourStatus, _ := ours["status"].(map[string]interface{})
+	if ourStatus == nil {
+		ourStatus = map[string]interface{}{}
+	}
+	if !fillEmptyStrings(ourStatus, theirStatus) {
+		return nil
+	}
+	ours["status"] = ourStatus
+	return runtime.DefaultUnstructuredConverter.FromUnstructured(ours, obj)
+}
+
+func fillEmptyStrings(dst, src map[string]interface{}) bool {
+	changed := false
+	for k, sv := range src {
+		switch sv := sv.(type) {
+		case string:
+			if sv == "" {
+				continue
+			}
+			if dv, present := dst[k]; !present || dv == nil || dv == "" {
+				dst[k] = sv
+				changed = true
+			}
+		case map[string]interface{}:
+			switch dv := dst[k].(type) {
+			case map[string]interface{}:
+				if fillEmptyStrings(dv, sv) {
+					changed = true
+				}
+			case nil:
+				sub := map[string]interface{}{}
+				if fillEmptyStrings(sub, sv) {
+					dst[k] = sub
+					changed = true
+				}
+			}
+		}
+	}
+	return changed
+}
+
+// newKindController starts the builder every kind's controller uses. It
+// splits the kind's watch in two so the operator's own writes cannot drive a
+// tight reconcile loop:
+//
+//   - changes a user makes (spec, labels, annotations, deletion) enqueue the
+//     object immediately, as before;
+//   - every other update (in practice the operator's own status and finalizer
+//     writes) enqueues it through the rate limiter. A healthy reconcile resets
+//     the limiter, so multi-step convergence that relies on the status echo
+//     still follows within milliseconds; a failing reconcile that rewrites its
+//     error condition on every attempt now backs off exponentially instead of
+//     retrying as fast as the API server can deliver its own write back.
+func newKindController(mgr ctrl.Manager, obj client.Object) *builder.Builder {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(obj, builder.WithPredicates(predicate.Funcs{UpdateFunc: isUserChange})).
+		Watches(obj, handler.Funcs{
+			UpdateFunc: func(_ context.Context, e event.UpdateEvent, q workqueue.RateLimitingInterface) {
+				if e.ObjectNew == nil || isUserChange(e) {
+					return
+				}
+				q.AddRateLimited(reconcile.Request{NamespacedName: client.ObjectKeyFromObject(e.ObjectNew)})
+			},
+		})
+}
+
+// isUserChange reports whether an update touched anything other than status,
+// finalizers and bookkeeping metadata.
+func isUserChange(e event.UpdateEvent) bool {
+	if e.ObjectOld == nil || e.ObjectNew == nil {
+		return true
+	}
+	return e.ObjectOld.GetGeneration() != e.ObjectNew.GetGeneration() ||
+		!e.ObjectOld.GetDeletionTimestamp().Equal(e.ObjectNew.GetDeletionTimestamp()) ||
+		!reflect.DeepEqual(e.ObjectOld.GetLabels(), e.ObjectNew.GetLabels()) ||
+		!reflect.DeepEqual(e.ObjectOld.GetAnnotations(), e.ObjectNew.GetAnnotations())
+}
+
+// sameJSON reports whether two JSON documents are semantically equal
+// (ignoring whitespace and key order). Unparseable input compares unequal.
+func sameJSON(a, b string) bool {
+	var av, bv interface{}
+	if json.Unmarshal([]byte(a), &av) != nil || json.Unmarshal([]byte(b), &bv) != nil {
+		return false
+	}
+	return reflect.DeepEqual(av, bv)
 }
 
 // resolveSecretValue reads a sensitive value from a Kubernetes Secret via a

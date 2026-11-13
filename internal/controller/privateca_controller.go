@@ -275,7 +275,6 @@ func (r *PrivateCAReconciler) setCondition(ctx context.Context, obj *awsv1alpha1
 }
 
 func (r *PrivateCAReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PrivateCA{}).
+	return newKindController(mgr, &awsv1alpha1.PrivateCA{}).
 		Complete(r)
 }

@@ -171,7 +171,6 @@ func (r *DBSnapshotReconciler) setConditionDBS(ctx context.Context, snap *awsv1a
 }
 
 func (r *DBSnapshotReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBSnapshot{}).
+	return newKindController(mgr, &awsv1alpha1.DBSnapshot{}).
 		Complete(r)
 }

@@ -320,7 +320,6 @@ func (r *LoadBalancerReconciler) setConditionLB(ctx context.Context, lb *awsv1al
 }
 
 func (r *LoadBalancerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LoadBalancer{}).
+	return newKindController(mgr, &awsv1alpha1.LoadBalancer{}).
 		Complete(r)
 }

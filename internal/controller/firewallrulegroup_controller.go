@@ -216,7 +216,6 @@ func nfwTagsFromMap(m map[string]string) []nfwtypes.Tag {
 }
 
 func (r *FirewallRuleGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.FirewallRuleGroup{}).
+	return newKindController(mgr, &awsv1alpha1.FirewallRuleGroup{}).
 		Complete(r)
 }

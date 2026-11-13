@@ -252,7 +252,6 @@ func (r *FirewallPolicyReconciler) setCondition(ctx context.Context, obj *awsv1a
 }
 
 func (r *FirewallPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.FirewallPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.FirewallPolicy{}).
 		Complete(r)
 }

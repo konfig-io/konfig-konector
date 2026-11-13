@@ -238,7 +238,6 @@ func (r *CloudFrontOriginAccessControlReconciler) setConditionCFOAC(ctx context.
 }
 
 func (r *CloudFrontOriginAccessControlReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFrontOriginAccessControl{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFrontOriginAccessControl{}).
 		Complete(r)
 }

@@ -174,7 +174,6 @@ func (r *SecretRotationReconciler) setConditionSR(ctx context.Context, sr *awsv1
 }
 
 func (r *SecretRotationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SecretRotation{}).
+	return newKindController(mgr, &awsv1alpha1.SecretRotation{}).
 		Complete(r)
 }

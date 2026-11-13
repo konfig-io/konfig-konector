@@ -211,7 +211,6 @@ func (r *SSMPatchBaselineReconciler) setCondition(ctx context.Context, pb *awsv1
 }
 
 func (r *SSMPatchBaselineReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSMPatchBaseline{}).
+	return newKindController(mgr, &awsv1alpha1.SSMPatchBaseline{}).
 		Complete(r)
 }

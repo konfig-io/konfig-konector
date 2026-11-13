@@ -236,7 +236,6 @@ func guarddutyFeatures(features []awsv1alpha1.GuardDutyFeature) []guarddutytypes
 }
 
 func (r *GuardDutyDetectorReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.GuardDutyDetector{}).
+	return newKindController(mgr, &awsv1alpha1.GuardDutyDetector{}).
 		Complete(r)
 }

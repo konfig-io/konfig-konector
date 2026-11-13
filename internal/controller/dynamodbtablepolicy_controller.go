@@ -138,7 +138,6 @@ func (r *DynamoDBTablePolicyReconciler) setConditionDTP(ctx context.Context, obj
 }
 
 func (r *DynamoDBTablePolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DynamoDBTablePolicy{}).
+	return newKindController(mgr, &awsv1alpha1.DynamoDBTablePolicy{}).
 		Complete(r)
 }

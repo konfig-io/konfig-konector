@@ -195,7 +195,6 @@ func (r *RedshiftParameterGroupReconciler) setCondition(ctx context.Context, pg 
 }
 
 func (r *RedshiftParameterGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RedshiftParameterGroup{}).
+	return newKindController(mgr, &awsv1alpha1.RedshiftParameterGroup{}).
 		Complete(r)
 }

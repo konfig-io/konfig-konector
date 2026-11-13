@@ -241,7 +241,6 @@ func (r *CTEnabledControlReconciler) setCondition(ctx context.Context, ec *awsv1
 }
 
 func (r *CTEnabledControlReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CTEnabledControl{}).
+	return newKindController(mgr, &awsv1alpha1.CTEnabledControl{}).
 		Complete(r)
 }

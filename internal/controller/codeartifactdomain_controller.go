@@ -197,7 +197,6 @@ func (r *CodeArtifactDomainReconciler) setCondition(ctx context.Context, d *awsv
 }
 
 func (r *CodeArtifactDomainReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeArtifactDomain{}).
+	return newKindController(mgr, &awsv1alpha1.CodeArtifactDomain{}).
 		Complete(r)
 }

@@ -201,7 +201,6 @@ func (r *MSKServerlessClusterReconciler) setConditionMSKSL(ctx context.Context, 
 }
 
 func (r *MSKServerlessClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MSKServerlessCluster{}).
+	return newKindController(mgr, &awsv1alpha1.MSKServerlessCluster{}).
 		Complete(r)
 }

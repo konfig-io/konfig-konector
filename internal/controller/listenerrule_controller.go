@@ -273,7 +273,6 @@ func (r *ListenerRuleReconciler) setConditionLR(ctx context.Context, lr *awsv1al
 }
 
 func (r *ListenerRuleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ListenerRule{}).
+	return newKindController(mgr, &awsv1alpha1.ListenerRule{}).
 		Complete(r)
 }

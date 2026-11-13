@@ -232,7 +232,6 @@ func (r *TargetGroupReconciler) setConditionTG(ctx context.Context, tg *awsv1alp
 }
 
 func (r *TargetGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.TargetGroup{}).
+	return newKindController(mgr, &awsv1alpha1.TargetGroup{}).
 		Complete(r)
 }

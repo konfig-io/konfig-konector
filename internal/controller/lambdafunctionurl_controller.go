@@ -203,7 +203,6 @@ func (r *LambdaFunctionURLReconciler) setConditionLFU(ctx context.Context, obj *
 }
 
 func (r *LambdaFunctionURLReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaFunctionURL{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaFunctionURL{}).
 		Complete(r)
 }

@@ -200,7 +200,6 @@ func (r *MemoryDBClusterReconciler) setConditionMDB(ctx context.Context, obj *aw
 }
 
 func (r *MemoryDBClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MemoryDBCluster{}).
+	return newKindController(mgr, &awsv1alpha1.MemoryDBCluster{}).
 		Complete(r)
 }

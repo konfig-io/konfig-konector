@@ -247,7 +247,6 @@ func (r *AMIReconciler) setConditionAMI(ctx context.Context, ami *awsv1alpha1.AM
 }
 
 func (r *AMIReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AMI{}).
+	return newKindController(mgr, &awsv1alpha1.AMI{}).
 		Complete(r)
 }

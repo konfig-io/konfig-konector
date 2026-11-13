@@ -193,7 +193,6 @@ func (r *PrometheusAlertManagerDefinitionReconciler) setCondition(ctx context.Co
 }
 
 func (r *PrometheusAlertManagerDefinitionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PrometheusAlertManagerDefinition{}).
+	return newKindController(mgr, &awsv1alpha1.PrometheusAlertManagerDefinition{}).
 		Complete(r)
 }

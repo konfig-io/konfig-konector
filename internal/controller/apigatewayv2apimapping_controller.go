@@ -227,7 +227,6 @@ func (r *APIGatewayV2ApiMappingReconciler) setConditionMapping(ctx context.Conte
 }
 
 func (r *APIGatewayV2ApiMappingReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2ApiMapping{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2ApiMapping{}).
 		Complete(r)
 }

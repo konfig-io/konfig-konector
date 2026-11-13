@@ -262,7 +262,6 @@ func (r *LaunchTemplateReconciler) setCondition(ctx context.Context, lt *awsv1al
 }
 
 func (r *LaunchTemplateReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LaunchTemplate{}).
+	return newKindController(mgr, &awsv1alpha1.LaunchTemplate{}).
 		Complete(r)
 }

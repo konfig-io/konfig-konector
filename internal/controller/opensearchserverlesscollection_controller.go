@@ -203,7 +203,6 @@ func (r *OpenSearchServerlessCollectionReconciler) setConditionOSSC(ctx context.
 }
 
 func (r *OpenSearchServerlessCollectionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OpenSearchServerlessCollection{}).
+	return newKindController(mgr, &awsv1alpha1.OpenSearchServerlessCollection{}).
 		Complete(r)
 }

@@ -165,7 +165,6 @@ func (r *DBParameterGroupReconciler) setCondition(ctx context.Context, pg *awsv1
 }
 
 func (r *DBParameterGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBParameterGroup{}).
+	return newKindController(mgr, &awsv1alpha1.DBParameterGroup{}).
 		Complete(r)
 }

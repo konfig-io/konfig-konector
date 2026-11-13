@@ -192,7 +192,6 @@ func (r *IAMOIDCProviderReconciler) setCondition(ctx context.Context, prov *awsv
 }
 
 func (r *IAMOIDCProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMOIDCProvider{}).
+	return newKindController(mgr, &awsv1alpha1.IAMOIDCProvider{}).
 		Complete(r)
 }

@@ -204,7 +204,6 @@ func (r *EventRuleReconciler) setConditionER(ctx context.Context, er *awsv1alpha
 }
 
 func (r *EventRuleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EventRule{}).
+	return newKindController(mgr, &awsv1alpha1.EventRule{}).
 		Complete(r)
 }

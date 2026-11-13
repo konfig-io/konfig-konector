@@ -153,7 +153,6 @@ func (r *DynamoDBGlobalTableReconciler) setConditionGT(ctx context.Context, gt *
 }
 
 func (r *DynamoDBGlobalTableReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DynamoDBGlobalTable{}).
+	return newKindController(mgr, &awsv1alpha1.DynamoDBGlobalTable{}).
 		Complete(r)
 }

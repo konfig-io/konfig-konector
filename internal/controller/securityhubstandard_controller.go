@@ -202,7 +202,6 @@ func (r *SecurityHubStandardReconciler) setCondition(ctx context.Context, std *a
 }
 
 func (r *SecurityHubStandardReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SecurityHubStandard{}).
+	return newKindController(mgr, &awsv1alpha1.SecurityHubStandard{}).
 		Complete(r)
 }

@@ -184,7 +184,6 @@ func (r *RDSGlobalClusterReconciler) setCondition(ctx context.Context, gc *awsv1
 }
 
 func (r *RDSGlobalClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RDSGlobalCluster{}).
+	return newKindController(mgr, &awsv1alpha1.RDSGlobalCluster{}).
 		Complete(r)
 }

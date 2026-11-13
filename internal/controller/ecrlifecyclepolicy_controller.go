@@ -107,12 +107,22 @@ func (r *ECRLifecyclePolicyReconciler) reconcileECRLifecyclePolicy(ctx context.C
 		return err
 	}
 
-	_, err = r.ECRClient.PutLifecyclePolicy(ctx, &awsecr.PutLifecyclePolicyInput{
-		RepositoryName:      aws.String(repoName),
-		LifecyclePolicyText: aws.String(lp.Spec.LifecyclePolicyDocument),
+	// Read before writing: only call PutLifecyclePolicy when the live policy
+	// differs, so the periodic resync is read-only once in sync.
+	current, err := r.ECRClient.GetLifecyclePolicy(ctx, &awsecr.GetLifecyclePolicyInput{
+		RepositoryName: aws.String(repoName),
 	})
-	if err != nil {
-		return fmt.Errorf("put lifecycle policy: %w", err)
+	if err != nil && !ecrhelper.IsNotFound(err) {
+		return fmt.Errorf("get lifecycle policy: %w", err)
+	}
+	if err != nil || !sameJSON(aws.ToString(current.LifecyclePolicyText), lp.Spec.LifecyclePolicyDocument) {
+		_, err = r.ECRClient.PutLifecyclePolicy(ctx, &awsecr.PutLifecyclePolicyInput{
+			RepositoryName:      aws.String(repoName),
+			LifecyclePolicyText: aws.String(lp.Spec.LifecyclePolicyDocument),
+		})
+		if err != nil {
+			return fmt.Errorf("put lifecycle policy: %w", err)
+		}
 	}
 
 	lp.Status.ObservedGeneration = lp.Generation
@@ -169,7 +179,6 @@ func (r *ECRLifecyclePolicyReconciler) setConditionLP(ctx context.Context, lp *a
 }
 
 func (r *ECRLifecyclePolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECRLifecyclePolicy{}).
+	return newKindController(mgr, &awsv1alpha1.ECRLifecyclePolicy{}).
 		Complete(r)
 }

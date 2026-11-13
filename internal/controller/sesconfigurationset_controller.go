@@ -184,7 +184,6 @@ func (r *SESConfigurationSetReconciler) setConditionSCS(ctx context.Context, obj
 }
 
 func (r *SESConfigurationSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SESConfigurationSet{}).
+	return newKindController(mgr, &awsv1alpha1.SESConfigurationSet{}).
 		Complete(r)
 }

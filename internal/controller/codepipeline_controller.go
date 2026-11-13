@@ -215,7 +215,6 @@ func (r *CodePipelineReconciler) setConditionCP(ctx context.Context, obj *awsv1a
 }
 
 func (r *CodePipelineReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodePipeline{}).
+	return newKindController(mgr, &awsv1alpha1.CodePipeline{}).
 		Complete(r)
 }

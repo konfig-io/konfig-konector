@@ -202,7 +202,6 @@ func (r *XRayGroupReconciler) setCondition(ctx context.Context, g *awsv1alpha1.X
 }
 
 func (r *XRayGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.XRayGroup{}).
+	return newKindController(mgr, &awsv1alpha1.XRayGroup{}).
 		Complete(r)
 }

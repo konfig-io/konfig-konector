@@ -229,7 +229,6 @@ func (r *UserPoolClientReconciler) setConditionUPC(ctx context.Context, upc *aws
 }
 
 func (r *UserPoolClientReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.UserPoolClient{}).
+	return newKindController(mgr, &awsv1alpha1.UserPoolClient{}).
 		Complete(r)
 }

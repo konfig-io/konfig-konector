@@ -199,7 +199,6 @@ func (r *WebACLReconciler) setConditionWA(ctx context.Context, wa *awsv1alpha1.W
 }
 
 func (r *WebACLReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.WebACL{}).
+	return newKindController(mgr, &awsv1alpha1.WebACL{}).
 		Complete(r)
 }

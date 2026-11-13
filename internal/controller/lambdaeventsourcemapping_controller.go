@@ -189,7 +189,6 @@ func (r *LambdaEventSourceMappingReconciler) setCondition(ctx context.Context, o
 }
 
 func (r *LambdaEventSourceMappingReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaEventSourceMapping{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaEventSourceMapping{}).
 		Complete(r)
 }

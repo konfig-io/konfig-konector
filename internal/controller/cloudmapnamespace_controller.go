@@ -300,7 +300,6 @@ func (r *CloudMapNamespaceReconciler) setCondition(ctx context.Context, obj *aws
 }
 
 func (r *CloudMapNamespaceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudMapNamespace{}).
+	return newKindController(mgr, &awsv1alpha1.CloudMapNamespace{}).
 		Complete(r)
 }

@@ -189,8 +189,7 @@ func (r *DBSubnetGroupReconciler) setCondition(ctx context.Context, sg *awsv1alp
 }
 
 func (r *DBSubnetGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBSubnetGroup{}).
+	return newKindController(mgr, &awsv1alpha1.DBSubnetGroup{}).
 		Complete(r)
 }
 

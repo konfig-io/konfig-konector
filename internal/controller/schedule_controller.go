@@ -289,7 +289,6 @@ func (r *ScheduleReconciler) setCondition(ctx context.Context, s *awsv1alpha1.Sc
 }
 
 func (r *ScheduleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Schedule{}).
+	return newKindController(mgr, &awsv1alpha1.Schedule{}).
 		Complete(r)
 }

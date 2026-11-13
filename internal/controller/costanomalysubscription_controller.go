@@ -279,7 +279,6 @@ func (r *CostAnomalySubscriptionReconciler) setCondition(ctx context.Context, s 
 }
 
 func (r *CostAnomalySubscriptionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CostAnomalySubscription{}).
+	return newKindController(mgr, &awsv1alpha1.CostAnomalySubscription{}).
 		Complete(r)
 }

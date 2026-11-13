@@ -292,7 +292,6 @@ func (r *NetworkACLReconciler) setConditionNACL(ctx context.Context, nacl *awsv1
 }
 
 func (r *NetworkACLReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.NetworkACL{}).
+	return newKindController(mgr, &awsv1alpha1.NetworkACL{}).
 		Complete(r)
 }

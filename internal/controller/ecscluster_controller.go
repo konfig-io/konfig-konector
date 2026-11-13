@@ -157,7 +157,6 @@ func (r *ECSClusterReconciler) setCondition(ctx context.Context, obj *awsv1alpha
 }
 
 func (r *ECSClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECSCluster{}).
+	return newKindController(mgr, &awsv1alpha1.ECSCluster{}).
 		Complete(r)
 }

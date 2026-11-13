@@ -262,7 +262,6 @@ func cloudtrailTags(tags map[string]string) []cloudtrailtypes.Tag {
 }
 
 func (r *TrailReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Trail{}).
+	return newKindController(mgr, &awsv1alpha1.Trail{}).
 		Complete(r)
 }

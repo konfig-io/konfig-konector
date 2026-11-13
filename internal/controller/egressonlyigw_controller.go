@@ -232,7 +232,6 @@ func (r *EgressOnlyIGWReconciler) setConditionEOIGW(ctx context.Context, igw *aw
 }
 
 func (r *EgressOnlyIGWReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EgressOnlyIGW{}).
+	return newKindController(mgr, &awsv1alpha1.EgressOnlyIGW{}).
 		Complete(r)
 }

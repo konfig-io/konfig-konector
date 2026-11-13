@@ -257,7 +257,6 @@ func (r *RecordSetReconciler) setRSCondition(ctx context.Context, rs *awsv1alpha
 }
 
 func (r *RecordSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RecordSet{}).
+	return newKindController(mgr, &awsv1alpha1.RecordSet{}).
 		Complete(r)
 }

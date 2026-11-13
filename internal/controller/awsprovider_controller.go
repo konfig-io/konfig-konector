@@ -183,7 +183,6 @@ func (r *AWSProviderReconciler) verify(ctx context.Context, p *awsv1alpha1.AWSPr
 }
 
 func (r *AWSProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.AWSProvider{}).
+	return newKindController(mgr, &awsv1alpha1.AWSProvider{}).
 		Complete(r)
 }

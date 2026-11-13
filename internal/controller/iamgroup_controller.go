@@ -139,7 +139,6 @@ func (r *IAMGroupReconciler) setCondition(ctx context.Context, grp *awsv1alpha1.
 }
 
 func (r *IAMGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMGroup{}).
+	return newKindController(mgr, &awsv1alpha1.IAMGroup{}).
 		Complete(r)
 }

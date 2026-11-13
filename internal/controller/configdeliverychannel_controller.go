@@ -171,7 +171,6 @@ func (r *ConfigDeliveryChannelReconciler) setCondition(ctx context.Context, ch *
 }
 
 func (r *ConfigDeliveryChannelReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ConfigDeliveryChannel{}).
+	return newKindController(mgr, &awsv1alpha1.ConfigDeliveryChannel{}).
 		Complete(r)
 }

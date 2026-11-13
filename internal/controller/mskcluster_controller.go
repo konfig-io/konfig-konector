@@ -283,7 +283,6 @@ func (r *MSKClusterReconciler) setConditionMSK(ctx context.Context, obj *awsv1al
 }
 
 func (r *MSKClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MSKCluster{}).
+	return newKindController(mgr, &awsv1alpha1.MSKCluster{}).
 		Complete(r)
 }

@@ -254,7 +254,6 @@ func (r *SpotFleetReconciler) setConditionSF(ctx context.Context, sf *awsv1alpha
 }
 
 func (r *SpotFleetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SpotFleet{}).
+	return newKindController(mgr, &awsv1alpha1.SpotFleet{}).
 		Complete(r)
 }

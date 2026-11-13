@@ -186,7 +186,6 @@ func (r *CertificateReconciler) setConditionCert(ctx context.Context, cert *awsv
 }
 
 func (r *CertificateReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Certificate{}).
+	return newKindController(mgr, &awsv1alpha1.Certificate{}).
 		Complete(r)
 }

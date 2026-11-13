@@ -198,7 +198,6 @@ func (r *CodeBuildProjectReconciler) setConditionCB(ctx context.Context, obj *aw
 }
 
 func (r *CodeBuildProjectReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeBuildProject{}).
+	return newKindController(mgr, &awsv1alpha1.CodeBuildProject{}).
 		Complete(r)
 }

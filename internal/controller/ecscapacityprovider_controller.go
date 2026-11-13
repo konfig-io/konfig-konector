@@ -210,7 +210,6 @@ func (r *ECSCapacityProviderReconciler) setConditionECPCP(ctx context.Context, o
 }
 
 func (r *ECSCapacityProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECSCapacityProvider{}).
+	return newKindController(mgr, &awsv1alpha1.ECSCapacityProvider{}).
 		Complete(r)
 }

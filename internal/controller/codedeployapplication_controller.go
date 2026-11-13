@@ -163,7 +163,6 @@ func (r *CodeDeployApplicationReconciler) setConditionCDA(ctx context.Context, o
 }
 
 func (r *CodeDeployApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CodeDeployApplication{}).
+	return newKindController(mgr, &awsv1alpha1.CodeDeployApplication{}).
 		Complete(r)
 }

@@ -144,7 +144,6 @@ func (r *S3BucketLifecycleReconciler) setConditionSBL(ctx context.Context, obj *
 }
 
 func (r *S3BucketLifecycleReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3BucketLifecycle{}).
+	return newKindController(mgr, &awsv1alpha1.S3BucketLifecycle{}).
 		Complete(r)
 }

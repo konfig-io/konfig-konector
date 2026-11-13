@@ -199,7 +199,6 @@ func (r *EKSFargateProfileReconciler) setCondition(ctx context.Context, obj *aws
 }
 
 func (r *EKSFargateProfileReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EKSFargateProfile{}).
+	return newKindController(mgr, &awsv1alpha1.EKSFargateProfile{}).
 		Complete(r)
 }

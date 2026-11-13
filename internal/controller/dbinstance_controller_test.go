@@ -131,6 +131,10 @@ func dbInstanceCR(mutate ...func(*awsv1alpha1.DBInstance)) *awsv1alpha1.DBInstan
 	return db
 }
 
+func describeNotFound(_ context.Context, _ *awsrds.DescribeDBInstancesInput) (*awsrds.DescribeDBInstancesOutput, error) {
+	return nil, &rdstypes.DBInstanceNotFoundFault{}
+}
+
 func availableDescribeOutput() *awsrds.DescribeDBInstancesOutput {
 	return &awsrds.DescribeDBInstancesOutput{
 		DBInstances: []rdstypes.DBInstance{{
@@ -173,12 +177,15 @@ func TestDBInstanceReconcile(t *testing.T) {
 					DBInstanceStatus: aws.String("creating"),
 				}}, nil
 			},
-			describe: func(_ context.Context, _ *awsrds.DescribeDBInstancesInput) (*awsrds.DescribeDBInstancesOutput, error) {
-				return availableDescribeOutput(), nil
-			},
 			modify: func(_ context.Context, _ *awsrds.ModifyDBInstanceInput) (*awsrds.ModifyDBInstanceOutput, error) {
 				return &awsrds.ModifyDBInstanceOutput{}, nil
 			},
+		}
+		f.describe = func(_ context.Context, _ *awsrds.DescribeDBInstancesInput) (*awsrds.DescribeDBInstancesOutput, error) {
+			if !f.createCalled {
+				return nil, &rdstypes.DBInstanceNotFoundFault{}
+			}
+			return availableDescribeOutput(), nil
 		}
 		c := fake.NewClientBuilder().WithScheme(scheme).
 			WithStatusSubresource(&awsv1alpha1.DBInstance{}).
@@ -225,7 +232,7 @@ func TestDBInstanceReconcile(t *testing.T) {
 	t.Run("missing secret key errors and sets Ready=False without leaking password", func(t *testing.T) {
 		ctx := context.Background()
 		scheme := dbInstanceScheme(t)
-		f := &fakeDBInstanceAPI{}
+		f := &fakeDBInstanceAPI{describe: describeNotFound}
 		secret := dbPasswordSecret()
 		secret.Data = map[string][]byte{"wrong-key": []byte(testDBPassword)}
 		c := fake.NewClientBuilder().WithScheme(scheme).
@@ -286,6 +293,91 @@ func TestDBInstanceReconcile(t *testing.T) {
 		cond := apimeta.FindStatusCondition(got.Status.Conditions, awsv1alpha1.ConditionReady)
 		if cond == nil || cond.Status != metav1.ConditionTrue {
 			t.Errorf("Ready condition = %+v, want True", cond)
+		}
+	})
+
+	t.Run("existing instance without status ARN is adopted, not created again", func(t *testing.T) {
+		ctx := context.Background()
+		scheme := dbInstanceScheme(t)
+		f := &fakeDBInstanceAPI{
+			describe: func(_ context.Context, _ *awsrds.DescribeDBInstancesInput) (*awsrds.DescribeDBInstancesOutput, error) {
+				out := availableDescribeOutput()
+				out.DBInstances[0].DBInstanceStatus = aws.String("creating")
+				return out, nil
+			},
+		}
+		c := fake.NewClientBuilder().WithScheme(scheme).
+			WithStatusSubresource(&awsv1alpha1.DBInstance{}).
+			WithObjects(dbInstanceCR(), dbPasswordSecret()).Build()
+		r := &DBInstanceReconciler{Client: c, Scheme: scheme, RDSClient: f}
+
+		res, err := r.Reconcile(ctx, req)
+		if err != nil {
+			t.Fatalf("reconcile: %v", err)
+		}
+		if f.createCalled {
+			t.Error("expected CreateDBInstance NOT to be called for an existing instance")
+		}
+		if res.RequeueAfter == 0 {
+			t.Error("expected polling requeue while instance is creating")
+		}
+		got := &awsv1alpha1.DBInstance{}
+		if err := c.Get(ctx, req.NamespacedName, got); err != nil {
+			t.Fatalf("get: %v", err)
+		}
+		if got.Status.DBInstanceARN != testDBInstanceARN {
+			t.Errorf("status.dbInstanceArn = %q, want adopted %q", got.Status.DBInstanceARN, testDBInstanceARN)
+		}
+	})
+
+	t.Run("existing instance in a non-transient, non-available state is not created again", func(t *testing.T) {
+		ctx := context.Background()
+		scheme := dbInstanceScheme(t)
+		f := &fakeDBInstanceAPI{
+			describe: func(_ context.Context, _ *awsrds.DescribeDBInstancesInput) (*awsrds.DescribeDBInstancesOutput, error) {
+				out := availableDescribeOutput()
+				out.DBInstances[0].DBInstanceStatus = aws.String("stopped")
+				return out, nil
+			},
+		}
+		db := dbInstanceCR(func(db *awsv1alpha1.DBInstance) { db.Status.DBInstanceARN = testDBInstanceARN })
+		c := fake.NewClientBuilder().WithScheme(scheme).
+			WithStatusSubresource(&awsv1alpha1.DBInstance{}).
+			WithObjects(db, dbPasswordSecret()).Build()
+		r := &DBInstanceReconciler{Client: c, Scheme: scheme, RDSClient: f}
+
+		res, err := r.Reconcile(ctx, req)
+		if err != nil {
+			t.Fatalf("reconcile: %v", err)
+		}
+		if f.createCalled {
+			t.Error("expected CreateDBInstance NOT to be called for a stopped instance")
+		}
+		if res.RequeueAfter == 0 {
+			t.Error("expected polling requeue")
+		}
+	})
+
+	t.Run("AlreadyExists on create requeues without an error", func(t *testing.T) {
+		ctx := context.Background()
+		scheme := dbInstanceScheme(t)
+		f := &fakeDBInstanceAPI{
+			describe: describeNotFound,
+			create: func(_ context.Context, _ *awsrds.CreateDBInstanceInput) (*awsrds.CreateDBInstanceOutput, error) {
+				return nil, fmt.Errorf("operation error RDS: CreateDBInstance: %w", &rdstypes.DBInstanceAlreadyExistsFault{})
+			},
+		}
+		c := fake.NewClientBuilder().WithScheme(scheme).
+			WithStatusSubresource(&awsv1alpha1.DBInstance{}).
+			WithObjects(dbInstanceCR(), dbPasswordSecret()).Build()
+		r := &DBInstanceReconciler{Client: c, Scheme: scheme, RDSClient: f}
+
+		res, err := r.Reconcile(ctx, req)
+		if err != nil {
+			t.Fatalf("reconcile: %v", err)
+		}
+		if res.RequeueAfter == 0 {
+			t.Error("expected polling requeue after AlreadyExists")
 		}
 	})
 

@@ -117,41 +117,47 @@ func (r *DBInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 }
 
 func (r *DBInstanceReconciler) reconcileDBInstance(ctx context.Context, db *awsv1alpha1.DBInstance) (ctrl.Result, error) {
-	// Check current state if we have an ARN.
-	if db.Status.DBInstanceARN != "" {
-		out, err := r.RDSClient.DescribeDBInstances(ctx, &awsrds.DescribeDBInstancesInput{
-			DBInstanceIdentifier: aws.String(db.Spec.DBInstanceIdentifier),
-		})
-		if err != nil && !rdshelper.IsNotFound(err) {
-			return ctrl.Result{}, err
+	// Always look the instance up by identifier before creating. The identifier
+	// comes from spec, so status is not needed to find it, and an instance that
+	// already exists (created by a reconcile whose status write was lost, or
+	// pre-existing) is adopted instead of being created a second time.
+	out, err := r.RDSClient.DescribeDBInstances(ctx, &awsrds.DescribeDBInstancesInput{
+		DBInstanceIdentifier: aws.String(db.Spec.DBInstanceIdentifier),
+	})
+	if err != nil && !rdshelper.IsNotFound(err) {
+		return ctrl.Result{}, fmt.Errorf("describe DB instance: %w", err)
+	}
+	if err == nil && len(out.DBInstances) > 0 {
+		inst := out.DBInstances[0]
+		db.Status.DBInstanceARN = aws.ToString(inst.DBInstanceArn)
+		db.Status.DBInstanceStatus = aws.ToString(inst.DBInstanceStatus)
+		if inst.Endpoint != nil {
+			db.Status.Endpoint = aws.ToString(inst.Endpoint.Address)
+			db.Status.Port = aws.ToInt32(inst.Endpoint.Port)
 		}
-		if err == nil && len(out.DBInstances) > 0 {
-			inst := out.DBInstances[0]
-			db.Status.DBInstanceStatus = aws.ToString(inst.DBInstanceStatus)
-			if inst.Endpoint != nil {
-				db.Status.Endpoint = aws.ToString(inst.Endpoint.Address)
-				db.Status.Port = aws.ToInt32(inst.Endpoint.Port)
-			}
 
-			if rdshelper.IsTransient(db.Status.DBInstanceStatus) {
-				_ = r.setCondition(ctx, db, awsv1alpha1.ConditionReady, metav1.ConditionFalse, "Provisioning",
-					fmt.Sprintf("DB instance is %s", db.Status.DBInstanceStatus))
-				return requeueRDSPolling, nil
-			}
-
-			if db.Status.DBInstanceStatus == "available" {
-				// Drift: update if generation changed.
-				if db.Status.ObservedGeneration != db.Generation {
-					if err := r.updateDBInstance(ctx, db); err != nil {
-						return ctrl.Result{}, err
-					}
+		if db.Status.DBInstanceStatus == "available" {
+			// Drift: update if generation changed.
+			if db.Status.ObservedGeneration != db.Generation {
+				if err := r.updateDBInstance(ctx, db); err != nil {
+					return ctrl.Result{}, err
 				}
-				db.Status.ObservedGeneration = db.Generation
-				now := metav1.Now()
-				db.Status.LastSyncTime = &now
-				return requeueResult(), r.setCondition(ctx, db, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "DB instance available")
 			}
+			db.Status.ObservedGeneration = db.Generation
+			now := metav1.Now()
+			db.Status.LastSyncTime = &now
+			return requeueResult(), r.setCondition(ctx, db, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "DB instance available")
 		}
+
+		// The instance exists but is not available (provisioning, stopped,
+		// failed, ...). Report it and poll; never fall through to create.
+		reason := "NotAvailable"
+		if rdshelper.IsTransient(db.Status.DBInstanceStatus) {
+			reason = "Provisioning"
+		}
+		_ = r.setCondition(ctx, db, awsv1alpha1.ConditionReady, metav1.ConditionFalse, reason,
+			fmt.Sprintf("DB instance is %s", db.Status.DBInstanceStatus))
+		return requeueRDSPolling, nil
 	}
 
 	// Create new instance.
@@ -262,13 +268,20 @@ func (r *DBInstanceReconciler) reconcileDBInstance(ctx context.Context, db *awsv
 		input.StorageThroughput = db.Spec.StorageThroughput
 	}
 
-	out, err := r.RDSClient.CreateDBInstance(ctx, input)
+	created, err := r.RDSClient.CreateDBInstance(ctx, input)
 	if err != nil {
+		var exists *rdstypes.DBInstanceAlreadyExistsFault
+		if errors.As(err, &exists) {
+			// Lost a race with our own earlier create (describe had not caught
+			// up yet). The next pass finds the instance and adopts it.
+			log.FromContext(ctx).Info("DB instance already exists, adopting on next reconcile")
+			return requeueRDSPolling, nil
+		}
 		return ctrl.Result{}, fmt.Errorf("create DB instance: %w", err)
 	}
 
-	db.Status.DBInstanceARN = aws.ToString(out.DBInstance.DBInstanceArn)
-	db.Status.DBInstanceStatus = aws.ToString(out.DBInstance.DBInstanceStatus)
+	db.Status.DBInstanceARN = aws.ToString(created.DBInstance.DBInstanceArn)
+	db.Status.DBInstanceStatus = aws.ToString(created.DBInstance.DBInstanceStatus)
 	_ = r.setCondition(ctx, db, awsv1alpha1.ConditionReady, metav1.ConditionFalse, "Provisioning", "DB instance is being created")
 	return requeueRDSPolling, nil
 }
@@ -413,7 +426,6 @@ func rdsTagsToMap(tags []rdstypes.Tag) map[string]string {
 }
 
 func (r *DBInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBInstance{}).
+	return newKindController(mgr, &awsv1alpha1.DBInstance{}).
 		Complete(r)
 }

@@ -195,7 +195,6 @@ func (r *UserPoolReconciler) setConditionUP(ctx context.Context, up *awsv1alpha1
 }
 
 func (r *UserPoolReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.UserPool{}).
+	return newKindController(mgr, &awsv1alpha1.UserPool{}).
 		Complete(r)
 }

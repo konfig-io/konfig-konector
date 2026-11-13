@@ -217,7 +217,6 @@ func (r *RDSEventSubscriptionReconciler) setCondition(ctx context.Context, es *a
 }
 
 func (r *RDSEventSubscriptionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RDSEventSubscription{}).
+	return newKindController(mgr, &awsv1alpha1.RDSEventSubscription{}).
 		Complete(r)
 }

@@ -231,7 +231,6 @@ func (r *PrometheusWorkspaceReconciler) setCondition(ctx context.Context, ws *aw
 }
 
 func (r *PrometheusWorkspaceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.PrometheusWorkspace{}).
+	return newKindController(mgr, &awsv1alpha1.PrometheusWorkspace{}).
 		Complete(r)
 }

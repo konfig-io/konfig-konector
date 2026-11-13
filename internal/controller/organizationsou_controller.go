@@ -235,7 +235,6 @@ func (r *OrganizationsOUReconciler) setCondition(ctx context.Context, ou *awsv1a
 }
 
 func (r *OrganizationsOUReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.OrganizationsOU{}).
+	return newKindController(mgr, &awsv1alpha1.OrganizationsOU{}).
 		Complete(r)
 }

@@ -286,7 +286,6 @@ func (r *SQSQueueReconciler) setCondition(ctx context.Context, q *awsv1alpha1.SQ
 }
 
 func (r *SQSQueueReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SQSQueue{}).
+	return newKindController(mgr, &awsv1alpha1.SQSQueue{}).
 		Complete(r)
 }

@@ -190,7 +190,6 @@ func (r *SSMMaintenanceWindowReconciler) setCondition(ctx context.Context, mw *a
 }
 
 func (r *SSMMaintenanceWindowReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSMMaintenanceWindow{}).
+	return newKindController(mgr, &awsv1alpha1.SSMMaintenanceWindow{}).
 		Complete(r)
 }

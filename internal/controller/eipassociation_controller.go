@@ -220,7 +220,6 @@ func (r *EIPAssociationReconciler) setConditionEIPAssoc(ctx context.Context, ass
 }
 
 func (r *EIPAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EIPAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.EIPAssociation{}).
 		Complete(r)
 }

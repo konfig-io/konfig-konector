@@ -182,7 +182,6 @@ func (r *ElastiCacheParameterGroupReconciler) setConditionECPG(ctx context.Conte
 }
 
 func (r *ElastiCacheParameterGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ElastiCacheParameterGroup{}).
+	return newKindController(mgr, &awsv1alpha1.ElastiCacheParameterGroup{}).
 		Complete(r)
 }

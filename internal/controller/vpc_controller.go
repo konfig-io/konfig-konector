@@ -281,7 +281,6 @@ func (r *VPCReconciler) setCondition(ctx context.Context, vpc *awsv1alpha1.VPC, 
 }
 
 func (r *VPCReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.VPC{}).
+	return newKindController(mgr, &awsv1alpha1.VPC{}).
 		Complete(r)
 }

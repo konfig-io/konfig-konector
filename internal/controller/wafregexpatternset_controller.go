@@ -218,7 +218,6 @@ func (r *WAFRegexPatternSetReconciler) setConditionRPS(ctx context.Context, obj 
 }
 
 func (r *WAFRegexPatternSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.WAFRegexPatternSet{}).
+	return newKindController(mgr, &awsv1alpha1.WAFRegexPatternSet{}).
 		Complete(r)
 }

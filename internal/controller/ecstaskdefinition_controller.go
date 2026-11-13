@@ -248,7 +248,6 @@ func (r *ECSTaskDefinitionReconciler) setCondition(ctx context.Context, obj *aws
 }
 
 func (r *ECSTaskDefinitionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ECSTaskDefinition{}).
+	return newKindController(mgr, &awsv1alpha1.ECSTaskDefinition{}).
 		Complete(r)
 }

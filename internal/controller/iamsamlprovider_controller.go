@@ -189,7 +189,6 @@ func (r *IAMSAMLProviderReconciler) setCondition(ctx context.Context, prov *awsv
 }
 
 func (r *IAMSAMLProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMSAMLProvider{}).
+	return newKindController(mgr, &awsv1alpha1.IAMSAMLProvider{}).
 		Complete(r)
 }

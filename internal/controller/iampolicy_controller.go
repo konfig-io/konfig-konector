@@ -238,7 +238,6 @@ func (r *IAMPolicyReconciler) setPolicyCondition(ctx context.Context, p *awsv1al
 }
 
 func (r *IAMPolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.IAMPolicy{}).
+	return newKindController(mgr, &awsv1alpha1.IAMPolicy{}).
 		Complete(r)
 }

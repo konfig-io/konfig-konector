@@ -184,7 +184,6 @@ func (r *S3BucketNotificationReconciler) setConditionSBN(ctx context.Context, ob
 }
 
 func (r *S3BucketNotificationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3BucketNotification{}).
+	return newKindController(mgr, &awsv1alpha1.S3BucketNotification{}).
 		Complete(r)
 }

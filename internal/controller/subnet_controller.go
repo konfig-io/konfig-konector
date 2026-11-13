@@ -268,7 +268,6 @@ func (r *SubnetReconciler) setCondition(ctx context.Context, sn *awsv1alpha1.Sub
 }
 
 func (r *SubnetReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.Subnet{}).
+	return newKindController(mgr, &awsv1alpha1.Subnet{}).
 		Complete(r)
 }

@@ -251,7 +251,6 @@ func (r *InternetGatewayReconciler) setCondition(ctx context.Context, igw *awsv1
 }
 
 func (r *InternetGatewayReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.InternetGateway{}).
+	return newKindController(mgr, &awsv1alpha1.InternetGateway{}).
 		Complete(r)
 }

@@ -202,7 +202,6 @@ func (r *CloudWatchAlarmReconciler) setConditionCWA(ctx context.Context, obj *aw
 }
 
 func (r *CloudWatchAlarmReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudWatchAlarm{}).
+	return newKindController(mgr, &awsv1alpha1.CloudWatchAlarm{}).
 		Complete(r)
 }

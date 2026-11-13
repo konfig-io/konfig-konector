@@ -214,7 +214,6 @@ func (r *InspectorEnablerReconciler) setCondition(ctx context.Context, ins *awsv
 }
 
 func (r *InspectorEnablerReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.InspectorEnabler{}).
+	return newKindController(mgr, &awsv1alpha1.InspectorEnabler{}).
 		Complete(r)
 }

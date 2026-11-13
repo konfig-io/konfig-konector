@@ -187,7 +187,6 @@ func (r *ElastiCacheServerlessCacheReconciler) setConditionESC(ctx context.Conte
 }
 
 func (r *ElastiCacheServerlessCacheReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.ElastiCacheServerlessCache{}).
+	return newKindController(mgr, &awsv1alpha1.ElastiCacheServerlessCache{}).
 		Complete(r)
 }

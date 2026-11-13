@@ -145,7 +145,6 @@ func (r *LambdaPermissionReconciler) setCondition(ctx context.Context, obj *awsv
 }
 
 func (r *LambdaPermissionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.LambdaPermission{}).
+	return newKindController(mgr, &awsv1alpha1.LambdaPermission{}).
 		Complete(r)
 }

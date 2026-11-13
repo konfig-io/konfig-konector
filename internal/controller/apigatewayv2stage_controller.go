@@ -240,7 +240,6 @@ func (r *APIGatewayV2StageReconciler) setConditionStage(ctx context.Context, obj
 }
 
 func (r *APIGatewayV2StageReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.APIGatewayV2Stage{}).
+	return newKindController(mgr, &awsv1alpha1.APIGatewayV2Stage{}).
 		Complete(r)
 }

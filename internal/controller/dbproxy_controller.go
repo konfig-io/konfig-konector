@@ -212,7 +212,6 @@ func (r *DBProxyReconciler) setConditionProxy(ctx context.Context, proxy *awsv1a
 }
 
 func (r *DBProxyReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.DBProxy{}).
+	return newKindController(mgr, &awsv1alpha1.DBProxy{}).
 		Complete(r)
 }

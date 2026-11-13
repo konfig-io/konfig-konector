@@ -187,7 +187,6 @@ func (r *MQConfigurationReconciler) setCondition(ctx context.Context, obj *awsv1
 }
 
 func (r *MQConfigurationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MQConfiguration{}).
+	return newKindController(mgr, &awsv1alpha1.MQConfiguration{}).
 		Complete(r)
 }

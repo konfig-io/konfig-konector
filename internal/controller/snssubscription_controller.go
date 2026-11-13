@@ -228,7 +228,6 @@ func boolToStr(b bool) string {
 }
 
 func (r *SNSSubscriptionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SNSSubscription{}).
+	return newKindController(mgr, &awsv1alpha1.SNSSubscription{}).
 		Complete(r)
 }

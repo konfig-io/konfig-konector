@@ -174,7 +174,6 @@ func (r *EventBusReconciler) setConditionEB(ctx context.Context, eb *awsv1alpha1
 }
 
 func (r *EventBusReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EventBus{}).
+	return newKindController(mgr, &awsv1alpha1.EventBus{}).
 		Complete(r)
 }

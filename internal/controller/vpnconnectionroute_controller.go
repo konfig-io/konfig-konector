@@ -186,7 +186,6 @@ func (r *VPNConnectionRouteReconciler) setCondition(ctx context.Context, obj *aw
 }
 
 func (r *VPNConnectionRouteReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.VPNConnectionRoute{}).
+	return newKindController(mgr, &awsv1alpha1.VPNConnectionRoute{}).
 		Complete(r)
 }

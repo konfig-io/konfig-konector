@@ -299,7 +299,6 @@ func (r *RedshiftClusterReconciler) setCondition(ctx context.Context, rc *awsv1a
 }
 
 func (r *RedshiftClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.RedshiftCluster{}).
+	return newKindController(mgr, &awsv1alpha1.RedshiftCluster{}).
 		Complete(r)
 }

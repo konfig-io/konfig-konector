@@ -209,7 +209,6 @@ func (r *CloudFrontFunctionReconciler) setConditionCFF(ctx context.Context, obj 
 }
 
 func (r *CloudFrontFunctionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.CloudFrontFunction{}).
+	return newKindController(mgr, &awsv1alpha1.CloudFrontFunction{}).
 		Complete(r)
 }

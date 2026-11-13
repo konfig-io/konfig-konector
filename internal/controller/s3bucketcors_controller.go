@@ -159,7 +159,6 @@ func (r *S3BucketCORSReconciler) setConditionSBC(ctx context.Context, obj *awsv1
 }
 
 func (r *S3BucketCORSReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.S3BucketCORS{}).
+	return newKindController(mgr, &awsv1alpha1.S3BucketCORS{}).
 		Complete(r)
 }

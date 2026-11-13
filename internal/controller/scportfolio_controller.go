@@ -204,7 +204,6 @@ func (r *SCPortfolioReconciler) setCondition(ctx context.Context, pf *awsv1alpha
 }
 
 func (r *SCPortfolioReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SCPortfolio{}).
+	return newKindController(mgr, &awsv1alpha1.SCPortfolio{}).
 		Complete(r)
 }

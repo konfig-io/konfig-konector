@@ -177,7 +177,6 @@ func (r *KinesisStreamReconciler) setConditionKS(ctx context.Context, obj *awsv1
 }
 
 func (r *KinesisStreamReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.KinesisStream{}).
+	return newKindController(mgr, &awsv1alpha1.KinesisStream{}).
 		Complete(r)
 }

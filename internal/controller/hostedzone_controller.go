@@ -246,7 +246,6 @@ func (r *HostedZoneReconciler) setHZCondition(ctx context.Context, hz *awsv1alph
 }
 
 func (r *HostedZoneReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.HostedZone{}).
+	return newKindController(mgr, &awsv1alpha1.HostedZone{}).
 		Complete(r)
 }

@@ -194,7 +194,6 @@ func (r *EKSAddonReconciler) setCondition(ctx context.Context, obj *awsv1alpha1.
 }
 
 func (r *EKSAddonReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.EKSAddon{}).
+	return newKindController(mgr, &awsv1alpha1.EKSAddon{}).
 		Complete(r)
 }

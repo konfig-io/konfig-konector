@@ -200,7 +200,6 @@ func (r *MSKConfigurationReconciler) setConditionMC(ctx context.Context, obj *aw
 }
 
 func (r *MSKConfigurationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.MSKConfiguration{}).
+	return newKindController(mgr, &awsv1alpha1.MSKConfiguration{}).
 		Complete(r)
 }

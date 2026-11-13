@@ -225,7 +225,6 @@ func (r *SSMAssociationReconciler) setCondition(ctx context.Context, assoc *awsv
 }
 
 func (r *SSMAssociationReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&awsv1alpha1.SSMAssociation{}).
+	return newKindController(mgr, &awsv1alpha1.SSMAssociation{}).
 		Complete(r)
 }
