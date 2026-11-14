@@ -662,6 +662,7 @@ data "aws_iam_policy_document" "operator" {
       "kms:GetKeyPolicy",
       "kms:PutKeyPolicy",
       "kms:CreateAlias",
+      "kms:UpdateAlias",
       "kms:DeleteAlias",
       "kms:ListAliases",
       "kms:CreateGrant",

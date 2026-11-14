@@ -20,9 +20,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awskms "github.com/aws/aws-sdk-go-v2/service/kms"
+	kmstypes "github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -34,14 +36,22 @@ import (
 
 	awsv1alpha1 "github.com/konfig-io/konfig-konector/api/v1alpha1"
 	kmshelper "github.com/konfig-io/konfig-konector/internal/aws/kms"
-	"github.com/konfig-io/konfig-konector/internal/aws/multi"
 )
+
+// KMSAliasAWSAPI is the subset of the KMS SDK client used by this controller.
+// *multi.KMS and *awskms.Client satisfy it.
+type KMSAliasAWSAPI interface {
+	ListAliases(ctx context.Context, params *awskms.ListAliasesInput, optFns ...func(*awskms.Options)) (*awskms.ListAliasesOutput, error)
+	CreateAlias(ctx context.Context, params *awskms.CreateAliasInput, optFns ...func(*awskms.Options)) (*awskms.CreateAliasOutput, error)
+	UpdateAlias(ctx context.Context, params *awskms.UpdateAliasInput, optFns ...func(*awskms.Options)) (*awskms.UpdateAliasOutput, error)
+	DeleteAlias(ctx context.Context, params *awskms.DeleteAliasInput, optFns ...func(*awskms.Options)) (*awskms.DeleteAliasOutput, error)
+}
 
 // KMSAliasReconciler reconciles KMSAlias objects.
 type KMSAliasReconciler struct {
 	client.Client
 	Scheme    *runtime.Scheme
-	KMSClient *multi.KMS
+	KMSClient KMSAliasAWSAPI
 }
 
 // +kubebuilder:rbac:groups=aws.konfig.io,resources=kmsalias,verbs=get;list;watch;create;update;patch;delete
@@ -107,46 +117,108 @@ func (r *KMSAliasReconciler) reconcileKMSAlias(ctx context.Context, a *awsv1alph
 		return err
 	}
 
-	if a.Status.ARN != "" {
-		_, err2 := r.KMSClient.UpdateAlias(ctx, &awskms.UpdateAliasInput{
+	// Always look the alias up by name first. The name comes from spec, so an
+	// alias that already exists (created by a pass whose ARN lookup or status
+	// write was lost, or pre-existing) is adopted instead of created again.
+	existing, onDesiredKey, err := r.findAlias(ctx, a.Spec.AliasName, keyID)
+	if err != nil {
+		return err
+	}
+
+	reason, message := awsv1alpha1.ReasonSynced, "KMSAlias reconciled"
+	switch {
+	case existing == nil:
+		_, err = r.KMSClient.CreateAlias(ctx, &awskms.CreateAliasInput{
 			AliasName:   aws.String(a.Spec.AliasName),
 			TargetKeyId: aws.String(keyID),
 		})
-		if err2 != nil && !kmshelper.IsNotFound(err2) {
-			return fmt.Errorf("update alias: %w", err2)
-		}
-		if err2 == nil {
-			a.Status.ObservedGeneration = a.Generation
-			now := metav1.Now()
-			a.Status.LastSyncTime = &now
-			return r.setConditionAlias(ctx, a, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced, "KMSAlias reconciled")
-		}
-		a.Status.ARN = ""
-	}
-
-	_, err = r.KMSClient.CreateAlias(ctx, &awskms.CreateAliasInput{
-		AliasName:   aws.String(a.Spec.AliasName),
-		TargetKeyId: aws.String(keyID),
-	})
-	if err != nil {
-		return fmt.Errorf("create alias: %w", err)
-	}
-
-	out, err := r.KMSClient.ListAliases(ctx, &awskms.ListAliasesInput{
-		KeyId: aws.String(keyID),
-	})
-	if err == nil {
-		for _, al := range out.Aliases {
-			if aws.ToString(al.AliasName) == a.Spec.AliasName {
-				a.Status.ARN = aws.ToString(al.AliasArn)
+		if err != nil {
+			var exists *kmstypes.AlreadyExistsException
+			if errors.As(err, &exists) {
+				// ListAliases had not caught up with an earlier create. The
+				// next pass finds the alias and adopts it.
+				return &dependencyNotReady{msg: fmt.Sprintf("alias %s already exists but is not listed by KMS yet", a.Spec.AliasName)}
 			}
+			return fmt.Errorf("create alias: %w", err)
+		}
+		// Never report Ready without the ARN: wait until KMS lists the alias.
+		existing, _, err = r.findAlias(ctx, a.Spec.AliasName, keyID)
+		if err != nil {
+			return err
+		}
+		if existing == nil {
+			return &dependencyNotReady{msg: fmt.Sprintf("alias %s created but not listed by KMS yet", a.Spec.AliasName)}
+		}
+		reason, message = awsv1alpha1.ReasonCreated, "KMSAlias created"
+	case !onDesiredKey:
+		// The alias points at another key: this is the only case that needs
+		// UpdateAlias.
+		_, err = r.KMSClient.UpdateAlias(ctx, &awskms.UpdateAliasInput{
+			AliasName:   aws.String(a.Spec.AliasName),
+			TargetKeyId: aws.String(keyID),
+		})
+		if err != nil {
+			return fmt.Errorf("update alias: %w", err)
 		}
 	}
 
+	a.Status.ARN = aws.ToString(existing.AliasArn)
 	a.Status.ObservedGeneration = a.Generation
 	now := metav1.Now()
 	a.Status.LastSyncTime = &now
-	return r.setConditionAlias(ctx, a, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonCreated, "KMSAlias created")
+	return r.setConditionAlias(ctx, a, awsv1alpha1.ConditionReady, metav1.ConditionTrue, reason, message)
+}
+
+// findAlias looks an alias up by exact name. It first asks for the aliases of
+// the desired key (a short list; the steady-state path), and only when the
+// alias is not there pages through every alias in the account and region to
+// see whether it exists on another key. onDesiredKey reports whether the alias
+// found already targets keyID.
+func (r *KMSAliasReconciler) findAlias(ctx context.Context, name, keyID string) (alias *kmstypes.AliasListEntry, onDesiredKey bool, err error) {
+	alias, err = r.listAliasByName(ctx, name, aws.String(keyID))
+	if err != nil && !kmshelper.IsNotFound(err) {
+		return nil, false, fmt.Errorf("list aliases for key: %w", err)
+	}
+	if err == nil && alias != nil {
+		return alias, true, nil
+	}
+	alias, err = r.listAliasByName(ctx, name, nil)
+	if err != nil {
+		return nil, false, fmt.Errorf("list aliases: %w", err)
+	}
+	if alias == nil {
+		return nil, false, nil
+	}
+	// The per-key listing can lag behind; compare the target directly too.
+	return alias, aws.ToString(alias.TargetKeyId) == kmsKeyIDFromRef(keyID), nil
+}
+
+func (r *KMSAliasReconciler) listAliasByName(ctx context.Context, name string, keyID *string) (*kmstypes.AliasListEntry, error) {
+	var marker *string
+	for {
+		out, err := r.KMSClient.ListAliases(ctx, &awskms.ListAliasesInput{KeyId: keyID, Marker: marker})
+		if err != nil {
+			return nil, err
+		}
+		for i := range out.Aliases {
+			if aws.ToString(out.Aliases[i].AliasName) == name {
+				return &out.Aliases[i], nil
+			}
+		}
+		if !out.Truncated || aws.ToString(out.NextMarker) == "" {
+			return nil, nil
+		}
+		marker = out.NextMarker
+	}
+}
+
+// kmsKeyIDFromRef reduces a key ARN to the bare key ID that ListAliases
+// reports in TargetKeyId; a bare key ID is returned unchanged.
+func kmsKeyIDFromRef(ref string) string {
+	if i := strings.LastIndex(ref, ":key/"); i >= 0 {
+		return ref[i+len(":key/"):]
+	}
+	return ref
 }
 
 func (r *KMSAliasReconciler) resolveKeyID(ctx context.Context, a *awsv1alpha1.KMSAlias) (string, error) {
