@@ -6,6 +6,12 @@ on:
   push:
     branches: [dev, main]
     tags: ["v*"]
+  # Manual run: publish the Helm chart for an existing release tag (backfill).
+  workflow_dispatch:
+    inputs:
+      chart_version:
+        description: "Release to publish the Helm chart for, without the v (e.g. 0.11.8). The tag v<version> must exist."
+        required: true
 
 permissions:
   contents: read
@@ -143,3 +149,48 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # Public Helm chart on GitHub Container Registry (OCI), published on version
+  # tags after the image, so the chart never points at an image that does not
+  # exist yet:
+  #   helm install konfig-konector oci://ghcr.io/konfig-io/charts/konfig-konector --version 0.11.8
+  # The chart is packaged with version = appVersion = the release tag, so the
+  # version users pin is the operator version (Chart.yaml's own numbers are
+  # only used for installs from a checkout). Like the image, the package must
+  # be set to public once in the GitHub UI (Packages -> charts/konfig-konector
+  # -> settings). Run manually (workflow_dispatch) to publish an older tag.
+  publish_chart:
+    needs: [test, publish_ghcr]
+    if: >-
+      always() &&
+      (github.event_name == 'workflow_dispatch' ||
+       (startsWith(github.ref, 'refs/tags/v') && needs.publish_ghcr.result == 'success'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve version
+        id: v
+        env:
+          INPUT_VERSION: ${{ inputs.chart_version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then v="${INPUT_VERSION#v}"; else v="${GITHUB_REF_NAME#v}"; fi
+          echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' || { echo "not a semver: $v"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ steps.v.outputs.version }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Package and push chart
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+          GH_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          helm lint helm/konfig-konector
+          helm package helm/konfig-konector --version "$VERSION" --app-version "$VERSION" -d dist
+          echo "$GH_TOKEN" | helm registry login ghcr.io -u "$GH_ACTOR" --password-stdin
+          helm push "dist/konfig-konector-$VERSION.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/charts"

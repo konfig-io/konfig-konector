@@ -151,13 +151,23 @@ make docker-build docker-push IMG=<your-registry>/konfig-konector:v0.1.0
 
 ### Step 3 — Install with Helm
 
+The chart is published as an OCI artifact on GitHub Container Registry with
+every release; no `helm repo add` or clone is needed. The chart version is the
+operator version:
+
 ```bash
-helm install konfig-konector ./helm/konfig-konector \
+helm install konfig-konector oci://ghcr.io/konfig-io/charts/konfig-konector \
+  --version <version> \
   --namespace konfig-system \
   --create-namespace \
   --set aws.region=us-east-1 \
   --set operatorRoleArn=arn:aws:iam::123456789012:role/dev-konfig-konector-operator
 ```
+
+`helm pull oci://ghcr.io/konfig-io/charts/konfig-konector --version <version>`
+downloads it, and `helm show values` on the same URL prints the values. OCI
+charts need Helm 3.8 or newer. To install from a checkout instead, replace the
+URL and `--version` with `./helm/konfig-konector`.
 
 The Terraform module also outputs a pre-filled command (set your image
 repository in it before running):
