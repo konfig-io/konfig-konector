@@ -24,6 +24,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsiam "github.com/aws/aws-sdk-go-v2/service/iam"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -75,10 +76,28 @@ func (r *IAMRolePolicyReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 				controllerutil.RemoveFinalizer(rp, awsv1alpha1.FinalizerName)
 				return ctrl.Result{}, r.Update(ctx, rp)
 			}
-			roleName := rp.Spec.RoleRef.Name
-			if rp.Status.RoleARN != "" {
-				roleName = roleNameFromARN(rp.Status.RoleARN)
+			// The AWS role is the one this policy was put on (status), else the one its roleRef resolves to now.
+			// Never roleRef.Name itself: that is the IAMRole object's Kubernetes name, not the AWS role name, so
+			// deleting by it hits a role that doesn't exist (AccessDenied outside the operator's IAM path) and the
+			// finalizer is never removed. That left an Argo CD sync stuck when a hook deleted a policy before its
+			// first reconcile.
+			roleARN := rp.Status.RoleARN
+			if roleARN == "" {
+				resolved, err := r.resolveRoleARNForRP(ctx, rp)
+				var notReady *dependencyNotReady
+				switch {
+				case err == nil:
+					roleARN = resolved
+				case apierrors.IsNotFound(err) || errors.As(err, &notReady):
+					// No role to have put the policy on: nothing in AWS to delete.
+					logger.Info("no role ARN recorded or resolvable; nothing to delete in AWS", "reason", err.Error())
+					controllerutil.RemoveFinalizer(rp, awsv1alpha1.FinalizerName)
+					return ctrl.Result{}, r.Update(ctx, rp)
+				default:
+					return ctrl.Result{}, err
+				}
 			}
+			roleName := roleNameFromARN(roleARN)
 			if _, err := r.IAMClient.DeleteRolePolicy(ctx, &awsiam.DeleteRolePolicyInput{
 				RoleName:   aws.String(roleName),
 				PolicyName: aws.String(rp.Spec.PolicyName),
