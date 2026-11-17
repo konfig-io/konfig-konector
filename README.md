@@ -616,6 +616,7 @@ With this annotation, deleting the CR removes the finalizer and leaves the AWS r
 
 Related safeguards:
 
+- A `Secret` whose `spec.secretName` already exists in Secrets Manager adopts that secret instead of failing. Its value is left alone unless `spec.secretStringRef` is set, in which case the referenced value is written as a new version. Once adopted, deleting the CR deletes the secret like any other; annotate it with `deletion-policy: abandon` first if it must survive. A secret that is scheduled for deletion is not adopted: restore it or wait.
 - `Secret` (Secrets Manager) deletion uses the AWS default 30-day recovery window unless `spec.recoveryWindowInDays` is set. Immediate, unrecoverable deletion requires an explicit `spec.forceDelete: true`.
 - `DBInstance`/`DBCluster` take a final snapshot on delete unless `spec.skipFinalSnapshot: true`.
 
