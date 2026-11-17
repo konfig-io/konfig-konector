@@ -307,3 +307,72 @@ func TestIAMRolePolicyAbandonAnnotation(t *testing.T) {
 		t.Errorf("expected object gone, got err=%v", err)
 	}
 }
+
+// A policy deleted before its first reconcile (an Argo CD hook recreated and deleted within seconds) has no role
+// ARN in its status. The delete must use the AWS role its roleRef resolves to, never roleRef.Name (the IAMRole
+// object's Kubernetes name), or it hits a role that doesn't exist and the finalizer is never removed.
+func TestIAMRolePolicyDeleteBeforeFirstReconcileUsesTheResolvedRole(t *testing.T) {
+	s := iamRoleTestScheme(t)
+	rp := newTestIAMRolePolicy()
+	role := &awsv1alpha1.IAMRole{ObjectMeta: metav1.ObjectMeta{Name: "test-role", Namespace: "default"}}
+	cl := newIAMRolePolicyFakeClient(s, rp, role)
+	role.Status.ARN = "arn:aws:iam::123456789012:role/konfig/selfservice-test"
+	if err := cl.Status().Update(context.Background(), role); err != nil {
+		t.Fatalf("role status: %v", err)
+	}
+
+	var roles []string
+	fakeAWS := &fakeIAMRolePolicyAPI{
+		DeleteRolePolicyFn: func(_ context.Context, params *awsiam.DeleteRolePolicyInput, _ ...func(*awsiam.Options)) (*awsiam.DeleteRolePolicyOutput, error) {
+			roles = append(roles, aws.ToString(params.RoleName))
+			return nil, &iamtypes.NoSuchEntityException{Message: aws.String("never put")}
+		},
+	}
+	r := &IAMRolePolicyReconciler{Client: cl, Scheme: s, IAMClient: fakeAWS}
+
+	ctx := context.Background()
+	if err := cl.Delete(ctx, rp); err != nil {
+		t.Fatalf("delete: %v", err)
+	}
+	key := k8stypes.NamespacedName{Name: "test-rolepolicy", Namespace: "default"}
+	if _, err := r.Reconcile(ctx, ctrl.Request{NamespacedName: key}); err != nil {
+		t.Fatalf("reconcile: %v", err)
+	}
+	if len(roles) != 1 || roles[0] != "selfservice-test" {
+		t.Errorf("DeleteRolePolicy roles = %v, want [selfservice-test] (the resolved AWS role, not test-role)", roles)
+	}
+	if err := cl.Get(ctx, key, &awsv1alpha1.IAMRolePolicy{}); !errors.IsNotFound(err) {
+		t.Errorf("expected object gone, got err=%v", err)
+	}
+}
+
+// With no role ARN recorded and no role to resolve, nothing was ever put in AWS: the finalizer goes, no AWS call.
+func TestIAMRolePolicyDeleteWithNoRoleAnywhereRemovesTheFinalizer(t *testing.T) {
+	s := iamRoleTestScheme(t)
+	rp := newTestIAMRolePolicy()
+	cl := newIAMRolePolicyFakeClient(s, rp)
+
+	calls := 0
+	fakeAWS := &fakeIAMRolePolicyAPI{
+		DeleteRolePolicyFn: func(_ context.Context, _ *awsiam.DeleteRolePolicyInput, _ ...func(*awsiam.Options)) (*awsiam.DeleteRolePolicyOutput, error) {
+			calls++
+			return &awsiam.DeleteRolePolicyOutput{}, nil
+		},
+	}
+	r := &IAMRolePolicyReconciler{Client: cl, Scheme: s, IAMClient: fakeAWS}
+
+	ctx := context.Background()
+	if err := cl.Delete(ctx, rp); err != nil {
+		t.Fatalf("delete: %v", err)
+	}
+	key := k8stypes.NamespacedName{Name: "test-rolepolicy", Namespace: "default"}
+	if _, err := r.Reconcile(ctx, ctrl.Request{NamespacedName: key}); err != nil {
+		t.Fatalf("reconcile: %v", err)
+	}
+	if calls != 0 {
+		t.Errorf("DeleteRolePolicy called %d times, want 0", calls)
+	}
+	if err := cl.Get(ctx, key, &awsv1alpha1.IAMRolePolicy{}); !errors.IsNotFound(err) {
+		t.Errorf("expected object gone, got err=%v", err)
+	}
+}
