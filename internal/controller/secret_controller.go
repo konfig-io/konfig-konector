@@ -129,6 +129,13 @@ func (r *SecretReconciler) reconcileSecret(ctx context.Context, s *awsv1alpha1.S
 		s.Status.ARN = ""
 	}
 
+	// A secret that already exists under this name (made outside the operator, or created on a pass whose status
+	// write was lost) is adopted instead of created again. CreateSecret would fail with ResourceExistsException on
+	// every pass and the resource would never become Ready.
+	if adopted, err := r.adoptExisting(ctx, s); adopted || err != nil {
+		return err
+	}
+
 	input := &awssm.CreateSecretInput{
 		Name: aws.String(s.Spec.SecretName),
 	}
@@ -155,6 +162,12 @@ func (r *SecretReconciler) reconcileSecret(ctx context.Context, s *awsv1alpha1.S
 	}
 
 	out, err := r.SecretsManagerClient.CreateSecret(ctx, input)
+	if smhelper.IsAlreadyExists(err) {
+		// Created between the lookup above and this call: adopt it.
+		if adopted, aerr := r.adoptExisting(ctx, s); adopted || aerr != nil {
+			return aerr
+		}
+	}
 	if err != nil {
 		return fmt.Errorf("create secret: %w", err)
 	}
@@ -164,6 +177,35 @@ func (r *SecretReconciler) reconcileSecret(ctx context.Context, s *awsv1alpha1.S
 	now := metav1.Now()
 	s.Status.LastSyncTime = &now
 	return r.setConditionSecret(ctx, s, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonCreated, "Secret created")
+}
+
+// adoptExisting looks the secret up by name and, when it exists, records its ARN and becomes Ready without
+// creating anything. Its value is left as it is unless spec.secretStringRef declares one. A secret scheduled for
+// deletion is not adopted: restoring it is a person's decision. Returns (true, nil) when adopted.
+func (r *SecretReconciler) adoptExisting(ctx context.Context, s *awsv1alpha1.Secret) (bool, error) {
+	out, err := r.SecretsManagerClient.DescribeSecret(ctx, &awssm.DescribeSecretInput{
+		SecretId: aws.String(s.Spec.SecretName),
+	})
+	if smhelper.IsNotFound(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, fmt.Errorf("describe secret %s: %w", s.Spec.SecretName, err)
+	}
+	if out.DeletedDate != nil {
+		return false, fmt.Errorf("secret %s already exists but is scheduled for deletion; restore it "+
+			"(aws secretsmanager restore-secret) or wait for the deletion before this resource can use the name",
+			s.Spec.SecretName)
+	}
+	s.Status.ARN = aws.ToString(out.ARN)
+	if err := r.syncSecretValue(ctx, s); err != nil {
+		return true, err
+	}
+	s.Status.ObservedGeneration = s.Generation
+	now := metav1.Now()
+	s.Status.LastSyncTime = &now
+	return true, r.setConditionSecret(ctx, s, awsv1alpha1.ConditionReady, metav1.ConditionTrue, awsv1alpha1.ReasonSynced,
+		"Secret adopted: it already existed under this name")
 }
 
 // syncSecretValue pushes the referenced Kubernetes Secret value to Secrets

@@ -37,3 +37,12 @@ func IsNotFound(err error) bool {
 	}
 	return false
 }
+
+// IsAlreadyExists returns true when CreateSecret failed because a secret of that name already exists.
+func IsAlreadyExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	var apiErr smithy.APIError
+	return errors.As(err, &apiErr) && apiErr.ErrorCode() == "ResourceExistsException"
+}
