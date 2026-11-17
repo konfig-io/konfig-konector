@@ -19,7 +19,9 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awssm "github.com/aws/aws-sdk-go-v2/service/secretsmanager"
@@ -158,6 +160,9 @@ func TestSecretReconcile(t *testing.T) {
 			name: "create happy path persists ARN and Ready",
 			objs: []client.Object{secretCR(), sourceK8sSecret("s3cret")},
 			fake: &fakeSecretsManager{
+				describeSecret: func(_ context.Context, _ *awssm.DescribeSecretInput) (*awssm.DescribeSecretOutput, error) {
+					return nil, smNotFoundErr()
+				},
 				createSecret: func(_ context.Context, params *awssm.CreateSecretInput) (*awssm.CreateSecretOutput, error) {
 					if aws.ToString(params.Name) != "my-secret" {
 						return nil, fmt.Errorf("unexpected secret name %q", aws.ToString(params.Name))
@@ -394,5 +399,114 @@ func TestSecretReconcile(t *testing.T) {
 			}
 			tc.assert(t, ctx, c, tc.fake, res)
 		})
+	}
+}
+
+func smExistsErr() error {
+	return &smithy.GenericAPIError{Code: "ResourceExistsException", Message: "already exists"}
+}
+
+func reconcileSecretOnce(t *testing.T, f *fakeSecretsManager, objs ...client.Object) (*awsv1alpha1.Secret, error) {
+	t.Helper()
+	ctx := context.Background()
+	scheme := newSecretScheme(t)
+	c := fake.NewClientBuilder().WithScheme(scheme).WithStatusSubresource(&awsv1alpha1.Secret{}).
+		WithObjects(objs...).Build()
+	r := &SecretReconciler{Client: c, Scheme: scheme, SecretsManagerClient: f}
+	_, err := r.Reconcile(ctx, ctrl.Request{NamespacedName: k8stypes.NamespacedName{Name: "my-secret", Namespace: "default"}})
+	got := &awsv1alpha1.Secret{}
+	if gerr := c.Get(ctx, k8stypes.NamespacedName{Name: "my-secret", Namespace: "default"}, got); gerr != nil {
+		t.Fatalf("get: %v", gerr)
+	}
+	return got, err
+}
+
+func noValueRef(s *awsv1alpha1.Secret) { s.Spec.SecretStringRef = nil }
+
+// A secret made outside the operator (ht-secrets, the console) under the same name is adopted: Ready, its ARN
+// recorded, nothing created, and its value left alone when the resource declares none.
+func TestSecretAdoptsAnExistingSecretByName(t *testing.T) {
+	f := &fakeSecretsManager{
+		describeSecret: func(_ context.Context, params *awssm.DescribeSecretInput) (*awssm.DescribeSecretOutput, error) {
+			if aws.ToString(params.SecretId) != "my-secret" {
+				return nil, fmt.Errorf("looked up %q, want the name", aws.ToString(params.SecretId))
+			}
+			return &awssm.DescribeSecretOutput{ARN: aws.String(testSecretARN), Name: aws.String("my-secret")}, nil
+		},
+	}
+	got, err := reconcileSecretOnce(t, f, secretCR(noValueRef))
+	if err != nil {
+		t.Fatalf("reconcile: %v", err)
+	}
+	if f.createCalled || f.putCalled {
+		t.Errorf("create=%v put=%v, want neither", f.createCalled, f.putCalled)
+	}
+	if got.Status.ARN != testSecretARN {
+		t.Errorf("status.arn = %q, want %q", got.Status.ARN, testSecretARN)
+	}
+	cond := apimeta.FindStatusCondition(got.Status.Conditions, awsv1alpha1.ConditionReady)
+	if cond == nil || cond.Status != metav1.ConditionTrue || cond.Message != "Secret adopted: it already existed under this name" {
+		t.Errorf("Ready condition = %+v, want True and adopted", cond)
+	}
+}
+
+// An adopted secret still gets the value the resource declares (spec.secretStringRef), as a created one would.
+func TestSecretAdoptedSecretGetsItsDeclaredValue(t *testing.T) {
+	f := &fakeSecretsManager{
+		describeSecret: func(_ context.Context, _ *awssm.DescribeSecretInput) (*awssm.DescribeSecretOutput, error) {
+			return &awssm.DescribeSecretOutput{ARN: aws.String(testSecretARN)}, nil
+		},
+		getSecretValue: func(_ context.Context, _ *awssm.GetSecretValueInput) (*awssm.GetSecretValueOutput, error) {
+			return &awssm.GetSecretValueOutput{SecretString: aws.String("old")}, nil
+		},
+		putSecretValue: func(_ context.Context, _ *awssm.PutSecretValueInput) (*awssm.PutSecretValueOutput, error) {
+			return &awssm.PutSecretValueOutput{}, nil
+		},
+	}
+	if _, err := reconcileSecretOnce(t, f, secretCR(), sourceK8sSecret("s3cret")); err != nil {
+		t.Fatalf("reconcile: %v", err)
+	}
+	if f.createCalled || !f.putCalled || f.putValue != "s3cret" {
+		t.Errorf("create=%v put=%v value=%q, want only a put of the declared value", f.createCalled, f.putCalled, f.putValue)
+	}
+}
+
+// One scheduled for deletion is not adopted (restoring it is a person's call), and nothing is created.
+func TestSecretScheduledForDeletionIsNotAdopted(t *testing.T) {
+	f := &fakeSecretsManager{
+		describeSecret: func(_ context.Context, _ *awssm.DescribeSecretInput) (*awssm.DescribeSecretOutput, error) {
+			return &awssm.DescribeSecretOutput{ARN: aws.String(testSecretARN), DeletedDate: aws.Time(time.Now())}, nil
+		},
+	}
+	got, err := reconcileSecretOnce(t, f, secretCR(noValueRef))
+	if err == nil || !strings.Contains(err.Error(), "scheduled for deletion") {
+		t.Fatalf("err = %v, want scheduled for deletion", err)
+	}
+	if f.createCalled || got.Status.ARN != "" {
+		t.Errorf("create=%v arn=%q, want neither", f.createCalled, got.Status.ARN)
+	}
+}
+
+// Created by someone else between the lookup and CreateSecret: the ResourceExistsException is answered by adopting.
+func TestSecretCreateRaceIsAdopted(t *testing.T) {
+	looks := 0
+	f := &fakeSecretsManager{
+		describeSecret: func(_ context.Context, _ *awssm.DescribeSecretInput) (*awssm.DescribeSecretOutput, error) {
+			looks++
+			if looks == 1 {
+				return nil, smNotFoundErr()
+			}
+			return &awssm.DescribeSecretOutput{ARN: aws.String(testSecretARN)}, nil
+		},
+		createSecret: func(_ context.Context, _ *awssm.CreateSecretInput) (*awssm.CreateSecretOutput, error) {
+			return nil, smExistsErr()
+		},
+	}
+	got, err := reconcileSecretOnce(t, f, secretCR(noValueRef))
+	if err != nil {
+		t.Fatalf("reconcile: %v", err)
+	}
+	if got.Status.ARN != testSecretARN || looks != 2 {
+		t.Errorf("arn=%q looks=%d, want adopted after the race", got.Status.ARN, looks)
 	}
 }
